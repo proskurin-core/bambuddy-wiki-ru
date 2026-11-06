@@ -1,140 +1,140 @@
 ---
-title: Firmware Updates
-description: Check and upload firmware updates for LAN-only printers
+title: Обновления прошивки
+description: Проверка и загрузка обновлений прошивки для принтеров в локальной сети
 ---
 
-# Firmware Updates
+# Обновления прошивки {#firmware-updates}
 
-Check and upload firmware updates for printers operating in LAN-only mode.
-
----
-
-## :material-update: Overview
-
-Bambu Lab printers typically receive firmware updates through Bambu Cloud. For printers operating in **LAN-only mode**, this feature provides an alternative way to update firmware:
-
-- **Check** for available firmware updates
-- **Download** firmware from Bambu Lab servers
-- **Upload** directly to printer's SD card via FTP
-- **Trigger** update from printer's touchscreen
-
-!!! warning "SD Card Required"
-    An SD card must be inserted in your printer for firmware updates. The firmware file is uploaded to the SD card via FTP.
-
-!!! info "LAN-Only Mode"
-    This feature is designed for printers not connected to Bambu Cloud. If your printer is cloud-connected, use the standard OTA update method.
+Проверяйте и загружайте обновления прошивки для принтеров, работающих в режиме только локальной сети.
 
 ---
 
-## :material-bell-badge: Update Notifications
+## :material-update: Обзор {#overview}
 
-### Firmware Version Badge
+Обычно принтеры Bambu Lab получают обновления прошивки через Bambu Cloud. Для принтеров в **режиме только локальной сети** эта функция предлагает альтернативный способ обновления:
 
-Each printer card shows a firmware version badge when firmware checking is enabled:
+- **Проверить** наличие обновлений прошивки
+- **Скачать** прошивку с серверов Bambu Lab
+- **Загрузить** её непосредственно на SD-карту принтера через FTP
+- **Запустить** обновление на сенсорном экране принтера
 
-- **Green** (with checkmark icon) — firmware is up to date. Click to view release notes for the installed version
-- **Orange** (with download icon) — a firmware update is available. Hover for version info (current → latest). Click to open the firmware update modal
-- Badge displays the installed firmware version number (e.g. `01.09.00.00`)
-- Requires `firmware:read` permission when authentication is enabled
+!!! warning "Необходима SD-карта"
+    Для обновления прошивки в принтер должна быть вставлена SD-карта. Файл прошивки загружается на неё через FTP.
 
-### Automatic Checking
-
-Firmware versions are checked automatically:
-
-- On printer connection
-- Cached for 5 minutes to reduce API calls
-- Compares installed version against Bambu Lab's latest
-
-### Disabling Firmware Checks
-
-You can disable firmware update checks in **Settings → General → Updates**:
-
-- Toggle **"Check printer firmware"** off
-- When disabled, no firmware check requests are made to Bambu Lab servers
-- Useful for users who prefer to manage firmware manually or have network restrictions
-- The update badge will not appear on printer cards when disabled
+!!! info "Режим только локальной сети"
+    Эта функция предназначена для принтеров без подключения к Bambu Cloud. Если принтер подключён к облаку, используйте стандартное обновление OTA.
 
 ---
 
-## :material-download: Updating Firmware
+## :material-bell-badge: Уведомления об обновлениях {#update-notifications}
 
-### Step 1: Open Update Modal
+### Индикатор версии прошивки {#firmware-version-badge}
 
-Click the orange **Update** badge on the printer card to open the firmware update modal.
+При включённой проверке прошивки на карточке каждого принтера отображается индикатор:
 
-### Step 2: Review Version Info
+- **Зелёный** (со значком галочки) — установлена актуальная прошивка. Нажмите, чтобы прочитать примечания к установленной версии
+- **Оранжевый** (со значком загрузки) — доступно обновление. Наведите указатель, чтобы увидеть текущую и последнюю версии. Нажмите, чтобы открыть окно обновления прошивки
+- Индикатор показывает номер установленной версии (например, `01.09.00.00`)
+- При включённой аутентификации требуется разрешение `firmware:read`
 
-The modal shows:
+### Автоматическая проверка {#automatic-checking}
 
-| Field | Description |
+Версии прошивки проверяются автоматически:
+
+- При подключении принтера
+- Результат кэшируется на 5 минут для уменьшения числа обращений к API
+- Установленная версия сравнивается с последней версией Bambu Lab
+
+### Отключение проверки прошивки {#disabling-firmware-checks}
+
+Проверку обновлений можно отключить в **Настройки → Общие → Обновления**:
+
+- Выключите **«Проверять прошивку принтера»**
+- После отключения запросы проверки прошивки на серверы Bambu Lab не отправляются
+- Это полезно, если вы предпочитаете обновлять прошивку вручную или сеть ограничена
+- Индикатор обновления на карточках принтеров не отображается
+
+---
+
+## :material-download: Обновление прошивки {#updating-firmware}
+
+### Шаг 1. Откройте окно обновления {#step-1-open-update-modal}
+
+Нажмите оранжевый индикатор **Обновить** на карточке принтера.
+
+### Шаг 2. Изучите сведения о версии {#step-2-review-version-info}
+
+В окне показаны:
+
+| Поле | Описание |
 |-------|-------------|
-| **Current** | Installed firmware version |
-| **Latest / Selected** | The version you've selected to install (defaults to the newest update) |
-| **Release Notes** | Click to expand and view changes for the selected version |
+| **Текущая** | Установленная версия прошивки |
+| **Последняя / выбранная** | Версия, выбранная для установки (по умолчанию новейшая) |
+| **Примечания к выпуску** | Нажмите, чтобы развернуть список изменений выбранной версии |
 
-Below the version info, the **Available Versions** list shows every firmware version Bambu Lab has announced for your printer on their wiki release history. Each row carries two badges:
+Под сведениями список **Доступные версии** содержит все версии прошивки для вашего принтера, объявленные Bambu Lab в истории выпусков Wiki. В каждой строке есть два индикатора:
 
-- **Version relation** — `newer`, `current`, or `older` compared to the installed firmware
-- **File status** — one of:
-    - :material-check-circle: **Usable** (green) — an offline firmware package is published and can be installed
-    - :material-cancel: **Unavailable** (gray) — the version is announced but Bambu has not published an offline package for it. Typical for hot-fix point releases (e.g. `01.01.03.00`) that Bambu only delivers via cloud OTA
-    - :material-information: **Installed** (blue) — the version currently on the printer
+- **Относительная версия** — `newer` (новее), `current` (текущая) или `older` (старее) установленной
+- **Состояние файла** — одно из следующих:
+    - :material-check-circle: **Доступна** (зелёный) — опубликован автономный пакет, который можно установить
+    - :material-cancel: **Недоступна** (серый) — версия объявлена, но Bambu не опубликовала автономный пакет. Обычно это точечные исправления (например, `01.01.03.00`), которые Bambu доставляет только через облачное OTA
+    - :material-information: **Установлена** (синий) — текущая версия на принтере
 
-Click any **Usable** row to select it — this updates the release-notes block above and enables the **Upload Firmware** button for that specific version. You can select versions both newer *and* older than the one currently installed, which allows rolling back without manually sourcing firmware files.
+Нажмите любую строку **Доступна**, чтобы выбрать её: блок примечаний обновится, а кнопка **Загрузить прошивку** станет доступна для выбранной версии. Можно выбрать как более новую, так и более старую версию, откатившись без самостоятельного поиска файла прошивки.
 
-!!! tip "Rollback support"
-    Selecting an older usable version enables the install workflow for that build. The file is downloaded from Bambu Lab's official CDN and uploaded to the SD card exactly as for a forward upgrade — after which you trigger the downgrade from the printer's screen (Settings → Firmware → Update from SD card). The printer itself accepts both newer and older firmware files.
+!!! tip "Поддержка отката"
+    Выбор доступной более старой версии позволяет установить её. Как и при обычном обновлении, файл скачивается с официальной CDN Bambu Lab и загружается на SD-карту. Затем запустите переход на старую версию с экрана принтера (Настройки → Прошивка → Обновить с SD-карты). Принтер принимает как новые, так и старые файлы прошивки.
 
-### Step 3: Check Prerequisites
+### Шаг 3. Проверьте предварительные условия {#step-3-check-prerequisites}
 
-Before uploading, the system checks:
+Перед загрузкой система проверяет:
 
-- :material-sd: SD card is inserted
-- :material-database: Sufficient free space (~400MB recommended)
-- :material-wifi: Printer is connected
-- :material-sleep: Printer is idle: no print running, paused or starting (a finished or failed print counts as idle). The firmware goes onto the SD card the printer prints from. If a print starts while the firmware is still being downloaded, the upload stops before anything is written to the card. While the upload runs, the print queue does not start a job on that printer.
+- :material-sd: SD-карта вставлена
+- :material-database: Достаточно свободного места (рекомендуется около 400 МБ)
+- :material-wifi: Принтер подключён
+- :material-sleep: Принтер простаивает: печать не выполняется, не приостановлена и не запускается (завершённая или неудачная печать считается простоем). Прошивка помещается на SD-карту, с которой печатает принтер. Если печать начнётся во время скачивания прошивки, загрузка остановится до записи на карту. Пока идёт загрузка, очередь не запускает задания на этом принтере.
 
-### Step 4: Upload Firmware
+### Шаг 4. Загрузите прошивку {#step-4-upload-firmware}
 
-1. Click **Upload Firmware**
-2. Progress bar shows real-time upload status
-3. Wait for upload to complete (typically 2-5 minutes for ~300MB)
+1. Нажмите **Загрузить прошивку**
+2. Индикатор показывает ход загрузки в реальном времени
+3. Дождитесь завершения (обычно 2–5 минут для файла около 300 МБ)
 
-### Step 5: Trigger Update on Printer
+### Шаг 5. Запустите обновление на принтере {#step-5-trigger-update-on-printer}
 
-After upload completes, go to the printer's touchscreen:
+После загрузки на сенсорном экране принтера:
 
-1. Navigate to **Settings**
-2. Select **Firmware**
-3. Choose **Update from SD card**
-4. Wait for update to complete (10-20 minutes)
+1. Откройте **Настройки**
+2. Выберите **Прошивка**
+3. Выберите **Обновить с SD-карты**
+4. Дождитесь завершения обновления (10–20 минут)
 
-!!! warning "Do Not Power Off"
-    Never power off the printer during a firmware update. Wait for the process to complete fully.
-
----
-
-## :material-cached: Firmware Cache
-
-Downloaded firmware files are cached locally:
-
-- **Location**: `firmware/` directory
-- **Naming**: `{MODEL}_{VERSION}.bin`
-- **Reuse**: Cached files are reused for subsequent uploads
-
-This speeds up updates when:
-
-- Updating multiple printers of the same model
-- Re-uploading after a failed update
-- Uploading to a new printer
+!!! warning "Не выключайте питание"
+    Никогда не выключайте принтер во время обновления прошивки. Дождитесь полного завершения процесса.
 
 ---
 
-## :material-printer-3d: Supported Printers
+## :material-cached: Кэш прошивок {#firmware-cache}
 
-All Bambu Lab printer models are supported:
+Скачанные файлы прошивок кэшируются локально:
 
-| Series | Models |
+- **Расположение**: каталог `firmware/`
+- **Имена файлов**: `{MODEL}_{VERSION}.bin`
+- **Повторное использование**: кэшированные файлы используются при последующих загрузках
+
+Это ускоряет процесс при:
+
+- Обновлении нескольких принтеров одной модели
+- Повторной загрузке после неудачного обновления
+- Загрузке на новый принтер
+
+---
+
+## :material-printer-3d: Поддерживаемые принтеры {#supported-printers}
+
+Поддерживаются все модели принтеров Bambu Lab:
+
+| Серия | Модели |
 |--------|--------|
 | **X1** | X1C, X1, X1E |
 | **X2** | X2D |
@@ -145,47 +145,47 @@ All Bambu Lab printer models are supported:
 
 ---
 
-## :material-help-circle: Troubleshooting
+## :material-help-circle: Устранение неполадок {#troubleshooting}
 
-### No Update Badge
+### Индикатор обновления отсутствует {#no-update-badge}
 
-- Printer may already be on latest firmware
-- Check printer is connected (online status)
-- Firmware check may still be loading
+- Возможно, на принтере уже установлена последняя версия
+- Проверьте, подключён ли принтер
+- Проверка прошивки может ещё выполняться
 
-### Upload Fails
+### Ошибка загрузки {#upload-fails}
 
-- Ensure SD card is inserted and has space
-- Check printer is not currently printing
-- Verify network connectivity
+- Убедитесь, что SD-карта вставлена и на ней достаточно места
+- Проверьте, что принтер сейчас не печатает
+- Проверьте подключение к сети
 
-### Upload Stuck
+### Загрузка остановилась {#upload-stuck}
 
-- Large files (300MB+) take several minutes
-- Progress shows real bytes transferred
-- 10-minute timeout prevents indefinite hangs
+- Передача больших файлов (от 300 МБ) занимает несколько минут
+- Индикатор показывает фактически переданные байты
+- Тайм-аут в 10 минут предотвращает бесконечное зависание
 
-### Printer Doesn't See Update
+### Принтер не видит обновление {#printer-doesnt-see-update}
 
-- Firmware file must be in SD card root
-- File must have correct `.bin` extension
-- Try removing and reinserting SD card
+- Файл прошивки должен находиться в корне SD-карты
+- Файл должен иметь правильное расширение `.bin`
+- Попробуйте извлечь и снова вставить SD-карту
 
 ---
 
-## :material-frequently-asked-questions: FAQ
+## :material-frequently-asked-questions: Частые вопросы {#faq}
 
-??? question "Can I update cloud-connected printers this way?"
-    Yes, but it's unnecessary. Cloud-connected printers can receive OTA updates directly. This feature is primarily for LAN-only mode users.
+??? question "Можно ли так обновить принтер, подключённый к облаку?"
+    Да, но в этом нет необходимости. Такие принтеры могут получать OTA-обновления напрямую. Эта функция в первую очередь предназначена для режима только локальной сети.
 
-??? question "Is the firmware from official sources?"
-    Yes. Firmware is downloaded directly from Bambu Lab's official CDN servers.
+??? question "Прошивка поступает из официальных источников?"
+    Да. Прошивка скачивается непосредственно с официальных CDN-серверов Bambu Lab.
 
-??? question "Will this void my warranty?"
-    No. Using official Bambu Lab firmware through SD card update is a supported method.
+??? question "Лишит ли это гарантии?"
+    Нет. Обновление с SD-карты с использованием официальной прошивки Bambu Lab поддерживается производителем.
 
-??? question "Can I downgrade firmware?"
-    Yes. The firmware update modal lists all versions Bambu has announced for your printer, including those older than the currently installed version. Any row marked **Usable** can be installed — newer or older — so rollback is supported directly from the UI without hand-flashing files. Versions announced but not published as an offline package (hot-fix releases) are shown as **Unavailable** and cannot be installed from Bambuddy.
+??? question "Можно ли установить более старую прошивку?"
+    Да. В окне обновления перечислены все объявленные Bambu версии для принтера, включая более старые. Можно установить любую версию со статусом **Доступна** — новую или старую. Откат поддерживается прямо в интерфейсе без ручной прошивки файлов. Объявленные версии без автономного пакета (срочные исправления) имеют статус **Недоступна** и не устанавливаются из Bambuddy.
 
-??? question "What if the update fails?"
-    The printer typically reverts to the previous firmware if an update fails. You can retry the upload process.
+??? question "Что будет при ошибке обновления?"
+    Обычно при ошибке принтер возвращается к предыдущей прошивке. Вы можете повторить загрузку.
