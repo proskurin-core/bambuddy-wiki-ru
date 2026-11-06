@@ -1,717 +1,690 @@
 ---
-title: AMS, Humidity & Drying
-description: Monitor AMS and AMS-HT filament systems, manual and automatic remote drying, ambient drying, scheduled drying, configurable presets
+title: AMS, влажность и сушка
+description: Мониторинг систем филамента AMS и AMS-HT, ручная и автоматическая удалённая сушка, сушка без нагрева, сушка по расписанию и настраиваемые пресеты
 ---
 
-# AMS & Humidity Monitoring
+# Мониторинг AMS и влажности {#ams-humidity-monitoring}
 
-Bambuddy provides comprehensive monitoring for your AMS (Automatic Material System) and AMS-HT (High Temperature) units.
+Bambuddy обеспечивает подробный мониторинг модулей AMS (Automatic Material System) и AMS-HT (High Temperature).
 
 ---
 
-## :material-tray-full: AMS Slot Status
+## :material-tray-full: Состояние слотов AMS {#ams-slot-status}
 
-Each AMS slot displays:
+Каждый слот AMS показывает:
 
-| Information | Description |
+| Сведения | Описание |
 |-------------|-------------|
-| **Filament color** | Visual color swatch |
-| **Material type** | PLA, PETG, ABS, ASA, etc. |
-| **Remaining** | Estimated filament left |
-| **Active** | Currently feeding indicator |
-| **K** | Pressure advance value for the slot's calibration profile, when one is bound |
+| **Цвет филамента** | Образец цвета |
+| **Тип материала** | PLA, PETG, ABS, ASA и т. д. |
+| **Остаток** | Расчётное количество оставшегося филамента |
+| **Активен** | Индикатор текущей подачи |
+| **K** | Значение опережения давления для профиля калибровки слота, если профиль привязан |
 
-!!! note "When a slot shows no K value"
-    Most printers do not report a K value per slot. They report the index of a
-    calibration profile, and Bambuddy resolves the number from the printer's own
-    [K-profile](k-profiles.md) table. A slot shows no K value when it has no
-    profile bound, when the printer has not been asked for that nozzle's table
-    yet, or when the index cannot be tied to one nozzle with certainty --
-    Bambuddy shows nothing rather than the other nozzle's number.
+!!! note "Когда слот не показывает значение K"
+    Большинство принтеров не сообщают значение K для каждого слота. Они сообщают индекс профиля калибровки, а Bambuddy получает значение из таблицы [K-профилей](k-profiles.md) самого принтера. Значение K не отображается, если к слоту не привязан профиль, если таблица для сопла ещё не была запрошена у принтера или если индекс нельзя однозначно связать с одним соплом. Bambuddy оставляет поле пустым, чтобы не показать значение другого сопла.
 
-    On a dual-nozzle printer the profile is matched to the slot's own hotend
-    first. Some printers file one profile per filament rather than one per
-    hotend, so both nozzles' slots point at the same entries; where that is
-    what the printer sent, the calibration index is used on its own.
+    На принтере с двумя соплами профиль сначала сопоставляется с хотэндом данного слота. Некоторые принтеры хранят по одному профилю на филамент, а не на хотэнд, поэтому слоты обоих сопел указывают на одни и те же записи. Когда принтер передаёт данные именно так, используется только индекс калибровки.
 
-### Slot hover card
+### Карточка при наведении на слот {#slot-hover-card}
 
-Hovering a slot opens a card headed by the filament's colour, with the profile, K factor, fill level and — when a spool from [Inventory](inventory.md) is bound to the slot — the spool's own name.
+При наведении на слот открывается карточка с цветом филамента в заголовке, профилем, коэффициентом K и уровнем заполнения. Если к слоту привязана катушка из раздела [Филамент](inventory.md), показывается и её название.
 
-**The header shows the spool's colour, not the printer's.** A printer reports one hex per tray and nothing else, so a multi-colour roll would otherwise read as a single flat band. When the bound spool carries **Extra colours** or an **Effect**, the header paints that spool's full swatch — the same gradient, colour wheel or effect overlay the Inventory page draws — and the colour *name* is the one you gave the spool rather than whatever Bambu calls that hex. A plain single-colour spool, and any slot with no spool bound, is unchanged.
+**В заголовке показан цвет катушки, а не принтера.** Принтер сообщает для лотка только одно шестнадцатеричное значение цвета, поэтому многоцветная катушка иначе отображалась бы однотонной полосой. Если у привязанной катушки заданы **Дополнительные цвета** или **Эффект**, заголовок показывает полный образец: тот же градиент, цветовой круг или наложение эффекта, что и на странице филамента. *Название* цвета берётся из данных катушки, а не из названия Bambu для этого значения. Для обычной одноцветной катушки и слота без привязанной катушки отображение не меняется.
 
-!!! note "Spoolman mode renders the gradient but not the effect"
-    Spoolman stores a filament's extra stops in `multi_color_hexes`, which Bambuddy reads, so gradient and multi-colour spools render the same in both inventory modes. Spoolman has no field for a surface *effect* at all — its only related field describes how the stops are laid out — so silk, sparkle, wood and the rest are available on internally-managed spools only.
+!!! note "В режиме Spoolman отображается градиент, но не эффект"
+    Spoolman хранит дополнительные цвета филамента в `multi_color_hexes`, которые читает Bambuddy, поэтому градиентные и многоцветные катушки отображаются одинаково в обоих режимах учёта. Для эффекта поверхности в Spoolman отдельного поля нет: единственное связанное поле описывает расположение цветов. Поэтому эффекты шёлка, блёсток, дерева и другие доступны только для катушек, управляемых внутри Bambuddy.
 
-### RFID Re-read
+### Повторное чтение RFID {#rfid-re-read}
 
-Refresh filament information for individual AMS slots:
+Обновите сведения о филаменте отдельного слота AMS:
 
-1. Hover over an AMS slot on the printer card
-2. Click the menu button (:material-dots-vertical:) that appears
-3. Select **Re-read RFID**
-4. A loading indicator appears while the printer reads the RFID tag
-5. Filament information updates automatically when complete
+1. Наведите курсор на слот AMS на карточке принтера
+2. Нажмите появившуюся кнопку меню (:material-dots-vertical:)
+3. Выберите **Повторно считать RFID**
+4. Во время чтения RFID-метки принтером отображается индикатор загрузки
+5. После завершения сведения о филаменте автоматически обновятся
 
-!!! note "Availability"
-    The re-read menu is hidden when the printer is busy (printing). Wait until the printer is idle to re-read RFID data.
+!!! note "Доступность"
+    Меню повторного чтения скрыто, когда принтер занят печатью. Дождитесь простоя принтера.
 
-!!! tip "When to Re-read"
-    Use this feature when you've swapped a spool but the AMS hasn't automatically detected the change, or if filament information seems incorrect.
+!!! tip "Когда использовать повторное чтение"
+    Используйте его, если заменили катушку, а AMS не обнаружила замену автоматически, или если сведения о филаменте кажутся неверными.
 
-### Load / Unload Filament
+### Загрузка и выгрузка филамента {#load-unload-filament}
 
-Drive Load and Unload directly from any AMS slot or external spool — no need to walk to the touchscreen:
+Управляйте загрузкой и выгрузкой прямо из любого слота AMS или внешней катушки, не подходя к сенсорному экрану:
 
-1. Hover over an AMS slot or external spool on the printer card
-2. Click the menu button (:material-dots-vertical:) that appears
-3. Select **Load** to feed that tray, or **Unload** to retract whatever is currently loaded
+1. Наведите курсор на слот AMS или внешнюю катушку на карточке принтера
+2. Нажмите появившуюся кнопку меню (:material-dots-vertical:)
+3. Выберите **Загрузить**, чтобы подать филамент из этого лотка, или **Выгрузить**, чтобы отвести загруженный филамент
 
-!!! note "Availability"
-    The Load / Unload menu is hidden while the printer is `RUNNING`. Wait until the printer is idle.
+!!! note "Доступность"
+    Меню загрузки и выгрузки скрыто, пока принтер находится в состоянии `RUNNING`. Дождитесь простоя.
 
-!!! info "Dual-extruder H2D"
-    On the H2D with two external spools, **Ext-L** (left) and **Ext-R** (right) each drive their own nozzle. Loading from Ext-R uses the right nozzle's actual current temperature for the load command (matching BambuStudio's behaviour); a sensible 215 °C fallback is used if the right nozzle reports as cold or unknown.
+!!! info "H2D с двумя экструдерами"
+    На H2D с двумя внешними катушками **Ext-L** (левая) и **Ext-R** (правая) каждая подаёт филамент в своё сопло. При загрузке из Ext-R используется фактическая текущая температура правого сопла, как в Bambu Studio; если она показывает холодное или неизвестное состояние, используется резервное значение 215 °C.
 
-    **Unload** is aimed at the slot whose menu you used, so on a dual-nozzle printer with both hotends loaded it retracts the right one. If no hotend is fed from that slot, nothing is sent and Bambuddy says so.
+    **Выгрузка** направлена на слот, из меню которого она вызвана, поэтому на принтере с двумя соплами и загруженными хотэндами выгружается нужное сопло. Если ни один хотэнд не получает филамент из этого слота, команда не отправляется, а Bambuddy сообщает об этом.
 
-!!! info "With a Filament Track Switch fitted"
-    A slot behind the switch can feed either nozzle, so **Load** asks which one before it sends anything — the same question Bambu Studio asks in the same place. Neither nozzle is preselected, and the one already fed from that slot is greyed out. See [Filament Track Switch (FTS) Support](#filament-track-switch-fts-support).
+!!! info "При установленном Filament Track Switch"
+    Слот за переключателем может подавать филамент в любое сопло, поэтому перед **загрузкой** требуется выбрать сопло — тот же вопрос в этом месте задаёт Bambu Studio. Ни одно сопло не выбрано заранее, а то, в которое слот уже подаёт филамент, недоступно. См. [Поддержка Filament Track Switch (FTS)](#filament-track-switch-fts-support).
 
-    If the switch is fitted but any AMS has not been assigned to an inlet yet, Load is refused with a note to finish **Manual AMS Setup** on the printer — until then the switch has no route to send filament down.
+    Если переключатель установлен, но какая-либо AMS ещё не назначена входу, загрузка отклоняется с предложением завершить **ручную настройку AMS** на принтере: до этого переключателю неизвестен маршрут подачи филамента.
 
-!!! warning "Permission"
-    Load / Unload requires the `printers:control` permission — the same scope used to start, stop, pause, and resume prints.
+!!! warning "Разрешение"
+    Для загрузки и выгрузки требуется `printers:control` — то же разрешение, что используется для запуска, остановки, паузы и продолжения печати.
 
-### Configure AMS Slot
+### Настройка слота AMS {#configure-ams-slot}
 
-Manually configure AMS slots for third-party or generic filaments. This tells the printer which filament profile to use for a specific slot (temperatures, flow rate, pressure advance).
+Настройте слоты AMS вручную для стороннего или универсального филамента. Так вы указываете принтеру профиль для конкретного слота: температуру, поток и опережение давления.
 
-1. Hover over an AMS slot on the printer card
-2. Click the menu button (:material-dots-vertical:) that appears
-3. Select **Configure Slot**
-4. Choose a filament preset (from Bambu Cloud, local OrcaSlicer imports, or the built-in Bambu filament catalog — see [preset sources](inventory.md#where-presets-come-from))
-5. Select a matching K profile (pressure advance calibration)
-6. Optionally set a custom color using the color picker
-7. Click **Configure Slot** to apply
+1. Наведите курсор на слот AMS на карточке принтера
+2. Нажмите появившуюся кнопку меню (:material-dots-vertical:)
+3. Выберите **Настроить слот**
+4. Выберите пресет филамента из Bambu Cloud, локально импортированных профилей OrcaSlicer или встроенного каталога Bambu — см. [источники пресетов](inventory.md#where-presets-come-from)
+5. Выберите соответствующий K-профиль калибровки опережения давления
+6. При необходимости задайте собственный цвет в палитре
+7. Нажмите **Настроить слот**, чтобы применить изменения
 
-**Color Picker Features:**
+**Возможности выбора цвета:**
 
-- 8 basic colors shown by default (White, Black, Red, Blue, Green, Yellow, Orange, Gray)
-- Click **+** to expand 24 additional colors
-- Enter custom hex codes or color names (e.g., "brown", "FF8800")
-- Live preview of selected color
+- По умолчанию показаны 8 основных цветов: белый, чёрный, красный, синий, зелёный, жёлтый, оранжевый и серый
+- Нажмите **+**, чтобы раскрыть ещё 24 цвета
+- Введите собственный шестнадцатеричный код или название цвета, например «brown» или «FF8800»
+- Выбранный цвет отображается сразу
 
-!!! tip "User Presets"
-    Presets you made yourself &mdash; in Bambu Studio, in OrcaSlicer, or imported locally &mdash; are offered alongside Bambu's own. Bambuddy sends the preset's own filament ID when it has one, and keeps the slot on a resolvable ID when it hasn't. What that means on the printer's screen is explained just below.
+!!! tip "Пользовательские пресеты"
+    Пресеты, которые вы создали в Bambu Studio или OrcaSlicer либо импортировали локально, доступны наряду с пресетами Bambu. Bambuddy отправляет собственный ID филамента пресета, если он имеется, а иначе оставляет в слоте ID, который можно определить. Как это отображается на экране принтера, описано ниже.
 
-#### Why the Printer May Still Show a Generic Filament { #custom-preset-display }
+#### Почему принтер может показывать универсальный филамент {#custom-preset-display}
 
-Bambuddy's slot card, the printer's own screen and Bambu Studio's Device tab are not answering the same question. Bambuddy shows the preset **you picked**, which it stores next to the slot. The printer and the slicer show whatever the **printer** could resolve from the slot's *filament ID* &mdash; an eight-character field that is the one thing a filament choice travels in.
+Карточка слота Bambuddy, экран принтера и вкладка устройства Bambu Studio отвечают на разные вопросы. Bambuddy показывает **выбранный вами** пресет, который он сохраняет рядом со слотом. Принтер и слайсер показывают то, что **принтер** смог определить по *ID филамента* слота — восьмисимвольному полю, в котором передаётся выбор филамента.
 
-So the three can legitimately disagree. A slot that reads as your custom preset in Bambuddy while both the LCD and Bambu Studio say *Generic PLA* is almost always one of the two cases below, not a setting that failed to arrive.
+Поэтому значения могут различаться. Если Bambuddy показывает пользовательский пресет, а экран и Bambu Studio показывают *Generic PLA*, почти всегда причина в одном из двух случаев ниже, а не в том, что настройка не дошла.
 
-**1. The preset has no filament ID of its own.**
+**1. У пресета нет собственного ID филамента.**
 
-A custom preset only becomes a filament in its own right when it carries its own ID &mdash; a `P` followed by seven hex characters. Bambu Studio mints one when you create a genuinely new filament. It does **not** when the preset merely overrides a few fields of a generic base. An OrcaSlicer preset synced to *Bambu* Cloud has no such field at all; one synced to [Orca Cloud](orca-cloud-profiles.md) usually carries one, and Bambuddy reads it from there.
+Пользовательский пресет становится самостоятельным филаментом, только если у него есть собственный ID: `P` и семь шестнадцатеричных символов. Bambu Studio создаёт такой ID при создании действительно нового филамента, но **не** при переопределении нескольких полей универсального базового пресета. У пресета OrcaSlicer, синхронизированного с *Bambu* Cloud, такого поля вовсе нет; у профиля, синхронизированного с [Orca Cloud](orca-cloud-profiles.md), оно обычно есть, и Bambuddy читает его оттуда.
 
-With no ID of its own, there is nothing custom to send. Bambuddy then puts an ID that does resolve in the slot, so the printer's calibration table and the slicer's filament matching keep working. For a Bambu Cloud preset, that is the ID the slot already had, or the generic for the material. For an Orca Cloud profile, it is the ID of the profile it inherits from, or the generic for the material, and the Configure dialog warns you when it had to use the generic. The name they show is that filament's, not your preset's. Bambuddy still sends the preset's full cloud ID alongside it, which is what lets Bambu Studio pick your settings up when it can.
+Без собственного ID передавать пользовательское значение нечего. Тогда Bambuddy записывает в слот распознаваемый ID, чтобы таблица калибровки принтера и сопоставление филамента в слайсере продолжали работать. Для пресета Bambu Cloud это прежний ID слота или универсальный ID материала. Для профиля Orca Cloud — ID родительского профиля или универсальный ID материала; при использовании универсального ID окно настройки показывает предупреждение. Отображается название соответствующего филамента, а не вашего пресета. Bambuddy по-прежнему отправляет вместе с ним полный облачный ID пресета, что позволяет Bambu Studio применить ваши настройки, когда это возможно.
 
-!!! note "Why not send the custom ID anyway?"
-    Earlier versions did. The cloud ID is eighteen characters and the field holds eight, so the printer stored a truncated fragment, reported success, and ended up pointing at something that resolves nowhere &mdash; the slicer showed *Generic* **and** the slot lost its calibration entry. Fixed in 1.2.6b1; see [#3003](https://github.com/maziggy/bambuddy/issues/3003).
+!!! note "Почему нельзя всё равно отправить пользовательский ID?"
+    В ранних версиях так и происходило. Облачный ID содержит 18 символов, а поле вмещает восемь, поэтому принтер сохранял обрезанный фрагмент, сообщал об успехе и ссылался на нераспознаваемое значение. В результате слайсер показывал *Generic*, **а** слот терял запись калибровки. Исправлено в 1.2.6b1; см. [#3003](https://github.com/maziggy/bambuddy/issues/3003).
 
-**2. The printer has never seen the preset.**
+**2. Принтер никогда не получал этот пресет.**
 
-Even a preset that has its own ID is only a *name* the printer can print on its screen once it has fetched your filament list from Bambu Cloud. It does that when you open the filament settings screen on the printer while it is connected to the cloud.
+Даже пресет с собственным ID становится *названием*, которое принтер может показать на экране, только после получения списка вашего филамента из Bambu Cloud. Это происходит, когда вы открываете экран настройки филамента на принтере, подключённом к облаку.
 
-Developer Mode &mdash; which Bambuddy needs in order to control the printer at all &mdash; is LAN-only. Bambu state it plainly: Developer Mode *"will not allow the printer to be connected to Bambu Cloud, so it is exclusively working in LAN Mode"* ([Third-party Integration](https://wiki.bambulab.com/en/software/third-party-integration)). A printer that has only ever run in Developer Mode has no custom-filament data to resolve against and falls back to the material.
+Режим разработчика, необходимый Bambuddy для управления принтером, работает только в локальной сети. Bambu прямо указывает, что режим разработчика *не позволяет принтеру подключаться к Bambu Cloud и работает исключительно в локальном режиме* ([Third-party Integration](https://wiki.bambulab.com/en/software/third-party-integration)). У принтера, который всегда работал только в режиме разработчика, нет данных пользовательского филамента, поэтому он показывает название материала.
 
-Bambu document the way around it on [Problems and solutions for Custom Filament](https://wiki.bambulab.com/en/software/bambu-studio/custom-filament-issue): create the preset with the printer in cloud mode, then *"go to the printer screen to select the Filament"* &mdash; entering that screen is what saves the filament data onto the printer itself. Afterwards the printer can name it in LAN mode too.
+Bambu описывает решение в [Problems and solutions for Custom Filament](https://wiki.bambulab.com/en/software/bambu-studio/custom-filament-issue): создайте пресет, пока принтер работает в облачном режиме, затем откройте на его экране выбор филамента — именно вход на этот экран сохраняет данные филамента в самом принтере. После этого принтер сможет показывать его название и в локальном режиме.
 
-!!! warning "Presets flagged Action Required in Bambu Studio"
-    A preset created by copying another *user* preset can never be fetched by the printer, whatever mode it is in. Bambu Studio flags these with **\[Action Required\]** in the Custom Filament list. Delete and recreate them from a Bambu base preset &mdash; the same page above walks through it.
+!!! warning "Пресеты с пометкой Action Required в Bambu Studio"
+    Принтер никогда не сможет получить пресет, созданный копированием другого *пользовательского* пресета, независимо от режима. Bambu Studio отмечает их как **\[Action Required\]** в списке пользовательского филамента. Удалите их и создайте заново на основе базового пресета Bambu, как описано на странице выше.
 
-#### Printer Model Filtering
+#### Фильтрация по модели принтера {#printer-model-filtering}
 
-Filament presets in the Configure AMS Slot modal are automatically filtered by the printer model. This means you only see presets that are compatible with the printer you are configuring:
+Пресеты филамента в окне настройки слота AMS автоматически фильтруются по модели принтера, чтобы показывать только совместимые:
 
-- **Cloud presets** are matched by the model suffix in the preset name (e.g., `@BBL X1C`, `@BBL P1S`, `@BBL H2D`). Generic presets without a model suffix are always included.
-- **Local presets** are filtered by their `compatible_printers` field to show only those that list the current printer model.
-- The **currently-configured preset** for the slot is always shown in the list, regardless of model filter, so you can see what is already set even if the preset would otherwise be filtered out.
+- **Облачные пресеты** сопоставляются по суффиксу модели в названии, например `@BBL X1C`, `@BBL P1S`, `@BBL H2D`. Универсальные пресеты без суффикса всегда включаются.
+- **Локальные пресеты** фильтруются по полю `compatible_printers`, чтобы показывать только те, где указана текущая модель.
+- **Текущий пресет слота** всегда остаётся в списке независимо от фильтра модели, чтобы можно было увидеть существующую настройку.
 
-This filtering reduces clutter and prevents accidentally selecting a preset intended for a different printer.
+Фильтрация уменьшает число лишних вариантов и помогает не выбрать пресет для другого принтера.
 
-The picker also filters by the **nozzle diameter actually installed** on the printer, not a fixed 0.4 mm. If you have a 0.6 mm nozzle fitted, you'll see the 0.6 mm profiles for your trays; on a dual-nozzle H2D each AMS shows the profiles for the nozzle that feeds it. Configuring a slot with a profile that doesn't match the installed nozzle is what causes the printer to reject a print with *"Failed to get AMS mapping table"* — see [Troubleshooting](../reference/troubleshooting.md#nozzle-size-mismatch).
+Список также учитывает **фактически установленный диаметр сопла**, а не фиксированные 0,4 мм. Если установлено сопло 0,6 мм, для лотков показываются профили на 0,6 мм; на H2D с двумя соплами каждая AMS показывает профили сопла, которое она питает. Настройка слота профилем, не соответствующим установленному соплу, вызывает отказ печати с сообщением *«Failed to get AMS mapping table»* — см. [Устранение неполадок](../reference/troubleshooting.md#nozzle-size-mismatch).
 
-#### Which K Profiles Are Offered
+#### Какие K-профили предлагаются {#which-k-profiles-are-offered}
 
-The **K Profile (Pressure Advance)** dropdown lists the calibrations stored on the printer itself, narrowed to the ones that suit the filament preset you picked above it. A profile is offered when either of these holds:
+Список **K-профиль (опережение давления)** показывает калибровки, сохранённые на самом принтере, отобранные по выбранному выше пресету. Профиль предлагается, если выполняется хотя бы одно условие:
 
-- Its **filament ID matches the selected preset's**. This includes Bambu's generic IDs — a slot set to *Generic PLA* offers every profile the printer calibrated under Generic PLA, whatever you named them. This is how Bambu Studio's Flow Dynamics list behaves, because the printer keeps one calibration table per filament ID.
-- Its **name matches the preset's material** (and brand, when the preset names one). This is the fallback for printers that report no filament ID with their calibrations.
+- Его **ID филамента совпадает с ID выбранного пресета**. Это относится и к универсальным ID Bambu: слот с *Generic PLA* предлагает все профили, откалиброванные под Generic PLA, независимо от их названия. Так работает список Flow Dynamics в Bambu Studio, поскольку принтер хранит одну таблицу калибровки на ID филамента.
+- Его **название соответствует материалу пресета** и бренду, если он указан. Это резервный вариант для принтеров, не сообщающих ID филамента вместе с калибровками.
 
-The profile currently bound to the slot is always shown, even if it matches neither rule, so the dropdown always reflects what the printer is actually using.
+Профиль, привязанный к слоту, всегда отображается, даже если не соответствует ни одному условию, чтобы список отражал фактическую настройку принтера.
 
-Below those, **Other K profiles on this printer** lists everything else the printer holds. Profile names are free text — a calibration named after its colour ("Dark Brown", "Marble") carries nothing that ties it to a material — so this group guarantees any profile on the printer can be selected. Picking one from it works exactly like picking a matching one: Bambuddy realigns the slot's filament context to the profile so the printer keeps the selection.
+Ниже группа **Другие K-профили на этом принтере** содержит все остальные профили. Их названия произвольны: калибровка по названию цвета («Dark Brown», «Marble») не указывает материал, поэтому эта группа позволяет выбрать любой профиль принтера. Выбор работает как для подходящего профиля: Bambuddy согласует контекст филамента слота с профилем, чтобы принтер сохранил выбор.
 
-!!! tip "Nothing in the list?"
-    If the dropdown is empty, the printer has no calibrations for the installed nozzle diameter. Run a Flow Dynamics calibration, or add one from [K-Profiles](k-profiles.md).
+!!! tip "Список пуст?"
+    Если список пуст, у принтера нет калибровок для установленного диаметра сопла. Выполните калибровку Flow Dynamics или добавьте её в разделе [K-профили](k-profiles.md).
 
-    On a dual-nozzle printer the list is narrowed to the hotend the slot feeds, but only when the printer files its calibrations that way. When it files one profile per filament instead -- both AMS units pointing at the same entries -- every profile is offered on both sides.
+    На принтере с двумя соплами список ограничивается хотэндом слота, но только если принтер хранит калибровки таким образом. Если он хранит один профиль на филамент и обе AMS указывают на одни записи, все профили предлагаются с обеих сторон.
 
-#### Pre-Population for Configured Slots
+#### Предзаполнение настроенного слота {#pre-population-for-configured-slots}
 
-When you open the Configure AMS Slot modal for a slot that already has a configuration, Bambuddy pre-populates the form fields so you can review or adjust the current settings without starting from scratch:
+Когда вы открываете окно настройки уже настроенного слота AMS, Bambuddy заполняет поля текущими значениями, чтобы их можно было проверить и изменить:
 
-- **Filament preset** — The previously-configured preset is pre-selected. Bambuddy resolves this from the saved preset mapping or by matching the slot's `tray_info_idx` to the corresponding preset.
-- **Color** — The color picker is pre-populated with the slot's current filament color.
-- **K-profile** — The active pressure advance profile is pre-selected by matching the slot's `cali_idx` to the available K-profile entries.
-- **Auto-scroll** — The preset list automatically scrolls to the selected item so it is visible without manual scrolling.
+- **Пресет филамента** — ранее настроенный пресет выбирается автоматически. Bambuddy определяет его по сохранённому сопоставлению или по совпадению `tray_info_idx` слота с пресетом.
+- **Цвет** — палитра заполняется текущим цветом филамента слота.
+- **K-профиль** — активный профиль опережения давления выбирается сопоставлением `cali_idx` слота с доступными K-профилями.
+- **Автопрокрутка** — список пресетов прокручивается к выбранному элементу.
 
-!!! tip "Quick Adjustments"
-    Pre-population makes it easy to tweak a single setting (for example, updating just the color or K-profile) without re-selecting every field from scratch.
+!!! tip "Быстрое изменение"
+    Предзаполнение позволяет изменить только один параметр, например цвет или K-профиль, не выбирая все поля заново.
 
-#### Reset Slot
+#### Сброс слота {#reset-slot}
 
-**Reset Slot** at the bottom left of the dialog clears the slot's filament setting on the printer and the preset Bambuddy stored for it. It asks first, and it is not available while a print is running, paused or starting, since the print may be feeding from that slot.
+Кнопка **Сбросить слот** внизу слева очищает настройку филамента слота на принтере и сохранённый Bambuddy пресет. Действие требует подтверждения и недоступно во время печати, паузы или запуска, поскольку печать может получать филамент из этого слота.
 
-### Multi-AMS Support
+### Поддержка нескольких AMS {#multi-ams-support}
 
-Bambuddy supports multiple AMS units per printer:
+Bambuddy поддерживает несколько модулей AMS на одном принтере:
 
-- Up to 4 AMS units (16 total slots)
-- Each unit displayed with its slots
-- Visual indication of active slot during printing
+- До 4 модулей AMS (всего 16 слотов)
+- Каждый модуль показывается со своими слотами
+- Активный во время печати слот отмечается визуально
 
-#### External Spool Holders
+#### Внешние держатели катушек {#external-spool-holders}
 
-Printers without an AMS (or with filament loaded outside the AMS) use an external spool holder. The H2D is a dual-nozzle printer with two external spool positions — **Ext-L** (left) and **Ext-R** (right) — each feeding its respective nozzle. Bambuddy displays both external slots and supports configuring, color-setting, and K-profile assignment for each one independently.
+Принтеры без AMS и с филаментом вне AMS используют внешний держатель. H2D — принтер с двумя соплами и двумя внешними позициями: **Ext-L** (левая) и **Ext-R** (правая), каждая подаёт филамент в соответствующее сопло. Bambuddy показывает оба внешних слота и позволяет независимо настраивать их, задавать цвет и K-профиль.
 
-##### Hiding it from the printer card
+##### Скрытие на карточке принтера {#hiding-it-from-the-printer-card}
 
-If you never feed filament from the external holder, its card is just taking up room next to your AMS units. The eye icon at the right-hand end of the **Filaments** header hides it; click it again to bring it back. The choice is remembered per printer and per browser, so it does not affect anyone else using the same Bambuddy.
+Если вы никогда не подаёте филамент с внешнего держателя, его карточка занимает место рядом с AMS. Значок глаза справа в заголовке **Филамент** скрывает её; повторное нажатие возвращает. Выбор запоминается для каждого принтера и браузера отдельно и не влияет на других пользователей Bambuddy.
 
-!!! note "Only offered when an AMS is present"
-    On a printer with no AMS the external spool *is* the filament section, so hiding it would leave the row empty — the icon does not appear there. The same applies if you later unplug the AMS from a printer whose external spool you had hidden: the spool comes back rather than leaving you with a blank row.
+!!! note "Доступно только при наличии AMS"
+    На принтере без AMS внешняя катушка составляет весь раздел филамента, поэтому скрытие оставило бы пустую строку — значок не показывается. Если позже отключить AMS у принтера со скрытой внешней катушкой, катушка снова появится вместо пустой строки.
 
-    On the H2D and H2S both external positions are one card, so they hide and reappear together.
+    На H2D и H2S обе внешние позиции находятся на одной карточке, поэтому скрываются и появляются вместе.
 
 ---
 
-## :material-autorenew: AMS Filament Backup
+## :material-autorenew: Резервирование филамента AMS {#ams-filament-backup}
 
-Bambuddy reads and controls the printer's per-printer **AMS Filament Backup** setting (BambuStudio's "Auto switch filament" / `auto_switch_filament`). When enabled, the printer automatically switches to a matching spool in another slot once one runs out, so a long print can roll across multiple spools of the same filament profile and colour.
+Bambuddy читает и управляет настройкой **Резервирование филамента AMS** для каждого принтера (в Bambu Studio — «Auto switch filament» / `auto_switch_filament`). Если она включена, принтер автоматически переключается на соответствующую катушку в другом слоте, когда текущая закончится. Это позволяет выполнить длительную печать с несколькими катушками одного профиля и цвета.
 
-### Status badge
+### Индикатор состояния {#status-badge}
 
-The Filaments section header on each printer card carries a small badge:
+В заголовке раздела филамента каждой карточки принтера есть небольшой значок:
 
-| Badge | State | Meaning |
+| Значок | Состояние | Значение |
 |:-----:|-------|---------|
-| :material-autorenew:{ style="color: #2196f3" } | **ON** (blue circular arrow) | Auto-switch is enabled. The printer will roll over to a matching peer spool when one empties. |
-| :material-autorenew:{ style="color: #6b7280" } | **OFF** (dim) | Auto-switch is disabled. The print pauses when a spool runs out. |
-| **?** | Unknown | The printer didn't advertise the state (A1 / A1 Mini family — they emit no `cfg` field in push_status). Click disabled. |
+| :material-autorenew:{ style="color: #2196f3" } | **ВКЛ.** (синяя круговая стрелка) | Автопереключение включено. Когда катушка закончится, принтер перейдёт на подходящую резервную. |
+| :material-autorenew:{ style="color: #6b7280" } | **ВЫКЛ.** (приглушённый) | Автопереключение отключено. При окончании катушки печать приостанавливается. |
+| **?** | Неизвестно | Принтер не сообщил состояние (семейство A1 / A1 Mini не передаёт поле `cfg` в push_status). Нажатие недоступно. |
 
-Click the badge to open the **AMS Filament Backup modal**.
+Нажмите значок, чтобы открыть **окно резервирования филамента AMS**.
 
-### Backup modal
+### Окно резервирования {#backup-modal}
 
-A BambuStudio Auto Refill-style view of every backup pair currently formed on the printer.
+Представление в стиле Auto Refill Bambu Studio показывает все резервные пары на принтере.
 
-- **Toggle row** at the top with the current ON / OFF / unsupported state and the same setting wired to the firmware via MQTT.
-- **One ring per backup pair**, modelled on BambuStudio's "Auto Refill" widget. The ring is filled with the actual filament colour; the material name and rotation count (`N× ↻`) sit in the centre; member slot labels (e.g. `A·1`, `B·3`) sit on contrast-aware pills distributed around the colour band. Lone slots (no peer) are deliberately not listed — if a slot doesn't appear in any ring, it has no backup.
-- **R / L badges** on each ring only render on dual-extruder printers (H2D / H2C / X2D) when the extruder map carries two distinct values; single-nozzle printers or printers with routing data not yet reported don't see the badges.
-- **Esc**, click-outside, or the close button dismisses the modal.
+- **Строка переключателя** вверху показывает состояние «включено», «выключено» или «не поддерживается» и управляет той же настройкой прошивки по MQTT.
+- **По одному кольцу на резервную пару**, по образцу виджета Auto Refill Bambu Studio. Кольцо заполнено фактическим цветом филамента; название материала и число переключений (`N× ↻`) находятся в центре; обозначения слотов (например, `A·1`, `B·3`) расположены вокруг цветной полосы на контрастных метках. Одиночные слоты без пары намеренно не показываются: если слот отсутствует среди колец, резерва у него нет.
+- Метки **R / L** на кольцах отображаются только у принтеров с двумя экструдерами (H2D / H2C / X2D), когда карта экструдеров содержит два разных значения. На принтерах с одним соплом или ещё не сообщивших данные маршрутизации меток нет.
+- Окно закрывается клавишей **Esc**, нажатием за его пределами или кнопкой закрытия.
 
-### Pairing rule
+### Правило сопоставления {#pairing-rule}
 
-Two slots pair when they share **the same Bambu filament preset ID** (`tray_info_idx`, e.g. `GFA00`) AND **the same colour** (alpha-normalised — `1A1A1AFF` matches `1A1A1A`). This mirrors the firmware's own switch decision.
+Два слота образуют пару, если у них **одинаковый ID пресета филамента Bambu** (`tray_info_idx`, например `GFA00`) И **одинаковый цвет** с нормализацией альфа-канала: `1A1A1AFF` совпадает с `1A1A1A`. Это соответствует решению самой прошивки о переключении.
 
-- Three PETG HF spools in different colours **don't** back each other up. The firmware would correctly swap PETG HF but the print would change colour mid-run.
-- User-tagged spools without a Bambu preset **never** pair with anything else. The firmware backup logic relies on the preset, and pairing on cosmetic name match alone risks treating two visually-identical but materially-different spools as backups.
-- On dual-extruder printers, pairing is scoped per extruder side. Two same-`(preset, colour)` slots on opposite extruders aren't peers — the firmware can't cross.
+- Три катушки PETG HF разных цветов **не** резервируют друг друга. Прошивка смогла бы переключить PETG HF, но цвет модели изменился бы во время печати.
+- Катушки с пользовательскими метками без пресета Bambu **никогда** не образуют резервную пару. Логика прошивки зависит от пресета; сопоставление только по названию может ошибочно объединить внешне одинаковые катушки с разными материалами.
+- На принтерах с двумя экструдерами пары формируются отдельно для каждой стороны. Слоты с одинаковыми пресетом и цветом на разных экструдерах не являются парой: прошивка не может переключаться между сторонами.
 
-!!! info "Why the badge sits in the section header, not on each AMS"
-    The setting is **per-printer**, not per-AMS. Bambuddy decodes it from bit 18 of the printer's top-level `print.cfg` hex string, which is a single value covering every AMS attached to that printer.
+!!! info "Почему значок находится в заголовке раздела, а не на каждом AMS"
+    Настройка действует для **всего принтера**, а не отдельного AMS. Bambuddy извлекает её из бита 18 шестнадцатеричной строки `print.cfg` верхнего уровня принтера — одного значения для всех подключённых к нему AMS.
 
-### Backup-aware "insufficient filament" check
+### Проверка недостатка филамента с учётом резерва {#backup-aware-insufficient-filament-check}
 
-The pre-dispatch deficit check that gates "Print Now" / "Send" buttons (and the queue dispatcher) is **backup-aware**, and so is the "Not enough filament" warning the print dialog raises before it queues anything.
+Проверка дефицита перед отправкой, от которой зависят кнопки «Печатать сейчас» / «Отправить» и диспетчер очереди, **учитывает резерв**. Это относится и к предупреждению «Недостаточно филамента» в окне печати до добавления задания в очередь.
 
-When AMS Filament Backup is **ON**, the deficit check pools remaining grams across same-`(preset, colour)` spools on the printer (per extruder side on dual-nozzle) before declaring a shortfall. So a 200 g print routed to a slot with 10 g remaining no longer gets blocked when a peer slot holds the same filament with 500 g spare — the firmware will swap automatically. If the pool genuinely can't cover the print, the dialog quotes the pooled totals rather than the mapped slot's own remaining weight.
+Когда резервирование AMS **включено**, перед определением дефицита суммируются оставшиеся граммы катушек с одинаковыми пресетом и цветом на принтере — отдельно для каждой стороны на принтерах с двумя соплами. Поэтому печать на 200 г, направленная в слот с остатком 10 г, больше не блокируется, если в парном слоте тот же филамент с запасом 500 г: прошивка переключится автоматически. Если суммарного остатка действительно недостаточно, окно показывает сумму группы, а не остаток одного назначенного слота.
 
-When AMS Filament Backup is **OFF**, the check falls back to strict per-slot accounting — there's no peer to roll to, so an empty slot would actually stop the print.
+Когда резервирование AMS **выключено**, проверка снова учитывает каждый слот строго отдельно: переключаться не на что, и пустая катушка действительно остановит печать.
 
-This works both in internal-inventory mode (via the local Spool table) and Spoolman mode (via Spoolman's `filament.id` + `color_hex`). Which spools count as backups for each other is decided in one place on the server, by the same code the dispatcher uses, and handed to the print dialog — so the dialog can't disagree with what the queue will actually do.
+Это работает как во внутреннем учёте катушек (локальная таблица Spool), так и в режиме Spoolman (`filament.id` и `color_hex` Spoolman). Сервер определяет резервные пары в одном месте тем же кодом, который использует диспетчер очереди, и передаёт результат в окно печати — поэтому оно не может противоречить фактической работе очереди.
 
-### Interaction with "Prefer Lowest Remaining Filament"
+### Взаимодействие с настройкой «Предпочитать наименьший остаток филамента» {#interaction-with-prefer-lowest-remaining-filament}
 
-The **Prefer Lowest Remaining Filament** setting (Settings → Filament) tells the AMS auto-mapper to pick the spool with the least remaining weight first — useful for finishing off near-empty spools so they don't accumulate. This only makes sense when **AMS Filament Backup** is **ON**, because without backup the printer will stop on the first empty spool, defeating the purpose.
+Настройка **Предпочитать наименьший остаток филамента** в разделе Настройки → Филамент предлагает автоматическому сопоставлению AMS сначала выбирать катушку с наименьшим остатком. Это помогает допечатывать почти пустые катушки, чтобы они не накапливались. Имеет смысл она только при **включённом** резервировании AMS: без резерва принтер остановится на первой пустой катушке.
 
-When AMS Filament Backup is **OFF**, Bambuddy automatically suppresses the prefer-lowest sort (both backend dispatcher and the PrintModal mapping UI honour this) so it won't reach for a near-empty spool the printer can't roll off of. The setting itself isn't hidden — flip Backup back on and it takes effect again immediately.
+Когда резервирование **выключено**, Bambuddy автоматически отменяет сортировку по минимальному остатку и в серверном диспетчере, и в интерфейсе сопоставления окна печати, чтобы не выбрать почти пустую катушку, с которой принтер не сможет переключиться. Сама настройка не скрывается; при повторном включении резервирования она сразу снова действует.
 
-With Backup **ON**, prefer-lowest picks the lowest-remaining slot **within the same `(preset, colour)` group** — so when the picked slot empties, the firmware swaps to the same-colour peer that holds more material. If only one same-`(preset, colour)` slot exists, prefer-lowest can't pick anything riskier than that one, and the backup-aware deficit check still catches the case where it's short.
+При **включённом** резервировании сначала выбирается слот с минимальным остатком **внутри одной группы `(пресет, цвет)`**. Когда он опустеет, прошивка переключится на катушку того же цвета с большим остатком. Если подходящий слот только один, более рискованный вариант выбрать невозможно, а проверка дефицита всё равно обнаружит недостаток материала.
 
 ---
 
-## :material-water-percent: Humidity Monitoring
+## :material-water-percent: Мониторинг влажности {#humidity-monitoring}
 
-Track humidity levels inside your AMS units:
+Следите за влажностью внутри модулей AMS:
 
-### Current Reading
+### Текущее показание {#current-reading}
 
-The humidity percentage is displayed on the printer card:
+Процент влажности отображается на карточке принтера:
 
-| Level | Status | Action |
+| Уровень | Состояние | Действие |
 |:-----:|--------|--------|
-| < 20% | :material-check-circle:{ style="color: #4caf50" } Excellent | None needed |
-| 20-40% | :material-check-circle:{ style="color: #8bc34a" } Good | None needed |
-| 40-60% | :material-alert:{ style="color: #ff9800" } Fair | Consider drying |
-| > 60% | :material-alert-circle:{ style="color: #f44336" } High | Replace desiccant |
+| < 20% | :material-check-circle:{ style="color: #4caf50" } Отлично | Не требуется |
+| 20–40% | :material-check-circle:{ style="color: #8bc34a" } Хорошо | Не требуется |
+| 40–60% | :material-alert:{ style="color: #ff9800" } Умеренно | Рассмотрите сушку |
+| > 60% | :material-alert-circle:{ style="color: #f44336" } Высокая | Замените осушитель |
 
-### Configurable Thresholds
+### Настраиваемые пороги {#configurable-thresholds}
 
-Set custom warning thresholds in Settings:
+Установите собственные пороги предупреждения:
 
-1. Go to **Settings** > **General**
-2. Find **AMS Humidity Threshold**
-3. Set your preferred warning level
-4. Save changes
+1. Перейдите в **Настройки** > **Общие**
+2. Найдите **Порог влажности AMS**
+3. Задайте желаемый уровень предупреждения
+4. Сохраните изменения
 
-!!! tip "Filament Sensitivity"
-    Different filaments have different humidity sensitivities. PLA is more tolerant than Nylon or PETG. If you run multi-material AMS units (e.g. one dedicated to PLA, another to Nylon), set a **[per-filament threshold](#per-filament-humidity-threshold)** below instead of one global value — auto-drying and the humidity alarm will trigger at the right level for each material.
+!!! tip "Чувствительность филамента"
+    Разные материалы по-разному чувствительны к влажности. PLA устойчивее, чем Nylon или PETG. Если разные модули AMS предназначены для разных материалов, например один для PLA, другой для Nylon, вместо общего значения задайте [порог для каждого филамента](#per-filament-humidity-threshold) ниже: автоматическая сушка и предупреждение о влажности сработают на подходящем уровне для каждого материала.
 
 ---
 
-## :material-thermometer: Temperature Monitoring
+## :material-thermometer: Мониторинг температуры {#temperature-monitoring}
 
-For AMS-HT (High Temperature) units, temperature is also tracked:
+Для модулей AMS-HT (High Temperature) также отслеживается температура:
 
-| Reading | Description |
+| Показание | Описание |
 |---------|-------------|
-| **Current temp** | Live temperature inside the unit |
-| **Target temp** | Configured drying temperature |
-| **Status** | Heating, holding, or idle |
+| **Текущая температура** | Температура внутри модуля в реальном времени |
+| **Целевая температура** | Заданная температура сушки |
+| **Состояние** | Нагрев, поддержание температуры или ожидание |
 
-### Temperature thresholds and the alarm { #temperature-alarm-threshold }
+### Температурные пороги и предупреждение {#temperature-alarm-threshold}
 
-**Settings** > **AMS Display Thresholds** > **Temperature** has three fields, and
-they do different jobs:
+В разделе **Настройки** > **Пороги отображения AMS** > **Температура** есть три поля с разным назначением:
 
-| Field | What it does |
+| Поле | Действие |
 |-------|--------------|
-| **Good (blue) ≤** | Colours the reading wherever an AMS temperature is shown |
-| **Fair (orange) ≤** | Colours it the same way; above this value the reading shows red |
-| **Alarm above** | Sends the **AMS Temperature High** and **AMS-HT Temperature High** [notifications](notifications.md#ams-events) |
+| **Хорошо (синий) ≤** | Определяет цвет показания везде, где отображается температура AMS |
+| **Умеренно (оранжевый) ≤** | Аналогично определяет цвет; выше этого значения показание становится красным |
+| **Предупреждать выше** | Отправляет [уведомления](notifications.md#ams-events) **Высокая температура AMS** и **Высокая температура AMS-HT** |
 
-**Leave *Alarm above* empty and the alarm uses the Fair threshold**, which is how
-Bambuddy behaved before the field existed — so nothing changes for an install
-that never sets it.
+**Если оставить поле предупреждения пустым, используется умеренный порог**, как Bambuddy работал до появления этого поля. Поэтому для установки, где поле никогда не задавали, поведение не изменится.
 
-One value covers every printer and every unit, AMS-HT included — there is no
-per-printer or per-unit override. Nothing requires it to sit above the Fair band
-either: set it lower if you would rather hear about a unit before the reading
-changes colour. Zero or less is refused and falls back to Fair, since zero would
-alarm permanently and is far more likely to be a cleared field than a choice.
+Одно значение действует для всех принтеров и модулей, включая AMS-HT; отдельных настроек для принтера или модуля нет. Порог предупреждения не обязательно должен быть выше умеренного: его можно установить ниже, чтобы узнать о нагреве до изменения цвета. Ноль и отрицательные значения отклоняются с возвратом к умеренному порогу, поскольку ноль вызывал бы постоянное предупреждение и скорее указывает на очищенное поле, чем на намеренный выбор.
 
-!!! tip "Set an alarm threshold if your room gets warm"
-    The Fair threshold defaults to 35 °C, which is a reasonable place to change a
-    colour and a low place to send a notification. In a room that sits above it
-    for weeks at a time, the alarm fires once an hour for as long as the weather
-    lasts — and raising the Fair threshold to stop it also takes away the red
-    that tells you the unit is warm. Setting **Alarm above** to something like
-    45 °C separates the two: the reading still turns red above 35 °C, and the
-    notification waits for a temperature you actually want to know about.
+!!! tip "Задайте порог предупреждения для тёплого помещения"
+    Умеренный порог по умолчанию равен 35 °C. Для изменения цвета это разумное значение, но для уведомления оно невелико. В помещении, где температура неделями выше этого уровня, предупреждение будет приходить раз в час, пока сохраняется жара; повышение умеренного порога уберёт и красный цвет, показывающий нагрев. Порог предупреждения, например 45 °C, разделяет эти функции: показание краснеет выше 35 °C, а уведомление ожидает действительно важной для вас температуры.
 
-    It also affects the drying cool-down. Bambuddy holds the alarm quiet during a
-    cycle and releases it once the unit reads back at or below the alarm
-    threshold. A unit that settles at, say, 38 °C in a warm room never drops
-    under a 35 °C threshold, so the hold can only expire on its two-hour cap.
-    With the alarm threshold at 45 °C it releases as soon as the unit has
-    actually cooled.
+    Этот порог влияет и на охлаждение после сушки. Во время цикла Bambuddy подавляет предупреждение и снимает блокировку, когда температура модуля опустится до порога или ниже. Если в тёплой комнате модуль остывает только до 38 °C, порог 35 °C никогда не будет достигнут и блокировка закончится лишь по двухчасовому ограничению. При пороге 45 °C она снимается сразу после фактического охлаждения.
 
 ---
 
-## :material-fire: Remote AMS Drying
+## :material-fire: Удалённая сушка AMS {#remote-ams-drying}
 
-Control AMS drying directly from Bambuddy — no need to use the printer's touchscreen. Start, monitor, and stop drying sessions for AMS 2 Pro and AMS-HT units.
+Управляйте сушкой AMS прямо из Bambuddy, не используя сенсорный экран принтера. Запускайте, отслеживайте и останавливайте сушку модулей AMS 2 Pro и AMS-HT.
 
-!!! warning "P1P / P1S: drying is screen-only"
-    The P1 series does not accept drying commands over the network. Bambu's own [P1 manual](https://wiki.bambulab.com/en/p1/manual/screen-operation) says it plainly: *"P1S connected AMS drying functions may only be controlled from the P1S screen."* The firmware acknowledges the command and then ignores it, so no app — Bambuddy, Studio, or Handy — can start or stop a cycle on a P1.
+!!! warning "P1P / P1S: сушка управляется только с экрана"
+    Серия P1 не принимает команды сушки по сети. В [руководстве P1](https://wiki.bambulab.com/en/p1/manual/screen-operation) Bambu прямо сказано, что сушкой подключённого AMS можно управлять только с экрана P1S. Прошивка подтверждает команду, а затем игнорирует её, поэтому ни Bambuddy, ни Studio, ни Handy не могут запустить или остановить цикл на P1.
 
-    Bambuddy still shows the drying button on a P1, greyed out with a tooltip saying why, and still displays a cycle you started at the printer, including its countdown. Auto-drying (queue and ambient) skips P1 printers.
+    Bambuddy по-прежнему показывает кнопку сушки на P1 неактивной с поясняющей подсказкой, а также показывает запущенный на принтере цикл и обратный отсчёт. Автоматическая сушка очереди и окружающей среды пропускает принтеры P1.
 
-### Supported Hardware
+### Поддерживаемое оборудование {#supported-hardware}
 
-Remote drying requires an AMS unit with built-in heating:
+Для удалённой сушки нужен модуль AMS со встроенным нагревом:
 
-| AMS Type | Module Type | Max Temp | Supported |
+| Тип AMS | Тип модуля | Макс. температура | Поддержка |
 |----------|:-----------:|:--------:|:---------:|
 | AMS 2 Pro | n3f | 65°C | :material-check: |
 | AMS-HT | n3s | 85°C | :material-check: |
-| AMS (original) | ams | — | :material-close: |
+| AMS (оригинальный) | ams | — | :material-close: |
 
-### Printer Firmware Requirements
+### Требования к прошивке принтера {#printer-firmware-requirements}
 
-Not all printers support remote drying commands. The following minimum firmware versions are required:
+Не все принтеры поддерживают удалённые команды сушки. Необходимы следующие минимальные версии прошивки:
 
-| Printer Model | Min Firmware | Notes |
+| Модель принтера | Мин. версия | Примечания |
 |---------------|:------------:|-------|
 | X1 / X1C | 01.09.00.00 | |
 | P2S | 01.02.00.00 | |
 | H2D | 01.02.30.00 | |
 | H2C | 01.02.00.00 | |
 | H2S | 01.02.00.00 | |
-| H2D Pro | Any | No version gate |
-| X1E | Any | No version gate |
-| P1P / P1S | — | :material-close: Screen-only — see the warning above |
-| A1, A1 Mini | — | :material-close: No drying-capable AMS |
+| H2D Pro | Любая | Ограничения по версии нет |
+| X1E | Любая | Ограничения по версии нет |
+| P1P / P1S | — | :material-close: Только с экрана — см. предупреждение выше |
+| A1, A1 Mini | — | :material-close: Нет AMS с поддержкой сушки |
 
-!!! note "Unknown Models"
-    For printers not listed above (future models), Bambuddy allows the drying command. If the printer's firmware doesn't support it, the command fails gracefully with no side effects.
+!!! note "Неизвестные модели"
+    Для отсутствующих в списке принтеров, включая будущие модели, Bambuddy разрешает команду сушки. Если прошивка её не поддерживает, команда завершится без побочных эффектов.
 
-### Power Supply Requirements
+### Требования к питанию {#power-supply-requirements}
 
-AMS 2 Pro and AMS-HT units require an external power supply (PSU) to run the drying heater. Without it, the AMS can only monitor humidity — it cannot actively dry.
+Нагревателю AMS 2 Pro и AMS-HT нужен внешний блок питания. Без него AMS может только отслеживать влажность, но не сушить филамент.
 
-The printer firmware reports power constraints via the `dry_sf_reason` field per AMS unit. Bambuddy reads these automatically:
+Прошивка сообщает об ограничениях через поле `dry_sf_reason` для каждого модуля AMS. Bambuddy автоматически считывает эти данные:
 
-| Reason | Code | Description |
+| Причина | Код | Описание |
 |--------|:----:|-------------|
-| Insufficient Power | 1 | Too many AMS units drying simultaneously — disconnect other units or connect a PSU |
-| Need Plugin Power | 8 | No external PSU connected — plug in the AMS power adapter |
-| Task Occupied | 0 | Printer is busy with another operation |
-| AMS Busy | 2 | AMS is performing another operation |
-| Consumable at Outlet | 3 | Filament detected at the AMS outlet |
-| Initiating | 4 | Drying is already starting up |
-| Not Supported in 2D Mode | 5 | Cannot dry in current mode |
-| Already Drying | 6 | Drying session already active |
-| Upgrading | 7 | Firmware update in progress |
+| Недостаточно питания | 1 | Одновременно сушит слишком много модулей AMS — отключите другие модули или подключите блок питания |
+| Нужен внешний блок питания | 8 | Внешний блок питания отсутствует — подключите адаптер AMS |
+| Задача занята | 0 | Принтер выполняет другую операцию |
+| AMS занята | 2 | AMS выполняет другую операцию |
+| Филамент на выходе | 3 | На выходе AMS обнаружен филамент |
+| Запуск | 4 | Сушка уже запускается |
+| Не поддерживается в режиме 2D | 5 | Сушка в текущем режиме невозможна |
+| Сушка выполняется | 6 | Цикл сушки уже активен |
+| Обновление | 7 | Выполняется обновление прошивки |
 
-When any of these is reported, the :material-fire: drying button is **disabled** and its tooltip names the reason: "Connect AMS power adapter to enable drying" for the two power codes, "Retract the filament at the AMS outlet to start drying" for a consumable at the outlet, and "AMS can't start drying right now" for the rest. This applies to manual drying, queue auto-drying, and ambient drying — the scheduler skips AMS units with active `dry_sf_reason` entries.
+При любой из этих причин кнопка сушки :material-fire: **отключена**, а подсказка называет причину: «Подключите адаптер питания AMS для сушки» для двух кодов питания, «Извлеките филамент с выхода AMS для запуска сушки» при филаменте на выходе и «AMS не может начать сушку сейчас» для остальных. Это относится к ручной сушке, автоматической сушке очереди и сушке по условиям окружающей среды: планировщик пропускает модули с активными записями `dry_sf_reason`.
 
-!!! warning "PSU Not Connected"
-    If you see the drying button greyed out with the "Connect AMS power adapter to enable drying" tooltip, connect the external power adapter to your AMS unit. This is the most common reason drying cannot start.
+!!! warning "Блок питания не подключён"
+    Если кнопка сушки неактивна и подсказка предлагает подключить адаптер питания AMS, подключите внешний адаптер к модулю. Это наиболее распространённая причина, по которой сушка не запускается.
 
-### HMS Error Codes (AMS Power)
+### Коды ошибок HMS питания AMS {#hms-error-codes-ams-power}
 
-When the AMS encounters a power-related issue, the printer reports it as an HMS (Health Management System) error. These appear in Bambuddy's HMS error panel:
+При проблемах с питанием AMS принтер сообщает об ошибке HMS (Health Management System). Она отображается на панели ошибок HMS Bambuddy:
 
-**AMS 2 Pro Errors:**
+**Ошибки AMS 2 Pro:**
 
-| HMS Code | Description |
+| Код HMS | Описание |
 |----------|-------------|
-| `07XX_9200_0002_0003` | Heater fan 1 can't start — PSU not connected |
-| `07XX_9300_0002_0003` | Heater fan 2 can't start — PSU not connected |
-| `07XX_9800_0002_0001` | PSU voltage too low |
-| `07XX_9800_0002_0002` | PSU voltage too high |
+| `07XX_9200_0002_0003` | Вентилятор нагревателя 1 не запускается — блок питания не подключён |
+| `07XX_9300_0002_0003` | Вентилятор нагревателя 2 не запускается — блок питания не подключён |
+| `07XX_9800_0002_0001` | Слишком низкое напряжение блока питания |
+| `07XX_9800_0002_0002` | Слишком высокое напряжение блока питания |
 
-**AMS-HT Errors:**
+**Ошибки AMS-HT:**
 
-| HMS Code | Description |
+| Код HMS | Описание |
 |----------|-------------|
-| `18XX_2500_0002_0001` | Using printer power instead of dedicated adapter — connect the AMS-HT power adapter |
-| `18XX_9200_0002_0003` | Heater fan 1 can't start — PSU not connected |
-| `18XX_9300_0002_0003` | Heater fan 2 can't start — PSU not connected |
-| `18XX_9800_0002_0001` | PSU voltage too low |
-| `18XX_9800_0002_0002` | PSU voltage too high |
+| `18XX_2500_0002_0001` | Используется питание принтера вместо отдельного адаптера — подключите адаптер AMS-HT |
+| `18XX_9200_0002_0003` | Вентилятор нагревателя 1 не запускается — блок питания не подключён |
+| `18XX_9300_0002_0003` | Вентилятор нагревателя 2 не запускается — блок питания не подключён |
+| `18XX_9800_0002_0001` | Слишком низкое напряжение блока питания |
+| `18XX_9800_0002_0002` | Слишком высокое напряжение блока питания |
 
-!!! note "HMS Code Format"
-    `XX` represents the AMS unit index (`00`–`07` for units A–H). For example, `0700_9200_0002_0003` is unit A, `0701_9200_0002_0003` is unit B.
+!!! note "Формат кода HMS"
+    `XX` обозначает индекс модуля AMS (`00`–`07` для модулей A–H). Например, `0700_9200_0002_0003` — модуль A, `0701_9200_0002_0003` — модуль B.
 
-### Starting a Drying Session
+### Запуск сушки {#starting-a-drying-session}
 
-1. Find the AMS 2 Pro or AMS-HT card on the Printers page
-2. Click the :material-fire: flame icon in the AMS card header
-3. In the drying popover:
-      - **Select filament type** — Choose from PLA, PETG, TPU, ABS, ASA, PA, PC, or PVA
-      - **Temperature** — Auto-set from BambuStudio official presets; adjust manually with the slider or input field
-      - **Duration** — Auto-set from presets (1–24 hours); adjust as needed
-      - **Rotate spool** — Optionally enable spool rotation during drying for more even heat distribution. Off by default. The toggle is automatically **disabled** (greyed out, with a tooltip) when any tray in the targeted AMS has filament threaded into the feed tube — the whole AMS rotates as one mechanism, so a single loaded slot mechanically locks the entire unit. The submission also clamps the value off in that state to prevent a stale toggle from leaking through
-      - **Start time** — Choose when to start drying (now, after a delay, or at a specific time). Pending scheduled drying sessions are displayed in the printer card and can be cancelled from there with the **×** button.
-4. Click **Start** (or **Schedule** for drying sessions scheduled for a future time).
+1. Найдите карточку AMS 2 Pro или AMS-HT на странице принтеров
+2. Нажмите значок пламени :material-fire: в заголовке карточки AMS
+3. Во всплывающем окне сушки:
+      - **Выберите тип филамента** — PLA, PETG, TPU, ABS, ASA, PA, PC или PVA
+      - **Температура** — автоматически устанавливается по официальным пресетам Bambu Studio; её можно изменить ползунком или в поле ввода
+      - **Длительность** — автоматически задаётся пресетом (1–24 часа); при необходимости измените
+      - **Вращать катушку** — при необходимости включите вращение для более равномерного прогрева. По умолчанию выключено. Переключатель автоматически **отключается** с подсказкой, если в любом лотке выбранной AMS филамент заправлен в подающую трубку: вся AMS вращается как один механизм, поэтому один загруженный слот механически блокирует весь модуль. При отправке значение принудительно отключается, чтобы не применить устаревшее состояние переключателя
+      - **Время запуска** — выберите немедленный запуск, задержку или конкретное время. Ожидающие запланированные сушки отображаются на карточке принтера; там их можно отменить кнопкой **×**.
+4. Нажмите **Запустить** или **Запланировать** для будущего времени.
 
-!!! tip "Filament Presets"
-    Temperature and duration defaults come from BambuStudio's official filament profiles. You can customize them in **Settings** > **Workflow** > **Queue Auto-Drying** > **Drying Presets**. These presets are shared between manual drying, queue auto-drying, and ambient drying.
+!!! tip "Пресеты филамента"
+    Температура и длительность по умолчанию взяты из официальных профилей филамента Bambu Studio. Их можно изменить в разделе **Настройки** > **Рабочий процесс** > **Автосушка очереди** > **Пресеты сушки**. Пресеты общие для ручной сушки, автосушки очереди и сушки по условиям окружающей среды.
 
-!!! info "Composites dry as their base material"
-    The preset table is keyed by base material, while the printer reports filled and foamed variants by their full name — `PA6-CF`, `PETG-CF`, `ABS-GF`, `PLA-AERO`. A variant with no row of its own takes its base material's: `PETG-CF` dries at PETG's temperature, and the polyamide spellings (`PA6`, `PA11`, `PA12`, `PAHT`, `PPA`, and `Nylon`) all take PA's.
+!!! info "Композиты сушатся как базовый материал"
+    Таблица пресетов использует базовые материалы, а принтер сообщает наполненные и вспененные варианты полными названиями: `PA6-CF`, `PETG-CF`, `ABS-GF`, `PLA-AERO`. Вариант без собственной строки наследует настройки базового материала: `PETG-CF` сушится при температуре PETG, а обозначения полиамидов (`PA6`, `PA11`, `PA12`, `PAHT`, `PPA` и `Nylon`) используют настройки PA.
 
-    A row you add yourself still wins. Put `PA6-CF` in the table at a temperature you picked and that is what both manual and automatic drying use for it.
+    Добавленная вами строка имеет приоритет. Если задать в таблице `PA6-CF` с выбранной температурой, и ручная, и автоматическая сушка будут использовать её.
 
-    Materials whose base is not in the table either — `PPS`, `PEEK`, `PP`, `PE`, `PET` — are left alone by auto-drying rather than given a temperature nobody chose. Add a row for one if you want it dried automatically.
+    Материалы, для которых и базового материала нет в таблице (`PPS`, `PEEK`, `PP`, `PE`, `PET`), автоматическая сушка не трогает: она не назначает температуру, которую никто не выбирал. Добавьте строку для нужного материала, если хотите сушить его автоматически.
 
-### When a Scheduled Session Starts
+### Когда запускается запланированная сушка {#when-a-scheduled-session-starts}
 
-The time you pick is the earliest start, not an exact one. A session starts on the first scheduler pass after that time when the printer is idle and the AMS is ready to dry. It can start later than the time you chose, and there is no limit on how much later.
+Выбранное время — самое раннее время запуска, а не точное. Цикл начнётся при первой проверке планировщика после него, когда принтер свободен и AMS готова к сушке. Запуск может произойти позже выбранного времени, причём задержка не ограничена.
 
-While a session waits, the printer card says why it has not started. Most reasons clear by themselves — **Waiting for the printer to come online**, **to be free**, **for the current drying cycle to finish**, or **for the AMS to be detected**, and **AMS can't start drying right now** for the transient AMS states in the [`dry_sf_reason` table](#power-supply-requirements) above.
+Пока цикл ожидает, карточка принтера показывает причину. Большинство причин устраняются автоматически: ожидание подключения принтера, его освобождения, завершения текущего цикла или обнаружения AMS, а также временные состояния AMS из [таблицы `dry_sf_reason`](#power-supply-requirements) выше.
 
-Two of those states need you to act, and the session waits indefinitely until you do:
+Два состояния требуют ваших действий, и цикл будет ждать их неограниченное время:
 
-- **Connect AMS power adapter to enable drying** — codes 1 and 8
-- **Retract the filament at the AMS outlet to start drying** — code 3
+- **Подключите адаптер питания AMS для сушки** — коды 1 и 8
+- **Извлеките филамент с выхода AMS для запуска сушки** — код 3
 
-A session can also fail. The usual cause is firmware too old for remote drying, which Bambuddy cannot check if the printer was offline when you scheduled. A session also fails when the printer accepts the command on an idle printer but the AMS never starts drying (see ["Drying not running"](#drying-not-running)). The card shows the failed session in red with the reason, in your language. Clear it with the **×** button.
+Цикл также может завершиться ошибкой. Обычная причина — слишком старая прошивка для удалённой сушки, которую Bambuddy не смог проверить, если принтер был отключён при планировании. Ошибка возникает и тогда, когда свободный принтер принял команду, но AMS так и не начала сушку (см. [«Сушка не выполняется»](#drying-not-running)). Карточка показывает неудачный цикл красным и указывает причину на вашем языке. Удалите его кнопкой **×**.
 
-!!! warning "An interrupted session starts over"
-    If something stops the dryer before the run finishes, such as a print claiming the AMS, the session goes back to pending and runs again for its full duration once the printer is free. Nothing limits how late that is, so a session interrupted overnight can start again the next afternoon.
+!!! warning "Прерванный цикл начинается заново"
+    Если что-то остановит сушку до завершения, например печать займёт AMS, цикл снова перейдёт в ожидание и выполнится на полную длительность после освобождения принтера. Задержка не ограничена, поэтому прерванная ночью сушка может начаться снова на следующий день.
 
-    If you schedule drying around off-peak electricity rates, check the card after an interruption and cancel the session with the **×** button if it has moved into a peak window.
+    Если вы планируете сушку на часы льготного тарифа, после прерывания проверьте карточку и отмените цикл кнопкой **×**, если он переместился на время высокого тарифа.
 
-    Stopping a session yourself while the printer is idle cancels it instead of re-queueing it.
+    Если вы сами остановите цикл при свободном принтере, он отменится, а не вернётся в очередь.
 
-### Monitoring Drying Progress
+### Мониторинг сушки {#monitoring-drying-progress}
 
-When drying is active, a status bar appears between the AMS header and slot grid:
+Во время сушки между заголовком AMS и сеткой слотов появляется строка состояния:
 
-- **Time remaining** — Countdown in hours and minutes (e.g., "3h 42m" or "42m")
-- **Filament and target temperature** — e.g. "PLA @ 45°C", when Bambuddy knows them
-- The flame icon in the header turns amber to indicate active drying
+- **Оставшееся время** — обратный отсчёт в часах и минутах, например «3 ч 42 мин» или «42 мин»
+- **Филамент и целевая температура** — например, «PLA @ 45°C», если Bambuddy их знает
+- Значок пламени в заголовке становится жёлтым, обозначая активную сушку
 
-!!! note "Why the filament and temperature are sometimes missing"
+!!! note "Почему иногда не видны филамент и температура"
+    Принтер сообщает оставшееся время, но не сообщает филамент и температуру цикла. Bambuddy показывает значения, отправленные при запуске цикла из приложения. Если цикл запущен с экрана принтера или Bambuddy был перезапущен во время него, эта запись отсутствует.
 
-    The printer reports how long is left, but never which filament or temperature the cycle is running. Bambuddy shows what it sent when you started the cycle from here. If the cycle was started from the printer's own screen, or Bambuddy restarted while it was running, that record is gone.
+    Тогда Bambuddy использует данные загруженных катушек: по ним можно узнать филамент, но не температуру. Если все слоты содержат один тип, значок показывает его; при смешанных материалах отображается только отсчёт, без предположений. Для температуры запасного источника нет: при запуске вы выбираете её свободно, и рекомендованная температура сушки катушки не доказывает, что используется именно она. В таком случае ожидайте только филамент и отсчёт.
 
-    It then falls back to the loaded spools, which can name the filament but never the temperature. When every slot holds the same type, that is what is being dried, so the badge says so; on a mixed unit it shows the countdown alone rather than guessing. The temperature has no fallback at all — you choose it freely when starting a cycle, so the spools' own recommended drying temperature is no evidence of what the cycle is actually running. Expect to see just the filament and the countdown in that case.
+### «Сушка не выполняется» {#drying-not-running}
 
-### "Drying not running" { #drying-not-running }
+Принтер устанавливает отсчёт сушки AMS сразу после приёма команды, а работающий цикл уменьшает его раз в минуту. Если отсчёт не изменился за 150 секунд и AMS не сообщает фазу проверки, сушки или охлаждения, Bambuddy показывает серый значок **Сушка не выполняется** вместо жёлтого. Неидущий отсчёт скрыт, а подсказка при наведении объясняет причину. Кнопка **×** по-прежнему останавливает цикл.
 
-A printer sets an AMS unit's drying countdown as soon as it accepts a drying command, and a running cycle counts it down once a minute. If the countdown has not moved for 150 seconds and the AMS reports no Checking, Drying or Cooling phase, Bambuddy shows a grey **Drying not running** badge instead of the amber one. The countdown is hidden, because it is not counting, and hovering the badge explains why. The **×** button still stops it.
+Два случая выглядят одинаково:
 
-There are two ways to get here, and they look the same:
+- **Цикл не начался.** Принтер принял команду, но AMS не начала нагрев. Это наблюдалось на H2D во время печати: два модуля AMS-HT сушили, а таймер третьего оставался на 720 минутах без нагрева.
+- **Цикл приостановился**, например из-за ограничения питания или текущей печати.
 
-- **The cycle never started.** The printer took the command but the AMS never began heating. This was seen on an H2D during a print: two AMS-HT units were drying, and a third unit's timer sat at 720 minutes without heating.
-- **The cycle was paused partway**, for example by the power limit or the current print.
+Как только AMS сообщает активную фазу или отсчёт возобновляется, значок сам возвращается к жёлтому состоянию **Сушка**. Сообщённая AMS фаза всегда имеет приоритет над правилом 150 секунд. После перезапуска Bambuddy отсчёт 150 секунд начинается заново.
 
-As soon as the AMS reports an active phase, or the countdown moves again, the badge goes back to the amber **Drying** state on its own. A phase the AMS reports always wins over the 150-second rule. After Bambuddy restarts, the 150 seconds start again.
+Если значок не меняется, проверьте питание AMS и дождитесь завершения текущей печати. Если сушка всё ещё не начинается, остановите её кнопкой **×** и запустите снова.
 
-If a unit stays on this badge, make sure the AMS has power and, if a print is running, wait for it to finish. If drying still doesn't start, stop it with **×** and start it again.
+Такой таймер никогда не достигнет нуля, поэтому Bambuddy не ждёт его окончания:
 
-A timer like this never reaches zero, so Bambuddy doesn't wait for it to end:
+- В [блокирующем режиме](#blocking-vs-non-blocking-mode) принтер, у которого все таймеры сушки не работают, не задерживает очередь.
+- [Запланированный цикл](#when-a-scheduled-session-starts), таймер которого остановился, возвращается в ожидание во время печати и запускается снова после освобождения принтера. На свободном принтере он завершается ошибкой **Принтер принял команду, но AMS не начала сушку**. В обоих случаях таймер остаётся на принтере, поскольку сушка ещё может начаться после высвобождения мощности.
+- Для модуля без фактического нагрева предупреждение о высокой температуре AMS не подавляется.
 
-- In [blocking mode](#blocking-vs-non-blocking-mode), a printer whose only drying timers are not running doesn't hold the queue.
-- A [scheduled session](#when-a-scheduled-session-starts) whose timer stops running goes back to pending if a print is running, and runs again once the printer is free. On an idle printer it fails with **The printer accepted the command, but the AMS did not start drying**. Either way the timer is left on the printer, since it may still start once power frees up.
-- The AMS high-temperature alarm is not held back for a unit that isn't actually heating.
+### Остановка сушки {#stopping-a-drying-session}
 
-### Stopping a Drying Session
+- Нажмите **×** в строке состояния сушки или
+- Нажмите значок пламени: во время сушки он работает как кнопка остановки
 
-- Click the **×** button on the drying status bar, or
-- Click the flame icon (when drying is active, it acts as a stop button)
+### Разрешения {#permissions}
 
-### Permissions
-
-| Action | Required Permission |
+| Действие | Необходимое разрешение |
 |--------|:------------------:|
-| View drying status | No permission needed |
-| View scheduled drying sessions | `printers:read` |
-| Start / Schedule / Stop drying | `printers:control` |
+| Просмотр состояния сушки | Разрешение не требуется |
+| Просмотр запланированных циклов | `printers:read` |
+| Запуск / планирование / остановка сушки | `printers:control` |
 
-!!! warning "Drying During Prints"
-    The AMS can dry filament while the printer is idle or printing. However, drying during a print may affect the AMS temperature readings and humidity levels.
+!!! warning "Сушка во время печати"
+    AMS может сушить филамент как во время простоя, так и во время печати. Однако сушка во время печати может влиять на показания температуры и влажности AMS.
 
-!!! info "Drying does not trigger a high-temperature alert"
-    A cycle runs well above the temperature threshold on purpose, so Bambuddy keeps the **AMS Temperature High** [notification](notifications.md#ams-events) quiet for the length of the cycle and through the cool-down afterwards. It resumes once the unit reads back at or below your [alarm threshold](#temperature-alarm-threshold). The humidity alert is unaffected.
+!!! info "Сушка не вызывает предупреждение о высокой температуре"
+    При сушке температура намеренно значительно выше порога, поэтому Bambuddy подавляет [уведомление](notifications.md#ams-events) **Высокая температура AMS** на время цикла и последующего охлаждения. Оно возобновляется, когда температура опустится до [порога предупреждения](#temperature-alarm-threshold) или ниже. На предупреждение о влажности это не влияет.
 
 ---
 
-## :material-fire-circle: Queue Auto-Drying
+## :material-fire-circle: Автосушка очереди {#queue-auto-drying}
 
-Automatically dry AMS filament between scheduled prints. When a printer is idle and humidity exceeds the configured threshold, Bambuddy starts a drying session to keep filament in optimal condition before the next print begins.
+Автоматически сушите филамент AMS между запланированными печатями. Когда принтер свободен, а влажность превышает порог, Bambuddy запускает сушку, чтобы подготовить филамент к следующей печати.
 
-### How It Works
+### Как это работает {#how-it-works}
 
-1. The scheduler checks idle printers that have **scheduled** queue items
-2. For each AMS unit, it reads the current humidity level
-3. If humidity exceeds the **Fair (orange)** threshold from Settings, drying is triggered
-4. The drying temperature and duration are determined by the loaded filament types using the configured [drying presets](#configurable-drying-presets)
-5. Drying runs for the preset **duration** — the printer stops it automatically when the cycle completes
-6. When the next scheduled print is ready to start, any remaining drying is stopped and the print begins
+1. Планировщик проверяет свободные принтеры с **запланированными** заданиями очереди
+2. Для каждого модуля AMS считывается текущая влажность
+3. Если она превышает порог **Умеренно (оранжевый)** из настроек, запускается сушка
+4. Температура и длительность определяются загруженными материалами и настроенными [пресетами сушки](#configurable-drying-presets)
+5. Сушка выполняется заданную **длительность**, после чего принтер автоматически останавливает её
+6. Когда следующая запланированная печать готова к запуску, оставшаяся сушка останавливается и печать начинается
 
-A job for **Any <model>** counts for every printer of that model it could run on (in its location, and only printers its creator may use), so all of them are dried until one takes the job. A job with alternative files for several models counts for the printers of each model. With **Wait for drying to complete** on, no new drying starts on a printer a pending job could take, the same as for a job pinned to one printer.
+Задание для **любого принтера <model>** учитывается для каждого подходящего принтера этой модели в выбранном расположении, к которому имеет доступ создатель. Все они сушатся, пока один не возьмёт задание. Задание с альтернативными файлами для нескольких моделей учитывается для принтеров каждой модели. Если включено **Ждать завершения сушки**, новая сушка не начинается на принтере, который может принять ожидающее задание, как и при задании для конкретного принтера.
 
-### Conservative Temperature Selection
+### Осторожный выбор температуры {#conservative-temperature-selection}
 
-When an AMS unit contains **mixed filament types** (e.g., PLA and PETG in the same unit), the scheduler uses conservative parameters:
+Если в одной AMS находятся **разные материалы**, например PLA и PETG, планировщик использует осторожные параметры:
 
-- **Temperature** — The **lowest** temperature across all loaded filaments (to avoid overheating sensitive materials)
-- **Duration** — The **longest** duration across all loaded filaments
+- **Температура** — самая **низкая** из температур загруженных материалов, чтобы не перегреть чувствительные материалы
+- **Длительность** — самая **длинная** из длительностей загруженных материалов
 
-### Per-Filament Humidity Threshold
+### Порог влажности для каждого филамента {#per-filament-humidity-threshold}
 
-A single global humidity threshold is a poor fit for multi-material print farms — Nylon wants to stay under 20%, PLA is happy at 60%, ASA somewhere in between. Bambuddy lets you set a different **trigger threshold per filament type**, in addition to the conservative drying temp/duration above.
+Один общий порог неудобен для фермы с разными материалами: Nylon желательно держать ниже 20%, PLA выдерживает 60%, ASA — между ними. В дополнение к осторожному выбору температуры и длительности Bambuddy позволяет задавать **порог запуска для каждого типа филамента**.
 
-Configure overrides in **Settings** > **Workflow** > **Queue Auto-Drying** in the table directly below the **Drying Presets** table:
+Настройте переопределения в **Настройки** > **Рабочий процесс** > **Автосушка очереди** в таблице сразу под таблицей **Пресеты сушки**:
 
-| Filament | Threshold |
+| Филамент | Порог |
 |----------|-----------|
-| Default (unknown types) | 60 % |
+| По умолчанию (неизвестные типы) | 60 % |
 | PLA | 60 % |
 | PETG | 50 % |
 | Nylon (PA) | 20 % |
 | ASA | 30 % |
 | ... | ... |
 
-- **Empty / unset** — the editor pre-fills from your global **AMS Humidity Threshold (Fair)** value, so the upgrade is silent. You only need to touch the rows for materials you want to treat differently.
-- **Range** — 5 % to 95 %.
-- **Clearing a row** (delete the value, click away) resets that row to use the **Default** row.
+- **Пусто / не задано** — редактор предварительно использует общий **порог влажности AMS (умеренно)**, поэтому при обновлении поведение не меняется. Изменять нужно только строки материалов, требующих другого порога.
+- **Диапазон** — от 5% до 95%.
+- **Очистка строки**: удалите значение и переведите фокус. Строка снова будет использовать значение **По умолчанию**.
 
-#### Mixed-AMS Resolution: Most-Restrictive Wins
+#### Смешанная AMS: действует самый строгий порог {#mixed-ams-resolution-most-restrictive-wins}
 
-When one AMS unit holds different filament types, Bambuddy picks the **lowest** threshold across the loaded spools. A unit with PLA at 60 % and Nylon at 20 % triggers drying when humidity exceeds 20 % — the Nylon's level — protecting the most sensitive material in the unit.
+Если модуль AMS содержит разные материалы, Bambuddy выбирает **самый низкий** порог загруженных катушек. При PLA с порогом 60% и Nylon с порогом 20% сушка начнётся, когда влажность превысит 20%, защищая самый чувствительный материал.
 
-This matches the conservative-params strategy used for drying temperature and duration above. If you want a dedicated humidity profile per material, dedicate one AMS unit per filament type.
+Это соответствует осторожному выбору температуры и длительности выше. Если нужен отдельный профиль влажности для каждого материала, выделите отдельный модуль AMS на каждый тип филамента.
 
-#### What the Override Drives
+#### На что влияет переопределение {#what-the-override-drives}
 
-The per-filament threshold is read by **both**:
+Порог для филамента используется **обоими** механизмами:
 
-1. The **auto-drying scheduler** — decides when to start, stop, and skip drying per AMS.
-2. The hourly **humidity alarm** notifier — fires `on_ams_humidity_high` / `on_ams_ht_humidity_high` (see [Notifications](notifications.md)).
+1. **Планировщик автосушки** решает, когда запускать, останавливать и пропускать сушку каждой AMS.
+2. Ежечасное **уведомление о влажности** отправляет `on_ams_humidity_high` / `on_ams_ht_humidity_high` (см. [Уведомления](notifications.md)).
 
-Both consumers go through the same resolver, so they can never disagree on whether a given AMS is "too humid."
+Оба используют один механизм определения порога, поэтому не могут расходиться в оценке слишком высокой влажности AMS.
 
-!!! note "What this does NOT change"
-    - The **AMS humidity badge color** on the printer card stays based on the single global **Fair** threshold from Settings > General. Badge color is per-AMS-unit, and there's no clean way to color a mixed AMS based on its most sensitive material — the override applies only to the scheduler and the alarm, which act on per-AMS firmware commands.
-    - The **drying temperature and duration** for each filament are still set in **Drying Presets** above (separate setting). Humidity = *when* to dry. Temp + duration = *how* to dry.
+!!! note "Что при этом НЕ меняется"
+    - **Цвет индикатора влажности AMS** на карточке принтера по-прежнему определяется единым общим порогом **Умеренно** в Настройки > Общие. Цвет задаётся для модуля целиком, а наглядно окрасить смешанную AMS по самому чувствительному материалу нельзя. Переопределение применяется только к планировщику и предупреждению, которые действуют через команды прошивки для каждой AMS.
+    - **Температура и длительность сушки** каждого филамента по-прежнему задаются отдельно в **Пресетах сушки** выше. Влажность определяет, *когда* сушить; температура и длительность — *как* сушить.
 
-### Enabling Auto-Drying
+### Включение автосушки {#enabling-auto-drying}
 
-1. Go to **Settings** > **AMS Display Thresholds**
-2. Set the **Fair (orange) ≤** humidity threshold — this is the trigger point for auto-drying
-3. Go to **Settings** > **Workflow** and find the **Queue Auto-Drying** card
-4. Enable **Enable auto-drying**
-5. Optionally enable **Wait for drying to complete** (blocking mode)
+1. Перейдите в **Настройки** > **Пороги отображения AMS**
+2. Установите порог влажности **Умеренно (оранжевый) ≤** — он запускает автосушку
+3. Перейдите в **Настройки** > **Рабочий процесс** и найдите карточку **Автосушка очереди**
+4. Включите **Включить автосушку**
+5. При необходимости включите **Ждать завершения сушки** (блокирующий режим)
 
-### Blocking vs Non-Blocking Mode
+### Блокирующий и неблокирующий режимы {#blocking-vs-non-blocking-mode}
 
-| Mode | Behavior |
+| Режим | Поведение |
 |------|----------|
-| **Non-blocking** (default) | Prints take priority. Drying stops when a print is ready to start. |
-| **Blocking** | Queue waits until the drying session finishes before starting the next print. A job for **Any <model>** goes to another printer of the model that is not drying, and waits only while all of them are. A new cycle does not start on a printer with a job that could start now; one whose job is scheduled for later is still dried ahead of it. |
+| **Неблокирующий** (по умолчанию) | Приоритет у печати. Сушка останавливается, когда печать готова к запуску. |
+| **Блокирующий** | Очередь ждёт окончания сушки перед следующей печатью. Задание для **любого принтера <model>** отправляется на другой принтер этой модели без сушки и ждёт только тогда, когда сушатся все подходящие принтеры. Новый цикл не запускается на принтере с заданием, готовым к немедленному запуску; перед заданием на будущее сушка всё ещё выполняется. |
 
-!!! tip "Which mode should I use?"
-    **Non-blocking** is recommended for most users — it ensures prints start on time while filling idle gaps with drying. Use **blocking** only if filament dryness is critical for print quality (e.g., Nylon, PC) and you don't mind delayed print starts.
+!!! tip "Какой режим выбрать?"
+    Для большинства пользователей рекомендуется **неблокирующий** режим: печати начинаются вовремя, а сушка заполняет промежутки простоя. **Блокирующий** режим выбирайте, если сухость филамента критична для качества, например для Nylon или PC, и задержка печати допустима.
 
-### When Auto-Drying Stops
+### Когда автосушка останавливается {#when-auto-drying-stops}
 
-Auto-drying is stopped automatically when:
+Автосушка останавливается автоматически, когда:
 
-- **The drying cycle completes** — drying runs for the preset duration and the printer stops it when the cycle finishes
-- A scheduled print is ready to start (non-blocking mode)
-- The queue item's schedule is removed or changed to "Queue Only"
-- All scheduled items are removed from the queue
-- Auto-drying is disabled in Settings
+- **Цикл сушки завершается** — принтер останавливает его по истечении заданной длительности
+- Запланированная печать готова к запуску (неблокирующий режим)
+- Расписание задания очереди удалено или изменено на «Только очередь»
+- Все запланированные задания удалены из очереди
+- Автосушка выключена в настройках
 
-!!! note "The threshold only starts drying"
-    The **Fair (orange)** humidity threshold controls when drying **starts** — a cycle begins when humidity exceeds it. Once a cycle is running, Bambuddy lets it run for its full preset duration rather than stopping on a mid-cycle humidity reading. Relative humidity drops sharply in the heated air of an active dryer, so a mid-cycle reading isn't a reliable measure of how dry the filament actually is.
+!!! note "Порог только запускает сушку"
+    Порог влажности **Умеренно (оранжевый)** определяет момент **запуска** цикла: он начинается при превышении порога. После запуска Bambuddy позволяет циклу идти всю заданную длительность, не останавливая его по промежуточному показанию. Относительная влажность в нагретом воздухе сушилки резко падает, поэтому показание во время цикла ненадёжно отражает фактическую сухость филамента.
 
-### Don't set the threshold below 20% { #drying-threshold-floor }
+### Не задавайте порог ниже 20% {#drying-threshold-floor}
 
-An AMS reports a **higher** humidity while it is warm than the same unit reports once it has cooled. A measured example: an AMS 2 Pro that reads 10-13% cold sat at 15-20% throughout every drying cycle. Moisture driven out of the spools has to go somewhere, and until it vents it is in the air the sensor is measuring.
+Тёплая AMS сообщает **более высокую** влажность, чем тот же модуль после охлаждения. В одном измерении AMS 2 Pro с показанием 10–13% в холодном состоянии во время каждого цикла показывала 15–20%. Влага, вытесненная из катушек, должна куда-то деться и до выхода находится в воздухе возле датчика.
 
-That matters because the threshold is checked again the moment a cycle ends. Set it to 14% and the reading at that moment is still 15-16%, so a new 12-hour cycle starts immediately — and the firmware, which ends a cycle when it judges the filament dry rather than when the clock runs out, ends that one early too. The result is a cycle every few minutes that never gets anywhere.
+Это важно, поскольку порог проверяется сразу после окончания цикла. При пороге 14% показание в этот момент всё ещё 15–16%, поэтому немедленно начинается новый 12-часовой цикл. Прошивка завершает цикл, когда считает филамент сухим, а не когда истечёт таймер, поэтому и второй цикл завершится рано. В результате циклы повторяются каждые несколько минут без прогресса.
 
-Bambuddy guards against this from both ends:
+Bambuddy защищается с обеих сторон:
 
-- **Settings warns you** when the Fair threshold is below 20%.
-- **A cooling-off period.** After a cycle ends, the same AMS unit will not be armed again for 30 minutes — the humidity reading is not worth acting on until the box has cooled.
-- **It gives up rather than loop.** After two cycles in a row that make no progress, Bambuddy stops arming that unit, logs why, and sends an **Auto-drying suspended** notification (see [Notifications](notifications.md)). The suspension lifts on its own as soon as the reading falls below the threshold.
+- **Настройки предупреждают**, если умеренный порог ниже 20%.
+- **Период охлаждения.** После цикла та же AMS не запускается повторно 30 минут: до охлаждения модуля показание влажности не стоит использовать для решения.
+- **Прекращение вместо зацикливания.** После двух циклов подряд без прогресса Bambuddy приостанавливает запуск этого модуля, записывает причину в журнал и отправляет уведомление **Автосушка приостановлена** (см. [Уведомления](notifications.md)). Приостановка снимается сама, как только показание опустится ниже порога.
 
-    Progress is measured against the **lowest reading any cycle on that unit has ended at**, not against the threshold. A genuinely wet spool in a humid room comes down slowly — 40%, 37%, 35% — and keeps drying for as long as it is still coming down, however far it still is from your threshold. What stops is a unit whose cycles end exactly where the last one did. Comparing against the best reading so far rather than the previous one means a sensor wobbling by a point between two values doesn't read as progress every other cycle.
+    Прогресс измеряется относительно **самого низкого показания по завершении любого цикла этого модуля**, а не относительно порога. Действительно влажная катушка во влажной комнате сохнет постепенно — 40%, 37%, 35% — и продолжит сушиться, пока значение уменьшается, независимо от расстояния до порога. Останавливается модуль, циклы которого заканчиваются с тем же показанием. Сравнение с лучшим результатом, а не с предыдущим, не позволяет колебанию датчика на один процент считаться прогрессом через цикл.
 
-None of these ever stop a cycle that is running. A dry you started by hand, from Bambu Studio or from the queue is untouched.
+Ни одна из этих мер не останавливает уже выполняющийся цикл. Сушка, запущенная вручную, из Bambu Studio или очереди, не затрагивается.
 
-!!! tip "If drying really is needed at a low threshold"
-    A suspension means the number you are triggering on can't be reached while the AMS is warm — not that the filament is wet. Raise the threshold above 20%, or dry the spools in a standalone dryer where the enclosure vents differently.
+!!! tip "Если при низком пороге действительно нужна сушка"
+    Приостановка означает, что заданного значения нельзя достичь, пока AMS тёплая, а не то, что филамент влажный. Поднимите порог выше 20% или сушите катушки в отдельной сушилке с другой вентиляцией корпуса.
 
-### Requirements
+### Требования {#requirements}
 
-- At least one **scheduled** queue item (items in "Queue Only" mode do not trigger auto-drying)
-- AMS 2 Pro or AMS-HT unit (original AMS does not support drying)
-- Supported printer firmware (see [firmware requirements](#printer-firmware-requirements) above)
-- Humidity above the Fair threshold
+- Хотя бы одно **запланированное** задание в очереди (режим «Только очередь» не запускает автосушку)
+- AMS 2 Pro или AMS-HT (оригинальная AMS не поддерживает сушку)
+- Поддерживаемая прошивка принтера (см. [требования к прошивке](#printer-firmware-requirements) выше)
+- Влажность выше умеренного порога
 
-!!! note "No Scheduled Prints?"
-    If you want drying to run on idle printers regardless of whether prints are scheduled, see [Ambient Drying](#ambient-drying) below.
+!!! note "Нет запланированных печатей?"
+    Чтобы сушить на свободных принтерах независимо от наличия запланированных печатей, см. раздел [Сушка по условиям окружающей среды](#ambient-drying) ниже.
 
 ---
 
-## :material-fire-alert: Ambient Drying
+## :material-fire-alert: Сушка по условиям окружающей среды {#ambient-drying}
 
-Automatically dry filament on any idle printer whenever AMS humidity exceeds the configured threshold — no scheduled prints required. While [queue auto-drying](#queue-auto-drying) only activates when prints are scheduled, ambient drying keeps filament dry on all idle printers at all times.
+Автоматически сушите филамент на свободных принтерах, когда влажность AMS превышает заданный порог, без необходимости иметь запланированные задания. В отличие от [автосушки очереди](#queue-auto-drying), которая работает только при наличии расписания печати, этот режим поддерживает филамент сухим на всех свободных принтерах.
 
-### How It Works
+### Как это работает {#how-it-works_1}
 
-1. The scheduler continuously monitors all idle printers
-2. For each AMS unit, it reads the current humidity level
-3. If humidity exceeds the **Fair (orange)** threshold from Settings, drying is triggered — after the [sustained-humidity wait](#sustained-humidity), if it is switched on
-4. The drying temperature and duration are determined by the loaded filament types using the configured [drying presets](#configurable-drying-presets)
-5. Drying runs for the preset **duration** — the printer stops it automatically when the cycle completes
+1. Планировщик постоянно отслеживает все свободные принтеры
+2. Для каждого AMS считывается текущая влажность
+3. Если она выше порога **Умеренно (оранжевый)**, начинается сушка; если включено [ожидание устойчивой влажности](#sustained-humidity), запуск происходит после него
+4. Температура и длительность определяются материалами в AMS и настроенными [пресетами сушки](#configurable-drying-presets)
+5. Цикл выполняется заданную **длительность**, после чего принтер останавливает его автоматически
 
-Unlike queue auto-drying, ambient drying does not require any scheduled queue items. It runs whenever a printer is idle and its AMS humidity is above the threshold.
+В отличие от автосушки очереди, этому режиму не нужны задания по расписанию. Он работает всякий раз, когда принтер свободен, а влажность AMS выше порога.
 
-### Enabling Ambient Drying
+### Включение сушки по условиям окружающей среды {#enabling-ambient-drying}
 
-1. Go to **Settings** > **Workflow**
-2. Find the **Queue Auto-Drying** card
-3. Enable **Ambient drying**
+1. Перейдите в **Настройки** > **Рабочий процесс**
+2. Найдите карточку **Автосушка очереди**
+3. Включите **Сушка по условиям окружающей среды**
 
-### Waiting Out a Humidity Spike { #sustained-humidity }
+### Ожидание устойчивой влажности {#sustained-humidity}
 
-Opening the AMS lid can admit room air and cause a temporary humidity rise. Ambient drying uses the unit's effective humidity trigger threshold: the most restrictive applicable per-filament threshold when overrides are configured, or the global **AMS Humidity Threshold (Fair)** otherwise (see [Per-Filament Humidity Threshold](#per-filament-humidity-threshold)). With the sustained wait off, one reading above that threshold can start a cycle. Whether a rise is transient or signals a need for drying depends on the AMS and room conditions.
+При открытии крышки AMS воздух помещения может временно повысить влажность. Сушка использует действующий порог модуля: самый строгий подходящий порог отдельных филаментов при наличии переопределений либо общий **порог влажности AMS (умеренно)** (см. [Порог для каждого филамента](#per-filament-humidity-threshold)). Если ожидание выключено, достаточно одного показания выше порога. Является ли рост временным или указывает на необходимость сушки, зависит от AMS и условий помещения.
 
-**Require sustained humidity** (shown once ambient drying is enabled, in the same settings block) makes an ambient start wait until the unit's humidity has stayed above its effective trigger threshold **continuously** for a set number of minutes (5–240). The field starts at 15 minutes when you switch it on. Off by default — with it off, ambient drying starts instantly, exactly as before. The wait belongs to ambient drying: with ambient drying off it has no effect, even if a value is still stored.
+Настройка **Требовать устойчивую влажность**, доступная после включения этого режима в том же блоке, откладывает запуск, пока влажность модуля **непрерывно** не превышает действующий порог заданное число минут (5–240). При включении предлагается 15 минут. По умолчанию она выключена: сушка запускается сразу, как раньше. Ожидание относится только к этому режиму и не действует, когда он выключен, даже если значение сохранено.
 
-Continuously means exactly that:
+Непрерывность означает следующее:
 
-- A single reading back at or below the threshold clears the wait. The clock starts over the next time the reading crosses the threshold.
-- A missing reading is treated as no information, not as a dip — a sensor that skips a beat does not reset the count.
-- A gap longer than four scheduler polling intervals, with a two-minute minimum (for example, after Bambuddy restarts, the printer disconnects, or a print runs on a printer that is not [drying while printing](#continue-drying-while-printing)), restarts the wait. Time nobody measured is not evidence the humidity stayed high. The restart is logged, so a wait that never matures can be explained from the log.
+- Одно показание на уровне порога или ниже сбрасывает ожидание. При следующем превышении отсчёт начнётся заново.
+- Отсутствующее показание считается отсутствием данных, а не снижением: пропущенное измерение не сбрасывает счётчик.
+- Промежуток более четырёх интервалов опроса планировщика, но не менее двух минут, начинает ожидание заново. Это может произойти при перезапуске Bambuddy, отключении принтера или печати на принтере без режима [сушки во время печати](#continue-drying-while-printing). Неизмеренное время не доказывает сохранение высокой влажности. Перезапуск записывается в журнал, чтобы объяснить бесконечное ожидание.
 
-Only a printer with a **scheduled queue item pending** keeps the instant behavior — minutes burned ahead of a scheduled job is exactly what [queue auto-drying](#queue-auto-drying) exists to prevent, and the exemption follows the schedule whether the printer is idle or printing. While ambient drying is on, a start on a printer that is printing (possible with [Continue drying while printing](#continue-drying-while-printing)) serves the same wait as a start on an idle printer: a lid opened mid-print causes the same brief spike.
+Только принтер с **ожидающим заданием по расписанию** сохраняет немедленный запуск: предотвращение потери времени перед запланированной печатью — задача [автосушки очереди](#queue-auto-drying), и исключение действует как при простое, так и во время печати. Когда сушка по условиям окружающей среды включена, запуск на печатающем принтере при включённой [сушке во время печати](#continue-drying-while-printing) проходит такое же ожидание: открытая во время печати крышка вызывает тот же краткий всплеск.
 
-Note that the exemption is per **printer**, not per AMS unit: any pending scheduled item lifts the wait for every AMS on that printer, including units the scheduled job will never touch. A printer that always has something queued — a standing schedule, for instance — effectively never waits; its drying is governed by [queue auto-drying](#queue-auto-drying)'s deadline logic instead.
+Исключение действует для **принтера**, а не конкретной AMS: любое ожидающее задание по расписанию снимает ожидание для всех AMS этого принтера, даже тех, которые задание не затронет. Принтер с постоянно ожидающими заданиями фактически не ждёт; его сушкой управляет логика сроков [автосушки очереди](#queue-auto-drying).
 
-The wait runs **alongside** the 30-minute [cooling-off period](#drying-threshold-floor) after a finished cycle rather than after it, so a re-dry waits for whichever is longer, not both in a row. And like the cooling-off period and the unproductive-cycle suspension, it only ever delays *starting* a cycle — a running cycle, or one you started by hand, is untouched.
+Ожидание идёт **параллельно** 30-минутному [периоду охлаждения](#drying-threshold-floor) после цикла, а не после него: повторная сушка ждёт большего из двух интервалов, а не обоих подряд. Как и период охлаждения и приостановка непродуктивных циклов, оно лишь откладывает *начало* цикла и не затрагивает уже работающий или запущенный вручную цикл.
 
-!!! tip "Picking a value"
-    **15 minutes is a measured starting point, not a guarantee.** On one H2D, every AMS unit was back at or below 25% humidity within about 12 minutes of opening its lid for one to five minutes. If your AMS normally sits close to its threshold, the reading may not drop back below it during the wait, and drying will start — which is the right outcome. Adjust the value for how far your threshold sits above the closed-lid reading, how long you usually keep the lid open, and your room and desiccant. See [the measurement notes in the code PR](https://github.com/maziggy/bambuddy/pull/2895) for the details and limitations.
+!!! tip "Выбор значения"
+    **15 минут — измеренная отправная точка, а не гарантия.** На одном H2D все AMS возвращались к влажности 25% или ниже примерно за 12 минут после открытия крышки на 1–5 минут. Если AMS обычно находится близко к порогу, показание может не опуститься ниже него за время ожидания и сушка начнётся — это правильный результат. Настройте значение с учётом разницы между порогом и показанием с закрытой крышкой, обычного времени открытия, условий помещения и осушителя. Подробности и ограничения см. в [заметках измерений в PR](https://github.com/maziggy/bambuddy/pull/2895).
 
-### Using Both Modes Together
+### Совместное использование режимов {#using-both-modes-together}
 
-Ambient drying and queue auto-drying can be enabled simultaneously. They complement each other:
+Сушку по условиям окружающей среды и автосушку очереди можно включить одновременно: они дополняют друг друга.
 
-| Mode | Triggers when | Stops when |
+| Режим | Запускается, когда | Останавливается, когда |
 |------|---------------|------------|
-| **Queue auto-drying** | Printer is idle with scheduled prints pending | Drying cycle completes, or next print is ready to start |
-| **Ambient drying** | Printer is idle (no scheduled prints required) | Drying cycle completes |
+| **Автосушка очереди** | Принтер свободен и есть ожидающие запланированные печати | Цикл сушки завершён или следующая печать готова к запуску |
+| **Сушка по условиям окружающей среды** | Принтер свободен; расписание печати не требуется | Цикл сушки завершён |
 
-When both are enabled and a printer has scheduled prints, queue auto-drying takes precedence (since it is aware of print scheduling and blocking/non-blocking behavior). On printers with no scheduled prints, ambient drying takes over.
+Если включены оба режима и у принтера есть запланированные печати, приоритет у автосушки очереди, поскольку она учитывает расписание и блокирующий или неблокирующий режим. На принтерах без запланированных печатей действует сушка по условиям окружающей среды.
 
-### Requirements
+### Требования {#requirements_1}
 
-- AMS 2 Pro or AMS-HT unit (original AMS does not support drying)
-- Supported printer firmware (see [firmware requirements](#printer-firmware-requirements) above)
-- Humidity above the effective trigger threshold (per-filament override when configured; otherwise the global Fair threshold)
-- No active power constraints on the AMS unit (see [power supply requirements](#power-supply-requirements))
+- AMS 2 Pro или AMS-HT (оригинальная AMS не поддерживает сушку)
+- Поддерживаемая прошивка принтера (см. [требования к прошивке](#printer-firmware-requirements) выше)
+- Влажность выше действующего порога: отдельного для филамента при наличии, иначе общего умеренного порога
+- Нет активных ограничений питания AMS (см. [требования к питанию](#power-supply-requirements))
 
-!!! tip "Print Farm Use Case"
-    Ambient drying is particularly useful for print farms where printers may sit idle for extended periods. Rather than letting humidity build up, Bambuddy keeps filament dry on every idle printer automatically.
+!!! tip "Для фермы печати"
+    Этот режим особенно полезен для ферм, где принтеры могут долго простаивать. Вместо накопления влажности Bambuddy автоматически поддерживает филамент сухим на каждом свободном принтере.
 
 ---
 
-## :material-fire-truck: Continue Drying While Printing
+## :material-fire-truck: Продолжать сушку во время печати {#continue-drying-while-printing}
 
-Bambu shipped an "AMS Print While Drying" firmware feature on selected printers that lets the AMS keep running its drying cycle **concurrently** with an active print. With this feature enabled in Bambuddy, the existing auto-drying scheduler can also evaluate printers that are mid-print — drying does not stop the instant a print starts. With queue auto-drying or ambient drying also on, a printing printer is dried when its humidity is above the threshold, whether or not it has scheduled prints. The [sustained-humidity wait](#sustained-humidity) applies to these starts only while ambient drying is on.
+Bambu добавила в прошивку некоторых принтеров функцию «AMS Print While Drying», позволяющую AMS продолжать сушку **одновременно** с активной печатью. Если включить её в Bambuddy, существующий планировщик автосушки также учитывает печатающие принтеры: сушка не останавливается сразу после начала печати. При включённой автосушке очереди или сушке по условиям окружающей среды печатающий принтер сушит филамент при превышении порога влажности независимо от наличия запланированных печатей. [Ожидание устойчивой влажности](#sustained-humidity) применяется к таким запускам только при включённой сушке по условиям окружающей среды.
 
-**Off by default.** Opt-in toggle in **Settings** > **Workflow** > **Queue Auto-Drying** > **Continue drying while printing**.
+**По умолчанию выключено.** Включите настройку в **Настройки** > **Рабочий процесс** > **Автосушка очереди** > **Продолжать сушку во время печати**.
 
-### Firmware Requirements
+### Требования к прошивке {#firmware-requirements}
 
-These minimum firmware versions are verified per Bambu wiki release notes (release-note phrasing: "printing while filament is drying" / "Print While Drying"):
+Минимальные версии проверены по примечаниям к выпускам в Wiki Bambu, где функция называется «printing while filament is drying» / «Print While Drying»:
 
-| Printer Model | Min Firmware |
+| Модель принтера | Мин. версия |
 |---------------|:------------:|
 | H2D | 01.03.00.00 |
 | H2D Pro | 01.02.00.00 |
@@ -722,355 +695,354 @@ These minimum firmware versions are verified per Bambu wiki release notes (relea
 | P2S | 01.02.00.00 |
 | A2L | 01.01.00.00 |
 
-**Not supported** (intentionally excluded — wiki release notes never mention "Print While Drying" for these models):
+**Не поддерживается**: эти модели намеренно исключены, поскольку в примечаниях Wiki для них не упоминается Print While Drying:
 
 - P1P / P1S
 - A1, A1 Mini
-- X1 (non-C), X1E
+- X1 (не C), X1E
 
-On an unsupported printer the toggle has no effect — the firmware reports `dry_sf_reason=[0]` (`TaskOccupied`) any time a print is running, so any attempt to start drying mid-print is rejected at the printer.
+На неподдерживаемом принтере переключатель не действует: во время печати прошивка сообщает `dry_sf_reason=[0]` (`TaskOccupied`), поэтому принтер отклоняет попытку запустить сушку.
 
-### How It Works
+### Как это работает {#how-it-works_2}
 
-1. The auto-drying scheduler evaluates **all** active printers, not just idle ones
-2. For each printer, it checks model and firmware against the matrix above
-3. If the printer is mid-print **and** supports concurrent drying **and** AMS humidity exceeds the threshold, drying starts (or continues) using the conservative per-AMS preset
-4. The mid-print drying temperature is automatically **capped at `max(40, preset_temp - 5)`** &mdash; Bambu's own release notes warn "lower drying temperature during printing" and "drying temperature must not exceed the filament's softening temperature". The 5 &deg;C offset protects spools inside the hot enclosure during an active print
-5. Drying runs for the preset duration, just like the idle path — the printer stops it when the cycle completes
-6. The firmware's per-AMS `dry_sf_reason` field continues to arbitrate — if hardware rejects the command for any reason (busy AMS, power constraint, filament at outlet), the scheduler honours that decision per AMS
+1. Планировщик автосушки проверяет **все** активные принтеры, а не только свободные
+2. Для каждого он проверяет модель и прошивку по таблице выше
+3. Если принтер печатает, **поддерживает** одновременную сушку, а влажность AMS превышает порог, сушка начинается или продолжается с осторожно выбранным пресетом модуля
+4. Температура сушки во время печати автоматически **ограничивается значением `max(40, preset_temp - 5)`**. Примечания Bambu предупреждают: снижайте температуру сушки при печати и не превышайте температуру размягчения филамента. Снижение на 5 °C защищает катушки внутри горячей камеры во время печати
+5. Сушка длится заданное пресетом время, как и при простое; принтер остановит её после завершения
+6. Окончательное решение по-прежнему принимает поле прошивки `dry_sf_reason` для каждой AMS. Если оборудование отклоняет команду из-за занятой AMS, питания или филамента на выходе, планировщик учитывает это для конкретного модуля
 
-### Enabling
+### Включение {#enabling}
 
-1. Go to **Settings** > **Workflow**
-2. Find **Continue drying while printing** in the **Queue Auto-Drying** card
-3. Enable the toggle
+1. Перейдите в **Настройки** > **Рабочий процесс**
+2. Найдите **Продолжать сушку во время печати** в карточке **Автосушка очереди**
+3. Включите переключатель
 
-The toggle is independent of [queue auto-drying](#queue-auto-drying) and [ambient drying](#ambient-drying) — you can mix and match. With all three enabled, drying runs in idle gaps **and** during prints on capable hardware, each cycle running for its configured preset duration.
+Переключатель не зависит от [автосушки очереди](#queue-auto-drying) и [сушки по условиям окружающей среды](#ambient-drying): режимы можно сочетать. Если включены все три, сушка выполняется и в простое, и во время печати на поддерживаемом оборудовании; каждый цикл длится время, заданное пресетом.
 
-### Safety
+### Безопасность {#safety}
 
-- **Temperature cap** — `max(40, preset_temp - 5)` &deg;C, applied automatically. The user-configured idle preset is not touched; the cap only applies to the mid-print code path
-- **Firmware is the ultimate arbiter** — Bambuddy never sends a drying command that contradicts the printer's reported state. The matrix is a UI affordance; if Bambu silently ships the feature to a new model, Bambuddy will surface the toggle there too on the next release
-- **Default off** — existing installs see no behaviour change until the toggle is enabled
+- **Ограничение температуры** — `max(40, preset_temp - 5)` °C, применяется автоматически. Пользовательский пресет для простоя не меняется; ограничение действует только во время печати
+- **Окончательное решение за прошивкой** — Bambuddy не отправляет команду сушки вопреки состоянию, сообщённому принтером. Таблица управляет доступностью в интерфейсе; если Bambu добавит функцию новой модели, Bambuddy покажет переключатель и для неё в следующем выпуске
+- **По умолчанию выключено** — существующие установки не изменят поведение до включения настройки
 
-### Requirements
+### Требования {#requirements_2}
 
-- Supported printer firmware (matrix above)
-- AMS 2 Pro or AMS-HT unit (original AMS does not support drying)
-- Humidity above the configured threshold
-- No active blocking constraints on the AMS unit (see [power supply requirements](#power-supply-requirements))
+- Поддерживаемая прошивка (таблица выше)
+- AMS 2 Pro или AMS-HT (оригинальная AMS не поддерживает сушку)
+- Влажность выше заданного порога
+- Нет активных ограничений AMS (см. [требования к питанию](#power-supply-requirements))
 
-!!! warning "Continuing a cycle is not the same as starting a print during one"
+!!! warning "Продолжение сушки отличается от запуска печати во время неё"
+    Эта функция касается сушки, которая продолжается **во время** уже выполняющейся печати. Запуск *новой* печати посреди цикла — отдельный случай, и как минимум один принтер его отклоняет: на X2D с двумя сушащими AMS команда печати была принята, но принтер остался в простое, а Bambu Studio сообщила, что сушка мешает запуску задания ([#2758](https://github.com/maziggy/bambuddy/issues/2758)). При этом одна из AMS сушила **без внешнего блока питания**, поэтому пока неизвестно, препятствует ли запуску сама сушка или недостаток мощности для начальной калибровки.
 
-    This feature covers drying that carries on **through** a print that is already running. Beginning a *new* print while an AMS is mid-cycle is a separate matter, and at least one printer refuses it: on an X2D with two AMS units drying, the print command was accepted, the printer stayed idle, and Bambu Studio reported it could not start the job because of the drying ([#2758](https://github.com/maziggy/bambuddy/issues/2758)). Notably one of those units was drying **without its external power supply** — so it is not yet established whether the obstacle is the drying itself or the power left for the start-of-print calibration.
+    Bambuddy не останавливает сушку принудительно, чтобы запустить печать: на этом оборудовании сушка и печать сами по себе не противоречат друг другу, а остановка неправильного цикла не поможет. Вместо этого при неудачном запуске задания, во время которого непрерывно сушилась AMS, сообщение ошибки очереди называет эти модули вместо общих советов.
 
-    Bambuddy does not stop drying to force a print through, because on this hardware drying and printing are not inherently in conflict and stopping the wrong cycle would not help. What it does do is say so: if a dispatched job never starts and an AMS was drying throughout, the queue item's failure message names the units instead of offering generic advice.
-
-    If you hit this, stopping the cycle — or connecting the AMS power supply — and starting the job again is the workaround. Reports either way are useful, particularly whether a properly-powered AMS drying alone shows the same behaviour.
+    При такой проблеме остановите цикл или подключите блок питания AMS и запустите задание снова. Сообщения о результатах полезны в любом случае, особенно сведения о том, возникает ли проблема при сушке одной AMS с исправным питанием.
 
 ---
 
-## :material-tune: Configurable Drying Presets
+## :material-tune: Настраиваемые пресеты сушки {#configurable-drying-presets}
 
-Customize the drying temperature and duration for each filament type. These presets are used by both [manual drying](#starting-a-drying-session), [queue auto-drying](#queue-auto-drying), and [ambient drying](#ambient-drying).
+Задайте температуру и длительность сушки для каждого материала. Эти пресеты используются при [ручной сушке](#starting-a-drying-session), [автосушке очереди](#queue-auto-drying) и [сушке по условиям окружающей среды](#ambient-drying).
 
-### Default Presets
+### Пресеты по умолчанию {#default-presets}
 
-Defaults are based on BambuStudio's official filament drying profiles:
+Значения основаны на официальных профилях сушки филамента Bambu Studio:
 
-| Filament | AMS 2 Pro Temp | AMS-HT Temp | AMS 2 Pro Duration | AMS-HT Duration |
+| Филамент | Температура AMS 2 Pro | Температура AMS-HT | Длительность AMS 2 Pro | Длительность AMS-HT |
 |----------|:--------------:|:-----------:|:-------------------:|:---------------:|
-| PLA | 45°C | 45°C | 12h | 12h |
-| PETG | 65°C | 65°C | 12h | 12h |
-| TPU | 65°C | 75°C | 12h | 18h |
-| ABS | 65°C | 80°C | 12h | 8h |
-| ASA | 65°C | 80°C | 12h | 8h |
-| PA | 65°C | 85°C | 12h | 12h |
-| PC | 65°C | 80°C | 12h | 8h |
-| PVA | 65°C | 85°C | 12h | 18h |
+| PLA | 45°C | 45°C | 12 ч | 12 ч |
+| PETG | 65°C | 65°C | 12 ч | 12 ч |
+| TPU | 65°C | 75°C | 12 ч | 18 ч |
+| ABS | 65°C | 80°C | 12 ч | 8 ч |
+| ASA | 65°C | 80°C | 12 ч | 8 ч |
+| PA | 65°C | 85°C | 12 ч | 12 ч |
+| PC | 65°C | 80°C | 12 ч | 8 ч |
+| PVA | 65°C | 85°C | 12 ч | 18 ч |
 
-### Editing Presets
+### Изменение пресетов {#editing-presets}
 
-1. Go to **Settings** > **AMS Display Thresholds**
-2. Find the **Drying Presets** table
-3. Edit temperature (°C) and duration (hours) for each filament type
-4. Changes auto-save
+1. Перейдите в **Настройки** > **Пороги отображения AMS**
+2. Найдите таблицу **Пресеты сушки**
+3. Измените температуру (°C) и длительность (часы) для каждого материала
+4. Изменения сохраняются автоматически
 
-!!! note "AMS 2 Pro Temperature Limit"
-    AMS 2 Pro (n3f) has a hardware maximum of 65°C. AMS-HT (n3s) supports up to 85°C.
+!!! note "Ограничение температуры AMS 2 Pro"
+    Аппаратный максимум AMS 2 Pro (n3f) — 65°C. AMS-HT (n3s) поддерживает до 85°C.
 
 ---
 
-## :material-power-plug-off: Auto Off After Drying (Smart Plug)
+## :material-power-plug-off: Автовыключение после сушки (умная розетка) {#auto-off-after-drying-smart-plug}
 
-If the printer (or its AMS) is on a [smart plug](smart-plugs.md), Bambuddy can cut power automatically once a drying cycle completes. The trigger works for all three drying paths — [manual drying](#starting-a-drying-session), [queue auto-drying](#queue-auto-drying), and [ambient drying](#ambient-drying) — because Bambuddy detects completion from the printer's MQTT state (`dry_time` falling from a positive value to `0`), not from how the cycle was started.
+Если принтер или AMS подключены к [умной розетке](smart-plugs.md), Bambuddy может автоматически отключить питание после сушки. Условие работает для всех трёх способов: [ручной сушки](#starting-a-drying-session), [автосушки очереди](#queue-auto-drying) и [сушки по условиям окружающей среды](#ambient-drying), поскольку завершение определяется по состоянию MQTT принтера (`dry_time` уменьшается с положительного значения до `0`), а не по способу запуска.
 
-### Enabling
+### Включение {#enabling_1}
 
-1. Open **Settings** > **Smart Plugs** (or expand the plug card on the dashboard)
-2. On the plug that powers the printer and AMS, enable **Auto Off After Drying**
-3. Set the **Drying delay (minutes)** — default **10 minutes**, gives the AMS chamber time to cool before power is cut
+1. Откройте **Настройки** > **Умные розетки** или раскройте карточку розетки на панели
+2. На розетке, питающей принтер и AMS, включите **Автовыключение после сушки**
+3. Задайте **задержку после сушки (минуты)** — по умолчанию **10 минут**, чтобы камера AMS остыла до отключения питания
 
-### How It Differs From Print-Finish Auto-Off
+### Отличие от автовыключения после печати {#how-it-differs-from-print-finish-auto-off}
 
-| | Print-Finish Auto-Off | Auto Off After Drying |
+| | Автовыключение после печати | Автовыключение после сушки |
 |---|---|---|
-| **Trigger** | Print completes successfully | AMS `dry_time` reaches 0 |
-| **Default delay** | 5 minutes | 10 minutes (chamber stays warmer) |
-| **Cooldown mode** | Time or temperature (hotend) | Time only |
-| **Per-plug toggle** | `auto_off` | `auto_off_after_drying` |
+| **Условие** | Печать успешно завершена | `dry_time` AMS достигает 0 |
+| **Задержка по умолчанию** | 5 минут | 10 минут (камера остаётся теплее) |
+| **Режим охлаждения** | По времени или температуре хотэнда | Только по времени |
+| **Переключатель розетки** | `auto_off` | `auto_off_after_drying` |
 
-Both toggles are independent — you can enable either, both, or neither on the same plug.
+Переключатели независимы: на одной розетке можно включить любой из них, оба или ни одного.
 
-!!! note "Per-AMS routing"
-    The trigger is plug-vs-printer-level: if your printer has multiple AMS units on one plug, the auto-off fires whenever **any** of them finishes a cycle. Per-AMS targeting (a separate plug for the AMS, or different plugs for AMS 0 vs AMS 1 on dual-AMS printers) is not currently supported.
+!!! note "Маршрутизация для отдельных AMS"
+    Условие действует на уровне розетки и принтера: если несколько AMS принтера подключены к одной розетке, автовыключение срабатывает после окончания цикла **любого** из них. Выбор отдельной розетки для AMS или разных розеток для AMS 0 и AMS 1 на принтерах с двумя AMS сейчас не поддерживается.
 
-[:material-arrow-right: Full Smart Plug documentation](smart-plugs.md#auto-off-after-ams-drying)
-
----
-
-## :material-chart-line: Historical Charts
-
-Click on the humidity or temperature indicator to view historical data:
-
-### Time Ranges
-
-- **6 hours** - Recent trends
-- **24 hours** - Daily pattern
-- **48 hours** - Extended view
-- **7 days** - Weekly overview
-
-### Chart Features
-
-- **Min/Max/Avg** statistics
-- **Threshold reference lines**
-- **Interactive tooltips**
-- **Zoom and pan**
+[:material-arrow-right: Полная документация умных розеток](smart-plugs.md#auto-off-after-ams-drying)
 
 ---
 
-## :material-database: Data Retention
+## :material-chart-line: Исторические графики {#historical-charts}
 
-AMS data is stored for historical analysis:
+Нажмите индикатор влажности или температуры, чтобы увидеть историю:
 
-### Default Retention
+### Периоды {#time-ranges}
 
-- **30 days** of humidity/temperature data
-- Configurable in Settings
+- **6 часов** — недавние изменения
+- **24 часа** — суточная картина
+- **48 часов** — расширенный обзор
+- **7 дней** — обзор за неделю
 
-### Configuring Retention
+### Возможности графика {#chart-features}
 
-1. Go to **Settings** > **Filament**
-2. Find **History Retention** > **Keep sensor history for**
-3. Set number of days (1-365)
-4. Older data is automatically purged
-
-!!! warning "Storage Impact"
-    Longer retention periods increase database size. Consider your available storage.
+- Статистика **мин./макс./среднее**
+- **Линии порогов**
+- **Интерактивные подсказки**
+- **Масштабирование и перемещение**
 
 ---
 
-## :material-bell-ring: AMS Notifications
+## :material-database: Хранение данных {#data-retention}
 
-Get notified about AMS conditions:
+Данные AMS сохраняются для анализа истории:
 
-### Available Alerts
+### Срок по умолчанию {#default-retention}
 
-| Event | Description |
+- **30 дней** данных влажности и температуры
+- Настраивается в параметрах
+
+### Настройка срока хранения {#configuring-retention}
+
+1. Перейдите в **Настройки** > **Филамент**
+2. Найдите **Хранение истории** > **Хранить историю датчиков**
+3. Задайте число дней (1–365)
+4. Старые данные будут удаляться автоматически
+
+!!! warning "Влияние на хранилище"
+    Более длительный срок увеличивает размер базы данных. Учитывайте доступное место.
+
+---
+
+## :material-bell-ring: Уведомления AMS {#ams-notifications}
+
+Получайте уведомления о состоянии AMS:
+
+### Доступные оповещения {#available-alerts}
+
+| Событие | Описание |
 |-------|-------------|
-| **High Humidity** | When humidity exceeds threshold |
-| **Low Filament** | When the spool assigned to a slot drops below its low-stock threshold ([details](notifications.md#printer-events)) |
-| **AMS Error** | When AMS encounters issues |
+| **Высокая влажность** | Влажность превышает порог |
+| **Мало филамента** | Остаток катушки, назначенной слоту, ниже её порога ([подробнее](notifications.md#printer-events)) |
+| **Ошибка AMS** | В AMS возникла проблема |
 
-### Setting Up
+### Настройка {#setting-up}
 
-1. Go to **Settings** > **Notifications**
-2. Add or edit a provider
-3. Enable AMS-related events
-4. Save changes
+1. Перейдите в **Настройки** > **Уведомления**
+2. Добавьте или измените провайдера
+3. Включите события AMS
+4. Сохраните изменения
 
-[:material-arrow-right: Full notifications guide](notifications.md)
+[:material-arrow-right: Полное руководство по уведомлениям](notifications.md)
 
 ---
 
-## :material-fire: AMS-HT vs Standard AMS
+## :material-fire: AMS-HT и стандартная AMS {#ams-ht-vs-standard-ams}
 
-| Feature | Standard AMS | AMS-HT |
+| Возможность | Стандартная AMS | AMS-HT |
 |---------|-------------|--------|
-| Humidity monitoring | :material-check: | :material-check: |
-| Temperature monitoring | :material-close: | :material-check: |
-| [Remote drying](#remote-ams-drying) | :material-close: | :material-check: |
-| High-temp filaments | :material-close: | :material-check: |
+| Мониторинг влажности | :material-check: | :material-check: |
+| Мониторинг температуры | :material-close: | :material-check: |
+| [Удалённая сушка](#remote-ams-drying) | :material-close: | :material-check: |
+| Высокотемпературные филаменты | :material-close: | :material-check: |
 
-### AMS-HT Temperature Control
+### Управление температурой AMS-HT {#ams-ht-temperature-control}
 
-AMS-HT units can actively dry filament. See [Remote AMS Drying](#remote-ams-drying) for setup and usage.
-
----
-
-## :material-label: Custom AMS Labels
-
-Assign friendly names to your AMS units to easily identify them in multi-AMS setups.
-
-### AMS Info Card
-
-Hover over any AMS label (e.g. "AMS-A") on the Printers page to see a popover with:
-
-- **Serial Number** — The hardware serial from MQTT
-- **Firmware Version** — Parsed from the printer's `get_version` response
-- **Friendly Name** — An editable text field for your custom label
-
-### Setting a Custom Label
-
-1. Hover over the AMS label on the Printers page
-2. Type a name in the "AMS Name" field (e.g. "Silk Colours", "Workshop AMS")
-3. Click **Save** or press **Enter**
-4. To remove a label, clear the field and save, or click **Clear**
-
-!!! note "Permission Required"
-    Editing AMS labels requires the `printers:update` permission when authentication is enabled.
-
-### Label Persistence
-
-Labels are stored by AMS serial number, so they **persist when the AMS is moved to a different printer**. If the AMS serial is not available (older firmware), a fallback key based on printer ID and AMS position is used. A label kept by position still shows once the unit reports its serial (as the AMS Lite does since 1.3.0, #3348); saving it again moves it to the serial, and **Clear** removes it either way.
-
-Custom labels also appear in the **Inventory page** location column alongside the slot identifier, making it easy to find spools across a print farm.
-
-### Slot Numbers
-
-Each filament color circle now displays a 1-based slot number with automatically inverted text contrast — black text on light filaments, white text on dark filaments.
+AMS-HT может активно сушить филамент. Инструкции см. в разделе [Удалённая сушка AMS](#remote-ams-drying).
 
 ---
 
-## :material-lan: AMS Discovery
+## :material-label: Пользовательские названия AMS {#custom-ams-labels}
 
-Bambuddy automatically discovers connected AMS units:
+Назначайте модулям AMS удобные названия, чтобы различать их при использовании нескольких модулей.
 
-- Detected during printer connection
-- Updates when AMS configuration changes
-- No manual configuration needed
+### Карточка сведений AMS {#ams-info-card}
 
-### Dual-Nozzle Wiring
+Наведите курсор на обозначение AMS, например «AMS-A», на странице принтеров, чтобы открыть карточку:
 
-For H2D and other dual-nozzle printers, Bambuddy displays the AMS wiring configuration:
+- **Серийный номер** — номер оборудования из MQTT
+- **Версия прошивки** — извлекается из ответа принтера `get_version`
+- **Удобное название** — редактируемое поле вашего названия
 
-- Which AMS units feed which nozzle
-- Visual diagram of connections
-- Helps plan multi-material prints
+### Задание названия {#setting-a-custom-label}
 
-### Nozzle-Aware Filament Mapping
+1. Наведите курсор на обозначение AMS на странице принтеров
+2. Введите название в поле «Название AMS», например «Silk Colours» или «Workshop AMS»
+3. Нажмите **Сохранить** или **Enter**
+4. Чтобы удалить название, очистите поле и сохраните его либо нажмите **Очистить**
 
-On dual-nozzle printers (H2D, H2D Pro), each AMS unit is physically connected to either the left or right nozzle. The 3MF file's nozzle assignment is used to *pre-fill* the right slot per filament; you can still **manually override** with a tray on the other extruder when you've intentionally loaded the required filament there.
+!!! note "Необходимое разрешение"
+    При включённой аутентификации изменение названий AMS требует разрешения `printers:update`.
 
-**Auto-match (pre-fill behaviour):**
+### Сохранение названий {#label-persistence}
 
-1. The 3MF file contains `filament_nozzle_map` and `physical_extruder_map` in `project_settings.config`, mapping each filament slot to a target nozzle (0 = right, 1 = left)
-2. The printer reports `ams_extruder_map` via MQTT, indicating which AMS unit feeds which nozzle
-3. Auto-match prefers trays on the slicer-assigned nozzle when matching by type + colour
-4. If no matching tray exists on the target nozzle, auto-match falls back to the full tray list
+Названия хранятся по серийному номеру AMS, поэтому **сохраняются при переносе AMS на другой принтер**. Если серийный номер недоступен на старой прошивке, используется резервный ключ по ID принтера и позиции AMS. Название, сохранённое по позиции, остаётся видимым, когда модуль начинает сообщать серийный номер, как AMS Lite начиная с 1.3.0, #3348. Повторное сохранение переносит название на серийный номер, а **Очистить** удаляет его в обоих случаях.
 
-**Manual cross-extruder picks:**
+Пользовательские названия также отображаются в столбце расположения на **странице филамента** рядом с обозначением слота, упрощая поиск катушек на ферме.
 
-The per-filament slot dropdown in the Print modal shows **every loaded AMS slot**, regardless of which extruder it feeds. The **L** / **R** badge stays next to each filament as a *hint to the slicer's intent*, but it does not hide slots on the other extruder. If you've loaded the required filament into an AMS on the "wrong" side on purpose (a common H2D workflow when one AMS is busy with another colour set), you can pick it.
+### Номера слотов {#slot-numbers}
 
-The printer's firmware decides at start-print whether the resulting `ams_mapping` is physically valid; if a cross-extruder combination really can't be served, the firmware reports the error normally.
-
-This applies to:
-
-- **Print scheduler** — automatic filament matching for queued prints (still nozzle-preferring; never picks cross-extruder on its own)
-- **Print modal** — filament mapping for ASAP, Queue, Schedule, and Manual Start dispatch options
-- **Multi-printer selection** — per-printer mapping for print farms
-
-!!! note "Single-Nozzle Printers"
-    On single-nozzle printers (X1C, P1S, A1, etc.), nozzle filtering is not applied. All AMS trays are available for matching as before.
-
-### Filament Track Switch (FTS) Support
-
-The **Filament Track Switch** is an external accessory for dual-nozzle printers that sits between an AMS and the printer's extruders, dynamically routing any AMS slot to either nozzle. With the FTS installed, the AMS is no longer wired to a single extruder — it can feed either one through the track switch.
-
-When Bambuddy detects the FTS (via `print.device.fila_switch` in the printer's MQTT push), the per-nozzle filter is automatically suppressed in the print modal:
-
-- **Without FTS** — each AMS unit feeds a fixed nozzle, so the dropdown only shows trays on the matching nozzle (preventing the "position of left hotend is abnormal" failure that comes from cross-nozzle assignment).
-- **With FTS installed** — every loaded AMS slot is selectable for any nozzle's filament, since the FTS handles the routing on the fly.
-
-#### Inlet badges
-
-The switch has two filament **inlets** (In-A, In-B) and two outlets, and can pair any inlet with any outlet. Each AMS is plumbed into one inlet, which you assign on the printer's own **Manual AMS Setup** screen — several AMS units can share an inlet through a 4-in-1 PTFE adapter.
-
-That inlet is what Bambuddy shows, lettered **L** for In-A and **R** for In-B:
-
-- **On the printer card**, each AMS carries an L or R badge in a distinct colour from the plain nozzle badge, and its tooltip names the inlet in full — *Filament Track Switch IN-A (L) — feeds both nozzles*.
-- **In the print dialog**, each slot in the dropdown is labelled `[L]` or `[R]`.
-
-An AMS that still reports a fixed nozzle keeps its ordinary L/R badge. A switch that has been fitted but not yet assigned on the printer screen shows no badge at all, rather than a guess.
-
-!!! warning "The letter is the inlet, not the nozzle"
-    An AMS behind the switch reaches **both** nozzles. L and R name which inlet the AMS is plumbed into, matching the physical layout — they do not say which nozzle its filament goes to. That is why the tooltip spells out the inlet.
-
-!!! note "Why there is no live left/right"
-    The printer reports which slot is sitting in each inlet and which nozzle each *outlet* feeds, but never which inlet is currently paired with which outlet. There is therefore no way to say which nozzle a given slot is routed to at this instant, and Bambuddy does not pretend otherwise.
-
-#### K-profiles and the switch
-
-Flow-dynamics (K) profiles are calibrated **per nozzle** — the same spool can read K=0.018 on the left hotend and K=0.020 on the right — and the printer numbers its calibration table per nozzle too, so index 16 exists on both and means a different profile on each. An AMS tray holds exactly one index.
-
-That makes moving an AMS between inlets a calibration change as well as a routing one. Bambuddy handles it:
-
-- **Configure Slot** offers the profiles for the nozzle that slot actually feeds, names the hotend on each option, and resolves the slot's current index against its own nozzle. The other hotend's profiles stay available under **Other K profiles** if you want to override.
-- **Moving an AMS to the other inlet** re-selects each configured slot's counterpart profile for the new nozzle, provided the spool has one. A slot Bambuddy doesn't know, or a spool calibrated on one hotend only, is left as you set it.
-
-!!! note "The printer will not do this for you"
-    Re-linking on the printer screen changes which nozzle the AMS feeds but leaves the tray's calibration index untouched, and an RFID re-read only re-asserts it. Without Bambuddy the slot keeps the other hotend's K value.
-
-#### Loading and unloading through the switch
-
-Without the switch, each AMS is wired to one nozzle and the printer works out where a load is going by itself. With the switch fitted that stops being true: an AMS is bound to an *inlet*, both nozzles are reachable from every slot, and a load that names neither gives the firmware nothing to act on — it is discarded without a word.
-
-So **Load** on a slot asks first, exactly as Bambu Studio does:
-
-- Both nozzles are offered, with neither preselected, so a stray Enter cannot feed the wrong one.
-- The nozzle already fed from that very slot is greyed out — it is already there.
-- If any AMS is still unassigned to an inlet, the load is refused before anything is sent, with a note to finish **Manual AMS Setup** on the printer.
-
-**Unload** does not ask. The printer reports which slot each hotend is currently fed from, so Bambuddy retracts the one holding the slot whose menu you used. A slot no hotend is holding is reported as such rather than unloading something else.
-
-#### Same-inlet warning
-
-If every filament a print needs sits behind the same inlet, the print dialog says so. This is legal but slow: swapping between two filaments on one inlet means retracting the outgoing spool all the way back to its AMS before the next can be fed up the shared tube, where a swap across the two inlets only retracts as far as the switch. Moving one spool to an AMS on the other inlet is usually all it takes.
-
-!!! note "Detection is automatic"
-    There's no setting to toggle. The FTS is detected from MQTT in real time, so plugging in or removing the accessory updates the dropdown behaviour on the next status push, and moving an AMS to the other inlet on the printer updates the badges without a page reload.
-
-!!! warning "Assigning inlets is printer-side only"
-    Bambuddy can read which inlet each AMS is on but cannot change it — use the printer's **Manual AMS Setup** screen. Bambu's own slicer has the same limitation: it reads the binding and has no command to write it, so there is nothing for Bambuddy to call.
+Каждый цветной кружок филамента показывает номер слота с единицы с автоматически подобранным контрастом: чёрный текст на светлом филаменте и белый на тёмном.
 
 ---
 
-## :material-sync: Spoolman Integration
+## :material-lan: Обнаружение AMS {#ams-discovery}
 
-Sync AMS slots with Spoolman for complete filament tracking:
+Bambuddy автоматически обнаруживает подключённые AMS:
 
-1. Configure Spoolman integration in Settings
-2. AMS slots sync automatically
-3. Track usage across your inventory
+- При подключении принтера
+- При изменении конфигурации AMS
+- Без ручной настройки
 
-[:material-arrow-right: Spoolman integration guide](spoolman.md)
+### Подключение к двум соплам {#dual-nozzle-wiring}
+
+Для H2D и других принтеров с двумя соплами Bambuddy показывает схему подключения AMS:
+
+- Какие модули AMS подают материал в какое сопло
+- Наглядную схему соединений
+- Данные для планирования многоматериальной печати
+
+### Сопоставление филамента с учётом сопла {#nozzle-aware-filament-mapping}
+
+На принтерах с двумя соплами (H2D, H2D Pro) каждая AMS физически подключена к левому или правому соплу. Назначение сопел в 3MF используется для *предварительного выбора* слота каждого филамента; при необходимости можно **вручную выбрать** лоток другого экструдера, если нужный материал специально загружен туда.
+
+**Автосопоставление (предварительный выбор):**
+
+1. Файл 3MF содержит `filament_nozzle_map` и `physical_extruder_map` в `project_settings.config`, связывающие каждый слот филамента с целевым соплом (0 = правое, 1 = левое)
+2. Принтер сообщает `ams_extruder_map` по MQTT, указывая, какая AMS питает какое сопло
+3. При сопоставлении по типу и цвету автоподбор предпочитает лотки назначенного слайсером сопла
+4. Если подходящего лотка на целевом сопле нет, поиск выполняется по полному списку
+
+**Ручной выбор другого экструдера:**
+
+Список слотов для каждого филамента в окне печати показывает **все загруженные слоты AMS**, независимо от питаемого экструдера. Метка **L** / **R** рядом с каждым филаментом остаётся *подсказкой о назначении слайсера*, но не скрывает слоты другого экструдера. Если нужный филамент намеренно загружен в AMS на «неправильной» стороне — распространённый сценарий H2D, когда другая AMS занята другим набором цветов, — его можно выбрать.
+
+При запуске прошивка принтера решает, физически допустимо ли получившееся `ams_mapping`. Если сочетание невозможно, прошивка обычным образом сообщит об ошибке.
+
+Это относится к следующим функциям:
+
+- **Планировщик печати** — автоматическое сопоставление филамента для очереди (по-прежнему предпочитает назначенное сопло и сам не выбирает другой экструдер)
+- **Окно печати** — сопоставление для отправки «Как можно скорее», в очередь, по расписанию и с ручным запуском
+- **Выбор нескольких принтеров** — отдельное сопоставление для каждого принтера фермы
+
+!!! note "Принтеры с одним соплом"
+    На принтерах с одним соплом (X1C, P1S, A1 и т. д.) фильтрация по соплу не применяется. Как и раньше, для сопоставления доступны все лотки AMS.
+
+### Поддержка Filament Track Switch (FTS) {#filament-track-switch-fts-support}
+
+**Filament Track Switch** — внешнее дополнение для принтеров с двумя соплами, установленное между AMS и экструдерами принтера и динамически направляющее любой слот AMS к любому соплу. При установленном FTS AMS больше не привязана физически к одному экструдеру: переключатель может подавать филамент в любой из них.
+
+Когда Bambuddy обнаруживает FTS по `print.device.fila_switch` в сообщении MQTT принтера, фильтр по соплу в окне печати автоматически отключается:
+
+- **Без FTS** — каждая AMS питает фиксированное сопло, поэтому список показывает только лотки соответствующего сопла; это предотвращает ошибку «position of left hotend is abnormal» при перекрёстном назначении.
+- **С FTS** — для филамента любого сопла можно выбрать любой загруженный слот AMS, поскольку маршрутизацию на лету выполняет FTS.
+
+#### Метки входов {#inlet-badges}
+
+У переключателя два **входа** филамента (In-A, In-B) и два выхода; любой вход может быть соединён с любым выходом. Каждая AMS подключена к одному входу, который назначается на экране принтера **Manual AMS Setup**. Несколько AMS могут использовать один вход через адаптер PTFE 4-в-1.
+
+Bambuddy показывает этот вход буквами **L** для In-A и **R** для In-B:
+
+- **На карточке принтера** каждая AMS имеет метку L или R, цветом отличающуюся от обычной метки сопла; подсказка полностью называет вход: *Filament Track Switch IN-A (L) — питает оба сопла*.
+- **В окне печати** каждый слот списка обозначается `[L]` или `[R]`.
+
+AMS, которая всё ещё сообщает фиксированное сопло, сохраняет обычную метку L/R. Если переключатель установлен, но ещё не назначен на экране принтера, метка не показывается: Bambuddy не делает предположений.
+
+!!! warning "Буква обозначает вход, а не сопло"
+    AMS за переключателем достигает **обоих** сопел. L и R указывают, к какому входу физически подключена AMS, а не в какое сопло идёт филамент. Поэтому подсказка расшифровывает вход.
+
+!!! note "Почему нет текущего направления влево или вправо"
+    Принтер сообщает, какой слот находится в каждом входе и какое сопло питает каждый *выход*, но не сообщает, какой вход сейчас соединён с каким выходом. Поэтому определить текущее сопло конкретного слота невозможно, и Bambuddy не пытается его угадать.
+
+#### K-профили и переключатель {#k-profiles-and-the-switch}
+
+Профили динамики потока (K) калибруются **отдельно для каждого сопла**: одна катушка может иметь K=0.018 на левом хотэнде и K=0.020 на правом. Принтер нумерует таблицу калибровки отдельно для сопел, поэтому индекс 16 существует на обоих и обозначает разные профили. Лоток AMS хранит ровно один индекс.
+
+Поэтому перенос AMS между входами меняет не только маршрут, но и калибровку. Bambuddy учитывает это:
+
+- **Настроить слот** предлагает профили сопла, которое действительно питается этим слотом, называет хотэнд у каждого варианта и сопоставляет текущий индекс со своим соплом. Профили другого хотэнда остаются в разделе **Другие K-профили**, если нужен ручной выбор.
+- При **переносе AMS на другой вход** для каждого настроенного слота повторно выбирается соответствующий профиль нового сопла, если он есть у катушки. Неизвестный Bambuddy слот или катушка, откалиброванная только на одном хотэнде, остаётся без изменений.
+
+!!! note "Принтер не сделает это за вас"
+    Переназначение на экране принтера меняет питаемое AMS сопло, но оставляет индекс калибровки лотка прежним; повторное чтение RFID лишь подтверждает его. Без Bambuddy слот сохранит K-значение другого хотэнда.
+
+#### Загрузка и выгрузка через переключатель {#loading-and-unloading-through-the-switch}
+
+Без переключателя каждая AMS подключена к одному соплу, и принтер сам определяет направление загрузки. С переключателем AMS привязана к *входу*, а каждый слот достигает обоих сопел; загрузка без указания сопла не даёт прошивке достаточно данных и молча отбрасывается.
+
+Поэтому **Загрузить** сначала задаёт вопрос, как в Bambu Studio:
+
+- Предлагаются оба сопла, ни одно не выбрано заранее, чтобы случайное нажатие Enter не подало филамент в неправильное сопло.
+- Сопло, уже питаемое этим слотом, недоступно: филамент уже загружен.
+- Если какая-либо AMS ещё не назначена входу, загрузка отклоняется до отправки команды с предложением завершить **Manual AMS Setup** на принтере.
+
+**Выгрузка** вопроса не задаёт. Принтер сообщает, из какого слота питается каждый хотэнд, поэтому Bambuddy отводит филамент из того, который использует слот вызванного меню. Если слот не используется ни одним хотэндом, об этом сообщается вместо выгрузки другого.
+
+#### Предупреждение об одном входе {#same-inlet-warning}
+
+Если весь необходимый для печати филамент находится за одним входом, окно печати предупреждает об этом. Это допустимо, но медленно: при смене двух филаментов одного входа исходную катушку приходится отводить до самой AMS перед подачей следующей по общей трубке; при смене между двумя входами отвод нужен только до переключателя. Обычно достаточно переместить одну катушку в AMS другого входа.
+
+!!! note "Обнаружение автоматическое"
+    Включать ничего не нужно. FTS обнаруживается по MQTT в реальном времени, поэтому подключение или удаление дополнения меняет поведение списка при следующем сообщении состояния, а перенос AMS на другой вход на принтере обновляет метки без перезагрузки страницы.
+
+!!! warning "Назначение входов выполняется только на принтере"
+    Bambuddy может прочитать вход каждой AMS, но не изменить его. Используйте экран принтера **Manual AMS Setup**. У слайсера Bambu то же ограничение: он читает привязку, но команды записи нет, поэтому Bambuddy нечего вызвать.
 
 ---
 
-## :material-lightbulb: Tips
+## :material-sync: Интеграция со Spoolman {#spoolman-integration}
 
-!!! tip "Desiccant Maintenance"
-    When humidity consistently stays high, it's time to replace or regenerate your desiccant packets.
+Синхронизируйте слоты AMS со Spoolman для полного учёта филамента:
 
-!!! tip "Filament Storage"
-    For filaments not in the AMS, store in vacuum bags with desiccant to maintain low humidity.
+1. Настройте интеграцию Spoolman в параметрах
+2. Слоты AMS синхронизируются автоматически
+3. Отслеживайте расход в своём учёте филамента
 
-!!! tip "Historical Analysis"
-    Review humidity charts to understand how your environment affects filament condition over time.
+[:material-arrow-right: Руководство по интеграции Spoolman](spoolman.md)
 
-!!! tip "AMS-HT for Hygroscopic Filaments"
-    Consider AMS-HT for moisture-sensitive materials like Nylon, PC, and PETG.
+---
 
-!!! tip "Auto-Drying Between Prints"
-    Enable queue auto-drying to keep filament dry during long print queues, or enable ambient drying to keep filament dry on all idle printers — even when no prints are scheduled. Both use the Fair humidity threshold as the trigger point.
+## :material-lightbulb: Советы {#tips}
+
+!!! tip "Обслуживание осушителя"
+    Если влажность постоянно высокая, замените или восстановите пакетики осушителя.
+
+!!! tip "Хранение филамента"
+    Филамент вне AMS храните в вакуумных пакетах с осушителем для поддержания низкой влажности.
+
+!!! tip "Анализ истории"
+    Изучайте графики влажности, чтобы понять влияние окружающих условий на состояние филамента со временем.
+
+!!! tip "AMS-HT для гигроскопичных материалов"
+    Рассмотрите AMS-HT для чувствительных к влаге Nylon, PC и PETG.
+
+!!! tip "Автосушка между печатями"
+    Включите автосушку очереди для длинных очередей или сушку по условиям окружающей среды, чтобы поддерживать сухой филамент на всех свободных принтерах даже без расписания. Оба режима запускаются по умеренному порогу влажности.
