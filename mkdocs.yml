@@ -1,5 +1,5 @@
-site_name: Bambuddy Documentation
-site_description: Self-hosted print archive and management system for Bambu Lab 3D printers
+site_name: Документация Bambuddy
+site_description: Локальная система архивации и управления печатью для 3D-принтеров Bambu Lab
 site_url: https://wiki.bambuddy.cool
 repo_url: https://github.com/maziggy/bambuddy
 repo_name: maziggy/bambuddy
@@ -7,6 +7,7 @@ edit_uri: ""
 
 theme:
   name: material
+  language: ru
   custom_dir: overrides
   logo: assets/logo.png
   favicon: assets/favicon.png
@@ -18,7 +19,7 @@ theme:
       accent: light green
       toggle:
         icon: material/brightness-7
-        name: Switch to dark mode
+        name: Переключить на тёмную тему
     # Dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
@@ -26,7 +27,7 @@ theme:
       accent: light green
       toggle:
         icon: material/brightness-4
-        name: Switch to light mode
+        name: Переключить на светлую тему
   features:
     - navigation.instant
     - navigation.instant.prefetch
@@ -51,6 +52,7 @@ theme:
 
 plugins:
   - search:
+      lang: ru
       separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
   - minify:
       minify_html: true
@@ -100,13 +102,13 @@ extra:
   social:
     - icon: fontawesome/brands/discord
       link: https://discord.gg/aFS3ZfScHM
-      name: Join our Discord
+      name: Присоединиться к Discord
     - icon: fontawesome/brands/github
       link: https://github.com/maziggy/bambuddy
-      name: Bambuddy on GitHub
+      name: Bambuddy на GitHub
     - icon: fontawesome/solid/heart
       link: https://ko-fi.com/maziggy
-      name: Support on Ko-fi
+      name: Поддержать на Ko-fi
   generator: false
   version:
     provider: mike
@@ -115,106 +117,106 @@ extra_css:
   - stylesheets/extra.css
 
 nav:
-  - Home: index.md
+  - Главная: index.md
 
-  - Getting Started:
+  - Начало работы:
     - getting-started/index.md
-    - Installation: getting-started/installation.md
+    - Установка: getting-started/installation.md
     - Docker: getting-started/docker.md
-    - Windows Installer: getting-started/windows-installer.md
-    - First Printer Setup: getting-started/first-printer.md
-    - Mobile Access: getting-started/mobile.md
+    - Установщик для Windows: getting-started/windows-installer.md
+    - Настройка первого принтера: getting-started/first-printer.md
+    - Доступ с мобильных устройств: getting-started/mobile.md
 
-  - Features:
+  - Возможности:
     - features/index.md
-    - Printers & Monitoring:
-      - Real-time Monitoring: features/monitoring.md
-      - Camera Streaming: features/camera.md
-      - AMS & Humidity: features/ams.md
-      - Printer Control: features/printer-control.md
-    - Print Archive:
-      - Print Archiving: features/archiving.md
-      - Print Log: features/print-log.md
-      - Full-Text Search: features/search.md
-      - Projects: features/projects.md
-      - Archive Comparison: features/comparison.md
-    - Analytics:
-      - Statistics Dashboard: features/statistics.md
-      - Failure Analysis: features/failure-analysis.md
-      - AI Failure Detection: features/failure-detection.md
-      - Energy Tracking: features/energy.md
-      - Export: features/export.md
-    - Automation:
-      - Print Queue: features/print-queue.md
-      - Billing & Cost Centers: features/billing.md
-      - Smart Plugs: features/smart-plugs.md
-      - Sensors: features/sensors.md
-      - Virtual Printer: features/virtual-printer.md
-      - Notifications: features/notifications.md
-    - Integrations:
+    - Принтеры и мониторинг:
+      - Мониторинг в реальном времени: features/monitoring.md
+      - Трансляция с камеры: features/camera.md
+      - AMS и влажность: features/ams.md
+      - Управление принтером: features/printer-control.md
+    - Архив печати:
+      - Архивация печати: features/archiving.md
+      - Журнал печати: features/print-log.md
+      - Полнотекстовый поиск: features/search.md
+      - Проекты: features/projects.md
+      - Сравнение архивов: features/comparison.md
+    - Аналитика:
+      - Панель статистики: features/statistics.md
+      - Анализ неудач: features/failure-analysis.md
+      - Обнаружение ошибок с помощью ИИ: features/failure-detection.md
+      - Учёт энергии: features/energy.md
+      - Экспорт: features/export.md
+    - Автоматизация:
+      - Очередь печати: features/print-queue.md
+      - Расчёты и центры затрат: features/billing.md
+      - Умные розетки: features/smart-plugs.md
+      - Датчики: features/sensors.md
+      - Виртуальный принтер: features/virtual-printer.md
+      - Уведомления: features/notifications.md
+    - Интеграции:
       - MakerWorld: features/makerworld.md
       - Manyfold: features/manyfold.md
-      - Spool Inventory: features/inventory.md
-      - Storage Locations: features/storage-locations.md
+      - Учёт катушек: features/inventory.md
+      - Места хранения: features/storage-locations.md
       - Spoolman: features/spoolman.md
-      - MQTT Publishing: features/mqtt.md
-      - Prometheus Metrics: features/prometheus.md
-      - Cloud Profiles (Bambu): features/cloud-profiles.md
-      - Cloud Profiles (Orca): features/orca-cloud-profiles.md
-      - Local Profiles: features/local-profiles.md
-      - K-Profiles: features/k-profiles.md
-      - Server-Side Slicing: features/slicer-api.md
-      - Slicer Pipelines: features/slicer-pipelines.md
-      - API Keys & Webhooks: features/api-keys.md
-      - Connected Apps: features/connected-apps.md
-      - Sidebar Customization: features/external-links.md
-    - Maintenance & Security:
-      - Maintenance Tracker: features/maintenance.md
-      - Firmware Updates: features/firmware-updates.md
-      - Announcements: features/announcements.md
-      - File Manager: features/file-manager.md
-      - Backup & Restore: features/backup.md
-      - PostgreSQL Support: features/postgresql.md
-      - System Info: features/system-info.md
-      - Bug Report: features/bug-report.md
-      - Authentication: features/authentication.md
+      - Публикация MQTT: features/mqtt.md
+      - Метрики Prometheus: features/prometheus.md
+      - Облачные профили (Bambu): features/cloud-profiles.md
+      - Облачные профили (Orca): features/orca-cloud-profiles.md
+      - Локальные профили: features/local-profiles.md
+      - K-профили: features/k-profiles.md
+      - Нарезка на сервере: features/slicer-api.md
+      - Конвейеры слайсера: features/slicer-pipelines.md
+      - Ключи API и вебхуки: features/api-keys.md
+      - Подключённые приложения: features/connected-apps.md
+      - Настройка боковой панели: features/external-links.md
+    - Обслуживание и безопасность:
+      - Учёт обслуживания: features/maintenance.md
+      - Обновления прошивки: features/firmware-updates.md
+      - Объявления: features/announcements.md
+      - Файловый менеджер: features/file-manager.md
+      - Резервное копирование и восстановление: features/backup.md
+      - Поддержка PostgreSQL: features/postgresql.md
+      - Информация о системе: features/system-info.md
+      - Сообщение об ошибке: features/bug-report.md
+      - Аутентификация: features/authentication.md
 
   - Appliance:
     - appliance/index.md
-    - Quick Start: appliance/quick-start.md
-    - Admin Panel: appliance/admin-panel.md
-    - Command Line: appliance/cli.md
-    - Updates & Backups: appliance/updates.md
-    - Registration: appliance/registration.md
-    - Recovery: appliance/recovery.md
+    - Быстрый старт: appliance/quick-start.md
+    - Панель администратора: appliance/admin-panel.md
+    - Командная строка: appliance/cli.md
+    - Обновления и резервные копии: appliance/updates.md
+    - Регистрация: appliance/registration.md
+    - Восстановление: appliance/recovery.md
 
   - SpoolBuddy:
     - spoolbuddy/index.md
-    - Supported Pis: spoolbuddy/supported-pis.md
-    - Deployment Modes: spoolbuddy/deployment-modes.md
-    - Hardware Requirements: spoolbuddy/hardware.md
-    - Materials Required: spoolbuddy/materials.md
-    - Wiring Diagrams: spoolbuddy/wiring-diagrams.md
-    - Assembly: spoolbuddy/assembly.md
-    - Installation: spoolbuddy/installation.md
-    - Configuration: spoolbuddy/configuration.md
-    - Usage: spoolbuddy/usage.md
+    - Поддерживаемые Raspberry Pi: spoolbuddy/supported-pis.md
+    - Режимы развёртывания: spoolbuddy/deployment-modes.md
+    - Требования к оборудованию: spoolbuddy/hardware.md
+    - Необходимые материалы: spoolbuddy/materials.md
+    - Схемы подключения: spoolbuddy/wiring-diagrams.md
+    - Сборка: spoolbuddy/assembly.md
+    - Установка: spoolbuddy/installation.md
+    - Настройка: spoolbuddy/configuration.md
+    - Использование: spoolbuddy/usage.md
 
-  - Community Add-ons:
+  - Дополнения сообщества:
     - community/index.md
     - Bambutton: community/bambutton.md
     - Bambuddy MCP Server: community/bambuddy-mcp.md
 
-  - Reference:
+  - Справочник:
     - reference/index.md
-    - API Reference: reference/api.md
-    - Troubleshooting: reference/troubleshooting.md
-    - Running a Large Farm: reference/farm-sizing.md
-    - Keyboard Shortcuts: reference/shortcuts.md
-    - Supported Printers: reference/printers.md
+    - Справочник API: reference/api.md
+    - Устранение неполадок: reference/troubleshooting.md
+    - Работа с большой фермой: reference/farm-sizing.md
+    - Сочетания клавиш: reference/shortcuts.md
+    - Поддерживаемые принтеры: reference/printers.md
 
-  - Legal:
-    - Legal Notice: legal-notice.md
-    - Privacy Policy: privacy-policy.md
+  - Правовая информация:
+    - Правовая информация: legal-notice.md
+    - Политика конфиденциальности: privacy-policy.md
 
-copyright: Copyright &copy; 2025-2026 Bambuddy Contributors | <a href="/legal-notice/">Legal Notice</a> | <a href="/privacy-policy/">Privacy Policy</a>
+copyright: Copyright &copy; 2025-2026 Bambuddy Contributors | <a href="/legal-notice/">Правовая информация</a> | <a href="/privacy-policy/">Политика конфиденциальности</a>
