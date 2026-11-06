@@ -1,129 +1,129 @@
 ---
-title: Command Line
-description: The bambuddy-appliance command - upgrades, network aliases, Tailscale, and registration over SSH
+title: Командная строка
+description: Команда bambuddy-appliance — обновления, сетевые псевдонимы, Tailscale и регистрация через SSH
 ---
 
-# Command Line
+# Командная строка {#command-line}
 
-Everything the [admin panel](admin-panel.md) does, the `bambuddy-appliance` command does too &mdash; the panel is a thin layer over this CLI, so there is exactly one code path that touches the appliance's state.
+Всё, что делает [панель администратора](admin-panel.md), доступно и через команду `bambuddy-appliance`. Панель служит тонкой оболочкой над этим CLI, поэтому состояние устройства изменяется одним и тем же кодом.
 
-SSH is enabled by default:
+SSH включён по умолчанию:
 
 ```bash
 ssh pi@bambuddy.local
 ```
 
-Most subcommands need root. Prefix them with `sudo`.
+Для большинства подкоманд нужны права root. Добавляйте перед ними `sudo`.
 
 ---
 
-## Status and restart
+## Состояние и перезапуск {#status-and-restart}
 
 ```bash
 bambuddy-appliance status      # docker compose ps
-bambuddy-appliance restart     # restart the Bambuddy stack
+bambuddy-appliance restart     # перезапустить стек Bambuddy
 ```
 
 ---
 
-## Upgrades
+## Обновления {#upgrades}
 
 ```bash
-# Health-checked, with automatic rollback if it doesn't come up
+# Проверка работоспособности и автоматический откат, если запуск не удался
 sudo bambuddy-appliance upgrade-bambuddy v0.2.5
 
-# The appliance layer: wizard, panel, CLI, units. Also health-checked.
-sudo bambuddy-appliance upgrade-check-appliance   # is there one? (JSON)
+# Компоненты устройства: мастер, панель, CLI, службы. С проверкой работоспособности.
+sudo bambuddy-appliance upgrade-check-appliance   # доступно ли обновление? (JSON)
 sudo bambuddy-appliance upgrade-appliance
 
-# Debian packages. No rollback.
+# Пакеты Debian. Откат не предусмотрен.
 sudo bambuddy-appliance upgrade-os
 
-# The current job's phase, as JSON
+# Этап текущего задания в формате JSON
 bambuddy-appliance upgrade-status
 ```
 
-Only one upgrade may run at a time; a second one exits rather than racing the first. Jobs run detached, so an SSH disconnect mid-upgrade doesn't kill them &mdash; reconnect and poll `upgrade-status`.
+Одновременно может выполняться только одно обновление; второе завершится, не мешая первому. Задания работают независимо от сеанса, поэтому разрыв SSH во время обновления их не останавливает: подключитесь снова и проверяйте `upgrade-status`.
 
-See [Updates &amp; Backups](updates.md) for what each lane can and cannot undo.
+В разделе [Обновления и резервные копии](updates.md) описано, какие изменения каждого типа можно и нельзя отменить.
 
 ---
 
-## Network aliases
+## Сетевые псевдонимы {#network-aliases}
 
-Extra addresses on the LAN interface, one per [virtual printer](../features/virtual-printer.md) that needs its own.
+Дополнительные адреса на интерфейсе локальной сети: по одному для каждого [виртуального принтера](../features/virtual-printer.md), которому нужен собственный адрес.
 
 ```bash
-bambuddy-appliance net-aliases                        # list, as JSON
+bambuddy-appliance net-aliases                        # список в формате JSON
 sudo bambuddy-appliance net-alias-add 192.168.1.50/24
 sudo bambuddy-appliance net-alias-remove 192.168.1.50/24
 ```
 
-Aliases are additive and persist across reboots. The primary DHCP address, the gateway, and the interface's own configuration are never modified &mdash; by design, so this command cannot strand the appliance off its network.
+Псевдонимы добавляются к существующей конфигурации и сохраняются после перезагрузки. Основной адрес DHCP, шлюз и собственная конфигурация интерфейса не изменяются: это сделано специально, чтобы команда не могла отключить устройство от сети.
 
-Addresses in reserved ranges are rejected before anything is applied.
+Адреса из зарезервированных диапазонов отклоняются до применения изменений.
 
 ---
 
-## Tailscale
+## Tailscale {#tailscale}
 
 ```bash
-sudo bambuddy-appliance tailscale up       # prints a sign-in URL
-bambuddy-appliance tailscale status        # tailnet IP, as JSON
-sudo bambuddy-appliance tailscale down     # disconnect, stay logged in
-sudo bambuddy-appliance tailscale logout   # forget the tailnet entirely
+sudo bambuddy-appliance tailscale up       # выводит URL для входа
+bambuddy-appliance tailscale status        # IP-адрес tailnet в формате JSON
+sudo bambuddy-appliance tailscale down     # отключиться, сохранив вход
+sudo bambuddy-appliance tailscale logout   # полностью забыть tailnet
 ```
 
-`tailscale up` prints a URL to open in a browser. Tailscale's own page handles first-time sign-up, so no console access or API key is needed. Once connected, `status` reports the `100.x` address to paste into a slicer.
+`tailscale up` выводит URL, который нужно открыть в браузере. Первоначальная регистрация происходит на странице Tailscale, поэтому доступ к консоли Tailscale и ключ API не нужны. После подключения `status` показывает адрес `100.x`, который можно вставить в слайсер.
 
 ---
 
-## The admin password
+## Пароль администратора {#the-admin-password}
 
 ```bash
 sudo bambuddy-appliance set-admin-password
 ```
 
-Reads the new password from standard input rather than an argument, so it never lands in `ps`, your shell history, or a process listing. On a terminal it prompts; in a script, pipe it:
+Команда читает новый пароль из стандартного ввода, а не из аргумента, поэтому он не попадёт в `ps`, историю оболочки или список процессов. В терминале команда запрашивает пароль; в скрипте передайте его через конвейер:
 
 ```bash
 printf '%s\n' "$NEW_PASSWORD" | sudo bambuddy-appliance set-admin-password
 ```
 
-Only the hash is stored, in `/etc/bambuddy/admin-auth`. This is the same password the setup wizard sets, and it secures the admin panel, the console, and SSH.
+Сохраняется только хеш в `/etc/bambuddy/admin-auth`. Это тот же пароль, который задаётся мастером настройки; он защищает панель администратора, консоль и SSH.
 
 ---
 
-## Licence and registration
+## Лицензия и регистрация {#licence-and-registration}
 
 ```bash
-bambuddy-appliance license                           # key set? entitled until when? refused why?
+bambuddy-appliance license                           # задан ли ключ, срок действия и причина отказа
 sudo bambuddy-appliance license XXXXX-XXXXX-XXXXX-XXXXX
 ```
 
-Setting a key stores it and asks the registrar straight away, so a mistyped key is answered now rather than on a timer. The key itself is never printed back &mdash; this output ends up in support bundles.
+При установке ключ сохраняется и сразу проверяется у регистратора, поэтому ошибка ввода обнаружится сразу, а не при следующей проверке по расписанию. Сам ключ обратно не выводится, поскольку вывод попадает в пакеты поддержки.
 
 ```bash
 sudo bambuddy-appliance register
 ```
 
-Claims the unit with the [fleet registrar](registration.md), or sends a heartbeat if it is already claimed. An hourly timer does this in the background; you should not normally need to call it by hand.
+Команда регистрирует устройство у [регистратора парка](registration.md) или отправляет сигнал состояния, если устройство уже зарегистрировано. Таймер выполняет это каждый час в фоновом режиме, поэтому обычно вызывать команду вручную не требуется.
 
-On a self-built image the command does nothing at all: with no batch identifier and no licence key there is nothing to present, so it exits without contacting anything.
+На самостоятельно собранном образе команда ничего не делает: без идентификатора партии и лицензионного ключа предъявлять нечего, поэтому она завершается без сетевых обращений.
 
 ---
 
-## Files it owns
+## Используемые файлы {#files-it-owns}
 
-| Path | What |
+| Путь | Назначение |
 |---|---|
-| `/etc/bambuddy/bambuddy.env` | Runtime environment for the Bambuddy container |
-| `/etc/bambuddy/docker-compose.yml` | The pinned container tag |
-| `/etc/bambuddy/docker-compose.override.yml` | Yours to write &mdash; e.g. bind-mounting extra file-manager roots |
-| `/etc/bambuddy/admin-auth` | Admin panel password hash |
-| `/etc/bambuddy/provisioning.json` | The batch identifier the image was built with, if any |
-| `/var/lib/bambuddy/` | Bambuddy's database and uploads |
-| `/var/lib/bambuddy/registrar/` | Identity, credential, licence key and the registrar's last answers &mdash; see [Registration](registration.md#checking-for-yourself) |
+| `/etc/bambuddy/bambuddy.env` | Рабочее окружение контейнера Bambuddy |
+| `/etc/bambuddy/docker-compose.yml` | Зафиксированный тег контейнера |
+| `/etc/bambuddy/docker-compose.override.yml` | Ваш файл для изменений, например bind-монтирования дополнительных корневых каталогов файлового менеджера |
+| `/etc/bambuddy/admin-auth` | Хеш пароля панели администратора |
+| `/etc/bambuddy/provisioning.json` | Идентификатор партии, с которым собран образ, если он имеется |
+| `/var/lib/bambuddy/` | База данных и загруженные файлы Bambuddy |
+| `/var/lib/bambuddy/registrar/` | Идентификатор, учётные данные, лицензионный ключ и последние ответы регистратора — см. [Регистрация](registration.md#checking-for-yourself) |
 
-!!! warning "Don't hand-edit the compose file's image tag"
-    `upgrade-bambuddy` rewrites it, and it is how the appliance knows what to roll back to.
+!!! warning "Не меняйте тег образа в файле Compose вручную"
+    `upgrade-bambuddy` перезаписывает его, и по нему устройство определяет, к какой версии нужно откатиться.
