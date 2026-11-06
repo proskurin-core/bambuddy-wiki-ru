@@ -1,245 +1,152 @@
 ---
-title: Billing & Cost Centers
-description: Allocate print costs to teams, budgets and projects — cost centers, budgets, reservations and a full print ledger
+title: Расчёты и центры затрат
+description: Распределение затрат на печать между командами, бюджетами и проектами — центры затрат, бюджеты, резервирование и журнал печати
 ---
 
-# Billing & Cost Centers
+# Расчёты и центры затрат {#billing-cost-centers}
 
-Bambuddy has always been able to tell you what a print cost. Billing tells you
-**whose budget it came out of** — and, when you want it, stops a print that would
-go over.
+Bambuddy всегда мог показать стоимость печати. Расчёты показывают, **из чьего бюджета она оплачивается**, а при необходимости останавливают печать, которая превысит лимит.
 
-It is aimed at installs where somebody has to be billed: a lab charging research
-groups, a makerspace with member accounts, a department splitting machine time
-between projects. It is entirely optional, off by default, and nothing about an
-existing install changes until you turn it on.
+Функция предназначена для случаев, когда затраты нужно выставлять пользователям: например, в лаборатории с исследовательскими группами, мастерской с учётными записями участников или отделе, распределяющем время работы оборудования между проектами. Она необязательна и по умолчанию выключена; до её включения в существующей установке ничего не меняется.
 
 ---
 
-## :material-cash-multiple: What it does
+## :material-cash-multiple: Возможности {#what-it-does}
 
-- **Cost centers** — a budget somebody can print against: a team, a course, a
-  customer, a grant. Every user also gets a private one automatically.
-- **Budgets** — an optional total or monthly limit per cost center. A center
-  with no budget is explicitly unlimited, not blocked.
-- **Reservations** — a queued print's cost is held against the budget while it
-  waits, so ten queued jobs cannot each pass a check that only the last would
-  fail.
-- **A ledger** — every charge, deposit, withdrawal and adjustment, on one page,
-  with the cost center it belongs to.
-- **Server-side costing** — the estimate that budgets are enforced against is
-  computed by Bambuddy, not sent by the browser.
-- **Proportional charging** — a print that fails half way is charged for the
-  filament it actually used.
+- **Центры затрат** — бюджеты, за счёт которых печатает команда, группа на курсе, клиент или грант. Для каждого пользователя также автоматически создаётся личный центр.
+- **Бюджеты** — необязательный общий или месячный лимит центра затрат. Центр без бюджета считается неограниченным и не блокируется.
+- **Резервирование** — стоимость ожидающей в очереди печати резервируется в бюджете, чтобы несколько заданий не прошли проверку по отдельности, когда вместе превысят лимит.
+- **Журнал операций** — все списания, пополнения, снятия и корректировки с указанием центра затрат на одной странице.
+- **Расчёт на сервере** — оценку стоимости для проверки бюджета вычисляет Bambuddy, а не браузер.
+- **Пропорциональное списание** — при неудаче во время печати оплачивается фактически израсходованный филамент.
 
 ---
 
-## :material-toggle-switch: Turning it on
+## :material-toggle-switch: Включение {#turning-it-on}
 
-**Settings → Workflow → Billing**
+**Настройки → Рабочий процесс → Расчёты**
 
-| Setting | Default | Range | What it does |
+| Настройка | По умолчанию | Диапазон | Описание |
 |---|---|---|---|
-| Billing enabled | Off | — | Turns the whole feature on. While off, no cost center is required, no budget is checked, and the **Finance** page is not in the sidebar. |
-| Printer kill switch | Off | — | Stops prints that start without going through Bambuddy. Separate switch — see [Printer kill switch](#printer-kill-switch) below, and read it before enabling. |
-| Budget reset day | `1` | 1–31 | Day of the month a monthly budget window restarts. Clamped on short months, so `31` means the last day of February. |
-| Budget reset timezone | `UTC` | IANA name | The timezone that reset day is measured in, e.g. `Europe/Berlin`. Teams spread across timezones otherwise disagree about which month a print landed in. |
+| Расчёты включены | Выкл. | — | Включает функцию целиком. Пока она выключена, центр затрат не требуется, бюджет не проверяется, а страницы **Финансы** нет в боковой панели. |
+| Остановка печати принтера | Выкл. | — | Останавливает печать, запущенную в обход Bambuddy. Это отдельный переключатель: перед включением прочитайте раздел [Остановка печати принтера](#printer-kill-switch). |
+| День сброса бюджета | `1` | 1–31 | День месяца, когда начинается новый период месячного бюджета. В коротких месяцах ограничивается последним днём: `31` означает последний день февраля. |
+| Часовой пояс сброса бюджета | `UTC` | Имя IANA | Часовой пояс для определения дня сброса, например `Europe/Berlin`. Он помогает участникам в разных часовых поясах одинаково определять месяц печати. |
 
-!!! note "The Finance page appears when billing does"
-    The **Finance** entry sits between *Statistics* and *Settings* in the
-    sidebar, and only while billing is enabled. If you have rearranged your
-    sidebar, it appears wherever you put it.
+!!! note "Страница финансов появляется после включения расчётов"
+    Пункт **Финансы** находится между *Статистикой* и *Настройками* и виден только при включённых расчётах. Если порядок боковой панели изменён, он появится в выбранном вами месте.
 
 ---
 
-## :material-account-group: Cost centers
+## :material-account-group: Центры затрат {#cost-centers}
 
-A cost center is created and staffed on the **Finance** page by an administrator.
+Администратор создаёт центры затрат и назначает участников на странице **Финансы**.
 
-**Private cost centers** are created automatically, one per user, and are the
-reason a single-user install works the moment billing is switched on. They
-belong to their owner: nobody else can print against them, and they cannot be
-renamed, deactivated or deleted. An administrator can set their budget; a
-budget of 0 refuses every print with an estimated cost.
+**Личные центры затрат** создаются автоматически для каждого пользователя, поэтому расчёты сразу работают и в однопользовательской установке. Они принадлежат владельцу: другие пользователи не могут печатать за их счёт, а переименовать, отключить или удалить их нельзя. Администратор может установить бюджет; бюджет 0 отклоняет любую печать с расчётной стоимостью.
 
-**Shared cost centers** are created by an administrator, who then adds members.
-Each member carries a **can print** flag, so somebody can be given visibility of
-a budget without being able to spend it.
+**Общие центры затрат** создаёт администратор, после чего добавляет участников. Для каждого участника устанавливается флаг **Может печатать**: можно разрешить просмотр бюджета без права его расходовать.
 
-Each center can carry a **total budget** (a fixed pot) or a **monthly budget**
-(refreshed on the reset day above). A center with neither is shown as
-**Unlimited** — printing against it is never blocked, and its spending is still
-recorded.
+Для каждого центра можно задать **общий бюджет** (фиксированную сумму) или **месячный бюджет** (обновляется в указанный день сброса). Центр без бюджета отображается как **Без ограничений**: печать по нему не блокируется, но расходы записываются.
 
-!!! warning "A cost center in use cannot be deleted"
-    Deletion is refused while any transaction or active reservation references
-    the center, because removing it would rewrite the history of everyone who
-    ever printed against it. Deactivate it instead — an inactive center cannot
-    be selected for new prints, and its ledger stays intact.
+!!! warning "Используемый центр затрат нельзя удалить"
+    Удаление отклоняется, пока на центр ссылается хотя бы одна операция или активный резерв: иначе была бы изменена история всех, кто печатал за его счёт. Вместо этого отключите центр: его нельзя будет выбрать для новой печати, а журнал сохранится.
 
 ---
 
-## :material-scale-balance: Balances and budgets are not the same thing { #balances-vs-budgets }
+## :material-scale-balance: Баланс и бюджет — разные понятия { #balances-vs-budgets }
 
-This is the one thing worth reading twice.
+Это различие стоит внимательно изучить.
 
-| | What it means | Does it stop a print? |
+| | Значение | Останавливает печать? |
 |---|---|---|
-| **Balance** | What a user has spent, deposited and been adjusted by | **No** |
-| **Cost center budget** | The limit set on the center a print is billed to | **Yes** |
+| **Баланс** | Учёт расходов, пополнений и корректировок пользователя | **Нет** |
+| **Бюджет центра затрат** | Лимит центра, на который списывается стоимость печати | **Да** |
 
-A balance is a record, not a credit limit. A user sitting at a negative balance
-can still print; only the budget on the selected cost center can refuse a job.
-If you want spending to stop somewhere, set a budget there.
+Баланс — запись операций, а не кредитный лимит. Пользователь с отрицательным балансом может печатать; задание может быть отклонено только бюджетом выбранного центра затрат. Чтобы ограничить расходы, задайте бюджет центра.
 
-A personal balance counts charges with no cost center, plus charges to the
-user's **own private** center. A print billed to a **shared** center does not
-move the personal balance — it belongs to the team that paid for it.
+Личный баланс учитывает списания без центра затрат и списания на **собственный личный** центр пользователя. Печать за счёт **общего** центра не меняет личный баланс: расходы относятся к оплатившей их команде.
 
 ---
 
-## :material-printer-3d: What happens when you print
+## :material-printer-3d: Что происходит при печати {#what-happens-when-you-print}
 
-1. **Pick a cost center.** With billing on, the print dialog shows an estimated
-   cost and a cost center picker. If you have no active center you are allowed
-   to print against, the dialog says so and the print is refused — ask an
-   administrator for print access on one.
-2. **The budget is checked** against what the center has already spent in the
-   current window, plus anything reserved for prints that have not run yet. If
-   the job does not fit, it is refused with the amounts in the message.
-3. **A reservation is taken** when the item is queued, and released if the print
-   never happens.
-4. **The charge is written when the print ends**, from the archive's measured
-   cost rather than the estimate.
+1. **Выбор центра затрат.** При включённых расчётах диалог печати показывает оценку стоимости и выбор центра. Если у вас нет активного центра, за счёт которого разрешено печатать, диалог сообщит об этом и печать будет отклонена. Попросите администратора предоставить доступ.
+2. **Проверка бюджета.** Учитываются уже потраченная сумма за текущий период и резервы для ещё не выполненных заданий. Если задание не укладывается в бюджет, оно отклоняется с указанием сумм.
+3. **Резервирование** происходит при постановке задания в очередь; если печать не состоится, резерв освобождается.
+4. **Списание записывается после завершения печати** по измеренной стоимости из архива, а не по оценке.
 
-!!! info "The estimate and the charge are different numbers"
-    The estimate is what the file and your printer's rates predict; the charge
-    is what the print actually consumed. They will rarely be identical, and the
-    charge is the one that lands in the ledger. The figure in the dialog is a
-    display hint only — budget enforcement uses Bambuddy's own calculation, so
-    editing it in the browser cannot buy a bigger budget.
+!!! info "Оценка и списание — разные суммы"
+    Оценка рассчитывается по файлу и тарифам принтера; списание отражает фактический расход. Эти суммы редко совпадают, а в журнал попадает именно списание. Значение в диалоге служит лишь подсказкой: бюджет проверяется по собственному расчёту Bambuddy, поэтому изменение значения в браузере не увеличит бюджет.
 
-**Aborted prints are charged proportionally.** A job stopped part way is billed
-for the filament it consumed, not for the whole job.
+**Прерванные печати оплачиваются пропорционально.** Для остановленного задания списывается стоимость израсходованного филамента, а не всего задания.
 
-**A job is never charged twice.** Each dispatch carries its own billing
-identity, so a reprint of the same file is a new charge, a restart mid-print
-does not produce a second one, and a charge that was deleted by an administrator
-does not come back on the next reprint.
+**Двойного списания не бывает.** У каждой отправки свой идентификатор расчёта: повторная печать того же файла создаёт новое списание, перезапуск во время печати не создаёт второе, а удалённое администратором списание не возвращается при следующей повторной печати.
 
-**A print is billed to the user who queued it.** A reprint of someone else's
-archive is charged under the person who sent it, not the archive's owner.
+**Печать оплачивает пользователь, поставивший её в очередь.** Повторная печать чужого архива относится к пользователю, который её отправил, а не к владельцу архива.
 
-**Deleting a user does not cancel the cost of a print still running.** It is
-charged to its cost center when it ends, including the user's own private center
-(which stays after them), and shows **No user** in the ledger, as do prints that
-never had a user (login turned off). Deleting the user together with their items
-releases the budget their queued prints still held; a print of theirs that is
-still running is kept until it ends, without a user, and billed the same way.
+**Удаление пользователя не отменяет стоимость выполняющейся печати.** После завершения она списывается на соответствующий центр затрат, включая личный центр пользователя, который сохраняется после удаления. В журнале указано **Нет пользователя**; то же относится к печатям без пользователя при отключённом входе. Удаление пользователя вместе с его элементами освобождает бюджет, зарезервированный его заданиями в очереди. Уже выполняющаяся печать сохраняется без пользователя до завершения и оплачивается таким же образом.
 
-**A charge that fails is loud.** If a charge cannot be written, Bambuddy reports
-it in the interface and through any notification provider subscribed to the
-**Billing charge failed** event, rather than quietly not billing.
+**Ошибка списания не остаётся незаметной.** Если записать списание не удалось, Bambuddy сообщает об этом в интерфейсе и через службы уведомлений, подписанные на событие **Ошибка списания за печать**.
 
 ---
 
-## :material-book-open-variant: The Finance page
+## :material-book-open-variant: Страница «Финансы» {#the-finance-page}
 
-Users see their own balance and ledger. Administrators additionally get an
-**Admin view** covering every user and cost center:
+Пользователи видят собственный баланс и журнал операций. Администраторам дополнительно доступен **Режим администратора** со сведениями обо всех пользователях и центрах затрат:
 
-- **Cost centers** — create, rename, deactivate, set total or monthly budgets,
-  add and remove members, and set who may print
-- **Transactions** — filter the whole ledger by user, cost center and type;
-  edit or delete an entry; move a transaction back to a personal account
-- **Deposits and withdrawals** — credit or debit a user's account
-- **Manual print charge** — record a job that happened outside Bambuddy
+- **Центры затрат** — создание, переименование и отключение, установка общего или месячного бюджета, добавление и удаление участников и назначение права печати
+- **Операции** — фильтрация общего журнала по пользователю, центру и типу; изменение или удаление записи; перенос операции обратно на личный счёт
+- **Пополнения и снятия** — зачисление или списание средств со счёта пользователя
+- **Печать, добавленная вручную** — учёт задания, выполненного вне Bambuddy
 
-Amounts use the currency configured in **Settings → General**.
+Суммы показываются в валюте, заданной в **Настройки → Общие**.
 
 ---
 
-## :material-shield-lock: Permissions
+## :material-shield-lock: Разрешения {#permissions}
 
-| Permission | Grants |
+| Разрешение | Доступ |
 |---|---|
-| `cost_centers:read_own` | See your own balance, ledger and the cost centers you may print against |
-| `cost_centers:read_all` | See every user's balance and the full ledger |
-| `cost_centers:modify` | Edit cost centers, budgets, members and transactions |
-| `cost_centers:create` | Create new cost centers |
+| `cost_centers:read_own` | Просмотр собственного баланса, журнала и доступных для печати центров затрат |
+| `cost_centers:read_all` | Просмотр балансов всех пользователей и полного журнала |
+| `cost_centers:modify` | Изменение центров затрат, бюджетов, участников и операций |
+| `cost_centers:create` | Создание центров затрат |
 
-The default **Administrators** group holds all four. **Operators** hold
-`cost_centers:read_own`, so they can see their own spending and print against
-the centers they belong to. Grant the rest to whoever does your accounting.
+Группа **Администраторы** по умолчанию обладает всеми четырьмя разрешениями. У группы **Операторы** есть `cost_centers:read_own`, поэтому участники видят собственные расходы и могут печатать за счёт своих центров. Остальные разрешения предоставьте тем, кто отвечает за учёт.
 
-### API keys { #api-keys }
+### Ключи API { #api-keys }
 
-With billing on, a job queued through an [API key](api-keys.md) needs a
-`cost_center_id` like any other. A key with **Manage Queue** finds the ones
-it may use at `GET /api/v1/finance/cost-centers/mine`. That endpoint returns
-the cost centers of the key's owner, and a key can charge only those, or any
-center if its owner is an administrator. A key created before keys had owners
-has none, and needs to be recreated to queue with billing on. Balances, the
-ledger and cost-center administration stay closed to API keys.
+При включённых расчётах заданию, поставленному в очередь через [ключ API](api-keys.md), как и другим заданиям, нужен `cost_center_id`. Ключ с разрешением **Управление очередью** может получить доступные центры через `GET /api/v1/finance/cost-centers/mine`. Конечная точка возвращает центры владельца ключа; ключ может списывать средства только с них, либо с любого центра, если владелец — администратор. У ключей, созданных до появления владельцев ключей, владельца нет; для постановки в очередь при включённых расчётах их нужно создать заново. Балансы, журнал и управление центрами затрат остаются недоступны ключам API.
 
 ---
 
-## :material-alert-octagon: Printer kill switch { #printer-kill-switch }
+## :material-alert-octagon: Остановка печати принтера { #printer-kill-switch }
 
-**Settings → Workflow → Billing → Printer kill switch.** Off by default, and
-separate from billing itself.
+**Настройки → Рабочий процесс → Расчёты → Остановка печати принтера.** По умолчанию выключена и настраивается отдельно от расчётов.
 
-An install that bills its users can be bypassed by sending a job straight to the
-printer from Bambu Studio or Handy — that print is not queued, not costed and
-not billed. With the kill switch on, Bambuddy stops such a print as soon as it
-sees it, raises an alert in the interface, and sends the configured print-stopped
-notification. Its archive is marked cancelled, with the reason **Stopped by the
-printer kill switch**, so it does not count as a failed print.
+Систему расчётов можно обойти, отправив задание прямо на принтер из Bambu Studio или Handy: такая печать не попадает в очередь, её стоимость не рассчитывается и не списывается. При включённом переключателе Bambuddy останавливает такую печать, как только обнаружит её, показывает предупреждение и отправляет настроенное уведомление об остановке. Её архив отмечается как отменённый с причиной **Остановлено функцией остановки печати принтера**, поэтому она не считается неудачной.
 
-!!! danger "This stops prints, and a stopped print is not recoverable"
-    Enable it only where prints genuinely must not start outside Bambuddy. It
-    acts on any print it can show did not come from Bambuddy, including one
-    started deliberately by an administrator at the machine. The printer's
-    built-in calibration (started on the printer's screen or from the slicer's
-    device page) is left alone; a calibration print sent from Bambu Studio, such as
-    the pressure-advance line, is a print like any other and is stopped. On an
-    A1, A1 Mini, P1 or A2L the built-in calibration reports itself under a
-    plain file name that any file could be given, so it is stopped too: switch
-    the kill switch off while calibrating those printers.
+!!! danger "Печать будет остановлена, и восстановить её нельзя"
+    Включайте функцию только там, где печать действительно нельзя запускать вне Bambuddy. Она действует на любую печать, про которую можно установить, что она запущена не через Bambuddy, в том числе намеренно запущенную администратором на устройстве. Встроенная калибровка принтера (с его экрана или страницы устройства в слайсере) не затрагивается; калибровочная печать, отправленная из Bambu Studio, например линия опережения давления, считается обычной печатью и останавливается. На A1, A1 Mini, P1 и A2L встроенная калибровка сообщает обычное имя файла, которое может иметь любой файл, поэтому она тоже останавливается: отключайте переключатель на время калибровки этих принтеров.
 
-It is deliberately cautious about what it can prove. When ownership of a running
-print cannot be established — during the moments after a Bambuddy restart, or
-while a job Bambuddy dispatched is still being recorded — it does nothing and
-logs that it deferred. Stopping a print is irreversible; declining to act costs
-a log line.
+Функция намеренно осторожна в отношении доказательств происхождения печати. Если установить владельца выполняющейся печати нельзя — например, сразу после перезапуска Bambuddy или пока отправленное им задание ещё записывается, — она ничего не делает и пишет в журнал об отложенном действии. Остановка необратима, поэтому при сомнениях действие откладывается.
 
 ---
 
-## :material-alert-circle-outline: Limitations
+## :material-alert-circle-outline: Ограничения {#limitations}
 
-- **Balances do not gate printing** — only cost center budgets do. See
-  [above](#balances-vs-budgets).
-- **Monthly budgets reset, they do not roll over.** Unspent budget from last
-  month is not added to this month's.
-- **The kill switch works on prints it observes**, so it acts after the printer
-  has started rather than preventing the start.
+- **Баланс не блокирует печать** — это делают только бюджеты центров затрат. См. [выше](#balances-vs-budgets).
+- **Месячный бюджет сбрасывается, а не переносится.** Неизрасходованный остаток прошлого месяца не добавляется к следующему.
+- **Остановка действует на наблюдаемую печать**: принтер сначала начинает работу, и только потом она останавливается.
 
 ---
 
-## :material-help-circle: Troubleshooting
+## :material-help-circle: Устранение неполадок {#troubleshooting}
 
-**"No active cost center is available for printing"** — you are not a member of
-any active cost center with print rights. An administrator can add you on the
-Finance page, or check that the center has not been deactivated.
+**«Нет активного центра затрат, доступного для печати»** — вы не состоите ни в одном активном центре с правом печати. Администратор может добавить вас на странице финансов или проверить, не отключён ли центр.
 
-**A print was refused for budget** — the message carries the requested amount
-and what remains. Remember that queued prints hold reservations: cancelling a
-queued job releases its reservation immediately.
+**Печать отклонена из-за бюджета** — сообщение содержит требуемую и оставшуюся суммы. Задания в очереди резервируют бюджет: отмена задания немедленно освобождает его резерв.
 
-**The Finance page is missing from the sidebar** — billing is off, or your
-account lacks `cost_centers:read_own`.
+**Страницы «Финансы» нет в боковой панели** — расчёты выключены или у вашей учётной записи нет разрешения `cost_centers:read_own`.
 
-**A balance looks wrong after an administrator edited a transaction** — balances
-are recomputed from the ledger, so the ledger is the source of truth. If a
-figure still looks wrong, an administrator can rebuild the balance ledger from
-the Finance page.
+**Баланс выглядит неверным после изменения операции администратором** — балансы пересчитываются по журналу, поэтому источником данных служит журнал. Если значение всё ещё кажется неверным, администратор может перестроить журнал балансов на странице финансов.
