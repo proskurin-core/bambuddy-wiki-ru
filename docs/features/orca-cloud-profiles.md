@@ -1,129 +1,127 @@
 ---
-title: Orca Cloud Profiles
-description: Sync your OrcaSlicer Cloud profiles into Bambuddy for slicing.
+title: Облачные профили Orca
+description: Синхронизация облачных профилей OrcaSlicer с Bambuddy для нарезки.
 ---
 
-# Orca Cloud Profiles
+# Облачные профили Orca {#orca-cloud-profiles}
 
-Sync your OrcaSlicer 2.4.0+ cloud-synced filament / process / printer
-profiles into Bambuddy and use them alongside your Bambu Cloud, locally
-imported, and standard bundled presets.
+Синхронизируйте облачные профили филамента, процесса и принтера OrcaSlicer 2.4.0+ с Bambuddy и используйте их вместе с профилями Bambu Cloud, локально импортированными и стандартными пресетами.
 
-!!! info "Companion to Bambu Cloud Profiles"
-    Orca Cloud profiles **don't replace** [Bambu Cloud Profiles](cloud-profiles.md) — both tabs live side by side in the Profiles page and you can connect to either, both, or neither. Profile precedence in the slicer is **Imported > Orca Cloud > Bambu Cloud > Standard**, so a locally-imported preset wins over the same name in either cloud, and an Orca Cloud preset wins over a Bambu Cloud one with the same name.
-
----
-
-## :material-cloud: Overview
-
-Orca Cloud Profiles lets you:
-
-- **Connect** your Orca Cloud account to Bambuddy by approving a pairing code
-- **View** all profiles your Orca account has synced — filament, process, printer
-- **Slice** with Orca profiles directly from the Bambuddy SliceModal
-- **Assign** an Orca filament profile to an AMS slot from the Configure modal
-- **Spool inventory**: pick Orca filaments when creating or editing a spool, including from a SpoolBuddy kiosk
-
-The integration is read-only on the Orca Cloud side — Bambuddy lists and uses your profiles but doesn't create, edit, or delete them. Make changes in OrcaSlicer itself; refresh the tab in Bambuddy to pick them up.
-
-!!! note "Only your own presets are in Orca Cloud"
-    OrcaSlicer uploads presets you created or saved yourself. Ticking a built-in filament, such as *Elegoo PLA* or *PolyLite PLA*, in OrcaSlicer's filament list only shows it in your own OrcaSlicer, so it never reaches Orca Cloud or this tab. You don't need it there: with the OrcaSlicer sidecar, Bambuddy lists OrcaSlicer's built-in filaments in the **Standard** tier of the Slice dialog. To use your own changes to one, select it in OrcaSlicer and **Save as** a preset of your own; that copy syncs.
+!!! info "Дополнение к облачным профилям Bambu"
+    Профили Orca Cloud **не заменяют** [профили Bambu Cloud](cloud-profiles.md): обе вкладки находятся на странице профилей, и вы можете подключить любую из них, обе или ни одну. Приоритет профилей при нарезке: **Импортированные > Orca Cloud > Bambu Cloud > Стандартные**. Поэтому локально импортированный пресет имеет приоритет над одноимённым облачным, а пресет Orca Cloud — над одноимённым пресетом Bambu Cloud.
 
 ---
 
-## :material-key: Connecting
+## :material-cloud: Обзор {#overview}
 
-### Pairing with Orca Cloud
+Облачные профили Orca позволяют:
 
-Bambuddy connects to Orca Cloud by **approving a pairing code**. There is no password to enter in Bambuddy and no redirect URL to copy.
+- **Подключить** учётную запись Orca Cloud к Bambuddy, подтвердив код сопряжения
+- **Просматривать** все синхронизированные профили учётной записи Orca: филамента, процесса и принтера
+- **Нарезать** с профилями Orca непосредственно из окна нарезки Bambuddy
+- **Назначать** профиль филамента Orca слоту AMS из окна настройки
+- В **учёте филамента** выбирать филамент Orca при создании или изменении катушки, в том числе с киоска SpoolBuddy
 
-1. Open **Profiles** → **Orca Cloud** tab
-2. Click **Connect Orca Cloud**
-3. Bambuddy shows a short **pairing code**. Click **Open Orca Cloud approval page**, or go to the address shown under the code and enter it there
-4. Sign in to Orca Cloud in that tab if asked, and approve the code
-5. Bambuddy connects on its own as soon as you approve. The dialog shows *Waiting for you to approve…* until then
+Интеграция имеет доступ к Orca Cloud только для чтения: Bambuddy получает список и использует профили, но не создаёт, не изменяет и не удаляет их. Вносите изменения в самом OrcaSlicer и обновляйте вкладку в Bambuddy, чтобы получить их.
 
-The code expires after 10 minutes. If it does, or if the pairing was denied, click **Connect Orca Cloud** again for a new one.
-
-Bambuddy asks for **read-only** access: it lists and views your profiles and nothing more. The pairing stays valid without signing in again, and it works the same whether you reach Bambuddy by LAN IP, `localhost` or through a reverse proxy. **Disconnect** on the tab ends it.
-
-### After signing in
-
-Once connected, the Orca Cloud tab shows your synced profiles grouped into **Filament / Process / Printer** columns, with the same filter dropdowns and detail view as the Bambu Cloud tab.
+!!! note "В Orca Cloud находятся только ваши пресеты"
+    OrcaSlicer загружает пресеты, которые вы создали или сохранили сами. Если отметить встроенный филамент, например *Elegoo PLA* или *PolyLite PLA*, в списке филаментов OrcaSlicer, он будет виден только в самом OrcaSlicer и не попадёт в Orca Cloud или на эту вкладку. Это не требуется: при использовании дополнительного контейнера OrcaSlicer Bambuddy показывает встроенные филаменты OrcaSlicer в разделе **Стандартные** окна нарезки. Чтобы использовать собственные изменения такого профиля, выберите его в OrcaSlicer и сохраните как новый пресет через **Save as**; эта копия синхронизируется.
 
 ---
 
-## :material-permission: Permissions
+## :material-key: Подключение {#connecting}
 
-| Permission | Required for |
+### Сопряжение с Orca Cloud {#pairing-with-orca-cloud}
+
+Bambuddy подключается к Orca Cloud путём **подтверждения кода сопряжения**. Вводить пароль в Bambuddy или копировать URL перенаправления не нужно.
+
+1. Откройте **Профили** → вкладку **Orca Cloud**
+2. Нажмите **Подключить Orca Cloud**
+3. Bambuddy покажет короткий **код сопряжения**. Нажмите кнопку открытия страницы подтверждения Orca Cloud или перейдите по адресу под кодом и введите его там
+4. При необходимости войдите в Orca Cloud на открывшейся вкладке и подтвердите код
+5. После подтверждения Bambuddy подключится автоматически. До этого окно показывает ожидание подтверждения
+
+Код действует 10 минут. Если срок истёк или сопряжение отклонено, снова нажмите **Подключить Orca Cloud**, чтобы получить новый код.
+
+Bambuddy запрашивает доступ **только для чтения**: он может просматривать список профилей и сами профили, но ничего больше. Сопряжение сохраняется без повторного входа и одинаково работает при доступе к Bambuddy по IP локальной сети, через `localhost` или обратный прокси. Кнопка отключения на вкладке завершает сопряжение.
+
+### После входа {#after-signing-in}
+
+После подключения вкладка Orca Cloud показывает синхронизированные профили в столбцах **Филамент / Процесс / Принтер**, с теми же фильтрами и подробным просмотром, что и вкладка Bambu Cloud.
+
+---
+
+## :material-permission: Разрешения {#material-permission-permissions}
+
+| Разрешение | Для чего необходимо |
 |------------|--------------|
-| `orca_cloud:auth` | Sign in / sign out / read profiles / slice with Orca presets |
+| `orca_cloud:auth` | Вход, выход, чтение профилей и нарезка с пресетами Orca |
 
-The permission is granted to the **Administrators** group by default. Add it to other groups in **Settings → Users & Groups → Groups** if you want non-admin users to access Orca Cloud.
+По умолчанию разрешение предоставлено группе **Администраторы**. Чтобы пользователи без прав администратора могли обращаться к Orca Cloud, добавьте его другим группам в **Настройки → Пользователи и группы → Группы**.
 
-!!! tip "API keys"
-    To let an API key read Orca Cloud presets on its owner's behalf (useful for headless slicing pipelines), enable **Allow cloud access** on the key. The same scope covers both Bambu Cloud and Orca Cloud — same trust dimension, one toggle.
-
----
-
-## :material-scissors-cutting: Slicing with Orca profiles
-
-The **SliceModal** preset dropdowns surface profiles from all four tiers in priority order:
-
-1. **Imported** — local OrcaSlicer / Bambu Studio profile imports (highest; ship with parsed type / colour metadata)
-2. **Orca Cloud** (this tab) — synced OrcaSlicer Cloud profiles
-3. **Bambu Cloud** — your Bambu Cloud account
-4. **Standard** — the slicer's stock bundled profiles (unconditional fallback)
-
-If a profile of the same name exists in multiple tiers (rare in practice), the higher-priority one wins. Status banners at the top of the modal flag each cloud independently — you'll see a *"Sign in to Orca Cloud"* hint if you're connected to Bambu Cloud but not Orca, and vice versa.
-
-For **multi-color** prints, the per-plate filament pre-pick benefits from Orca Cloud's inline `filament_type` and `default_filament_colour` metadata (no per-preset lookup needed), giving the matcher more to work with than Bambu Cloud presets where this metadata isn't surfaced in the list response &mdash; but a locally-imported preset of the same name still wins on tier priority above the cloud match.
+!!! tip "Ключи API"
+    Чтобы ключ API мог читать пресеты Orca Cloud от имени владельца, например для конвейеров нарезки без интерфейса, включите у ключа **Разрешить доступ к облаку**. Область доступа охватывает и Bambu Cloud, и Orca Cloud: один переключатель управляет доступом к обоим.
 
 ---
 
-## :material-printer-3d-nozzle: AMS slot assignment
+## :material-scissors-cutting: Нарезка с профилями Orca {#slicing-with-orca-profiles}
 
-The **Configure AMS Slot** dialog (both from the printer card and from SpoolBuddy) cannot send Orca's own profile ID to the printer. That ID is a 36-character UUID, and the printer's filament field holds eight characters. Instead, Bambuddy reads the profile's own `filament_id` from its slicer JSON and puts that in the slot's `tray_info_idx`. This is the eight-character `P…` ID that OrcaSlicer's Device tab also writes, and it is the only thing OrcaSlicer's **Sync filaments** uses to find your profile again. The lookup runs on the Bambuddy server when you configure the slot, and its result is written to the log.
+Выпадающие списки пресетов в окне нарезки показывают профили всех четырёх уровней в порядке приоритета:
 
-A profile that only stores its changes against another profile has no `filament_id` of its own. Bambuddy then takes the ID from the profile it inherits from: either another of your Orca Cloud profiles, or the Bambu filament it was copied from (for example `GFA00` for *Bambu PLA Basic*). If no ID can be found, or Orca Cloud can't be reached, the slot gets the generic Bambu ID for the material instead (PLA → GFL99, PETG → GFG99, ABS → GFB99, and so on). The dialog then shows a warning that OrcaSlicer will see the slot as *Generic*. See [Why the printer may still show a generic filament](ams.md#custom-preset-display). Bambuddy remembers the profile you picked for the slot, so it can show the right name on hover and preselect it the next time you open the dialog. Once the slot is changed somewhere else, such as OrcaSlicer's Device tab or the printer's screen, Bambuddy stops showing that profile.
+1. **Импортированные** — локально импортированные профили OrcaSlicer / Bambu Studio (наивысший приоритет; содержат извлечённые метаданные типа и цвета)
+2. **Orca Cloud** (эта вкладка) — синхронизированные облачные профили OrcaSlicer
+3. **Bambu Cloud** — профили вашей учётной записи Bambu Cloud
+4. **Стандартные** — встроенные профили слайсера (резервный вариант)
 
----
+Если одноимённый профиль существует на нескольких уровнях, что на практике бывает редко, используется профиль с более высоким приоритетом. Баннеры вверху окна независимо показывают состояние каждого облака: например, при подключённом Bambu Cloud и отключённом Orca Cloud появится приглашение войти в Orca Cloud, и наоборот.
 
-## :material-package-variant: Inventory and SpoolBuddy
-
-Orca filament profiles appear in the filament-preset picker of:
-
-- **Spool form** (Settings → Inventory → Add Spool / Edit Spool)
-- **SpoolBuddy kiosk** Write-Tag page
-- **SpoolBuddy AMS Configure** flow
-
-Both clouds are fetched in parallel; either or both can be connected. If you only connect Orca, the picker simply shows Orca filaments where it would otherwise show Bambu Cloud ones.
+Для **многоцветной** печати предварительный выбор филамента для пластины использует встроенные в ответ Orca Cloud метаданные `filament_type` и `default_filament_colour`, не требуя отдельного запроса для каждого пресета. Это даёт механизму сопоставления больше данных, чем пресеты Bambu Cloud, в ответе со списком которых эти метаданные не представлены. Однако одноимённый локально импортированный пресет всё равно имеет более высокий приоритет, чем найденный облачный.
 
 ---
 
-## :material-debug-step-over: Troubleshooting
+## :material-printer-3d-nozzle: Назначение слота AMS {#ams-slot-assignment}
 
-### "The Orca Cloud sign-in flow expired after 10 minutes"
+Окно **Настройка слота AMS**, открытое с карточки принтера или из SpoolBuddy, не может отправить принтеру собственный ID профиля Orca. Этот ID — UUID из 36 символов, а поле филамента принтера вмещает восемь. Поэтому Bambuddy читает `filament_id` из JSON профиля слайсера и записывает его в `tray_info_idx` слота. Это восьмисимвольный ID вида `P…`, который также записывает вкладка Device OrcaSlicer и который используется функцией **Sync filaments** OrcaSlicer для повторного поиска профиля. Поиск выполняется на сервере Bambuddy при настройке слота, а результат записывается в журнал.
 
-The PKCE handshake state is held server-side for 10 minutes. If you took longer than that between clicking Connect and pasting back the callback URL (or the kiosk was reloaded mid-flow), click Connect again to start fresh — the new flow generates a fresh verifier.
-
-### Profiles tab shows "Connected" but the list is empty
-
-Your Orca account has no profiles synced yet, or you signed in with an account that doesn't have OrcaSlicer profile sync enabled. Open OrcaSlicer, enable cloud sync from Preferences, sync at least one filament profile, then click Refresh on the Bambuddy tab.
-
-### The Configure AMS Slot picker doesn't show my Orca profile
-
-If you're using an API key (e.g., from SpoolBuddy), check the key has **Allow cloud access** enabled — the same scope gates both Bambu Cloud and Orca Cloud reads. Otherwise the kiosk's request is silently rejected and no Orca profiles appear.
-
-### Sign-in works, but the slicer doesn't see my Orca filament's metadata
-
-Orca's filament profiles include `filament_type` and `default_filament_colour` inline, but only after the first sync round-trip. If you added a brand-new filament profile in OrcaSlicer and immediately tried to slice with it in Bambuddy, hit **Refresh** on the Orca Cloud tab to re-pull the latest snapshot.
+Профиль, хранящий только изменения относительно другого профиля, не имеет собственного `filament_id`. Тогда Bambuddy берёт ID из родительского профиля: другого вашего профиля Orca Cloud или филамента Bambu, с которого он скопирован (например, `GFA00` для *Bambu PLA Basic*). Если ID не найден или Orca Cloud недоступен, слот получает общий ID Bambu для материала (PLA → GFL99, PETG → GFG99, ABS → GFB99 и т. д.). В окне появляется предупреждение, что OrcaSlicer увидит слот как *Generic*. См. [Почему принтер всё ещё может показывать общий филамент](ams.md#custom-preset-display). Bambuddy запоминает профиль, выбранный для слота, чтобы показывать правильное имя при наведении и выбирать его при следующем открытии окна. Если слот изменён в другом месте, например на вкладке Device OrcaSlicer или на экране принтера, Bambuddy перестаёт показывать этот профиль.
 
 ---
 
-## :material-link-variant: Related
+## :material-package-variant: Учёт филамента и SpoolBuddy {#inventory-and-spoolbuddy}
 
-- [Bambu Cloud Profiles](cloud-profiles.md) — the Bambu side of the dual-cloud setup
-- [Local Profiles](local-profiles.md) — for offline / non-Orca / non-Bambu profile sources
-- [Server-Side Slicing](slicer-api.md) — how preset tiers feed the slicer
-- [API Keys & Webhooks](api-keys.md) — to expose cloud presets to headless callers
+Профили филамента Orca доступны в списке пресетов:
+
+- **Форма катушки** (Настройки → Филамент → добавление или изменение катушки)
+- Страница записи метки киоска **SpoolBuddy**
+- Настройка AMS в **SpoolBuddy**
+
+Оба облака опрашиваются параллельно; можно подключить любое из них или оба. Если подключено только Orca, список покажет филаменты Orca там, где иначе отображались бы филаменты Bambu Cloud.
+
+---
+
+## :material-debug-step-over: Устранение неполадок {#troubleshooting}
+
+### «Время входа в Orca Cloud истекло через 10 минут» {#the-orca-cloud-sign-in-flow-expired-after-10-minutes}
+
+Состояние обмена PKCE хранится на сервере 10 минут. Если между нажатием кнопки подключения и вставкой URL обратного вызова прошло больше времени или киоск перезагрузился в ходе операции, нажмите кнопку подключения ещё раз: новый процесс создаст новый проверочный код.
+
+### На вкладке профилей указано подключение, но список пуст {#profiles-tab-shows-connected-but-the-list-is-empty}
+
+В вашей учётной записи Orca ещё нет синхронизированных профилей либо вы вошли с учётной записью без включённой синхронизации профилей OrcaSlicer. Откройте OrcaSlicer, включите облачную синхронизацию в настройках, синхронизируйте хотя бы один профиль филамента и нажмите обновление на вкладке Bambuddy.
+
+### В списке настройки слота AMS нет моего профиля Orca {#the-configure-ams-slot-picker-doesnt-show-my-orca-profile}
+
+Если используется ключ API, например из SpoolBuddy, проверьте, что у него включён **доступ к облаку**: одно разрешение управляет чтением и Bambu Cloud, и Orca Cloud. Иначе запрос киоска отклоняется без сообщения и профили Orca не появляются.
+
+### Вход работает, но слайсер не видит метаданные филамента Orca {#sign-in-works-but-the-slicer-doesnt-see-my-orca-filaments-metadata}
+
+Профили филамента Orca содержат `filament_type` и `default_filament_colour` непосредственно в ответе, но только после первого полного цикла синхронизации. Если вы создали новый профиль в OrcaSlicer и сразу попытались нарезать с ним в Bambuddy, нажмите обновление на вкладке Orca Cloud, чтобы повторно получить актуальные данные.
+
+---
+
+## :material-link-variant: Связанные разделы {#related}
+
+- [Облачные профили Bambu](cloud-profiles.md) — сторона Bambu в конфигурации двух облаков
+- [Локальные профили](local-profiles.md) — источники профилей без интернета или не относящиеся к Orca и Bambu
+- [Нарезка на сервере](slicer-api.md) — как уровни пресетов используются слайсером
+- [Ключи API и вебхуки](api-keys.md) — доступ к облачным пресетам для клиентов без интерфейса

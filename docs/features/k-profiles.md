@@ -1,302 +1,278 @@
 ---
-title: K-Profiles
-description: Pressure advance settings management
+title: K-профили
+description: Управление настройками опережения давления
 ---
 
-# K-Profiles
+# K-профили {#k-profiles}
 
-Manage pressure advance (K-factor) settings for optimal print quality across different filaments.
+Управляйте настройками опережения давления (K-фактором) для оптимального качества печати разными филаментами.
 
-![K-Profiles](../assets/k_profiles-1.png){ .screenshot }
-
----
-
-## :material-speedometer: What is Pressure Advance?
-
-Pressure advance (K-factor) compensates for filament compression in the extruder:
-
-- **Too low**: Bulging corners, blobs at start
-- **Too high**: Gaps at corners, weak lines
-- **Just right**: Clean corners, consistent extrusion
-
-Different filaments need different K values.
+![K-профили](../assets/k_profiles-1.png){ .screenshot }
 
 ---
 
-## :material-database: K-Profile Storage
+## :material-speedometer: Что такое опережение давления? {#what-is-pressure-advance}
 
-Bambuddy stores K-profiles per:
+Опережение давления (K-фактор) компенсирует сжатие филамента в экструдере:
 
-- **Printer** - Each printer has its own values
-- **Filament** - Different K per material
-- **Nozzle** - Values vary by nozzle size
+- **Слишком низкое значение**: выпуклые углы, наплывы в начале линий
+- **Слишком высокое значение**: пропуски на углах, слабые линии
+- **Правильное значение**: аккуратные углы и равномерная экструзия
+
+Разным филаментам нужны разные значения K.
 
 ---
 
-## :material-download: Retrieving K-Profiles
+## :material-database: Хранение K-профилей {#k-profile-storage}
 
-### From Printer
+Bambuddy хранит K-профили по следующим параметрам:
 
-Pull current K-profiles from your printer:
+- **Принтер** — у каждого принтера свои значения
+- **Филамент** — разные значения K для разных материалов
+- **Сопло** — значения зависят от диаметра сопла
 
-1. Go to **K-Profiles** page
-2. Select your printer
-3. Click **Fetch from Printer**
-4. K-values are downloaded
+---
 
-### What's Retrieved
+## :material-download: Получение K-профилей {#retrieving-k-profiles}
 
-| Data | Description |
+### С принтера {#from-printer}
+
+Получите текущие K-профили с принтера:
+
+1. Откройте страницу **K-профили**
+2. Выберите принтер
+3. Нажмите **Получить с принтера**
+4. Значения K будут загружены
+
+### Какие данные получаются {#whats-retrieved}
+
+| Данные | Описание |
 |------|-------------|
-| **Material** | Filament type |
-| **K-factor** | Pressure advance value |
-| **Nozzle** | Nozzle diameter |
-| **Flow type** | High Flow or Standard — only on printers that report it |
-| **Notes** | Any stored notes |
+| **Материал** | Тип филамента |
+| **K-фактор** | Значение опережения давления |
+| **Сопло** | Диаметр сопла |
+| **Тип потока** | High Flow или Standard — только на принтерах, которые сообщают эту информацию |
+| **Заметки** | Сохранённые заметки |
 
-!!! note "Flow type on printers that don't report it"
+!!! note "Тип потока на принтерах, которые его не сообщают"
+    Большинство принтеров передают таблицу калибровок без идентификатора сопла, поэтому тип потока существующего профиля нельзя прочитать обратно. Такие профили отображаются как **Standard** — то же предположение делает Bambu Studio. При создании профиля тип можно свободно изменить.
 
-    Most printers send their calibration table without a nozzle identity, so
-    the flow type of an existing profile can't be read back. Those profiles
-    show as **Standard** — the same assumption Bambu Studio makes — and you can
-    change it freely when creating a profile.
+    Ваш выбор отправляется принтеру, но на этих моделях прошивка его отбрасывает: калибровка хранится для филамента и его индекса калибровки, а не для типа потока. Поэтому сохранённый как High Flow профиль будет считан как Standard и в Bambu Studio, и в Bambuddy. Только принтеры, возвращающие идентификатор сопла, — серия H2D — показывают выбранный тип потока.
 
-    Your choice is sent to the printer, but on those models the firmware
-    discards it: the calibration is stored against the filament and its
-    calibration index, not against a flow type. So a profile you saved as High
-    Flow will read back as Standard, in Bambu Studio as well as in Bambuddy.
-    Only printers that return a nozzle identity — the H2D series — display the
-    flow type you chose.
-
-    The Flow Type field is hidden only on the **A1**, **A1 Mini** and **A2L**,
-    which are sold with a single nozzle variant. Every other model, including
-    the single-nozzle P1P, P1S, P2S, X1, X1 Carbon, X1E and H2S, offers both
-    Standard and High Flow.
+    Поле типа потока скрыто только на **A1**, **A1 Mini** и **A2L**, которые продаются с одним вариантом сопла. Все остальные модели, включая односопловые P1P, P1S, P2S, X1, X1 Carbon, X1E и H2S, предлагают Standard и High Flow.
 
 ---
 
-## :material-upload: Pushing K-Profiles
+## :material-upload: Отправка K-профилей {#pushing-k-profiles}
 
-### To Printer
+### На принтер {#to-printer}
 
-Send K-profiles to your printer:
+Отправьте K-профили на принтер:
 
-1. Go to **K-Profiles** page
-2. Select profiles to push
-3. Click **Push to Printer**
-4. Profiles are uploaded
+1. Откройте страницу **K-профили**
+2. Выберите профили для отправки
+3. Нажмите **Отправить на принтер**
+4. Профили будут загружены
 
-!!! warning "Overwrites Existing"
-    Pushing profiles overwrites the printer's current K values for that material.
+!!! warning "Существующие значения перезаписываются"
+    Отправка профилей перезаписывает текущие значения K этого материала на принтере.
 
 ---
 
-## :material-pencil: Editing K-Profiles
+## :material-pencil: Изменение K-профилей {#editing-k-profiles}
 
-### Modify Values
+### Изменение значений {#modify-values}
 
-1. Click on a K-profile
-2. Edit the K-factor value
-3. Add optional notes
-4. Click **Save**
+1. Нажмите K-профиль
+2. Измените значение K-фактора
+3. При необходимости добавьте заметки
+4. Нажмите **Сохранить**
 
-!!! note "When the printer does not confirm"
-    The printer acknowledges each K-profile write. Older firmware never does, so a missing answer is not a refusal: Bambuddy then says the profile was sent but not confirmed, and the list shows what the printer has once it refreshes.
+!!! note "Если принтер не подтверждает запись"
+    Принтер подтверждает каждую запись K-профиля. Старые версии прошивки никогда не отправляют подтверждение, поэтому отсутствие ответа не означает отказ: Bambuddy сообщит, что профиль отправлен, но не подтверждён, а после обновления список покажет данные принтера.
 
-    An import or a bulk delete says how many of its writes the printer did not confirm.
+    При импорте или массовом удалении указывается число записей, которые принтер не подтвердил.
 
-    On a single-nozzle printer an edit removes the profile and adds it again. Bambuddy reads the printer's table back afterwards; if the edited profile is not there, the save fails. Check the list before adding it again: when the printer did not answer the delete, the old profile may still be there.
+    На односопловом принтере при изменении профиль удаляется и добавляется снова. Затем Bambuddy считывает таблицу принтера; если изменённого профиля в ней нет, сохранение считается неудачным. Перед повторным добавлением проверьте список: если принтер не ответил на удаление, старый профиль может остаться.
 
-### Value Guidelines
+### Рекомендации по значениям {#value-guidelines}
 
-| Material | Typical K Range |
+| Материал | Типичный диапазон K |
 |----------|:--------------:|
 | PLA | 0.02 - 0.06 |
 | PETG | 0.06 - 0.12 |
 | ABS/ASA | 0.04 - 0.08 |
 | TPU | 0.20 - 0.50 |
 
-!!! note "These are starting points"
-    Actual values depend on your specific printer, filament brand, and nozzle.
+!!! note "Это отправные значения"
+    Фактические значения зависят от конкретного принтера, бренда филамента и сопла.
 
 ---
 
-## :material-plus-circle: Adding K-Profiles
+## :material-plus-circle: Добавление K-профилей {#adding-k-profiles}
 
-### Manual Entry
+### Ручной ввод {#manual-entry}
 
-1. Click **Add K-Profile**
-2. Pick the filament
-3. Enter K-factor value
-4. Select nozzle size
-5. Add notes if desired
-6. Click **Save**
+1. Нажмите **Добавить K-профиль**
+2. Выберите филамент
+3. Введите значение K-фактора
+4. Выберите диаметр сопла
+5. При желании добавьте заметки
+6. Нажмите **Сохранить**
 
-The filament list is searchable and grouped by where each entry came from, in
-the order Bambuddy uses everywhere:
+В списке филамента доступен поиск; записи сгруппированы по источнику в порядке, используемом Bambuddy повсюду:
 
-| Group | Source |
+| Группа | Источник |
 |-------|--------|
-| **Imported** | Presets you imported under **Profiles → Local Profiles** |
-| **Orca Cloud** | Your synced OrcaSlicer profiles |
-| **Bambu Cloud** | Your Bambu Lab account's filament presets |
-| **Built-in** | Bambuddy's built-in Bambu filament table |
+| **Импортированные** | Пресеты, импортированные в **Профили → Локальные профили** |
+| **Orca Cloud** | Синхронизированные профили OrcaSlicer |
+| **Bambu Cloud** | Пресеты филамента вашей учётной записи Bambu Lab |
+| **Встроенные** | Встроенная таблица филаментов Bambu в Bambuddy |
 
-Each group shows its own library in full. Within a group a filament appears
-once — a Bambu Cloud account carries one copy of each filament per printer
-model, and those collapse into a single entry. The **Built-in** group is a
-static copy of the same Bambu catalogue, so it only lists filaments none of the
-groups above it offer.
+Каждая группа полностью показывает свою библиотеку. Внутри группы филамент отображается один раз: учётная запись Bambu Cloud содержит копию каждого филамента для каждой модели принтера, и они объединяются в одну запись. Группа **Встроенные** — статическая копия того же каталога Bambu, поэтому она содержит только филаменты, отсутствующие во всех расположенных выше группах.
 
-That group is always there, so you can create a profile with no cloud account
-connected and nothing imported — including on a printer that has no K-profiles
-yet.
+Эта группа доступна всегда, поэтому можно создать профиль без подключённой облачной учётной записи и импортов, в том числе на принтере, где ещё нет K-профилей.
 
-!!! note "Imported and Orca Cloud filaments are filed under a generic"
+!!! note "Импортированный филамент и Orca Cloud сохраняются под общим типом"
+    Принтер индексирует таблицу калибровок по ID филамента Bambu, которого нет в импортированных профилях и профилях Orca. Они сохраняются под ближайшим общим филаментом Bambu для данного материала (например, импортированный PETG — под *Generic PETG*). Значение K остаётся вашим; общим является только ID, под которым принтер хранит запись.
 
-    The printer indexes its calibration table by Bambu filament ID, and
-    imported / Orca profiles don't carry one. Those are stored against the
-    closest generic Bambu filament for their material (an imported PETG lands
-    on *Generic PETG*). The K value is yours; only the ID the printer files it
-    under is generic.
+### После калибровки {#from-calibration}
 
-### From Calibration
+После калибровки:
 
-After running calibration:
-
-1. Note the optimal K value
-2. Add or update the profile
-3. Save for future use
+1. Запишите оптимальное значение K
+2. Добавьте или обновите профиль
+3. Сохраните его для будущего использования
 
 ---
 
-## :material-ruler: Calibration
+## :material-ruler: Калибровка {#calibration}
 
-### Running K-Factor Calibration
+### Запуск калибровки K-фактора {#running-k-factor-calibration}
 
-Bambu Lab printers include built-in calibration:
+Принтеры Bambu Lab имеют встроенную калибровку:
 
-1. Load the filament to calibrate
-2. From printer or Bambu Studio, run flow calibration
-3. Observe the test pattern
-4. Note the optimal K value
-5. Update the K-profile in Bambuddy
+1. Загрузите филамент для калибровки
+2. На принтере или в Bambu Studio запустите калибровку потока
+3. Изучите тестовый рисунок
+4. Запишите оптимальное значение K
+5. Обновите K-профиль в Bambuddy
 
-### Third-Party Methods
+### Сторонние методы {#third-party-methods}
 
-Alternative calibration methods:
+Альтернативные методы калибровки:
 
-- Marlin K-factor test patterns
-- Pressure advance tower prints
-- Corner flow tests
-
----
-
-## :material-content-copy: Copying Profiles
-
-### Between Printers
-
-Copy K-profiles to another printer:
-
-1. Select source profiles
-2. Click **Copy to Printer**
-3. Select destination printer
-4. Profiles are copied
-
-!!! tip "Fine-tune After Copy"
-    Copied values may need adjustment for different hardware.
+- Тестовые рисунки K-фактора Marlin
+- Печать башни опережения давления
+- Тесты потока на углах
 
 ---
 
-## :material-sync: Sync Status
+## :material-content-copy: Копирование профилей {#copying-profiles}
 
-### Profile States
+### Между принтерами {#between-printers}
 
-| Status | Meaning |
+Скопируйте K-профили на другой принтер:
+
+1. Выберите исходные профили
+2. Нажмите **Копировать на принтер**
+3. Выберите целевой принтер
+4. Профили будут скопированы
+
+!!! tip "Уточните настройки после копирования"
+    Для другого оборудования скопированные значения могут потребовать корректировки.
+
+---
+
+## :material-sync: Состояние синхронизации {#sync-status}
+
+### Состояния профилей {#profile-states}
+
+| Состояние | Значение |
 |:------:|---------|
-| :material-check-circle:{ style="color: #4caf50" } Synced | Matches printer |
-| :material-sync-alert:{ style="color: #ff9800" } Modified | Local changes not pushed |
-| :material-help-circle:{ style="color: #2196f3" } New | Not on printer yet |
+| :material-check-circle:{ style="color: #4caf50" } Синхронизирован | Совпадает с принтером |
+| :material-sync-alert:{ style="color: #ff9800" } Изменён | Локальные изменения не отправлены |
+| :material-help-circle:{ style="color: #2196f3" } Новый | Пока отсутствует на принтере |
 
-### Keeping in Sync
+### Поддержание синхронизации {#keeping-in-sync}
 
-- Fetch after printer changes
-- Push after local edits
-- Regular sync recommended
-
----
-
-## :material-compare: Comparing Values
-
-### View Differences
-
-Compare K-values between:
-
-- Different printers
-- Bambuddy vs printer
-- Different materials
-
-![K-Profiles Comparison](../assets/k_profiles-2.png){ .screenshot }
+- Получайте данные после изменений на принтере
+- Отправляйте данные после локальных изменений
+- Рекомендуется регулярная синхронизация
 
 ---
 
-## :material-file-export: Backup
+## :material-compare: Сравнение значений {#comparing-values}
 
-### Exporting K-Profiles
+### Просмотр различий {#view-differences}
 
-1. Go to **K-Profiles**
-2. Click **Export**
-3. Download JSON file
+Сравнивайте значения K между:
 
-### Importing K-Profiles
+- Разными принтерами
+- Bambuddy и принтером
+- Разными материалами
 
-1. Click **Import**
-2. Select JSON file
-3. Review and confirm
-
-Useful for backup or transferring to new installations.
+![Сравнение K-профилей](../assets/k_profiles-2.png){ .screenshot }
 
 ---
 
-## :material-alert: Troubleshooting
+## :material-file-export: Резервное копирование {#backup}
 
-### Fetch Failed
+### Экспорт K-профилей {#exporting-k-profiles}
 
-1. Verify printer connection
-2. Check printer is not busy
-3. Try again
+1. Откройте **K-профили**
+2. Нажмите **Экспорт**
+3. Скачайте файл JSON
 
-### Push Failed
+### Импорт K-профилей {#importing-k-profiles}
 
-1. Check printer is idle
-2. Verify connection status
-3. Ensure no active prints
+1. Нажмите **Импорт**
+2. Выберите файл JSON
+3. Проверьте данные и подтвердите
 
-### Values Don't Apply
-
-1. Verify profile was pushed
-2. Check material matches slicer
-3. Re-slice if needed
-
-### Profile Missing When Configuring a Slot
-
-The K profile dropdown in **Configure AMS Slot** shows the profiles that suit the selected filament preset first, then every other profile on the printer under **Other K profiles on this printer**. If a profile is not in the first group, look for it in the second — see [which K profiles are offered](ams.md#which-k-profiles-are-offered).
+Это полезно для резервного копирования или переноса на новую установку.
 
 ---
 
-## :material-lightbulb: Tips
+## :material-alert: Устранение неполадок {#troubleshooting}
 
-!!! tip "Calibrate Each Filament"
-    Even same material from different brands may need different K values.
+### Ошибка получения {#fetch-failed}
 
-!!! tip "Note the Brand"
-    Add brand/color to notes for easy identification.
+1. Проверьте подключение принтера
+2. Убедитесь, что принтер не занят
+3. Повторите попытку
 
-!!! tip "Regular Updates"
-    Recalibrate after nozzle changes or significant printer maintenance.
+### Ошибка отправки {#push-failed}
 
-!!! tip "Start Conservative"
-    When unsure, start with a lower K value and increase gradually.
+1. Убедитесь, что принтер простаивает
+2. Проверьте состояние соединения
+3. Убедитесь, что активных печатей нет
 
-!!! tip "Backup Before Changes"
-    Export profiles before making major changes.
+### Значения не применяются {#values-dont-apply}
+
+1. Убедитесь, что профиль отправлен
+2. Проверьте соответствие материала настройкам слайсера
+3. При необходимости нарежьте модель заново
+
+### Профиль отсутствует при настройке слота {#profile-missing-when-configuring-a-slot}
+
+В списке K-профилей окна **Настройка слота AMS** сначала отображаются профили, подходящие выбранному пресету филамента, затем все остальные профили принтера в разделе **Другие K-профили на этом принтере**. Если профиля нет в первой группе, поищите его во второй — см. [какие K-профили предлагаются](ams.md#which-k-profiles-are-offered).
+
+---
+
+## :material-lightbulb: Советы {#tips}
+
+!!! tip "Калибруйте каждый филамент"
+    Даже для одного материала разных брендов могут требоваться разные значения K.
+
+!!! tip "Записывайте бренд"
+    Добавьте бренд и цвет в заметки для удобства идентификации.
+
+!!! tip "Регулярно обновляйте"
+    Повторяйте калибровку после замены сопла или существенного обслуживания принтера.
+
+!!! tip "Начинайте с осторожного значения"
+    Если сомневаетесь, начните с меньшего значения K и постепенно увеличивайте его.
+
+!!! tip "Создавайте резервную копию перед изменениями"
+    Экспортируйте профили перед крупными изменениями.
