@@ -1,75 +1,55 @@
 ---
-title: Windows Installer
-description: Install Bambuddy natively on Windows with a self-contained .exe installer
+title: Установщик для Windows
+description: Установите Bambuddy непосредственно в Windows с помощью автономного установщика .exe
 ---
 
-# Windows Installer
+# Установщик для Windows {#windows-installer}
 
-The Windows installer is a self-contained `.exe` that bundles everything
-Bambuddy needs: an embedded Python 3.13 distribution, the pre-built React
-frontend, ffmpeg, and NSSM (the Windows service supervisor). **No Python,
-Node, Docker, Git, or any other runtime is required on the target
-machine.**
+Установщик Windows — автономный `.exe`, включающий всё необходимое для Bambuddy: встроенный Python 3.13, готовый фронтенд React, ffmpeg и NSSM для управления службой Windows. **Python, Node, Docker, Git и другие среды выполнения на целевом компьютере не нужны.**
 
-It installs Bambuddy as a Windows service running on
-`http://localhost:8000`, so the dashboard is always available after a
-reboot without any manual start.
+Он устанавливает Bambuddy как службу Windows, доступную по адресу `http://localhost:8000`. Поэтому панель доступна после перезагрузки без ручного запуска.
 
 ---
 
-## :material-download: Download
+## :material-download: Загрузка {#download}
 
-Latest stable release:
+Последняя стабильная версия:
 
 [:material-download: bambuddy-windows-x64-setup.exe](https://github.com/maziggy/bambuddy/releases/latest/download/bambuddy-windows-x64-setup.exe){ .md-button .md-button--primary }
 
-For daily beta builds (newest features, less tested): browse the
-[releases page](https://github.com/maziggy/bambuddy/releases) and pick the
-most recent prerelease tagged `v<version>-daily.<date>`.
+Ежедневные бета-сборки содержат новейшие функции, но проверены меньше. На [странице релизов](https://github.com/maziggy/bambuddy/releases) выберите последний предварительный выпуск с тегом `v<version>-daily.<date>`.
 
-!!! info "Windows 10 / 11 x64 only"
-    The installer targets 64-bit Windows 10 and 11. ARM64 (Surface Pro X,
-    Snapdragon) is not currently supported — most Bambuddy deps don't ship
-    ARM64 Windows wheels.
+!!! info "Только Windows 10 / 11 x64"
+    Установщик предназначен для 64-разрядных Windows 10 и 11. ARM64 (Surface Pro X, Snapdragon) пока не поддерживается: для большинства зависимостей Bambuddy нет пакетов ARM64 Windows.
 
 ---
 
-## :material-shield-alert: SmartScreen Warning on First Run
+## :material-shield-alert: Предупреждение SmartScreen при первом запуске {#smartscreen-warning-on-first-run}
 
-Until our [SignPath OSS code-signing](https://signpath.io/open-source)
-approval lands, the installer is unsigned. Windows SmartScreen will warn:
+До получения разрешения на [подпись кода SignPath OSS](https://signpath.io/open-source) установщик остаётся неподписанным. Windows SmartScreen покажет предупреждение:
 
-> **Windows protected your PC** — Microsoft Defender SmartScreen prevented an unrecognised app from starting.
+> **Система Windows защитила ваш компьютер** — Microsoft Defender SmartScreen предотвратил запуск неопознанного приложения.
 
-Click **More info** → **Run anyway** to proceed. The installer is built
-in public on GitHub Actions ([windows-installer.yml](https://github.com/maziggy/bambuddy/blob/main/.github/workflows/windows-installer.yml))
-so you can verify the build provenance directly.
+Чтобы продолжить, нажмите **Подробнее** → **Выполнить в любом случае**. Установщик собирается публично в GitHub Actions ([windows-installer.yml](https://github.com/maziggy/bambuddy/blob/main/.github/workflows/windows-installer.yml)), поэтому происхождение сборки можно проверить.
 
-Once signing is wired in, the warning will go away after a short
-SmartScreen reputation-building period across the first signed releases.
+После внедрения подписи предупреждение исчезнет, когда первые подписанные выпуски за короткое время наберут репутацию SmartScreen.
 
 ---
 
-## :material-cog-play: Installer Flow
+## :material-cog-play: Порядок установки {#installer-flow}
 
-When you run the `.exe`:
+После запуска `.exe`:
 
-1. **UAC prompt** — admin elevation is required because the installer
-   registers a Windows service and writes to `C:\Program Files\` and
-   `C:\ProgramData\`. This is a one-time prompt during install only;
-   normal Bambuddy use doesn't need admin.
-2. **License + install directory** — defaults to `C:\Program Files\Bambuddy\`.
-3. **Optional firewall rule** — checkbox to add a Windows Firewall inbound
-   rule for TCP `8000` so devices on your LAN can reach the dashboard.
-   Default: enabled. Uncheck if you only want loopback access from this
-   machine.
-4. **Optional desktop shortcut** — default: off.
-5. **Install** — files copy, Bambuddy service registers and starts.
-6. **Browser opens** — default browser navigates to `http://localhost:8000`.
+1. **Запрос UAC** — права администратора необходимы для регистрации службы Windows и записи в `C:\Program Files\` и `C:\ProgramData\`. Запрос появляется только при установке; для обычной работы права администратора не нужны.
+2. **Лицензия и каталог установки** — по умолчанию `C:\Program Files\Bambuddy\`.
+3. **Необязательное правило брандмауэра** — флажок добавляет входящее правило Windows Firewall для TCP `8000`, чтобы устройства локальной сети могли открыть панель. По умолчанию включено. Снимите флажок, если нужен доступ только с этого компьютера через loopback.
+4. **Необязательный ярлык на рабочем столе** — по умолчанию отключён.
+5. **Установка** — файлы копируются, служба Bambuddy регистрируется и запускается.
+6. **Открытие браузера** — браузер по умолчанию переходит на `http://localhost:8000`.
 
 ---
 
-## :material-folder-cog: Installation Layout
+## :material-folder-cog: Структура установки {#installation-layout}
 
 ```text
 C:\Program Files\Bambuddy\        Install root (managed by installer)
@@ -92,40 +72,31 @@ C:\ProgramData\Bambuddy\          Data root (preserved on uninstall)
 │   ├── archive\                  Archived 3MF files + thumbnails
 │   └── plate_calibration\        Plate detection cache
 └── logs\
-    ├── service-stdout.log        NSSM-captured uvicorn stdout
+    ├── service-stdout.log        Стандартный вывод uvicorn, записанный NSSM
     ├── service-stderr.log        NSSM-captured uvicorn stderr
     └── *.log                     Bambuddy application logs
 ```
 
-The split between `Program Files` (read-only after install, replaced on
-update) and `ProgramData` (persistent user data) means **updates never
-touch your database or archives**.
+Благодаря разделению `Program Files` (после установки только для чтения, заменяется при обновлении) и `ProgramData` (постоянные данные пользователя) **обновления не затрагивают базу данных и архивы**.
 
 ---
 
-## :material-cog-play: Windows Service
+## :material-cog-play: Служба Windows {#windows-service}
 
-Bambuddy runs as a Windows service named `Bambuddy`, registered to start
-automatically at boot. The service runs as `LocalSystem`.
+Bambuddy работает как служба Windows `Bambuddy`, настроенная на автоматический запуск при загрузке. Служба работает от имени `LocalSystem`.
 
-| Setting | Value |
+| Параметр | Значение |
 |---------|-------|
-| Service name | `Bambuddy` |
-| Display name | `Bambuddy` |
-| Startup type | Automatic |
-| Account | `LocalSystem` |
-| Restart on failure | Yes (NSSM-managed, 5s delay) |
+| Имя службы | `Bambuddy` |
+| Отображаемое имя | `Bambuddy` |
+| Тип запуска | Автоматический |
+| Учётная запись | `LocalSystem` |
+| Перезапуск при сбое | Да (управляется NSSM, задержка 5 секунд) |
 
-!!! info "Why LocalSystem?"
-    The optional Virtual Printer feature needs to bind privileged ports
-    (322 / 990 / 8883) for the RTSPS camera proxy, FTPS file server, and
-    MQTT broker that emulate a real Bambu printer for slicer uploads.
-    Only `LocalSystem` or a similarly-privileged account can bind ports
-    below 1024 on Windows. If you don't use Virtual Printer mode, the
-    extra privilege isn't doing anything — it's there so you can flip
-    the feature on later without a service-account change.
+!!! info "Почему LocalSystem?"
+    Необязательной функции виртуального принтера нужно привязывать привилегированные порты (322 / 990 / 8883) для прокси камеры RTSPS, файлового сервера FTPS и брокера MQTT, эмулирующих принтер Bambu для загрузок из слайсера. В Windows порты ниже 1024 может привязать только `LocalSystem` или учётная запись с аналогичными правами. Если виртуальный принтер не используется, эти права не задействуются; они позволяют включить функцию позднее без смены учётной записи службы.
 
-### Managing the service
+### Управление службой {#managing-the-service}
 
 ```powershell
 Get-Service Bambuddy            # Status
@@ -134,64 +105,54 @@ Stop-Service Bambuddy           # Stop
 Restart-Service Bambuddy        # Restart
 ```
 
-Or via the GUI: `services.msc` → find `Bambuddy`.
+Или через графический интерфейс: откройте `services.msc` и найдите `Bambuddy`.
 
 ---
 
-## :material-update: Updating
+## :material-update: Обновление {#updating}
 
-To update to a new version, just **download and run the newer installer
-over the existing install**. Inno Setup detects the prior install,
-stops the running Bambuddy service, replaces the program files, and
-re-registers + restarts the service automatically.
+Для обновления **скачайте и запустите новый установщик поверх существующей установки**. Inno Setup обнаружит предыдущую установку, остановит службу Bambuddy, заменит файлы программы, повторно зарегистрирует и запустит службу.
 
-- Your data in `C:\ProgramData\Bambuddy\` is untouched.
-- Your settings (notifications, integrations, OAuth tokens) persist.
-- The service stops for ~5 seconds during the file swap.
+- Данные в `C:\ProgramData\Bambuddy\` не изменяются.
+- Настройки (уведомления, интеграции, токены OAuth) сохраняются.
+- Служба останавливается примерно на 5 секунд при замене файлов.
 
 ```text
-1. Download the new bambuddy-windows-x64-setup.exe
-2. Run it (UAC prompt)
-3. Click through the wizard (your existing config is detected)
-4. Service restarts on the new version automatically
+1. Скачайте новый bambuddy-windows-x64-setup.exe
+2. Запустите его (появится запрос UAC)
+3. Пройдите мастер установки (существующая конфигурация будет обнаружена)
+4. Служба автоматически перезапустится с новой версией
 ```
 
-No manual `Stop-Service` is needed — the installer handles that with a
-pre-install hook. If you do see a "file in use" error, stop the service
-manually (`Stop-Service Bambuddy` in admin PowerShell) and click Retry.
+Выполнять `Stop-Service` вручную не нужно: установщик делает это перед установкой. Если всё же появится ошибка «файл используется», остановите службу вручную (`Stop-Service Bambuddy` в PowerShell администратора) и нажмите «Повторить».
 
 ---
 
-## :material-trash-can: Uninstalling
+## :material-trash-can: Удаление {#uninstalling}
 
-Standard Windows uninstall flow:
+Стандартный порядок удаления в Windows:
 
-- **Settings → Apps** → search "Bambuddy" → **Uninstall**, or
-- **Control Panel → Programs and Features** → Bambuddy → **Uninstall**
+- **Параметры → Приложения** → найдите «Bambuddy» → **Удалить**, или
+- **Панель управления → Программы и компоненты** → Bambuddy → **Удалить**
 
-The uninstaller stops the service, removes the Windows Firewall rule,
-deletes the `C:\Program Files\Bambuddy\` install tree, and deregisters
-the service.
+Программа удаления останавливает службу, удаляет правило Windows Firewall и каталог `C:\Program Files\Bambuddy\`, а также отменяет регистрацию службы.
 
-!!! info "Your data is preserved by default"
-    `C:\ProgramData\Bambuddy\` (database, archives, logs) is **not**
-    removed by the uninstaller. If you reinstall Bambuddy later, you'll
-    pick up exactly where you left off. To wipe everything, delete the
-    `C:\ProgramData\Bambuddy\` folder manually after uninstall.
+!!! info "По умолчанию ваши данные сохраняются"
+    `C:\ProgramData\Bambuddy\` (база данных, архивы и журналы) при удалении **не удаляется**. При последующей установке Bambuddy данные сохранятся. Чтобы удалить всё, после деинсталляции удалите папку `C:\ProgramData\Bambuddy\` вручную.
 
 ---
 
-## :material-file-document: Logs
+## :material-file-document: Журналы {#logs}
 
-Bambuddy writes three log streams on Windows:
+В Windows Bambuddy записывает три потока журнала:
 
-| File | Source |
+| Файл | Источник |
 |------|--------|
-| `C:\ProgramData\Bambuddy\logs\service-stdout.log` | NSSM-captured uvicorn stdout |
-| `C:\ProgramData\Bambuddy\logs\service-stderr.log` | NSSM-captured uvicorn stderr + Python tracebacks |
-| `C:\ProgramData\Bambuddy\logs\bambuddy.log` | Bambuddy's own rotating application log |
+| `C:\ProgramData\Bambuddy\logs\service-stdout.log` | Стандартный вывод uvicorn, записанный NSSM |
+| `C:\ProgramData\Bambuddy\logs\service-stderr.log` | Стандартный вывод ошибок uvicorn и трассировки Python, записанные NSSM |
+| `C:\ProgramData\Bambuddy\logs\bambuddy.log` | Собственный журнал приложения Bambuddy с ротацией |
 
-Quick log access:
+Быстрый доступ к журналам:
 
 ```powershell
 # Tail the service stdout
@@ -201,126 +162,90 @@ Get-Content "C:\ProgramData\Bambuddy\logs\service-stdout.log" -Tail 100 -Wait
 Get-Content "C:\ProgramData\Bambuddy\logs\bambuddy.log" -Tail 100 -Wait
 ```
 
-A Start Menu shortcut **Bambuddy → Bambuddy Logs** opens the logs folder
-in Explorer for quick triage.
+Ярлык **Bambuddy → Bambuddy Logs** в меню «Пуск» открывает папку журналов в проводнике для быстрой диагностики.
 
 ---
 
-## :material-firewall: Windows Firewall
+## :material-firewall: Брандмауэр Windows {#material-firewall-windows-firewall}
 
-If you ticked **Add firewall rule** during install, an inbound TCP rule
-is created for port 8000:
+Если при установке выбран пункт добавления правила брандмауэра, создаётся входящее правило TCP для порта 8000:
 
-| Setting | Value |
+| Параметр | Значение |
 |---------|-------|
-| Name | `Bambuddy Dashboard` |
-| Direction | Inbound |
-| Protocol | TCP |
-| Port | 8000 |
-| Action | Allow |
+| Имя | `Bambuddy Dashboard` |
+| Направление | Входящее |
+| Протокол | TCP |
+| Порт | 8000 |
+| Действие | Разрешить |
 
-This makes the dashboard reachable from other devices on your LAN at
-`http://<windows-host-ip>:8000`. The uninstaller removes this rule.
+Это делает панель доступной с других устройств локальной сети по адресу `http://<windows-host-ip>:8000`. Программа удаления удаляет правило.
 
-!!! warning "Bambuddy is unauthenticated by default"
-    With the firewall rule active, anyone on your LAN can open the
-    Bambuddy dashboard without credentials. Open
-    **Settings → Security** in the dashboard and enable authentication
-    before relying on LAN access, especially on shared / guest networks.
+!!! warning "По умолчанию аутентификация Bambuddy отключена"
+    При активном правиле любой пользователь локальной сети может открыть панель Bambuddy без учётных данных. Прежде чем использовать доступ по сети, особенно в общей или гостевой сети, откройте **Настройки → Безопасность** на панели и включите аутентификацию.
 
 ---
 
-## :material-lan: Virtual Printer + Network Interfaces
+## :material-lan: Виртуальный принтер и сетевые интерфейсы {#virtual-printer-network-interfaces}
 
-When you add a Virtual Printer, the **Bind Interface** dropdown lists every
-IPv4 address on the Windows host — one entry per address, not per adapter, so
-a single NIC carrying several addresses offers several bind targets. Extra
-addresses after an adapter's first are marked `[alias]`. On Windows you may
-see entries you don't see on Linux:
+При добавлении виртуального принтера список **Интерфейс привязки** показывает все IPv4-адреса хоста Windows: отдельную запись для каждого адреса, а не адаптера. Поэтому у сетевой карты с несколькими адресами будет несколько вариантов привязки. Дополнительные адреса после первого помечены `[alias]`. В Windows могут появиться записи, которых нет в Linux:
 
-- `Ethernet`, `Wi-Fi` — your real LAN adapters
-- `vEthernet (WSL)`, `vEthernet (Default Switch)` — Hyper-V virtual switches
-- `Tailscale` — if you have Tailscale installed
-- `Bluetooth Network Connection` — if active
+- `Ethernet`, `Wi-Fi` — физические адаптеры локальной сети
+- `vEthernet (WSL)`, `vEthernet (Default Switch)` — виртуальные коммутаторы Hyper-V
+- `Tailscale` — если установлен Tailscale
+- `Bluetooth Network Connection` — если подключение активно
 
-This is intentional — Bambuddy doesn't filter Windows-specific virtual
-adapters because some users legitimately want to bind a VP to one
-(common cases: binding to the Tailscale interface for remote slicing
-across a tailnet, or to a WSL interface for slicing from Linux tools
-running inside WSL).
+Это сделано намеренно: Bambuddy не фильтрует виртуальные адаптеры Windows, поскольку они могут понадобиться для привязки виртуального принтера. Например, интерфейс Tailscale используется для удалённой нарезки через tailnet, а WSL — для нарезки инструментами Linux внутри WSL.
 
-For most users, pick the real LAN adapter that matches the subnet your
-Bambu printer is on.
+В большинстве случаев выбирайте физический адаптер локальной сети в той же подсети, что и принтер Bambu.
 
-Each enabled Virtual Printer needs its own address. Add the extra ones to the
-adapter you already use, from an Administrator PowerShell:
+Каждому включённому виртуальному принтеру нужен собственный адрес. Добавьте дополнительные адреса на используемый адаптер из PowerShell с правами администратора:
 
 ```powershell
 New-NetIPAddress -InterfaceAlias "Ethernet0" -IPAddress 192.168.1.101 -PrefixLength 24
 ```
 
-They persist across reboots, and the dropdown picks them up when the Settings
-page is reloaded.
-The [Virtual Printer page](../features/virtual-printer.md#dedicated-bind-ip)
-has the full walkthrough.
+Адреса сохраняются после перезагрузки и появляются в списке после обновления страницы настроек. Подробная инструкция приведена на [странице виртуального принтера](../features/virtual-printer.md#dedicated-bind-ip).
 
-!!! warning "Don't reach for extra NICs on the same subnet"
-    Adding a second network adapter instead of a second address works only
-    when that adapter is on its own subnet or VLAN. Several adapters of one
-    machine on one subnet hit ARP flux: `route print -4` shows a route per
-    adapter, `netstat -a` shows every port LISTENING on every IP, and other
-    machines can still reach only one of them. Weak host mode does not help.
+!!! warning "Не добавляйте сетевые карты в одну подсеть"
+    Второй сетевой адаптер вместо второго адреса работает только в отдельной подсети или VLAN. Несколько адаптеров одного компьютера в одной подсети вызывают ARP flux: `route print -4` показывает маршрут для каждого адаптера, `netstat -a` показывает каждый порт в состоянии LISTENING на каждом IP-адресе, но другие компьютеры могут достичь только одного из них. Режим weak host не помогает.
 
 ---
 
-## :material-alert-circle: Troubleshooting
+## :material-alert-circle: Устранение неполадок {#troubleshooting}
 
-### Installer file-in-use error during update
+### Ошибка занятого файла при обновлении {#installer-file-in-use-error-during-update}
 
-If you see "permission denied" or "file in use" mid-install when
-upgrading, the previous Bambuddy service is still holding `python.exe`
-or its DLLs. The pre-install hook should stop the service automatically,
-but if it didn't:
+Если при обновлении появляются ошибки «доступ запрещён» или «файл используется», прежняя служба Bambuddy всё ещё удерживает `python.exe` или его DLL. Обычно установщик останавливает службу автоматически, но если этого не произошло:
 
 ```powershell
 # Admin PowerShell
 Stop-Service Bambuddy
 ```
 
-Then click **Retry** in the installer dialog.
+Затем нажмите **Повторить** в окне установщика.
 
-### Service won't start after install
+### Служба не запускается после установки {#service-wont-start-after-install}
 
-Check the NSSM stderr log first:
+Сначала проверьте журнал ошибок NSSM:
 
 ```powershell
 Get-Content "C:\ProgramData\Bambuddy\logs\service-stderr.log" -Tail 50
 ```
 
-Common causes:
+Распространённые причины:
 
-- **Port 8000 already in use** by another application. Stop the other
-  app or change Bambuddy's port via env var. (Port change UX is a
-  v1.1 polish item — for now, edit `C:\Program Files\Bambuddy\service\install-service.bat`
-  and re-run it as admin to re-register the service on a different port.)
-- **Antivirus blocking the embedded Python** — quarantines `python.exe`.
-  Add `C:\Program Files\Bambuddy\` to your AV's exclusion list.
+- **Порт 8000 уже занят** другим приложением. Остановите его или измените порт Bambuddy через переменную окружения. Удобный интерфейс смены порта запланирован для v1.1; пока измените `C:\Program Files\Bambuddy\service\install-service.bat` и снова запустите его от администратора для регистрации службы на другом порту.
+- **Антивирус блокирует встроенный Python**, помещая `python.exe` в карантин. Добавьте `C:\Program Files\Bambuddy\` в исключения антивируса.
 
-### Browser doesn't open at end of install
+### Браузер не открывается после установки {#browser-doesnt-open-at-end-of-install}
 
-The auto-open is best-effort; if your default-browser config is unusual
-(e.g. a privacy launcher), it may not fire. Use the Start Menu shortcut
-**Bambuddy → Open Bambuddy Dashboard**, or just point any browser at
-`http://localhost:8000`.
+Автоматическое открытие может не сработать при необычной настройке браузера по умолчанию, например при использовании программы запуска для конфиденциальности. Используйте ярлык **Bambuddy → Open Bambuddy Dashboard** в меню «Пуск» или откройте `http://localhost:8000` в любом браузере.
 
-### Virtual Printer dropdown is empty
+### Список виртуального принтера пуст {#virtual-printer-dropdown-is-empty}
 
-If you see no interfaces when adding a VP: restart the service and
-refresh the page. On some Windows configurations (heavy
-firewall / endpoint protection) `psutil.net_if_addrs()` returns stale
-data until the next service restart.
+Если при добавлении виртуального принтера интерфейсы не отображаются, перезапустите службу и обновите страницу. В некоторых конфигурациях Windows (при строгих правилах брандмауэра или защите конечных устройств) `psutil.net_if_addrs()` возвращает устаревшие данные до перезапуска службы.
 
-### Removing everything cleanly
+### Полное удаление {#removing-everything-cleanly}
 
 ```powershell
 # 1. Uninstall via Settings → Apps
@@ -330,27 +255,22 @@ Remove-Item "C:\ProgramData\Bambuddy" -Recurse -Force
 
 ---
 
-## :material-source-branch: Build From Source
+## :material-source-branch: Сборка из исходного кода {#build-from-source}
 
-The installer is built in CI from the public GitHub Actions workflow at
-[`.github/workflows/windows-installer.yml`](https://github.com/maziggy/bambuddy/blob/main/.github/workflows/windows-installer.yml).
-Build inputs:
+Установщик собирается в CI с помощью публичного процесса GitHub Actions [`.github/workflows/windows-installer.yml`](https://github.com/maziggy/bambuddy/blob/main/.github/workflows/windows-installer.yml). Компоненты сборки:
 
-- [`installers/windows/build.py`](https://github.com/maziggy/bambuddy/blob/main/installers/windows/build.py) — stages embedded Python + deps + frontend + vendored NSSM + ffmpeg
-- [`installers/windows/bambuddy.iss`](https://github.com/maziggy/bambuddy/blob/main/installers/windows/bambuddy.iss) — Inno Setup compiler script
-- [`installers/windows/vendor/nssm.exe`](https://github.com/maziggy/bambuddy/tree/main/installers/windows/vendor) — vendored NSSM 2.24
+- [`installers/windows/build.py`](https://github.com/maziggy/bambuddy/blob/main/installers/windows/build.py) — подготавливает встроенный Python, зависимости, фронтенд, включённый NSSM и ffmpeg
+- [`installers/windows/bambuddy.iss`](https://github.com/maziggy/bambuddy/blob/main/installers/windows/bambuddy.iss) — скрипт компилятора Inno Setup
+- [`installers/windows/vendor/nssm.exe`](https://github.com/maziggy/bambuddy/tree/main/installers/windows/vendor) — включённый в проект NSSM 2.24
 
-To build locally you need Windows 10/11 + Python 3.11+ + Node.js 22 + Inno
-Setup 6. See
-[`installers/windows/README.md`](https://github.com/maziggy/bambuddy/blob/main/installers/windows/README.md)
-for the build steps.
+Для локальной сборки нужны Windows 10/11, Python 3.11+, Node.js 22 и Inno Setup 6. Порядок сборки описан в [`installers/windows/README.md`](https://github.com/maziggy/bambuddy/blob/main/installers/windows/README.md).
 
 ---
 
-## :material-arrow-right-circle: Next Steps
+## :material-arrow-right-circle: Следующие шаги {#next-steps}
 
-After install:
+После установки:
 
-1. Open Bambuddy at `http://localhost:8000`
-2. Add your first Bambu printer — see [First Printer Setup](first-printer.md)
-3. Optionally enable authentication under **Settings → Security**
+1. Откройте Bambuddy по адресу `http://localhost:8000`
+2. Добавьте первый принтер Bambu — см. [Настройка первого принтера](first-printer.md)
+3. При необходимости включите аутентификацию в разделе **Настройки → Безопасность**
