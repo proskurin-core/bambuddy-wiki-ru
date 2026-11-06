@@ -1,530 +1,397 @@
 ---
-title: Notifications
-description: Multi-provider push notifications for print events
+title: Уведомления
+description: Push-уведомления о событиях печати через разные сервисы
 ---
 
-# Notifications
+# Уведомления {#notifications}
 
-Get notified about print events via WhatsApp, Telegram, Discord, Email, Home Assistant, and more.
+Получайте уведомления о событиях печати через WhatsApp, Telegram, Discord, электронную почту, Home Assistant и другие сервисы.
 
-![Notifications Settings](../assets/settings_notifications.png){ .screenshot }
+![Настройки уведомлений](../assets/settings_notifications.png){ .screenshot }
 
 ---
 
-## :material-bell-ring: Supported Providers
+## :material-bell-ring: Поддерживаемые сервисы {#supported-providers}
 
-| Provider | Setup | Features |
+| Сервис | Настройка | Возможности |
 |----------|:-----:|----------|
-| **ntfy** | :material-star::material-star-outline::material-star-outline: Easy | Free, no account needed |
-| **WhatsApp** | :material-star::material-star-outline::material-star-outline: Easy | Via CallMeBot |
-| **Discord** | :material-star::material-star-outline::material-star-outline: Easy | Channel webhooks |
-| **Pushover** | :material-star::material-star-outline::material-star-outline: Easy | Professional push service |
-| **Bark** | :material-star::material-star-outline::material-star-outline: Easy | iOS push, no account, self-hostable |
-| **Notify!** | :material-star::material-star-outline::material-star-outline: Easy | Device and group notifications, optional iOS Live Activities and Lock Screen widgets |
-| **Gotify** | :material-star::material-star-outline::material-star-outline: Easy | Push from your own Gotify server, per-event priority |
-| **Telegram** | :material-star::material-star::material-star-outline: Medium | Via Telegram Bot |
-| **Email** | :material-star::material-star::material-star-outline: Medium | SMTP email |
-| **Home Assistant** | :material-star::material-star-outline::material-star-outline: Easy | HA dashboard or mobile push via any notify service, with custom data fields and automatic photo attachment |
-| **Webhook** | :material-star::material-star::material-star: Flexible | Custom HTTP POST |
+| **ntfy** | :material-star::material-star-outline::material-star-outline: Просто | Бесплатно, учётная запись не нужна |
+| **WhatsApp** | :material-star::material-star-outline::material-star-outline: Просто | Через CallMeBot |
+| **Discord** | :material-star::material-star-outline::material-star-outline: Просто | Вебхуки каналов |
+| **Pushover** | :material-star::material-star-outline::material-star-outline: Просто | Профессиональный push-сервис |
+| **Bark** | :material-star::material-star-outline::material-star-outline: Просто | Push на iOS, без учётной записи, возможен свой сервер |
+| **Notify!** | :material-star::material-star-outline::material-star-outline: Просто | Уведомления устройств и групп, опциональные Live Activities и виджеты экрана блокировки iOS |
+| **Gotify** | :material-star::material-star-outline::material-star-outline: Просто | Push с собственного сервера Gotify, приоритет для каждого события |
+| **Telegram** | :material-star::material-star::material-star-outline: Средне | Через бота Telegram |
+| **Email** | :material-star::material-star::material-star-outline: Средне | Почта SMTP |
+| **Home Assistant** | :material-star::material-star-outline::material-star-outline: Просто | Панель HA или мобильные push через любой сервис notify, с пользовательскими полями данных и автоматическим вложением фото |
+| **Webhook** | :material-star::material-star::material-star: Гибко | Пользовательский HTTP POST |
 
 ---
 
-## :material-plus-circle: Adding a Provider
+## :material-plus-circle: Добавление сервиса {#adding-a-provider}
 
-1. Go to **Settings** > **Notifications**
-2. Click **Add Provider**
-3. Select provider type
-4. Enter configuration
-5. Click **Test Configuration** to verify
-6. Configure event triggers
-7. Click **Add**
+1. Откройте **Настройки** > **Уведомления**
+2. Нажмите **Добавить провайдера**
+3. Выберите тип сервиса
+4. Введите настройки
+5. Нажмите **Проверить настройку**
+6. Настройте события
+7. Нажмите **Добавить**
 
-!!! note "Saved tokens, passwords and webhook URLs"
-    Once saved, a provider's secrets (tokens, keys, passwords, webhook URLs) are never shown again: the edit dialog shows `********` instead. Leave it as is to keep the saved value, clear it to remove it, or enter a new one. If you change where a provider sends to (the SMTP server, port or security, or the ntfy, Gotify or Bark server, or the webhook URL), enter its secret again.
+!!! note "Сохранённые токены, пароли и URL вебхуков"
+    После сохранения секреты сервиса (токены, ключи, пароли и URL вебхуков) больше не показываются: в окне редактирования вместо них отображается `********`. Оставьте поле как есть, чтобы сохранить значение, очистите его для удаления или введите новое. Если меняете адрес назначения сервиса (сервер, порт или безопасность SMTP, сервер ntfy, Gotify или Bark либо URL вебхука), введите его секрет заново.
 
 ---
 
-## :material-tune: Provider Setup Guides
+## :material-tune: Настройка сервисов {#provider-setup-guides}
 
-### ntfy (Easiest)
+### ntfy (проще всего) {#ntfy-easiest}
 
-Simple topic-based notifications - no account needed!
+Простые уведомления по теме — учётная запись не нужна!
 
-1. Choose a unique topic name (e.g., `my-printer-xyz123`)
+1. Выберите уникальное название темы (например, `my-printer-xyz123`)
+2. Подпишитесь на телефоне:
+   - Установите приложение ntfy ([Android](https://play.google.com/store/apps/details?id=io.heckel.ntfy) / [iOS](https://apps.apple.com/app/ntfy/id1625396347))
+   - Подпишитесь на свою тему
+3. Введите в Bambuddy:
 
-2. Subscribe on your phone:
-   - Install ntfy app ([Android](https://play.google.com/store/apps/details?id=io.heckel.ntfy) / [iOS](https://apps.apple.com/app/ntfy/id1625396347))
-   - Subscribe to your topic
-
-3. In Bambuddy, enter:
-
-| Field | Value |
+| Поле | Значение |
 |-------|-------|
-| **Topic** | Your topic name |
-| **Server** | `https://ntfy.sh` (or self-hosted) |
+| **Тема** | Название вашей темы |
+| **Сервер** | `https://ntfy.sh` (или собственный сервер) |
 
-!!! tip "Keep Topic Secret"
-    Anyone who knows your topic can send you messages. Use a random string.
+!!! tip "Держите тему в секрете"
+    Любой, кто знает название вашей темы, может отправить вам сообщение. Используйте случайную строку.
 
-#### Per-event priority
+#### Приоритет для каждого события {#per-event-priority}
 
-ntfy supports a `Priority` header that controls how the receiving device escalates an alert (sound, vibration, do-not-disturb override, banner persistence). Bambuddy lets you map each *enabled* event to one of five levels:
+ntfy поддерживает заголовок `Priority`, который определяет, как принимающее устройство усиливает оповещение: звук, вибрация, обход режима «Не беспокоить», длительность баннера. В Bambuddy каждому *включённому* событию можно назначить один из пяти уровней:
 
-| Priority | ntfy value | Typical use |
+| Приоритет | Значение ntfy | Типичное применение |
 |----------|-----------|-------------|
-| **Min**     | 1 | Diagnostics-style pings — no sound, no badge |
-| **Low**     | 2 | Informational, non-urgent (e.g. "first layer complete") |
-| **Default** | 3 | Standard notification (the ntfy default if nothing is set) |
-| **High**    | 4 | Audible / urgent (e.g. "filament low", "AMS humidity high") |
-| **Urgent**  | 5 | Wakes the device, ignores DND (e.g. "print failed", "printer offline") |
+| **Min** | 1 | Диагностические сообщения без звука и значка |
+| **Low** | 2 | Информационные, несрочные сообщения (например, «первый слой готов») |
+| **Default** | 3 | Стандартное уведомление (по умолчанию в ntfy, если ничего не задано) |
+| **High** | 4 | Звуковое или срочное уведомление (например, «мало филамента», «высокая влажность AMS») |
+| **Urgent** | 5 | Пробуждает устройство, игнорирует режим «Не беспокоить» (например, «ошибка печати», «принтер отключён») |
 
-After enabling the events you want, scroll to the **ntfy Priority** section in the Add / Edit Notification dialog. Each enabled event gets its own dropdown — events left at *Default* fall through to whatever the ntfy server is configured to send. Disabled events don't appear in the section.
+После включения нужных событий прокрутите окно добавления или изменения уведомления до раздела **Приоритет ntfy**. Для каждого включённого события будет свой список; события со значением *Default* используют настройки сервера ntfy. Отключённые события в разделе не отображаются.
 
-Switching the provider type away from ntfy hides the section; the priorities are still saved if you switch back.
+При смене типа сервиса с ntfy раздел скрывается, но приоритеты сохраняются на случай возврата.
 
-The [daily digest](#daily-digest) is not covered by these priorities: it is one message summarising several events, so it goes out at the ntfy server's default.
+На [ежедневную сводку](#daily-digest) эти приоритеты не распространяются: она объединяет несколько событий и отправляется с приоритетом сервера ntfy по умолчанию.
 
 ---
 
-### WhatsApp (CallMeBot)
+### WhatsApp (CallMeBot) {#whatsapp-callmebot}
 
-Free WhatsApp notifications:
+Бесплатные уведомления WhatsApp:
 
-1. Add CallMeBot to contacts: **+34 644 51 95 23**
+1. Добавьте CallMeBot в контакты: **+34 644 51 95 23**
+2. Отправьте через WhatsApp: `I allow callmebot to send me messages`
+3. Вы получите ключ API
+4. Введите в Bambuddy:
 
-2. Send via WhatsApp: `I allow callmebot to send me messages`
-
-3. You'll receive an API key
-
-4. In Bambuddy, enter:
-
-| Field | Value |
+| Поле | Значение |
 |-------|-------|
-| **Phone Number** | Your number with country code (e.g., +1234567890) |
-| **API Key** | Key from CallMeBot |
+| **Номер телефона** | Ваш номер с кодом страны (например, +1234567890) |
+| **Ключ API** | Ключ от CallMeBot |
 
 ---
 
-### Discord
+### Discord {#discord}
 
-Via channel webhooks:
+Через вебхуки каналов:
 
-1. In Discord, go to channel settings
-2. Navigate to **Integrations** > **Webhooks**
-3. Click **New Webhook**
-4. Customize name/avatar
-5. Click **Copy Webhook URL**
-6. In Bambuddy, paste the URL
+1. В Discord откройте настройки канала
+2. Перейдите в **Integrations** > **Webhooks**
+3. Нажмите **New Webhook**
+4. Настройте название и аватар
+5. Нажмите **Copy Webhook URL**
+6. Вставьте URL в Bambuddy
 
 ---
 
-### Pushover
+### Pushover {#pushover}
 
-Professional push notification service:
+Профессиональный сервис push-уведомлений:
 
-1. Create account at [pushover.net](https://pushover.net/)
-2. Install Pushover app on your device
-3. Create an Application in dashboard
-4. In Bambuddy, enter:
+1. Создайте учётную запись на [pushover.net](https://pushover.net/)
+2. Установите приложение Pushover на устройство
+3. Создайте приложение на панели управления
+4. Введите в Bambuddy:
 
-| Field | Value |
+| Поле | Значение |
 |-------|-------|
-| **User Key** | From Pushover account |
-| **API Token** | From your Application |
-| **Priority** | Message priority, `-2` (lowest) to `2` (Emergency). Defaults to `0` (normal). |
+| **Ключ пользователя** | Из учётной записи Pushover |
+| **Токен API** | Из созданного приложения |
+| **Приоритет** | Приоритет сообщения от `-2` (минимальный) до `2` (экстренный). По умолчанию `0` (обычный). |
 
-!!! warning "Emergency priority (2)"
-    Priority `2` is Pushover's **Emergency** level: the notification keeps re-alerting on your device until you acknowledge it. Pushover requires two extra parameters for this, and Bambuddy exposes them **only when you set Priority to `2`**:
+!!! warning "Экстренный приоритет (2)"
+    Приоритет `2` — уровень **Emergency** в Pushover: уведомление повторно подаётся на устройстве, пока вы его не подтвердите. Pushover требует два дополнительных параметра, которые Bambuddy показывает **только при приоритете `2`**:
 
-    | Field | Meaning | Range | Default |
+    | Поле | Значение | Диапазон | По умолчанию |
     |-------|---------|-------|---------|
-    | **Emergency Retry (s)** | How often Pushover re-alerts until acknowledged | 30–10800 s | 60 s |
-    | **Emergency Expire (s)** | When Pushover stops re-alerting if never acknowledged | 30–10800 s (max 3 h) | 3600 s |
+    | **Повтор экстренного уведомления (с)** | Как часто Pushover повторяет уведомление до подтверждения | 30–10800 с | 60 с |
+    | **Истечение экстренного уведомления (с)** | Когда Pushover прекращает повторы без подтверждения | 30–10800 с (до 3 ч) | 3600 с |
 
-    Values outside the allowed range are clamped automatically. These fields have no effect at any other priority.
-
----
-
-### Bark (iOS)
-
-Open-source push notifications for iPhone/iPad via the [Bark](https://github.com/Finb/Bark) app — no account needed, self-hostable:
-
-1. Install the Bark app from the App Store
-2. Copy your **device key** from the app (shown on the main screen)
-3. In Bambuddy, add a provider and select **Bark**:
-
-| Field | Value |
-|-------|-------|
-| **Device Key** | From the Bark app |
-| **Server URL** | Optional — defaults to the official `https://api.day.app` relay; enter your own [bark-server](https://github.com/Finb/bark-server) URL if self-hosting |
-| **Group** | Optional — groups notifications in the iOS notification center |
-| **Sound** | Optional — a Bark sound name (e.g. `minuet`) |
-| **Interruption Level** | Optional — **Time Sensitive** breaks through scheduled summaries; **Critical** also bypasses Silent mode and Focus (great for print failures); **Passive** delivers without waking the screen |
-
-!!! tip "Photo attachment"
-    When a camera snapshot is available, it's sent as Bark's `icon` — the closest thing Bark's push schema has to a photo attachment, shown as a round icon on iOS. See [Finish Photos](#finish-photos) below for requirements.
+    Значения вне диапазона автоматически ограничиваются. При других приоритетах эти поля не влияют на работу.
 
 ---
 
-### Notify!
+### Bark (iOS) {#bark-ios}
 
-Send print alerts through [Notify!](https://getnotifyapp.com/) and optionally
-follow running prints or keep printer status on an iPhone or iPad Lock Screen.
+Push-уведомления с открытым исходным кодом для iPhone/iPad через [Bark](https://github.com/Finb/Bark): учётная запись не нужна, можно разместить собственный сервер.
 
-1. Open Notify! and copy your **Device ID** and **Token** from **Settings** >
-   **Device**. For group notifications, use the group's ID and token instead.
-2. In Bambuddy, go to **Settings** > **Notifications**, add a provider and
-   select **Notify!**.
-3. Enter the matching ID and token, then use **Test Configuration** to check delivery.
-4. Choose the printers and notification events you want, then save the provider.
+1. Установите Bark из App Store
+2. Скопируйте **ключ устройства** из приложения (на главном экране)
+3. В Bambuddy добавьте сервис и выберите **Bark**:
 
-| Field | Value |
+| Поле | Значение |
 |-------|-------|
-| **Device or group ID** | Your Notify! device ID or a group ID beginning with `GRP` |
-| **Notify! token** | The token belonging to that device or group |
-| **Icon URL (optional)** | HTTPS image URL for the notification's sender icon |
-| **Notification thread (optional)** | Thread name for grouping notifications on the receiving device. Leave empty to group by printer. |
-| **Live Activities (iOS)** | Optional live print progress on an iPhone or iPad; requires an individual device |
-| **Lock Screen Widgets (iOS)** | Optional persistent printer status widgets; requires an individual iOS device |
+| **Ключ устройства** | Из приложения Bark |
+| **URL сервера** | Необязательно; по умолчанию официальный сервер `https://api.day.app`. Для своего сервера введите URL [bark-server](https://github.com/Finb/bark-server) |
+| **Группа** | Необязательно; группирует уведомления в центре уведомлений iOS |
+| **Звук** | Необязательно; название звука Bark (например, `minuet`) |
+| **Уровень прерывания** | Необязательно: **Time Sensitive** проходит через запланированные сводки; **Critical** также обходит бесшумный режим и фокусирование (полезно при ошибках печати); **Passive** доставляется без пробуждения экрана |
 
-Ordinary notifications work with iOS, browser and Mac devices, and groups.
-Device IDs can be eight characters or the newer longer IDs; copy the whole ID
-from Notify!. A group uses its own token, not a member's device token.
-Group (`GRP`), browser (`WB`) and Mac (`MC`) targets use ordinary
-notifications, and both iOS options are turned off for them.
+!!! tip "Вложение фотографии"
+    Если доступен снимок камеры, он отправляется как `icon` Bark — наиболее близкий к вложению фото вариант схемы push Bark; в iOS он показывается круглым значком. Требования см. ниже в разделе [Фотографии после печати](#finish-photos).
 
-!!! tip "Finish photos"
-    With **Attach Photo** enabled, Notify! can show a camera snapshot inside the
-    expanded notification. Set Bambuddy's **External URL** to an HTTPS address
-    reachable from the receiving device. If no HTTPS photo URL is available,
-    Bambuddy still sends the text. Browser (`WB`) and group (`GRP`) recipients
-    receive text without camera photos, including problem alerts; **Attach
-    Photo** is unavailable for those targets. See [Finish Photos](#finish-photos).
+---
 
-#### Live print progress
+### Notify! {#notify}
 
-Enable **Live Activities (iOS)** for an individual iPhone or iPad device. Open Notify!
-on that device at least once and allow Live Activities in iOS settings. Browser,
-Mac and group targets receive ordinary notifications only.
+Отправляйте уведомления о печати через [Notify!](https://getnotifyapp.com/) и при желании следите за текущей печатью или сохраняйте состояние принтера на экране блокировки iPhone или iPad.
 
-Bambuddy starts a Live Activity for each printing machine, updates its progress
-and countdown, reflects pauses, and ends it when the print finishes, fails or
-stops. Updates continue independently of the **Print Progress** notification
-milestones. The provider's printer selection applies to both notifications and
-Live Activities.
+1. Откройте Notify! и скопируйте **Device ID** и **Token** из **Settings** > **Device**. Для групповых уведомлений используйте ID и токен группы.
+2. В Bambuddy откройте **Настройки** > **Уведомления**, добавьте сервис и выберите **Notify!**.
+3. Введите соответствующие ID и токен и проверьте доставку кнопкой **Проверить настройку**.
+4. Выберите нужные принтеры и события и сохраните сервис.
 
-When the printer reports a problem that needs attention, the activity displays
-the fault and stops its countdown, even if the printer still reports that it is
-running. The error text temporarily replaces any metric chips so the reason is
-visible. A manual pause also stops the countdown. Progress and the countdown
-resume when the problem clears and the printer resumes; informational HMS
-advisories do not turn a healthy print into an error.
+| Поле | Значение |
+|-------|-------|
+| **ID устройства или группы** | ID устройства Notify! или ID группы, начинающийся с `GRP` |
+| **Токен Notify!** | Токен этого устройства или группы |
+| **URL значка (необязательно)** | HTTPS-адрес изображения отправителя уведомления |
+| **Тема уведомлений (необязательно)** | Название темы для группировки уведомлений на принимающем устройстве. Оставьте пустым для группировки по принтеру. |
+| **Live Activities (iOS)** | Необязательное отображение хода печати в реальном времени на iPhone или iPad; требуется отдельное устройство |
+| **Виджеты экрана блокировки (iOS)** | Необязательные постоянные виджеты состояния принтера; требуется отдельное устройство iOS |
 
-- **Event triggers and Daily Digest** control ordinary notifications. The
-  **Live Activities** switch controls live progress separately.
-- **Quiet Hours** prevent new Live Activities from starting. An activity that
-  already exists continues updating and ends normally, so it cannot be left
-  showing an old print overnight.
-- **Swiping away an activity** dismisses it for that print. A later print can
-  create a new one.
-- **Restarting Bambuddy** retains saved activity IDs and waits up to two minutes
-  for the printer's first real status. If none arrives, the activity shows
-  **Printer offline** and stops its countdown. Normal updates resume when the
-  printer reconnects.
-- **Long prints** get a replacement activity at Apple's eight-hour limit.
+Обычные уведомления работают с устройствами iOS, браузерами, Mac и группами. ID устройства может содержать восемь символов или иметь более новый длинный формат; скопируйте ID целиком из Notify!. Группа использует собственный токен, а не токен устройства участника. Группы (`GRP`), браузеры (`WB`) и Mac (`MC`) получают обычные уведомления, и оба параметра iOS для них отключены.
 
-Notify! supports up to five simultaneous Live Activities per device. If your
-farm has more active printers, use the provider's printer selection to choose
-which machines appear on your Lock Screen.
+!!! tip "Фотографии после печати"
+    При включённом параметре **Прикреплять фото** Notify! может показать снимок камеры в развёрнутом уведомлении. Укажите во **Внешнем URL** Bambuddy HTTPS-адрес, доступный принимающему устройству. Если HTTPS-адрес фотографии недоступен, Bambuddy всё равно отправит текст. Получатели в браузере (`WB`) и группах (`GRP`) получают текст без фото, включая сообщения о проблемах; **Прикреплять фото** для них недоступно. См. [Фотографии после печати](#finish-photos).
 
-#### Customize the activity
+#### Ход печати в реальном времени {#live-print-progress}
 
-The default activity shows the printer and job name, a progress bar and a live
-countdown, with no extra metrics selected. Expand **Live Activity appearance**
-in the provider settings to customize it:
+Включите **Live Activities (iOS)** для отдельного iPhone или iPad. Откройте Notify! на устройстве хотя бы один раз и разрешите Live Activities в настройках iOS. Браузер, Mac и группы получают только обычные уведомления.
 
-| Option | What it changes |
+Bambuddy создаёт Live Activity для каждого печатающего принтера, обновляет ход и обратный отсчёт, отражает паузы и завершает активность после окончания, сбоя или остановки печати. Обновления не зависят от этапов уведомлений **Ход печати**. Выбор принтеров у сервиса применяется и к уведомлениям, и к Live Activities.
+
+Когда принтер сообщает о проблеме, требующей внимания, активность показывает ошибку и останавливает обратный отсчёт, даже если принтер всё ещё сообщает о работе. Текст ошибки временно заменяет показатели, чтобы причина была видна. Ручная пауза тоже останавливает отсчёт. После устранения проблемы и возобновления печати прогресс и отсчёт продолжаются; информационные сообщения HMS не превращают исправную печать в ошибку.
+
+- **События и ежедневная сводка** управляют обычными уведомлениями. Переключатель **Live Activities** отдельно управляет отображением хода.
+- **Тихие часы** не дают запускаться новым Live Activities. Уже созданная активность продолжает обновляться и завершается обычным образом, поэтому не останется показывать старую печать на ночь.
+- **Смахивание активности** закрывает её для текущей печати. Следующая печать может создать новую.
+- **Перезапуск Bambuddy** сохраняет ID активностей и ожидает до двух минут первое реальное состояние принтера. Если оно не получено, активность покажет **Принтер не в сети** и остановит отсчёт. После повторного подключения обновления возобновятся.
+- **Длительная печать** получает новую активность после установленного Apple предела в восемь часов.
+
+Notify! поддерживает до пяти одновременных Live Activities на устройстве. Если на ферме работает больше принтеров, выберите у сервиса те, которые должны появляться на экране блокировки.
+
+#### Настройка внешнего вида активности {#customize-the-activity}
+
+По умолчанию активность показывает название принтера и задания, индикатор прогресса и обратный отсчёт без дополнительных показателей. Разверните **Внешний вид Live Activity** в настройках сервиса:
+
+| Параметр | Что изменяет |
 |--------|-----------------|
-| **Hide file name on tile** | Keeps the filename off the Live Activity. Ordinary notification templates are unchanged. |
-| **Progress style** | Choose a continuous bar, segmented progress, or no bar. The countdown remains when an estimate is available. |
-| **Show print stage** | Show the printer's current stage, such as heating or calibration, in the activity's status. |
-| **Metrics** | Optionally show progress, time remaining, layer count, nozzle temperature, bed temperature or chamber temperature as small values. All are off by default; select only the ones you need. Metrics take the place of the job-name line. |
-| **Dashboard URL (optional)** | Add a button that opens your Bambuddy dashboard. Use an HTTPS URL your phone can reach. |
-| **Symbol (optional)** | Choose an SF Symbol for the activity's icon. |
-| **Tint (optional)** | Change its accent color using a hex color such as `#00A76F`. |
+| **Скрыть имя файла на плитке** | Скрывает имя файла в Live Activity. Шаблоны обычных уведомлений не меняются. |
+| **Стиль прогресса** | Сплошная или сегментированная полоса либо её отсутствие. Если оценка доступна, обратный отсчёт сохраняется. |
+| **Показывать этап печати** | Отображает текущий этап, например нагрев или калибровку. |
+| **Показатели** | Дополнительно показывает прогресс, оставшееся время, число слоёв, температуру сопла, стола или камеры. По умолчанию все выключены; включайте только нужные. Показатели заменяют строку имени задания. |
+| **URL панели (необязательно)** | Добавляет кнопку открытия панели Bambuddy. Используйте HTTPS-адрес, доступный телефону. |
+| **Символ (необязательно)** | Выбирает SF Symbol для значка активности. |
+| **Цвет (необязательно)** | Задаёт акцентный цвет в шестнадцатеричном формате, например `#00A76F`. |
 
-Missing metric readings are omitted rather than displayed as zero. Hiding the
-job name affects the Live Activity only; to keep filenames out of ordinary
-alerts too, remove `{filename}` from the relevant notification templates.
+Отсутствующие показания не отображаются вместо подстановки нуля. Скрытие имени задания действует только на Live Activity; чтобы исключить имена файлов и из обычных уведомлений, удалите `{filename}` из соответствующих шаблонов.
 
-The separate **Time Sensitive problem alerts** option applies to problem notifications. It
-requests delivery through iOS Focus and Do Not Disturb, subject to the receiving
-device's settings. Successful print notifications keep their normal priority.
+Отдельный параметр **Срочные предупреждения о проблемах** относится к уведомлениям о проблемах. Он запрашивает доставку через режимы фокусирования и «Не беспокоить» iOS с учётом настроек устройства. Уведомления об успешной печати сохраняют обычный приоритет.
 
-#### Persistent Lock Screen widgets
+#### Постоянные виджеты экрана блокировки {#persistent-lock-screen-widgets}
 
-Enable **Lock Screen Widgets (iOS)** to keep status widgets for up to ten selected
-active printers, including between prints. Printers in maintenance mode do not
-receive widgets. This option works independently of Live Activities. A widget shows progress while printing, the printer's status
-while idle or offline, and a useful description when a problem needs attention.
+Включите **Виджеты экрана блокировки (iOS)** для отображения состояния до десяти выбранных активных принтеров, в том числе между печатями. Принтеры в режиме обслуживания не получают виджеты. Функция работает независимо от Live Activities. Во время печати виджет показывает прогресс, в ожидании или без подключения — состояние принтера, а при проблеме — полезное описание.
 
-Bambuddy keeps the same widget for later prints. Its updates do not send push
-notifications and run independently of event toggles, Daily Digest and Quiet
-Hours. Notify! allows up to ten widgets per device in total, including widgets
-created outside Bambuddy. The provider settings show this limit. With **All
-Printers**, Bambuddy keeps existing widgets and adds eligible printers up to
-that limit. Choose a specific printer to control which machine appears when
-your device does not have enough available widget slots. If Notify! reports
-that all slots are occupied, Bambuddy stops trying to create more widgets;
-free a slot in Notify! and save the provider to retry.
+Bambuddy сохраняет тот же виджет для последующих печатей. Его обновления не отправляют push-уведомления и не зависят от переключателей событий, ежедневной сводки и тихих часов. Notify! допускает до десяти виджетов на устройство, включая созданные вне Bambuddy; этот предел указан в настройках сервиса. При выборе **Все принтеры** Bambuddy сохраняет существующие виджеты и добавляет подходящие принтеры до предела. Если свободных мест недостаточно, выберите конкретный принтер. Когда Notify! сообщает, что все места заняты, Bambuddy прекращает создание новых виджетов; освободите место в Notify! и сохраните сервис для повторной попытки.
 
-After saving the provider:
+После сохранения сервиса:
 
-1. Open Notify! on the receiving iOS device.
-2. Touch and hold the Lock Screen, choose **Customize**, then tap the widget
-   area below the clock.
-3. Choose **Notify!** and add a rectangular or circular widget.
-4. While still customizing, tap that widget and select the printer to display.
-   Enable **Show Last Updated** in the same sheet to see how fresh its value is.
+1. Откройте Notify! на принимающем устройстве iOS.
+2. Нажмите и удерживайте экран блокировки, выберите **Настроить** и нажмите область виджетов под часами.
+3. Выберите **Notify!** и добавьте прямоугольный или круглый виджет.
+4. В режиме настройки нажмите виджет и выберите принтер. Включите там же **Show Last Updated**, чтобы видеть время последнего обновления.
 
-iOS refreshes these widgets on its own schedule, roughly every fifteen minutes
-and sometimes longer. They display the most recently fetched status and do not
-have a live countdown. Use Live Activities for the timer and push notifications
-for timely problem alerts.
+iOS обновляет виджеты по собственному расписанию, примерно раз в пятнадцать минут, иногда реже. Они показывают последнее полученное состояние и не имеют непрерывного обратного отсчёта. Для таймера используйте Live Activities, а для своевременных предупреждений — push-уведомления.
 
-Disabling widgets or removing a printer from this provider's selection schedules
-removal of the widget Bambuddy manages. Cleanup runs in the background after
-saving or deleting a provider, so its old tiles may remain visible briefly.
-Widgets have no automatic expiry: if cleanup fails while deleting the provider
-or changing its device ID, an old widget can remain in Notify!. Remove that
-obsolete widget before setting it up again. The
-[Notify! widget API](https://getnotifyapp.com/apidocs/#op-widgets) also supports
-deleting an individual widget by its `WG` ID; removing its placement from the
-Lock Screen alone does not delete the stored widget.
+Отключение виджетов или удаление принтера из выбора сервиса планирует удаление управляемого Bambuddy виджета. Очистка выполняется в фоне после сохранения или удаления сервиса, поэтому старые плитки могут ненадолго остаться. Автоматического срока действия у виджетов нет: если очистка при удалении сервиса или изменении ID устройства не удалась, старый виджет может остаться в Notify!. Удалите его перед повторной настройкой. [API виджетов Notify!](https://getnotifyapp.com/apidocs/#op-widgets) также позволяет удалить отдельный виджет по его `WG` ID; удаление только размещения с экрана блокировки не удаляет сохранённый виджет.
 
-If Bambuddy reports that widget creation could not be confirmed, it stops
-trying to create another copy. Check Notify! for a widget that may already have
-been created and remove it before retrying. Then turn **Lock Screen Widgets
-(iOS)** off, save the provider, and turn it back on to start again.
+Если Bambuddy сообщает, что создание виджета не удалось подтвердить, он прекращает попытки создать ещё одну копию. Проверьте Notify! и удалите возможный уже созданный виджет перед повторной попыткой. Затем выключите **Виджеты экрана блокировки (iOS)**, сохраните сервис и снова включите параметр.
 
-!!! tip "Avoid duplicate alerts"
-    After configuring the native provider, stop the separate `notify-bambuddy`
-    companion before enabling Bambuddy's Live Activities. Leaving both running
-    creates duplicate activities; setting the companion's `ALERTS=off` only
-    disables its ordinary notifications. Dismiss its existing activities on
-    your device, because Bambuddy does not take over activities created by the
-    companion. Disable any generic webhook provider that sends the same events
-    to Notify! to avoid duplicate push notifications.
+!!! tip "Избегайте дублирования уведомлений"
+    После настройки встроенного сервиса остановите отдельный компонент `notify-bambuddy` перед включением Live Activities Bambuddy. Если оставить оба работающими, активности будут дублироваться; `ALERTS=off` у компонента отключает только обычные уведомления. Закройте уже созданные им активности на устройстве: Bambuddy не перенимает их управление. Чтобы не дублировать push, отключите и общий вебхук, отправляющий те же события в Notify!.
 
-!!! note "An alert test does not test a Live Activity"
-    **Test Configuration** and **Send Test Notification** send an ordinary push
-    notification. To check live progress, enable Live Activities, save the
-    provider, then start a print. If Notify!
-    reports that starts are temporarily limited, respect the retry time it
-    gives; repeatedly starting more activities does not clear that limit.
+!!! note "Проверка уведомления не проверяет Live Activity"
+    **Проверить настройку** и **Отправить тестовое уведомление** отправляют обычный push. Для проверки хода печати включите Live Activities, сохраните сервис и запустите печать. Если Notify! сообщает о временном ограничении запусков, соблюдайте указанный срок повторной попытки: многократные запуски ограничение не снимут.
 
-For Notify!'s device setup and delivery troubleshooting, see its
-[help](https://getnotifyapp.com/help/) and
-[API reference](https://getnotifyapp.com/apidocs/).
+Настройку устройств Notify! и устранение проблем доставки см. в его [справке](https://getnotifyapp.com/help/) и [справочнике API](https://getnotifyapp.com/apidocs/).
 
 ---
 
-### Gotify
+### Gotify {#gotify}
 
-Push notifications from your own [Gotify](https://gotify.net) server, received by the Gotify Android app or any other Gotify client:
+Push-уведомления с собственного сервера [Gotify](https://gotify.net) принимаются приложением Gotify для Android или другим клиентом Gotify:
 
-1. In the Gotify web UI, open **Apps** and create an application (e.g. "Bambuddy")
-2. Copy the application's **token**
-3. In Bambuddy, add a provider and select **Gotify**:
+1. В веб-интерфейсе Gotify откройте **Apps** и создайте приложение, например "Bambuddy"
+2. Скопируйте **токен** приложения
+3. В Bambuddy добавьте сервис и выберите **Gotify**:
 
-| Field | Value |
+| Поле | Значение |
 |-------|-------|
-| **Server URL** | Your Gotify server, e.g. `https://gotify.example.com` (a LAN address works too) |
-| **App Token** | The application token from step 2 |
+| **URL сервера** | Адрес сервера Gotify, например `https://gotify.example.com` (подойдёт и адрес локальной сети) |
+| **Токен приложения** | Токен приложения из шага 2 |
 
-The token is sent in the `X-Gotify-Key` header, never in the URL.
+Токен отправляется в заголовке `X-Gotify-Key`, а не в URL.
 
-#### Per-event priority
+#### Приоритет для каждого события {#per-event-priority_1}
 
-Like ntfy, each enabled event gets a dropdown in the **Gotify Priority** section of the dialog. Gotify priorities run from 0 to 10, and Bambuddy sends the five levels as:
+Как и в ntfy, для каждого включённого события в разделе **Приоритет Gotify** окна настройки есть список. Приоритеты Gotify принимают значения от 0 до 10; Bambuddy отправляет пять уровней:
 
-| Level | Gotify priority | Gotify Android app |
+| Уровень | Приоритет Gotify | Приложение Gotify для Android |
 |-------|:---------------:|--------------------|
-| **Min** | 0 | Silent, minimised |
-| **Low** | 2 | Silent |
-| **Default** | 5 | Sound |
-| **High** | 8 | Sound and pop-up |
-| **Urgent** | 10 | Sound and pop-up |
+| **Min** | 0 | Без звука, свёрнуто |
+| **Low** | 2 | Без звука |
+| **Default** | 5 | Со звуком |
+| **High** | 8 | Со звуком и всплывающим окном |
+| **Urgent** | 10 | Со звуком и всплывающим окном |
 
-Events left at *Default*, the test notification and the [daily digest](#daily-digest) go out at 5.
+События со значением *Default*, тестовое уведомление и [ежедневная сводка](#daily-digest) отправляются с приоритетом 5.
 
-!!! tip "Photo and tap action"
-    When a camera snapshot is available, it's sent as Gotify's `bigImageUrl`, which the Android app shows as a large picture. The [outcome confirmation](#print-events) opens the outcome dialog in Bambuddy when you tap the notification. Both need **External URL** set; see [Finish Photos](#finish-photos).
+!!! tip "Фотография и действие по нажатию"
+    Если доступен снимок камеры, он отправляется как `bigImageUrl` Gotify; приложение Android показывает его крупным изображением. При нажатии уведомления [подтверждение результата](#print-events) открывает соответствующее окно Bambuddy. Для обеих функций нужен **Внешний URL**; см. [Фотографии после печати](#finish-photos).
 
 ---
 
-### Telegram
+### Telegram {#telegram}
 
-Via Telegram Bot:
+Через бота Telegram:
 
-1. Message [@BotFather](https://t.me/BotFather)
-2. Send `/newbot` and follow prompts
-3. Save the **Bot Token**
-4. Message [@userinfobot](https://t.me/userinfobot) to get your **Chat ID**
-5. In Bambuddy, enter:
+1. Напишите [@BotFather](https://t.me/BotFather)
+2. Отправьте `/newbot` и следуйте инструкциям
+3. Сохраните **токен бота**
+4. Напишите [@userinfobot](https://t.me/userinfobot), чтобы получить **ID чата**
+5. Введите в Bambuddy:
 
-| Field | Value |
+| Поле | Значение |
 |-------|-------|
-| **Bot Token** | From BotFather |
-| **Chat ID** | Your user/group ID |
-| **Forum Topic ID** | Optional — see below |
-| **Outcome verdict via** | How the post-print outcome prompt is answered — buttons, a 👍 / 👎 reaction, or both. See [Verdict mode](#verdict-mode) |
+| **Токен бота** | От BotFather |
+| **ID чата** | Ваш ID пользователя или группы |
+| **ID темы форума** | Необязательно, см. ниже |
+| **Способ подтверждения результата** | Как отвечать на запрос результата печати: кнопками, реакцией 👍 / 👎 или обоими способами. См. [Режим подтверждения](#verdict-mode) |
 
-!!! tip "Group Notifications"
-    Add the bot to a group and use the group's chat ID for team notifications.
+!!! tip "Групповые уведомления"
+    Добавьте бота в группу и используйте ID группы для командных уведомлений.
 
-#### Forum Topics
+#### Темы форума {#forum-topics}
 
-If the target group has Topics enabled, Bambuddy posts to the **General** topic
-unless you tell it otherwise. Set **Forum Topic ID** to route the notifications
-into one specific topic instead — useful for giving each printer its own topic
-inside a single group rather than running a separate chat per printer.
+Если в целевой группе включены темы, Bambuddy отправляет сообщения в тему **General**, если не указано иное. Задайте **ID темы форума**, чтобы направить уведомления в конкретную тему. Так каждому принтеру можно выделить свою тему в одной группе вместо отдельного чата.
 
-To find the ID, open the topic in Telegram and copy its link. The last number is
-the topic ID:
+Чтобы найти ID, откройте тему в Telegram и скопируйте ссылку. Последнее число — ID темы:
 
 ```
 https://t.me/c/1234567890/25
                          ^^ Forum Topic ID
 ```
 
-The field takes a plain number and may be left empty. Two things to watch for:
+В поле вводится число; его можно оставить пустым. Учитывайте следующее:
 
-- The bot needs permission to post in the group, and Topics must actually be
-  enabled on it. Bambuddy passes the ID through unchanged and reports back
-  whatever Telegram answers, so a wrong ID surfaces as a Telegram error.
-- Deleting and recreating a topic gives it a new ID, so the notifications will
-  need repointing.
+- Боту нужно разрешение на отправку сообщений в группе, а темы должны быть включены. Bambuddy передаёт ID без изменений и сообщает ответ Telegram; неверный ID проявится как ошибка Telegram.
+- При удалении и повторном создании темы её ID меняется, поэтому уведомления нужно перенаправить.
 
-Use **Test** in the provider dialog to confirm the message lands where you
-expect before saving.
+Перед сохранением используйте **Проверить** в окне сервиса, чтобы убедиться, что сообщение попало в нужное место.
 
-#### Verdict mode
+#### Режим подтверждения результата {#verdict-mode}
 
-When a print that opted in to [outcome confirmation](archiving.md#post-print-outcome-confirmation)
-completes, the **Outcome Confirmation** [event](#event-triggers) asks for a
-Good / Reject verdict. **Outcome verdict via** in the provider dialog decides
-how you answer that prompt on Telegram:
+Когда завершается печать с включённым [подтверждением результата](archiving.md#post-print-outcome-confirmation), [событие](#event-triggers) **Подтверждение результата** запрашивает оценку «Годное» / «Брак». Параметр **Способ подтверждения результата** в окне сервиса определяет способ ответа в Telegram:
 
-| Option | How you answer |
+| Вариант | Как ответить |
 |--------|----------------|
-| **Inline buttons (link)** | 👍 Good / 👎 Reject buttons under the message, each opening a one-tap verdict link. The default. Needs the *External URL* setting, and your phone has to be able to reach that address. |
-| **Reaction (👍 / 👎)** | No buttons — the prompt ends with *React with 👍 or 👎 to record the outcome.* and you answer by reacting to the message. |
-| **Buttons and reaction** | Both at once; use whichever is handier. The buttons still need the External URL: without it they point at `APP_URL`, which defaults to `localhost`, so only the reaction works from the phone. |
+| **Кнопки (ссылка)** | Кнопки 👍 «Годное» / 👎 «Брак» под сообщением, каждая открывает ссылку подтверждения одним нажатием. Значение по умолчанию. Требуется *Внешний URL*, доступный телефону. |
+| **Реакция (👍 / 👎)** | Кнопок нет: запрос заканчивается предложением отреагировать 👍 или 👎; ответ — реакция на сообщение. |
+| **Кнопки и реакция** | Оба способа одновременно. Кнопкам всё ещё нужен внешний URL: без него они указывают на `APP_URL`, по умолчанию `localhost`, поэтому с телефона работает только реакция. |
 
-!!! tip "Reactions work away from the LAN"
-    A reaction needs no inbound connectivity to Bambuddy: your phone only talks
-    to Telegram, and Bambuddy fetches the reaction from Telegram. No External
-    URL, port forwarding or VPN required — answer the prompt from wherever the
-    Telegram app works.
+!!! tip "Реакции работают вне локальной сети"
+    Для реакции не требуется входящее подключение к Bambuddy: телефон связывается только с Telegram, а Bambuddy получает реакцию от Telegram. Внешний URL, проброс портов и VPN не нужны — отвечайте отовсюду, где работает Telegram.
 
-**How it works.** For every bot with a provider in *Reaction* or *Both* mode,
-Bambuddy long-polls the Telegram Bot API (`getUpdates`) for reactions on the
-outcome prompts it sent, so a reaction is picked up within seconds. 👍 records
-*Good*, 👎 records *Reject*; any other emoji is ignored. Once the verdict is
-stored, the bot edits the prompt to confirm — *✅ marked as good* or
-*❌ marked as reject* is appended to the message, and in *Both* mode the
-buttons disappear. The first verdict wins: a later reaction, or a tap on an
-old link, does not overturn a decision that was already made. A reaction
-counts exactly as long as the prompt's links would: once the print was
-answered some other way, or the archive was printed again, a reaction on the
-old message changes nothing, and the new run asks its own question. A reject
-recorded by reaction carries no reason; the verdict and reason stay editable
-in the Edit Archive modal.
+**Как это работает.** Для каждого бота с сервисом в режиме *Реакция* или *Оба* Bambuddy использует длительный опрос Telegram Bot API (`getUpdates`) для реакций на отправленные запросы, поэтому реакция обнаруживается за несколько секунд. 👍 записывает «Годное», 👎 — «Брак»; другие эмодзи игнорируются. После сохранения бот изменяет запрос, добавляя подтверждение ✅ или ❌, а в режиме *Оба* кнопки исчезают. Действует первый ответ: последующая реакция или нажатие старой ссылки не отменяют принятое решение. Реакция действительна столько же, сколько ссылки запроса: если на печать уже ответили иначе или архив напечатали снова, реакция на старое сообщение ничего не изменит, а новый запуск задаст свой вопрос. Для брака через реакцию причина не указывается; результат и причину можно изменить в окне редактирования архива.
 
-**Requirements and limits**
+**Требования и ограничения**
 
-- **Private chat recommended.** In a group, Telegram only delivers reactions
-  to a bot that is an **administrator** of that group — as a plain member the
-  bot sees nothing and the prompt goes unanswered.
-- **Use a bot only Bambuddy uses.** Create a separate bot with
-  [@BotFather](https://t.me/BotFather) for Bambuddy instead of sharing one with
-  Home Assistant, Node-RED or another script. Telegram allows one `getUpdates`
-  consumer per bot, so a webhook or a second application polling the same bot
-  conflicts with Bambuddy's poll. Sharing also breaks the other application
-  quietly: Bambuddy asks Telegram for reaction updates only, and Telegram keeps
-  that choice for the bot, so an application that polls the same bot without
-  naming the updates it wants (Home Assistant's `telegram_bot` integration, for
-  example) then receives nothing but reactions, and that stays so even after
-  you switch back to *Inline buttons*. Bambuddy's poll also marks the other
-  application's updates as read.
-- **Conflicts show on the provider.** A conflict appears as a provider error —
-  the red **Error** label on the provider card, with Telegram's message in its
-  tooltip — and Bambuddy retries every five minutes. A wrong or deleted bot
-  token is reported the same way. The label goes away with the next
-  notification the provider delivers.
-- **One poll per bot.** Several providers sharing a bot token — one per
-  printer, say — share a single poll; each reaction is matched to the provider
-  that sent the prompt.
-- **Only prompts sent in *Reaction* or *Both* mode can be answered by
-  reacting.** Prompts sent before you switched mode carry no mapping, and a
-  prompt nobody reacts to within a week is forgotten.
-- The poll starts when you save the provider and stops when you switch back to
-  *Inline buttons*, disable or delete it. Nothing to restart.
+- **Рекомендуется личный чат.** В группе Telegram доставляет реакции только боту-**администратору**; обычный участник их не видит и запрос останется без ответа.
+- **Используйте бота только для Bambuddy.** Создайте отдельного бота через [@BotFather](https://t.me/BotFather), не разделяя его с Home Assistant, Node-RED или другим скриптом. Telegram допускает только одного потребителя `getUpdates` на бота, поэтому вебхук или другое приложение с опросом конфликтует с Bambuddy. Совместное использование также незаметно нарушает другое приложение: Bambuddy запрашивает только обновления реакций, Telegram сохраняет этот выбор, и приложение, опрашивающее того же бота без указания нужных обновлений (например, интеграция `telegram_bot` Home Assistant), начинает получать только реакции; так остаётся даже после возврата к *Кнопкам*. Опрос Bambuddy также помечает обновления другого приложения прочитанными.
+- **Конфликт виден на сервисе.** Он отображается красной меткой **Ошибка** на карточке с сообщением Telegram во всплывающей подсказке; Bambuddy повторяет попытку каждые пять минут. Неверный или удалённый токен отображается так же. Метка исчезает при следующем доставленном уведомлении.
+- **Один опрос на бота.** Несколько сервисов с одним токеном, например по одному на принтер, используют общий опрос; каждая реакция сопоставляется с отправившим запрос сервисом.
+- **Реакцией можно ответить только на запросы, отправленные в режиме реакции или обоих способов.** Запросы до смены режима не имеют сопоставления; запрос без реакции забывается через неделю.
+- Опрос запускается при сохранении сервиса и останавливается при возврате к кнопкам, отключении или удалении сервиса. Перезапуск не нужен.
 
-!!! note "Outcome Confirmation must stay enabled"
-    The verdict mode only matters for the **Outcome Confirmation** event. With
-    that event switched off for the provider, no prompt is sent and there is
-    nothing to react to. The provider card shows a **Reactions** or
-    **Buttons + reactions** badge while the event is on and a reaction mode is
-    selected.
+!!! note "Подтверждение результата должно оставаться включённым"
+    Режим ответа относится только к событию **Подтверждение результата**. Если оно выключено у сервиса, запрос не отправляется и реагировать не на что. Пока событие включено и выбран режим реакции, карточка показывает значок **Реакции** или **Кнопки + реакции**.
 
 ---
 
-### Email (SMTP)
+### Email (SMTP) {#email-smtp}
 
-Send via email:
+Отправка по электронной почте:
 
-| Field | Example |
+| Поле | Пример |
 |-------|---------|
-| **SMTP Server** | `smtp.gmail.com` |
-| **Port** | 587 (STARTTLS) or 465 (SSL) |
-| **Security** | STARTTLS or SSL |
-| **Username** | Your email |
-| **Password** | App password (not regular password) |
-| **From Address** | Sender email |
-| **To Address** | Recipient email |
+| **Сервер SMTP** | `smtp.gmail.com` |
+| **Порт** | 587 (STARTTLS) или 465 (SSL) |
+| **Безопасность** | STARTTLS или SSL |
+| **Имя пользователя** | Ваш адрес электронной почты |
+| **Пароль** | Пароль приложения, а не обычный пароль |
+| **Адрес отправителя** | Электронная почта отправителя |
+| **Адрес получателя** | Электронная почта получателя |
 
-#### Gmail Setup
+#### Настройка Gmail {#gmail-setup}
 
-1. Enable 2-Factor Authentication
-2. Generate an [App Password](https://myaccount.google.com/apppasswords)
-3. Use: `smtp.gmail.com`, Port 587, STARTTLS
+1. Включите двухфакторную аутентификацию
+2. Создайте [пароль приложения](https://myaccount.google.com/apppasswords)
+3. Укажите `smtp.gmail.com`, порт 587 и STARTTLS
 
 ---
 
-### Home Assistant
+### Home Assistant {#home-assistant}
 
-Zero-config notifications if Home Assistant is already connected:
+Если Home Assistant уже подключён, дополнительная настройка уведомлений не нужна:
 
-1. Ensure HA is configured in **Settings** > **Network** > **Home Assistant**
-2. Add a notification provider and select **Home Assistant**
-3. No additional fields needed — click **Send Test** to verify
+1. Убедитесь, что HA настроен в **Настройки** > **Сеть** > **Home Assistant**
+2. Добавьте сервис уведомлений и выберите **Home Assistant**
+3. Дополнительные поля не нужны — нажмите **Отправить тест** для проверки
 
-Notifications appear as persistent notifications in your HA dashboard.
+Уведомления появляются как постоянные уведомления на панели HA.
 
-!!! tip "Push straight to your phone"
-    Set the **Home Assistant Service** field to a notify service like `notify.mobile_app_myphone` to push directly to the HA Companion app instead of the dashboard.
+!!! tip "Push прямо на телефон"
+    Укажите в поле **Сервис Home Assistant** сервис notify, например `notify.mobile_app_myphone`, чтобы отправлять push непосредственно в приложение HA Companion вместо панели.
 
-**Custom data fields.** When targeting a notify service, the optional **Data (JSON)** field is forwarded as the service call's nested `data` object — the same place HA automations put mobile push options:
+**Пользовательские поля данных.** При использовании сервиса notify необязательное поле **Данные (JSON)** передаётся как вложенный объект `data` вызова сервиса — там же автоматизации HA задают параметры мобильных push:
 
 ```json
 {"priority": "high", "ttl": 0, "channel": "3D Printing", "group": "printers"}
 ```
 
-`ttl: 0` + `priority: high` make Android pushes arrive immediately; `channel` creates a dedicated Android notification channel so you can give printer alerts their own sound. See the [HA Companion notification docs](https://companion.home-assistant.io/docs/notifications/notifications-basic/) for all supported keys. Leave the field empty when using the default persistent notification — it doesn't accept custom data.
+`ttl: 0` и `priority: high` обеспечивают немедленную доставку push на Android; `channel` создаёт отдельный канал уведомлений Android, позволяя задать оповещениям принтера свой звук. Полный список ключей см. в [документации уведомлений HA Companion](https://companion.home-assistant.io/docs/notifications/notifications-basic/). При использовании стандартного постоянного уведомления оставьте поле пустым: пользовательские данные в нём не поддерживаются.
 
-The field is passed to Home Assistant exactly as you write it, so **anything the notify service accepts works here** — including nested objects and lists, not just the flat values above. Action buttons are the common case:
+Поле передаётся в Home Assistant точно в указанном виде, поэтому **работает всё, что принимает сервис notify**, включая вложенные объекты и списки. Частый пример — кнопки действий:
 
 ```json
 {
@@ -538,31 +405,31 @@ The field is passed to Home Assistant exactly as you write it, so **anything the
 }
 ```
 
-Two things decide whether those buttons appear and do anything, and neither is set here:
+Появление и работа кнопок зависят от двух факторов, не настраиваемых здесь:
 
-- **Pressing a button does nothing until Home Assistant listens for it.** The Companion app fires a `mobile_app_notification_action` event carrying your `action` string; you need an HA automation triggered on that event to act on it.
-- **On iOS, a bare `actions` list is ignored.** iOS renders buttons only for a notification `category` you have registered in the Companion app, so send `"category": "your_category"` instead. Android renders the list directly.
+- **Нажатие ничего не делает, пока Home Assistant его не обрабатывает.** Companion отправляет событие `mobile_app_notification_action` с вашей строкой `action`; нужна автоматизация HA, запускаемая этим событием.
+- **В iOS простой список `actions` игнорируется.** iOS показывает кнопки только для зарегистрированной в Companion категории уведомлений, поэтому вместо него отправьте `"category": "your_category"`. Android отображает список напрямую.
 
-!!! warning "Write it as JSON, not YAML"
-    The examples in the HA docs are YAML. This field is JSON: keys and string values need double quotes, lists use `[ ]`, and there are no trailing commas. Bambuddy refuses to save malformed JSON rather than sending a half-built payload, so if **Save** reports invalid JSON, the field content is the thing to check — nothing was dropped silently.
+!!! warning "Используйте JSON, а не YAML"
+    Примеры в документации HA написаны на YAML. Это поле принимает JSON: ключи и строковые значения требуют двойных кавычек, списки используют `[ ]`, завершающих запятых быть не должно. Bambuddy не сохраняет некорректный JSON; если при сохранении сообщается об ошибке JSON, проверьте содержимое поля — ничего не было отброшено без уведомления.
 
-!!! tip "Photo attachment"
-    When a camera snapshot is available, Bambuddy merges an `image` key into the service call's `data` object automatically — HA's `notify.mobile_app_*` services fetch that URL and attach it to the push notification. This **only happens when you've set a custom Home Assistant Service** above; the default persistent-notification dashboard has a strict schema that rejects fields it doesn't recognize, so nothing is attached there (you'd need `{finish_photo_url}` in the template body instead — see [Finish Photos](#finish-photos)). A `data.image` you set yourself in the Data field always wins over the auto-attached one. Also requires **External URL** to be set in **Settings** > **Network**, since HA fetches the image itself rather than the browser loading it.
+!!! tip "Вложение фотографии"
+    Если снимок камеры доступен, Bambuddy автоматически добавляет ключ `image` в объект `data` вызова. Сервисы HA `notify.mobile_app_*` получают изображение по этому URL и прикрепляют к push. Это происходит **только при заданном пользовательском сервисе Home Assistant**: стандартное постоянное уведомление на панели имеет строгую схему и отклоняет неизвестные поля, поэтому туда фото не добавляется (вместо этого можно включить `{finish_photo_url}` в текст шаблона — см. [Фотографии после печати](#finish-photos)). Заданное вами в поле данных `data.image` всегда имеет приоритет. Также необходим **Внешний URL** в **Настройки** > **Сеть**, поскольку изображение запрашивает сам HA, а не браузер.
 
 ---
 
-### Webhook (Custom)
+### Webhook (пользовательский) {#webhook-custom}
 
-For custom integrations:
+Для собственных интеграций:
 
-| Field | Value |
+| Поле | Значение |
 |-------|-------|
-| **URL** | Your webhook endpoint |
-| **Headers** | Optional (e.g., Authorization) |
+| **URL** | Адрес вебхука |
+| **Заголовки** | Необязательно (например, Authorization) |
 
-All webhook payloads use a standardized format with `title`, `message`, `timestamp`, `source`, an `event` field identifying the event type, and all event-specific variables as structured fields. This makes it easy for automation tools (n8n, Node-RED, Home Assistant, etc.) to parse event data without extracting information from the message text.
+Все данные вебхуков используют стандартный формат с `title`, `message`, `timestamp`, `source`, полем `event` для типа события и всеми переменными события как структурированными полями. Это позволяет средствам автоматизации (n8n, Node-RED, Home Assistant и др.) разбирать данные без извлечения сведений из текста сообщения.
 
-**Print complete** example:
+Пример **завершённой печати**:
 
 ```json
 {
@@ -580,7 +447,7 @@ All webhook payloads use a standardized format with `title`, `message`, `timesta
 }
 ```
 
-**Failed/stopped prints** include additional fields:
+**Неудачные или остановленные печати** содержат дополнительные поля:
 
 ```json
 {
@@ -600,7 +467,7 @@ All webhook payloads use a standardized format with `title`, `message`, `timesta
 }
 ```
 
-**Simpler events** include fewer fields — only what's relevant:
+**Более простые события** содержат только необходимые поля:
 
 ```json
 {
@@ -614,7 +481,7 @@ All webhook payloads use a standardized format with `title`, `message`, `timesta
 }
 ```
 
-When a camera snapshot is available (e.g. First Layer Complete, Print Started, Print Completed), the payload includes a base64-encoded JPEG image in the `image` field:
+Если доступен снимок камеры (например, при завершении первого слоя, запуске или завершении печати), данные содержат изображение JPEG в base64 в поле `image`:
 
 ```json
 {
@@ -630,103 +497,104 @@ When a camera snapshot is available (e.g. First Layer Complete, Print Started, P
 }
 ```
 
-!!! tip "Decoding the image"
-    The `image` field contains a standard base64-encoded JPEG. In Home Assistant automations, you can decode it with a `template` sensor or pass it to `notify.mobile_app_*` as `image` data. In Node-RED, use a `Buffer.from(msg.payload.image, 'base64')` node. The field is only present when a snapshot was captured — not all events include images.
+!!! tip "Декодирование изображения"
+    Поле `image` содержит стандартный JPEG в base64. В автоматизациях Home Assistant его можно декодировать датчиком `template` или передать в `notify.mobile_app_*` как данные `image`. В Node-RED используйте узел `Buffer.from(msg.payload.image, 'base64')`. Поле присутствует только при наличии снимка; не все события содержат изображения.
 
-!!! info "Slack/Mattermost Format"
-    When using the Slack payload format, only `{"text": "..."}` is sent — structured event fields are not included. Use the generic format for automation integrations that need structured data.
+!!! info "Формат Slack/Mattermost"
+    При использовании формата Slack отправляется только `{"text": "..."}`; структурированные поля события не включаются. Для интеграций автоматизации, которым нужны структурированные данные, используйте общий формат.
 
-    A camera snapshot is the one exception: when one is available, Bambuddy adds a legacy `attachments: [{"image_url": "..."}]` block so Slack/Mattermost can render it, since incoming webhooks can't take a byte upload — only a URL they fetch themselves. Requires **External URL** to be set in **Settings** > **Network**.
+    Исключение — снимок камеры: при наличии Bambuddy добавляет блок `attachments: [{"image_url": "..."}]` для отображения в Slack/Mattermost, поскольку входящие вебхуки принимают не байты, а URL для самостоятельного получения изображения. Требуется **Внешний URL** в **Настройки** > **Сеть**.
 
 ---
 
-## :material-calendar-check: Event Triggers
+## :material-calendar-check: События {#event-triggers}
 
-### Print Events
+### События печати {#print-events}
 
-| Event | Description |
+| Событие | Описание |
 |-------|-------------|
-| **Print Started** | Print job begins |
-| **Plate Not Empty** | Objects detected on build plate before print (bypasses quiet hours, includes a camera snapshot of the plate) |
-| **Print Completed** | Print finishes successfully (includes filament usage) |
-| **Print Failed** | Print fails or errors (includes scaled filament usage and progress) |
-| **Print Stopped** | Manual cancellation (includes scaled filament usage and progress) |
-| **Plate Clear Required** | A print reached a terminal state and the queue is gated until the build plate is confirmed clear. Off by default — it fires after every print, at the same moment as Print Completed. Also published over [MQTT](mqtt.md). |
-| **Outcome Confirmation** | A completed print that opted in to [outcome confirmation](archiving.md#post-print-outcome-confirmation) asks for its good/reject verdict. On **ntfy** and **Telegram** the notification carries Good/Reject buttons that answer it directly; every other channel, Pushover, Bark and Gotify included, gets a link that opens the outcome dialog in Bambuddy. Set *External URL* so these links work from a phone — without it they point at `APP_URL`, which defaults to `localhost`. Telegram can take a 👍 / 👎 reaction on the message instead, which needs no External URL — see [Verdict mode](#verdict-mode). The one-tap verdict links are also available as `{good_url}` / `{reject_url}` for your own templates, but the default body leaves them out, because anything that opens links in a message (a preview card, a mail scanner) would reach them. On by default — it only ever fires for prints where you enabled *Ask for Outcome*, so this toggle just mutes a channel. |
-| **Missing Spool Assignment** | Print started with required AMS trays that have no assigned spool (off by default) |
-| **First Layer Complete** | First layer finished — check adhesion remotely (includes camera snapshot) |
-| **Pause Coming Up** | A pause added in the slicer is a few minutes away, so you can be at the printer for it (inserts, magnets, a colour swap). Sent once per pause, 5 minutes before by default, while the printer runs at Standard speed; set the minutes under **Settings** > **Notifications** > **Pause Heads-Up** (1-120). Off by default. |
-| **Bed Cooled** | Bed temperature dropped below threshold after print (configurable in Settings) |
-| **Progress Milestones** | At 25%, 50%, 75%, counted from the first printed layer. Some printers report a meaningless percentage while they heat and calibrate, so nothing fires before layer 1. A printer that reaches layer 1 already past a milestone sends that one milestone then. |
+| **Печать началась** | Задание запущено |
+| **Стол не пуст** | Перед печатью на столе обнаружены объекты (обходит тихие часы и содержит снимок стола) |
+| **Печать завершена** | Успешное завершение (с расходом филамента) |
+| **Ошибка печати** | Печать завершилась ошибкой (с расчётным расходом и прогрессом) |
+| **Печать остановлена** | Ручная отмена (с расчётным расходом и прогрессом) |
+| **Требуется очистить стол** | Печать завершилась, и очередь ожидает подтверждения очистки стола. По умолчанию выключено: срабатывает после каждой печати одновременно с событием успешного завершения. Также публикуется через [MQTT](mqtt.md). |
+| **Подтверждение результата** | Завершённая печать с включённым [подтверждением результата](archiving.md#post-print-outcome-confirmation) запрашивает оценку «Годное» / «Брак». В **ntfy** и **Telegram** уведомление содержит кнопки прямого ответа; все остальные каналы, включая Pushover, Bark и Gotify, получают ссылку на окно результата Bambuddy. Задайте *Внешний URL*, доступный телефону: иначе ссылки используют `APP_URL`, по умолчанию `localhost`. В Telegram можно ответить реакцией 👍 / 👎 без внешнего URL — см. [Режим подтверждения](#verdict-mode). Ссылки ответа доступны и как `{good_url}` / `{reject_url}` для собственных шаблонов, но отсутствуют в стандартном тексте: любой открывающий ссылки механизм, например предпросмотр или почтовый сканер, мог бы перейти по ним. Включено по умолчанию, но срабатывает только для печатей с включённым запросом результата, поэтому переключатель просто отключает канал. |
+| **Не назначена катушка** | Печать началась с необходимыми лотками AMS, которым не назначена катушка (по умолчанию выключено) |
+| **Первый слой завершён** | Первый слой готов; можно удалённо проверить адгезию (включает снимок камеры) |
+| **Скоро пауза** | Через несколько минут наступит пауза, добавленная в слайсере, чтобы вы успели подойти к принтеру для вставок, магнитов или смены цвета. Отправляется один раз на паузу, по умолчанию за 5 минут, при стандартной скорости принтера; число минут задаётся в **Настройки** > **Уведомления** > **Предупреждение о паузе** (1–120). По умолчанию выключено. |
+| **Стол остыл** | Температура стола после печати опустилась ниже порога (настраивается) |
+| **Этапы прогресса** | При 25%, 50% и 75%, считая с первого напечатанного слоя. Некоторые принтеры сообщают бессмысленный процент при нагреве и калибровке, поэтому до первого слоя события не отправляются. Если первый слой уже превысил этап, отправляется уведомление об этом этапе. |
 
-### Printer Events
+### События принтера {#printer-events}
 
-| Event | Description |
+| Событие | Описание |
 |-------|-------------|
-| **Printer Offline** | Connection lost |
-| **Printer Error** | A new HMS fault, with the description Bambu publishes for it on your printer model. Faults Bambu publishes no text for, and notices that don't need you (such as "The top cover is open"), are not sent; see [HMS Error Monitoring](monitoring.md#error-details). Also used for smart plug [power alerts](smart-plugs.md#power-alerts). |
-| **AI Failure Detection** | The selected [Failure Detection](failure-detection.md) provider detected a possible print failure. Obico uses the configured sensitivity threshold; OctoEverywhere uses warning/pause suggestions at the configured confidence level. Both include the camera frame that triggered the alert when **Attach Photo** is enabled and the notification channel supports it. Enable this event on each notification provider that should receive AI alerts and check its printer filters. Off by default. |
-| **Printer Sensor Alert** | A [Home Assistant sensor](sensors.md#printer-sensors) bound to a printer entered its alert state — an enclosure door opened, a chamber ran hot. Fires on the transition in, not repeatedly. Off by default. Storage-location sensors have their own event, below. |
-| **Low Filament** | A spool assigned to an AMS slot or external holder dropped below its [low-stock threshold](inventory.md#additional-section): the same global percentage (default 20 %) and per-spool override that drive the inventory's Low Stock count, so the alert and the card agree. Remaining filament comes from the spool's weight, never the AMS remain percentage. Sent once per spool and slot; it can fire again after the spool goes back above the threshold. Slots with no assigned spool never alert. Off by default. |
-| **Maintenance Due** | Scheduled maintenance is due |
+| **Принтер не в сети** | Соединение потеряно |
+| **Ошибка принтера** | Новая ошибка HMS с описанием Bambu для модели принтера. Ошибки без опубликованного Bambu текста и сообщения, не требующие действий, например об открытой верхней крышке, не отправляются; см. [Мониторинг ошибок HMS](monitoring.md#error-details). Также используется для [оповещений о питании](smart-plugs.md#power-alerts) умных розеток. |
+| **Обнаружение ошибки с помощью ИИ** | Выбранный поставщик [обнаружения ошибок](failure-detection.md) выявил возможный сбой печати. Obico использует настроенный порог чувствительности; OctoEverywhere — предложения предупреждения/паузы при заданной уверенности. Оба включают вызвавший оповещение кадр камеры, если включено **Прикреплять фото** и канал поддерживает его. Включите событие для каждого нужного сервиса уведомлений и проверьте фильтры принтеров. По умолчанию выключено. |
+| **Оповещение датчика принтера** | [Датчик Home Assistant](sensors.md#printer-sensors), привязанный к принтеру, перешёл в состояние тревоги, например открылась дверь корпуса или камера перегрелась. Срабатывает при переходе, а не повторно. По умолчанию выключено. Для датчиков мест хранения предусмотрено отдельное событие. |
+| **Мало филамента** | Остаток катушки, назначенной слоту AMS или внешнему держателю, опустился ниже [порога низкого запаса](inventory.md#additional-section): используется тот же общий процент (по умолчанию 20%) и индивидуальный порог катушки, что и в счётчике низкого запаса, поэтому оповещение и карточка совпадают. Остаток берётся из веса катушки, а не процента AMS. Отправляется один раз на катушку и слот; после возвращения выше порога может сработать снова. Слоты без назначенной катушки не вызывают оповещений. По умолчанию выключено. |
+| **Требуется обслуживание** | Наступил срок запланированного обслуживания |
 
-### AMS Events
+### События AMS {#ams-events}
 
-| Event | Description |
+| Событие | Описание |
 |-------|-------------|
-| **AMS Humidity High** | AMS humidity exceeds threshold |
-| **AMS Temperature High** | AMS temperature exceeds the [alarm threshold](ams.md#temperature-alarm-threshold) — a separate value from the Fair display band, falling back to it when unset. Silent while the unit is drying — see below. |
-| **AMS-HT Humidity High** | AMS-HT humidity exceeds threshold |
-| **AMS-HT Temperature High** | AMS-HT temperature exceeds the [alarm threshold](ams.md#temperature-alarm-threshold). Silent while the unit is drying — see below. |
-| **Auto-Drying Suspended** | Bambuddy stopped automatically drying an AMS unit because repeated cycles brought the humidity no lower. **On by default** — it reports that Bambuddy has stopped acting, so silence would read as "still drying". Fires once per unit; the suspension lifts on its own when the reading falls. See [the threshold floor](ams.md#drying-threshold-floor). |
+| **Высокая влажность AMS** | Влажность AMS превысила порог |
+| **Высокая температура AMS** | Температура AMS превысила [порог тревоги](ams.md#temperature-alarm-threshold), отдельный от диапазона Fair; если он не задан, используется значение диапазона. Во время сушки оповещение подавляется — см. ниже. |
+| **Высокая влажность AMS-HT** | Влажность AMS-HT превысила порог |
+| **Высокая температура AMS-HT** | Температура AMS-HT превысила [порог тревоги](ams.md#temperature-alarm-threshold). Во время сушки оповещение подавляется. |
+| **Автосушка приостановлена** | Bambuddy прекратил автоматическую сушку AMS, поскольку повторные циклы больше не снижают влажность. **Включено по умолчанию**: событие сообщает об остановке, чтобы отсутствие сообщений не воспринималось как продолжение сушки. Срабатывает один раз на устройство; при снижении показания приостановка снимается автоматически. См. [нижнюю границу порога](ams.md#drying-threshold-floor). |
 
-### Inventory Events
+### События учёта филамента {#inventory-events}
 
-| Event | Description |
+| Событие | Описание |
 |-------|-------------|
-| **Reorder Alert** | An inventory SKU has reached its reorder point in the [Forecast](inventory.md#forecasting) view. A SKU is one material, subtype, brand and colour, the same grouping the Forecast uses, with the same arithmetic. A SKU that is already in stock break has also reached its reorder point, so it counts here too. Checked every hour whether or not the Forecast page is open. Off by default. See [How the stock alerts fire](#how-the-stock-alerts-fire). |
-| **Stock Break Alert** | An inventory SKU is forecast to run out before a replenishment could arrive: its days of stock are no more than its effective lead time. Needs a lead time above zero, global or per SKU, since with none there is nothing to run out before. Off by default. See [How the stock alerts fire](#how-the-stock-alerts-fire). |
-| **Storage Location Sensor Alert** | A [Home Assistant sensor](sensors.md#storage-location-sensors) bound to a storage location entered its alert state — a drybox got too humid, a battery ran low. Fires on the transition in, not repeatedly. Off by default. This is a separate switch from **Printer Sensor Alert**: a provider narrowed to one printer would otherwise receive every drybox alert as well, with no way to have one without the other. |
-!!! info "Temperature alerts stay quiet while an AMS is drying"
+| **Пора заказать** | SKU достиг точки заказа в представлении [Прогноз](inventory.md#forecasting). SKU объединяет материал, подтип, бренд и цвет, как в прогнозе, с теми же расчётами. SKU, запас которого уже иссякнет, также достиг точки заказа и учитывается здесь. Проверка выполняется каждый час независимо от того, открыта ли страница прогноза. По умолчанию выключено. См. [Как срабатывают оповещения](#how-the-stock-alerts-fire). |
+| **Прогноз исчерпания запаса** | По прогнозу запас SKU закончится раньше, чем поступит пополнение: дней запаса не больше эффективного срока поставки. Нужен срок поставки больше нуля, общий или для SKU. По умолчанию выключено. См. [Как срабатывают оповещения](#how-the-stock-alerts-fire). |
+| **Оповещение датчика места хранения** | [Датчик Home Assistant](sensors.md#storage-location-sensors), привязанный к месту хранения, перешёл в состояние тревоги, например влажность сухого бокса превысила порог или батарея разрядилась. Срабатывает при переходе, не повторно. По умолчанию выключено. Это отдельный переключатель от **Оповещения датчика принтера**: иначе сервис, ограниченный одним принтером, получал бы и все предупреждения сухих боксов без возможности разделить их. |
 
-    Drying deliberately runs hotter than the alert threshold — 45°C for PLA, 65°C for PETG, up to 85°C on an AMS-HT, against a default threshold of 35°C. Left alone, a twelve-hour dry would send twelve notifications about a temperature you asked for.
+!!! info "Оповещения о температуре подавляются во время сушки AMS"
 
-    Bambuddy holds the temperature alert back for the length of a cycle and through the cool-down that follows, using the drying state the printer reports. It starts alerting again as soon as the unit reads back at or below your threshold, so the quiet period matches how long the unit actually takes to cool rather than a fixed delay. Nothing to configure, and the suppression survives a restart.
+    Сушка намеренно работает выше порога тревоги: 45°C для PLA, 65°C для PETG, до 85°C на AMS-HT при пороге по умолчанию 35°C. Иначе двенадцатичасовая сушка отправила бы двенадцать уведомлений о заданной вами температуре.
 
-    Two deliberate exceptions. The **humidity** alert is unaffected — during drying that reading falling is the whole point. And a unit reporting a loss of thermal control still alerts, because that is exactly when you want to hear about it.
+    Bambuddy подавляет оповещения на время цикла и последующего охлаждения по состоянию сушки, сообщаемому принтером. Оповещения возобновляются, как только температура устройства опустится до порога или ниже. Тихий период соответствует реальному времени охлаждения, а не фиксированной задержке. Ничего настраивать не нужно; подавление сохраняется после перезапуска.
 
-#### How the stock alerts fire
+    Есть два намеренных исключения. Оповещение о **влажности** не подавляется: её снижение и есть цель сушки. Устройство, сообщающее о потере контроля температуры, тоже выдаёт предупреждение — именно в такой ситуации оно необходимо.
 
-- **Every hour, in the background.** The scheduler runs the same forecast the Forecast view does, in both inventory modes (Bambuddy's own inventory and Spoolman). No spools are read unless an enabled provider has one of the two events on.
-- **On the way in.** An alert is sent when a SKU moves into the condition, and again after the condition has cleared (for example after a restock). A SKU that gets worse, from reorder to break, alerts again as a break. One that eases, from break back to reorder, is not announced again.
-- **A break is also a reorder.** A provider with only **Reorder Alert** on is told when a SKU breaks, as a reorder. A provider with **Stock Break Alert** on is told it as a break, and not a second time as a reorder.
-- **Snoozed SKUs are skipped.** Use the snooze icon on the SKU's row in the Forecast view. Un-snoozing a SKU that is still in the condition sends the alert again.
-- **Switching an event on tells you what is already low.** SKUs that were in the condition while it was off are reported the next time the check runs.
-- **A SKU with no measurable usage has no forecast**, so it never alerts. In Spoolman mode the daily rate is the SKU's consumption divided by the days since its oldest spool was registered, because Bambuddy holds no per-print usage history for Spoolman spools.
-- **Quiet hours and restarts.** An alert that falls in a provider's [quiet hours](#quiet-hours) is skipped, as for every event, and is not repeated when they end. What has been sent is stored, so a restart or an update does not repeat the alerts for SKUs that are still in the condition. A SKU that has no spools left is dropped from what is stored.
+#### Как срабатывают оповещения о запасах {#how-the-stock-alerts-fire}
 
-### Print Queue Events
+- **Каждый час в фоне.** Планировщик выполняет тот же прогноз, что и страница прогноза, в обоих режимах учёта (Bambuddy и Spoolman). Катушки не считываются, если ни у одного включённого сервиса не включено одно из двух событий.
+- **При наступлении условия.** Оповещение отправляется при переходе SKU в это состояние и снова после его снятия и повторного наступления, например после пополнения. Ухудшение от точки заказа до исчерпания вызывает новое оповещение об исчерпании; улучшение от исчерпания к точке заказа повторно не объявляется.
+- **Исчерпание также означает заказ.** Сервис только с событием **Пора заказать** получает исчерпание как заказ. Сервис с событием **Прогноз исчерпания запаса** получает его как исчерпание и не получает второй раз как заказ.
+- **Отложенные SKU пропускаются.** Используйте значок откладывания в строке SKU прогноза. Снятие отсрочки для SKU, всё ещё соответствующего условию, снова отправит оповещение.
+- **Включение события показывает уже низкие запасы.** SKU, соответствовавшие условию при выключенном событии, будут сообщены при следующей проверке.
+- **SKU без измеримого расхода не имеет прогноза** и не вызывает оповещений. В режиме Spoolman дневной расход равен расходу SKU, делённому на число дней с регистрации его старейшей катушки, поскольку Bambuddy не хранит историю расхода катушек Spoolman по печатям.
+- **Тихие часы и перезапуск.** Оповещение, попавшее в [тихие часы](#quiet-hours) сервиса, пропускается и не повторяется после их окончания. Отправленные оповещения сохраняются, поэтому перезапуск или обновление не повторяют их для SKU, всё ещё соответствующих условию. SKU без оставшихся катушек удаляется из сохранённого состояния.
 
-| Event | Default | Description |
+### События очереди печати {#print-queue-events}
+
+| Событие | По умолчанию | Описание |
 |-------|:-------:|-------------|
-| **Job Added** | Off | Job added to queue, from any source (print dialog, File Manager, webhook, virtual printer, pipeline run, order dispatch). Several jobs added at once are one message per printer |
-| **Job Assigned** | Off | Model-based job assigned to a printer |
-| **Job Started** | Off | Queue job started printing |
-| **Job Waiting** | **On** | Job waiting for filament (actionable) |
-| **Job Skipped** | **On** | Job skipped due to previous print failure |
-| **Job Failed** | **On** | Job failed to start (upload error, etc.) |
-| **Queue Complete** | Off | All queued jobs finished |
+| **Задание добавлено** | Выкл. | Задание добавлено в очередь из любого источника (окно печати, файловый менеджер, вебхук, виртуальный принтер, конвейер, отправка заказа). Несколько заданий за раз дают одно сообщение на принтер |
+| **Задание назначено** | Выкл. | Задание по модели назначено принтеру |
+| **Задание начато** | Выкл. | Задание очереди начало печататься |
+| **Задание ожидает** | **Вкл.** | Задание ожидает филамент (требует действий) |
+| **Задание пропущено** | **Вкл.** | Пропущено из-за ошибки предыдущей печати |
+| **Ошибка задания** | **Вкл.** | Не удалось запустить задание, например ошибка загрузки |
+| **Очередь завершена** | Выкл. | Все задания очереди завершены |
 
-!!! tip "Actionable Queue Notifications"
-    The most important queue notifications (Waiting, Skipped, Failed) are enabled by default because they require user action - load the right filament, check why a print failed, etc.
+!!! tip "Уведомления очереди, требующие действий"
+    Наиболее важные уведомления (ожидание, пропуск, ошибка) включены по умолчанию, поскольку требуют действий: загрузить нужный филамент, проверить причину ошибки и т. д.
 
-### Messages from Connected Apps
+### Сообщения подключённых приложений {#messages-from-connected-apps}
 
-| Event | Default | Description |
+| Событие | По умолчанию | Описание |
 |-------|:-------:|-------------|
-| **Messages from connected apps** | Off | Messages another application sends through Bambuddy, e.g. Bambuddy Orders' "3 orders need you" |
+| **Сообщения подключённых приложений** | Выкл. | Сообщения, которые другое приложение отправляет через Bambuddy, например «3 заказа требуют внимания» от Bambuddy Orders |
 
-An app sends its message to `POST /api/v1/notifications/app-message`; Bambuddy hands it to every enabled provider with this switch on. A sender limited to certain printers ([Printer Access](authentication.md#printer-access)) reaches only the providers bound to one of those printers, not the ones set to all printers. It goes through the same path as Bambuddy's own events: quiet hours, the daily digest and the notification log (listed with the event type `app:<API key name>`).
+Приложение отправляет сообщение в `POST /api/v1/notifications/app-message`; Bambuddy передаёт его каждому включённому сервису с этим переключателем. Отправитель с ограничением по принтерам ([Доступ к принтерам](authentication.md#printer-access)) достигает только сервисов, привязанных к одному из этих принтеров, но не сервисов для всех принтеров. Используется тот же путь, что и для событий Bambuddy: тихие часы, ежедневная сводка и журнал уведомлений (тип события `app:<API key name>`).
 
 ```bash
 curl -X POST http://localhost:8000/api/v1/notifications/app-message \
@@ -736,63 +604,61 @@ curl -X POST http://localhost:8000/api/v1/notifications/app-message \
 # => {"channels": 2}
 ```
 
-- **Who may send:** an API key with the **Send Notifications** permission ([API Keys](api-keys.md)), whose owner has `notifications:update`; or a signed-in user with `notifications:update`.
-- **What is accepted:** plain text; a title up to 120 characters, a message up to 2,000. The optional `url` must be an `http` or `https` address and is added as the message's last line.
-- **Limit:** 20 messages a minute per key. More are refused with `429`.
-- **Where it arrives:** `GET /api/v1/notifications/app-message/channels` lists the providers that take app messages for this sender (names and types only), so an app can tell its user where its messages go.
+- **Кто может отправлять:** ключ API с разрешением **Отправлять уведомления** ([Ключи API](api-keys.md)), владелец которого имеет `notifications:update`, либо вошедший пользователь с `notifications:update`.
+- **Что принимается:** обычный текст; заголовок до 120 символов, сообщение до 2000. Необязательный `url` должен иметь схему `http` или `https` и добавляется последней строкой сообщения.
+- **Ограничение:** 20 сообщений в минуту на ключ. Избыточные отклоняются с `429`.
+- **Куда поступает:** `GET /api/v1/notifications/app-message/channels` перечисляет сервисы, принимающие сообщения приложения для данного отправителя (только названия и типы), чтобы приложение могло сообщить пользователю о доставке.
 
-Enable/disable each event per provider.
-
----
-
-## :material-moon-waning-crescent: Quiet Hours
-
-Suppress notifications during sleep:
-
-1. Enable **Quiet Hours** toggle
-2. Set **Start Time** (e.g., 22:00)
-3. Set **End Time** (e.g., 07:00)
-
-Notifications during quiet hours are silently skipped. The [daily digest](#daily-digest) is the exception: it goes out at the time you set for it.
-
-Notify! Live Activities that have already started keep updating and end normally
-during quiet hours. New activities wait until quiet hours have ended.
+Включайте и отключайте события отдельно для каждого сервиса.
 
 ---
 
-## :material-printer: Per-Printer Filtering
+## :material-moon-waning-crescent: Тихие часы {#quiet-hours}
 
-Limit notifications to specific printers:
+Отключите уведомления на время сна:
 
-1. Open provider settings
-2. Find **Printers** section
-3. Select specific printers or "All"
+1. Включите **Тихие часы**
+2. Укажите **Начало** (например, 22:00)
+3. Укажите **Окончание** (например, 07:00)
 
-Only events from selected printers trigger notifications. A job waiting on a printer (for filament, a plate confirmation, the printer itself) reaches that printer's providers. An event that has no printer yet, such as a job added for **Any <model>** or one waiting for any printer of a model, goes to providers set to "All" only; a provider limited to one printer hears of the job once it is assigned to or started on that printer. Events about the whole setup (the queue finishing, stock alerts, messages from connected apps) reach every provider that has them on.
+В тихие часы уведомления пропускаются без сообщения. Исключение — [ежедневная сводка](#daily-digest): она отправляется в установленное время.
 
-Deleting a printer deletes the providers limited to it.
+Уже запущенные Live Activities Notify! продолжают обновляться и нормально завершаются в тихие часы. Новые активности ожидают окончания тихих часов.
 
 ---
 
-## :material-email-newsletter: Daily Digest
+## :material-printer: Фильтрация по принтерам {#per-printer-filtering}
 
-Batch notifications into a summary:
+Ограничьте уведомления определёнными принтерами:
 
-1. Enable **Daily Digest** toggle
-2. Set **Digest Time** (e.g., 08:00)
+1. Откройте настройки сервиса
+2. Найдите раздел **Принтеры**
+3. Выберите нужные принтеры или «Все»
 
-### How It Works
+Уведомления вызываются только событиями выбранных принтеров. Задание, ожидающее конкретный принтер (филамент, подтверждение стола или сам принтер), достигает сервисов этого принтера. Событие без определённого принтера, например задание для **Any <model>** или ожидающее любой принтер модели, отправляется только сервисам «Все»; сервис, ограниченный одним принтером, узнаёт о задании после назначения или запуска на нём. События всей установки (завершение очереди, оповещения о запасах, сообщения подключённых приложений) достигают всех сервисов, у которых они включены.
 
-- Events are collected (not sent immediately)
-- At digest time, one summary is sent
-- Includes counts and details
-- It goes out at digest time even when that falls inside the provider's [quiet hours](#quiet-hours): you chose that time for it
-- If sending fails, the events are kept and go out with the next day's digest; events more than two days old are dropped, so a provider that keeps failing doesn't pile them up
+При удалении принтера удаляются сервисы, ограниченные им.
 
-Notify! Live Activities continue showing live progress independently of digest
-summaries.
+---
 
-### Example Digest
+## :material-email-newsletter: Ежедневная сводка {#daily-digest}
+
+Объединяйте уведомления в сводку:
+
+1. Включите **Ежедневная сводка**
+2. Установите **Время сводки** (например, 08:00)
+
+### Как это работает {#how-it-works}
+
+- События собираются и не отправляются сразу
+- В заданное время отправляется одна сводка
+- Она содержит количество и подробности
+- Сводка отправляется в выбранное время, даже если оно попадает в [тихие часы](#quiet-hours) сервиса
+- При ошибке отправки события сохраняются до сводки следующего дня; события старше двух дней удаляются, чтобы они не накапливались при постоянных сбоях сервиса
+
+Live Activities Notify! продолжают показывать ход печати независимо от сводок.
+
+### Пример сводки {#example-digest}
 
 ```
 Daily Print Summary (Dec 14)
@@ -811,236 +677,192 @@ Details:
 
 ---
 
-## :material-file-document-edit: Message Templates
+## :material-file-document-edit: Шаблоны сообщений {#message-templates}
 
-Customize notification messages:
+Настройте текст уведомлений:
 
-### Accessing Templates
+### Открытие шаблонов {#accessing-templates}
 
-1. Go to **Settings** > **Notifications**
-2. Click **Templates** tab
-3. Select event type to edit
+1. Откройте **Настройки** > **Уведомления**
+2. Выберите вкладку **Шаблоны**
+3. Выберите тип события для изменения
 
-### Variables
+### Переменные {#variables}
 
-Insert dynamic content with `{variable}`:
+Вставляйте динамические данные с помощью `{variable}`:
 
-**Print Events:**
+**События печати:**
 
-- `{printer}` - Printer name
-- `{filename}` - Print filename
-- `{duration}` - Print time
-- `{filament_grams}` - Total filament used in grams (scaled by progress for failed/stopped prints)
-- `{filament_details}` - Per-filament breakdown (e.g., "PLA: 15.2g" or "PLA: 10.0g | PETG: 5.0g")
-- `{estimated_time}` - Estimated duration (e.g., "1h 23m")
-- `{eta}` - Wall-clock completion time (e.g., "15:53" or "3:53 PM"), respects your time format setting
-- `{progress}` - Completion percentage (available for failed/stopped prints)
-- `{reason}` - Failure reason
-- `{archive_id}` / `{run_id}` - The archive (the file) and the run (this print of it), for links and webhooks (print_complete, print_failed, print_stopped)
-- `{finish_photo_url}` - Camera snapshot URL (print_complete, print_failed, print_stopped). **Email special-case (#1792):** if your **Email** template references `{finish_photo_url}` in the body, the rendered URL also triggers an inline embed — the HTML part replaces the URL with the snapshot rendered inline at exactly that position, while the plain-text part keeps the URL as a clickable link. Place the variable WHERE you want the image to appear. If the template doesn't reference it, the email stays text-only — no surprise attachment.
+- `{printer}` — название принтера
+- `{filename}` — имя файла печати
+- `{duration}` — время печати
+- `{filament_grams}` — общий расход филамента в граммах (для неудачной или остановленной печати масштабируется по прогрессу)
+- `{filament_details}` — расход по филаментам (например, "PLA: 15.2g" или "PLA: 10.0g | PETG: 5.0g")
+- `{estimated_time}` — расчётная длительность (например, "1h 23m")
+- `{eta}` — время завершения по часам (например, "15:53" или "3:53 PM") с учётом настройки формата времени
+- `{progress}` — процент завершения (для неудачных и остановленных печатей)
+- `{reason}` — причина ошибки
+- `{archive_id}` / `{run_id}` — архив (файл) и запуск (данная печать) для ссылок и вебхуков (print_complete, print_failed, print_stopped)
+- `{finish_photo_url}` — URL снимка камеры (print_complete, print_failed, print_stopped). **Особенность Email (#1792):** если текст шаблона **Email** содержит `{finish_photo_url}`, полученный URL также вызывает встраивание фотографии: HTML-часть заменяет URL изображением точно в этом месте, а текстовая часть сохраняет URL как ссылку. Поместите переменную там, где должна появиться фотография. Если шаблон её не содержит, письмо остаётся текстовым без неожиданного вложения.
 
-**Printer Events:**
+**События принтера:**
 
-- `{printer}` - Printer name
-- `{error_type}` - HMS error type
-- `{error_detail}` - Error description
+- `{printer}` — название принтера
+- `{error_type}` — тип ошибки HMS
+- `{error_detail}` — описание ошибки
 
-**AI Failure Detection:**
+**Обнаружение ошибки с помощью ИИ:**
 
-- `{printer}` - Printer name
-- `{task_name}` - Print task name
-- `{provider}` - `Obico` or `OctoEverywhere`
-- `{print_quality}` - OctoEverywhere print quality, such as `2/10`; `N/A` for Obico
-- `{confidence}` - Obico detection confidence; `N/A` for OctoEverywhere
-- `{action}` - Action taken: `notify`, `pause`, or `pause_and_off`
+- `{printer}` — название принтера
+- `{task_name}` — название задания печати
+- `{provider}` — `Obico` или `OctoEverywhere`
+- `{print_quality}` — качество печати OctoEverywhere, например `2/10`; `N/A` для Obico
+- `{confidence}` — уверенность обнаружения Obico; `N/A` для OctoEverywhere
+- `{action}` — выполненное действие: `notify`, `pause` или `pause_and_off`
 
-Both detection providers use the same default template, which shows the provider, print quality, confidence, and action. The previous default message body is updated automatically; customized bodies and titles are preserved.
+Оба сервиса обнаружения используют одинаковый шаблон по умолчанию, показывающий сервис, качество печати, уверенность и действие. Прежний стандартный текст обновляется автоматически; изменённые пользователем заголовки и тексты сохраняются.
 
-**First Layer Complete:**
+**Первый слой завершён:**
 
-- `{printer}` - Printer name
-- `{filename}` - Print filename
-- `{total_layers}` - Total layer count
+- `{printer}` — название принтера
+- `{filename}` — имя файла печати
+- `{total_layers}` — общее число слоёв
 
-**Pause Coming Up:**
+**Скоро пауза:**
 
-- `{printer}` - Printer name
-- `{filename}` - Print filename
-- `{time_to_pause}` - Time until the pause, e.g. `5m`
-- `{eta}` - Clock time of the pause
-- `{layer}` - Layer the printer pauses at
-- `{total_layers}` - Total layer count
+- `{printer}` — название принтера
+- `{filename}` — имя файла печати
+- `{time_to_pause}` — время до паузы, например `5m`
+- `{eta}` — время паузы по часам
+- `{layer}` — слой, на котором принтер остановится
+- `{total_layers}` — общее число слоёв
 
-**Bed Cooled:**
+**Стол остыл:**
 
-- `{printer}` - Printer name
-- `{bed_temp}` - Current bed temperature
-- `{threshold}` - Configured threshold
-- `{filename}` - Print filename
+- `{printer}` — название принтера
+- `{bed_temp}` — текущая температура стола
+- `{threshold}` — заданный порог
+- `{filename}` — имя файла печати
 
-**Printer Sensor Alert:**
+**Оповещение датчика принтера:**
 
-- `{printer}` - Printer name
-- `{sensor}` - Sensor display name
-- `{state}` - State that triggered the alert (`open`, `41.2 °C`)
+- `{printer}` — название принтера
+- `{sensor}` — отображаемое название датчика
+- `{state}` — состояние, вызвавшее тревогу (`open`, `41.2 °C`)
 
-**Storage Location Sensor Alert:**
+**Оповещение датчика места хранения:**
 
-- `{location}` - Storage location name (there is no `{printer}` here — the alert
-  belongs to a location, not a machine)
-- `{sensor}` - Sensor display name
-- `{state}` - State that triggered the alert (`24.7 °C`, `43.6 %`) — trimmed of
-  trailing zeros, unlike the two-decimal form shown on the inventory page
+- `{location}` — название места хранения (переменной `{printer}` здесь нет: оповещение относится к месту, а не принтеру)
+- `{sensor}` — отображаемое название датчика
+- `{state}` — вызвавшее тревогу значение (`24.7 °C`, `43.6 %`) без завершающих нулей, в отличие от двух знаков после запятой на странице учёта
 
-**Missing Spool Assignment:**
+**Не назначена катушка:**
 
-- `{printer}` - Printer name
-- `{missing_slots}` - Comma-separated slot labels (e.g., "A1, A3")
-- `{missing_slot_details}` - Per-slot breakdown with expected profile (e.g., "- A1: PLA Basic")
+- `{printer}` — название принтера
+- `{missing_slots}` — обозначения слотов через запятую (например, "A1, A3")
+- `{missing_slot_details}` — подробности по слотам с ожидаемым профилем (например, "- A1: PLA Basic")
 
-**Reorder Alert / Stock Break Alert:**
+**Пора заказать / прогноз исчерпания запаса:**
 
-- `{material}` - Material (e.g. "PLA")
-- `{subtype}` - Subtype (e.g. "Matte"); empty when the spool has none
-- `{brand}` - Brand; empty when the spool has none
-- `{color}` - Colour name; empty when the spool has none. Two colours of one product are separate SKUs, so this is what tells their messages apart
-- `{stock_g}` - Grams left across the SKU's spools
-- `{rate_g_day}` - Forecast daily use in grams
-- `{days_left}` - Days of stock left at that rate
-- `{lead_time_days}` - The effective lead time (Stock Break Alert only)
+- `{material}` — материал (например, "PLA")
+- `{subtype}` — подтип (например, "Matte"); пусто, если не указан
+- `{brand}` — бренд; пусто, если не указан
+- `{color}` — название цвета; пусто, если не указан. Два цвета одного продукта являются разными SKU, поэтому это различает сообщения
+- `{stock_g}` — оставшиеся граммы на всех катушках SKU
+- `{rate_g_day}` — прогнозируемый дневной расход в граммах
+- `{days_left}` — оставшиеся дни запаса при таком расходе
+- `{lead_time_days}` — действующий срок поставки (только для прогноза исчерпания)
 
-The default message bodies include `{subtype}` and `{color}` (the titles still show only the material). An existing template is updated to match only if it is still the default; one you have edited keeps your wording.
+Стандартный текст содержит `{subtype}` и `{color}` (в заголовках по-прежнему только материал). Существующий шаблон обновляется, только если он остался стандартным; изменённый пользователем текст сохраняется.
 
-**AMS Events:**
+**События AMS:**
 
-- `{printer}` - Printer name
-- `{slot}` - AMS slot (e.g. "A1", "HT-A", "Ext-L")
-- `{remaining_percent}` - Filament left
-- `{color}` - Colour name of the spool (Low Filament only)
-- `{humidity}` - Humidity level
-- `{ams_label}` - Which unit (e.g. "AMS-A")
-- `{threshold}` - The configured threshold the reading is measured against
-- `{cycles}` - Drying cycles that ended above the threshold (Auto-Drying Suspended only)
+- `{printer}` — название принтера
+- `{slot}` — слот AMS (например, "A1", "HT-A", "Ext-L")
+- `{remaining_percent}` — остаток филамента
+- `{color}` — название цвета катушки (только для события низкого остатка)
+- `{humidity}` — уровень влажности
+- `{ams_label}` — обозначение устройства (например, "AMS-A")
+- `{threshold}` — заданный порог сравнения показаний
+- `{cycles}` — циклы сушки, завершившиеся выше порога (только при приостановке автосушки)
 
-**Outcome Confirmation:**
+**Подтверждение результата:**
 
-- `{printer}` - Printer name
-- `{filename}` - Print filename
-- `{confirm_url}` - Link that opens the outcome dialog for this print in Bambuddy (used by the default template)
-- `{good_url}` / `{reject_url}` - Single-use links that record Good or Reject after a confirmation click. Keep them out of channels that build link previews or scan links; see [What a One-Tap Link Does](archiving.md#what-a-one-tap-link-does)
-- `{finish_photo_url}` - Finish photo, when one was taken
+- `{printer}` — название принтера
+- `{filename}` — имя файла печати
+- `{confirm_url}` — ссылка на окно результата данной печати в Bambuddy (используется стандартным шаблоном)
+- `{good_url}` / `{reject_url}` — одноразовые ссылки записи результата после подтверждающего нажатия. Не используйте их в каналах с предпросмотром или проверкой ссылок; см. [Действие ссылки одного нажатия](archiving.md#what-a-one-tap-link-does)
+- `{finish_photo_url}` — фотография после завершения, если она сделана
 
-**Common:**
+**Общие:**
 
-- `{timestamp}` - Event time
-- `{app_name}` - "Bambuddy"
+- `{timestamp}` — время события
+- `{app_name}` — "Bambuddy"
 
-### Reset to Default
+### Сброс к значениям по умолчанию {#reset-to-default}
 
-Click reset to restore original template.
+Нажмите сброс, чтобы восстановить исходный шаблон.
 
-### Finish Photos
+### Фотографии после печати {#finish-photos}
 
-A camera snapshot can reach your notification three ways: uploaded directly as a
-**real attachment**, attached after the receiving service **fetches it from a
-URL**, or as a plain **link** you click. Which one you get depends on the
-channel — see the tables below.
+Снимок камеры может поступить с уведомлением тремя способами: непосредственно как **вложение**, как вложение после **получения сервисом по URL** или как обычная **ссылка**, которую нужно открыть. Способ зависит от канала — см. таблицы ниже.
 
-Taking snapshots is gated on **Settings** > **General** > **Archive Settings** >
-**Capture finish photo**. With that off, no snapshot is taken and nothing is
-attached or linked, for any channel. There is one exception: **AI Failure
-Detection** attaches the frame [Failure Detection](failure-detection.md) has
-already captured for its check, so that notification carries a photo either way.
+Создание снимков управляется параметром **Настройки** > **Общие** > **Настройки архива** > **Снимок после завершения**. Если он выключен, снимок не создаётся и ни один канал не получает вложение или ссылку. Одно исключение — **обнаружение ошибки с помощью ИИ**: к уведомлению прикладывается кадр, который [обнаружение ошибок](failure-detection.md) уже получило для проверки, независимо от этой настройки.
 
-Each provider also has its own **Attach Photo** toggle in the Add/Edit
-Notification dialog (on by default) if you want a specific provider to get the
-text only, without the image. While it is on, **Test** sends a sample image
-along with the test message, so you can see how photos arrive on that channel.
+У каждого сервиса также есть переключатель **Прикреплять фото** в окне добавления или редактирования уведомления (по умолчанию включён), если конкретный сервис должен получать только текст. Пока он включён, **Тест** отправляет пример изображения вместе с тестовым сообщением, чтобы можно было проверить доставку фото.
 
-#### Uploaded attachment
+#### Загружаемое вложение {#uploaded-attachment}
 
-ntfy, Pushover, Telegram, Discord and the generic Webhook format receive the
-photo bytes directly with the message — no External URL needed, and you don't
-need `{finish_photo_url}` in the template for this.
+ntfy, Pushover, Telegram, Discord и общий формат Webhook получают байты фотографии непосредственно с сообщением: внешний URL и `{finish_photo_url}` в шаблоне для этого не нужны.
 
-| Channel | Snapshot delivery |
+| Канал | Доставка снимка |
 |---------|-------------------|
-| **ntfy** | Attached. If your ntfy server has attachments disabled, Bambuddy retries automatically and sends the text alone. |
-| **Pushover** | Attached. |
-| **Telegram** | Attached — sent as a photo with the message as its caption. |
-| **Discord** | Attached and shown inline in the embed. |
-| **Webhook (generic format)** | Base64-encoded JPEG in the payload's `image` field. |
+| **ntfy** | Вложение. Если вложения на сервере ntfy отключены, Bambuddy автоматически повторит отправку только текста. |
+| **Pushover** | Вложение. |
+| **Telegram** | Вложение — фотография с сообщением в подписи. |
+| **Discord** | Вложение, отображается внутри встроенного сообщения. |
+| **Webhook (общий формат)** | JPEG в base64 в поле `image` данных. |
 
-#### Fetched-URL attachment
+#### Вложение, получаемое по URL {#fetched-url-attachment}
 
-Home Assistant, Bark, Notify!, Gotify and Slack/Mattermost-format webhooks can't take a byte
-upload — they fetch the photo from a URL themselves and attach it on their end.
-This needs **External URL** set in **Settings** > **Network**, or there's
-nothing for them to fetch, and (same as above) doesn't need `{finish_photo_url}`
-in the template.
+Home Assistant, Bark, Notify!, Gotify и вебхуки формата Slack/Mattermost не принимают загрузку байтов: они сами получают снимок по URL и добавляют его у себя. Для этого нужен **Внешний URL** в **Настройки** > **Сеть**; иначе получать нечего. Как и выше, `{finish_photo_url}` в шаблоне не требуется.
 
-| Channel | Snapshot delivery |
+| Канал | Доставка снимка |
 |---------|-------------------|
-| **Home Assistant** | Attached automatically via `data.image` — but only when you've set a custom **Home Assistant Service**. The default persistent-notification dashboard has a strict schema that rejects the extra field, so it falls back to link-only (see below) unless you set a service. |
-| **Bark** | Attached automatically as the notification `icon`. |
-| **Notify!** | Attached as `imageUrl` in the expanded notification. Requires an HTTPS External URL reachable from the receiving device; otherwise the notification is sent without the photo. Browser (`WB`) and group (`GRP`) targets receive text only. |
-| **Gotify** | Attached automatically as `bigImageUrl`, shown as a large picture in the Android app. |
-| **Webhook (Slack format)** | Attached via a legacy `attachments[].image_url` block. |
+| **Home Assistant** | Автоматическое вложение через `data.image`, но только при заданном пользовательском **сервисе Home Assistant**. Стандартная панель постоянных уведомлений имеет строгую схему и отклоняет дополнительное поле, поэтому без сервиса используется только ссылка (см. ниже). |
+| **Bark** | Автоматическое вложение как `icon` уведомления. |
+| **Notify!** | Вложение как `imageUrl` в развёрнутом уведомлении. Нужен внешний HTTPS URL, доступный принимающему устройству; иначе отправляется только текст. Браузеры (`WB`) и группы (`GRP`) получают только текст. |
+| **Gotify** | Автоматическое вложение как `bigImageUrl`, показывается крупным изображением в приложении Android. |
+| **Webhook (формат Slack)** | Вложение через устаревший блок `attachments[].image_url`. |
 
-!!! note "How the photo link is protected"
-    These services fetch the photo without logging in to Bambuddy, so the link
-    itself is the key: each one points at a single saved snapshot under a long
-    random name, opens that one photo and nothing else (no camera stream, no
-    other photos), and stops working after **3 days**. Anyone who can see the
-    notification, for example everyone in a Slack channel, can open the photo
-    until then.
+!!! note "Защита ссылки на фотографию"
+    Эти сервисы получают снимок без входа в Bambuddy, поэтому ключом является сама ссылка: каждая ведёт к одному сохранённому снимку под длинным случайным именем, открывает только его (без потока камеры и других фотографий) и перестаёт работать через **3 дня**. До этого открыть фото может каждый, кто видит уведомление, например все участники канала Slack.
 
-#### Inline embed (Email)
+#### Встраивание в текст (Email) {#inline-embed-email}
 
-Email is template-driven rather than automatic: it inlines the photo only when
-your template's body literally contains `{finish_photo_url}` (#1792), so nobody
-who never asked for a photo gets a surprise attachment. The HTML part replaces
-the URL with the image at exactly that position; the plain-text part keeps the
-URL as a clickable link. Unlike the fetched-URL channels above, this works even
-without External URL set — the image bytes travel with the email itself — though
-the fallback link text will be a relative, unclickable path in that case.
+Для Email используется шаблон: фотография встраивается только если текст буквально содержит `{finish_photo_url}` (#1792), поэтому тот, кто не запросил фото, не получает неожиданного вложения. HTML-часть заменяет URL изображением точно в этом месте, текстовая сохраняет кликабельную ссылку. В отличие от каналов, получающих URL выше, это работает и без внешнего URL: байты изображения передаются с письмом, хотя запасная ссылка в тексте будет относительным путём, по которому нельзя перейти.
 
-#### Link only
+#### Только ссылка {#link-only}
 
-CallMeBot has no attachment mechanism in its API at all — a `{finish_photo_url}`
-link in the text is the only way to get the photo there. Home Assistant also
-falls back to this when you're using the default persistent-notification
-service instead of a custom one.
+В API CallMeBot вообще нет механизма вложений: ссылка `{finish_photo_url}` в тексте — единственный способ получить фото. Home Assistant также переходит к этому варианту, если используется стандартный сервис постоянных уведомлений вместо пользовательского.
 
-With [authentication](authentication.md) off, `{finish_photo_url}` is the
-archive's own photo link, which needs no login and keeps working. With
-authentication on, that page needs a login a tapped link can't carry, so the
-link points at a copy of the photo instead, protected the same way as the
-fetched-URL photos above: one photo, a long random name, and it stops working
-after **3 days**.
+При выключенной [аутентификации](authentication.md) `{finish_photo_url}` является собственной ссылкой архива на фото, не требующей входа и продолжающей работать. При включённой аутентификации страница требует входа, который нажатие ссылки не передаёт, поэтому ссылка ведёт к копии фото с той же защитой, что и у каналов с получением по URL: одна фотография, длинное случайное имя и срок действия **3 дня**.
 
-Uploaded and fetched-URL attachments are capped at 2.5 MB. A larger snapshot is
-skipped and the message is sent as text — the reason is written to the log.
+Загружаемые и получаемые по URL вложения ограничены 2,5 МБ. Более крупный снимок пропускается, сообщение отправляется текстом, а причина записывается в журнал.
 
-Snapshots aren't limited to completed prints — Print Started, Print Progress,
-First Layer Complete, Plate Not Empty, AI Failure Detection and printer-error
-notifications all capture a live frame at the moment they fire, and get
-attached wherever the channel supports it. `{finish_photo_url}` itself is only
-exposed as an insertable template variable on **print_complete**,
-**print_failed** and **print_stopped** (and the per-user print emails, below)
-— the other events attach automatically to channels that support it, but have
-no variable for a manual link or Email's inline embed.
+Снимки не ограничиваются завершёнными печатями: уведомления о запуске и ходе печати, завершении первого слоя, непустом столе, обнаружении ошибки ИИ и ошибках принтера получают текущий кадр в момент события и прикладывают его там, где канал поддерживает вложения. Сама переменная `{finish_photo_url}` доступна для вставки в шаблоны только **print_complete**, **print_failed** и **print_stopped** (а также персональные письма о печати ниже); остальные события автоматически добавляют вложение поддерживаемым каналам, но не имеют переменной для ручной ссылки или встроенного изображения Email.
 
-#### Setting up the link / External URL
+#### Настройка ссылки и внешнего URL {#setting-up-the-link-external-url}
 
-1. Go to **Settings** > **Network**
-2. Set **External URL** to your Bambuddy server's address (e.g., `http://192.168.1.100:8000`)
-3. Edit your **print_complete** / **print_failed** / **print_stopped** template to include `{finish_photo_url}`
+1. Откройте **Настройки** > **Сеть**
+2. Укажите во **Внешнем URL** адрес сервера Bambuddy (например, `http://192.168.1.100:8000`)
+3. Добавьте `{finish_photo_url}` в шаблон **print_complete** / **print_failed** / **print_stopped**
 
-!!! note "External URL Required"
-    External URL is required for the link to resolve to something clickable, and for Home Assistant/Bark/Notify!/Gotify/Slack's automatic attachment to have anything to fetch. Notify! requires HTTPS. It's auto-detected from your browser when you first visit the Network settings page.
+!!! note "Необходим внешний URL"
+    Внешний URL нужен, чтобы ссылка была доступной, а Home Assistant/Bark/Notify!/Gotify/Slack могли получить автоматическое вложение. Notify! требует HTTPS. При первом посещении страницы настроек сети адрес определяется автоматически по браузеру.
 
-Example template:
+Пример шаблона:
+
 ```
 Print completed!
 Printer: {printer}
@@ -1049,101 +871,94 @@ Filament: {filament_details}
 Photo: {finish_photo_url}
 ```
 
-For **Email**, that same variable also switches the message to an inline embed —
-see [Inline embed (Email)](#inline-embed-email) above.
+Для **Email** эта же переменная также включает встроенное изображение — см. раздел [Встраивание в текст (Email)](#inline-embed-email) выше.
 
 ---
 
-## :material-check-circle: Testing
+## :material-check-circle: Проверка {#testing}
 
-Always test before relying on notifications:
+Всегда проверяйте уведомления перед использованием:
 
-1. Configure provider
-2. Click **Send Test**
-3. Verify you receive the message
-4. Check message formatting
-
----
-
-## :material-bell-off: Quick Disable
-
-Quickly disable all notifications:
-
-1. Find the **Quick Disable** button
-2. Click to toggle all notifications off
-3. Click again to re-enable
-
-Useful during maintenance or troubleshooting.
+1. Настройте сервис
+2. Нажмите **Отправить тест**
+3. Убедитесь, что сообщение получено
+4. Проверьте формат сообщения
 
 ---
 
-## :material-lightbulb: Tips
+## :material-bell-off: Быстрое отключение {#quick-disable}
 
-!!! tip "Start with ntfy"
-    ntfy is the simplest setup - no account needed, just pick a topic.
+Чтобы быстро выключить все уведомления:
 
-!!! tip "Use Quiet Hours"
-    Avoid middle-of-night alerts with quiet hours.
+1. Найдите кнопку **Быстрое отключение**
+2. Нажмите её для отключения всех уведомлений
+3. Нажмите ещё раз для повторного включения
 
-!!! tip "Multiple Providers"
-    Set up multiple providers for redundancy.
-
-!!! tip "Progress for Long Prints"
-    Enable progress milestones for prints over a few hours.
-
-!!! tip "Customize Templates"
-    Personalize messages to include only info you need.
-
-!!! tip "Test Regularly"
-    Periodically test notifications to ensure they still work.
-
-!!! tip "Bed Cooled Threshold"
-    Configure the bed cooled temperature threshold in **Settings** > **Notifications**. Default is 35°C. The notification fires as soon as the printer reports the bed at or below the threshold — no timeout.
-
-!!! tip "Pause Heads-Up"
-    Set how many minutes before a slicer pause **Pause Coming Up** is sent in **Settings** > **Notifications** > **Pause Heads-Up**. Default is 5 minutes. A print that starts with its pause already that close sends it straight away.
-
-!!! tip "Plate Not Empty Bypasses Quiet Hours"
-    Plate detection notifications are always sent immediately, even during quiet hours or when digest mode is enabled. This ensures you're alerted to potential issues before a print starts.
+Это полезно при обслуживании и устранении неполадок.
 
 ---
 
-## :material-account-bell: Per-User Email Notifications
+## :material-lightbulb: Советы {#tips}
 
-When [Advanced Authentication](authentication.md#per-user-email-notifications) is enabled, individual users can receive email notifications for their own print jobs. This is separate from the provider-based notification system above — it sends emails directly to the user who submitted the print.
+!!! tip "Начните с ntfy"
+    Его проще всего настроить: учётная запись не нужна, достаточно выбрать тему.
 
-### Requirements
+!!! tip "Используйте тихие часы"
+    Тихие часы избавят от уведомлений среди ночи.
 
-- Advanced Authentication must be enabled
-- SMTP must be configured
-- "User Notifications" must be enabled in **Settings** → **Notifications**
-- User must have an email address on their account
-- User must have the `notifications:user_email` permission (Administrators and Operators by default)
+!!! tip "Несколько сервисов"
+    Настройте несколько сервисов для резервирования.
 
-### Supported Events
+!!! tip "Ход длительных печатей"
+    Включите этапы прогресса для печатей продолжительностью несколько часов.
 
-| Event | Description |
+!!! tip "Настройте шаблоны"
+    Оставьте в сообщениях только нужные сведения.
+
+!!! tip "Регулярно проверяйте"
+    Периодически проверяйте, что уведомления работают.
+
+!!! tip "Порог охлаждения стола"
+    Настройте температуру охлаждения стола в **Настройки** > **Уведомления**. По умолчанию 35°C. Уведомление отправляется, как только принтер сообщает температуру на уровне порога или ниже, без тайм-аута.
+
+!!! tip "Предупреждение о паузе"
+    Укажите, за сколько минут до паузы слайсера отправлять **Скоро пауза**, в **Настройки** > **Уведомления** > **Предупреждение о паузе**. По умолчанию 5 минут. Если печать начинается, когда до паузы уже меньше времени, уведомление отправляется сразу.
+
+!!! tip "Непустой стол обходит тихие часы"
+    Уведомления об обнаружении объектов на столе всегда отправляются немедленно, даже в тихие часы или при включённой сводке. Это позволяет предупредить о проблеме до запуска печати.
+
+---
+
+## :material-account-bell: Персональные уведомления по электронной почте {#material-account-bell-per-user-email-notifications}
+
+При включённой [расширенной аутентификации](authentication.md#per-user-email-notifications) отдельные пользователи могут получать письма о собственных заданиях. Это отдельная от описанной выше системы сервисов функция: письмо отправляется непосредственно пользователю, который отправил задание.
+
+### Требования {#requirements}
+
+- Включена расширенная аутентификация
+- Настроен SMTP
+- В **Настройки** → **Уведомления** включены «Уведомления пользователей»
+- В учётной записи пользователя указан адрес электронной почты
+- У пользователя есть разрешение `notifications:user_email` (по умолчанию у администраторов и операторов)
+
+### Поддерживаемые события {#supported-events}
+
+| Событие | Описание |
 |-------|-------------|
-| **Print Started** | Your print job has begun |
-| **Print Completed** | Your print job finished successfully |
-| **Print Failed** | Your print job encountered an error |
-| **Print Stopped** | Your print job was cancelled |
+| **Печать началась** | Ваше задание запущено |
+| **Печать завершена** | Ваше задание успешно завершено |
+| **Ошибка печати** | При выполнении задания произошла ошибка |
+| **Печать остановлена** | Ваше задание отменено |
 
-### Setup
+### Настройка {#setup}
 
-1. Enable User Notifications in **Settings** → **Notifications**
-2. Click **Notifications** in the sidebar
-3. Toggle each event type on or off
-4. Click **Save**
+1. Включите уведомления пользователей в **Настройки** → **Уведомления**
+2. Нажмите **Уведомления** в боковой панели
+3. Включите или выключите каждый тип события
+4. Нажмите **Сохранить**
 
-### Photos
+### Фотографии {#photos}
 
-**Print Completed**, **Print Failed** and **Print Stopped** emails support the
-same inline-photo opt-in as the provider-based Email path: add
-`{finish_photo_url}` to the template body (**Settings** → **Notifications** →
-**Templates**) and the photo is embedded at that position when one was
-captured — see [Inline embed (Email)](#inline-embed-email) above for how the
-opt-in works. **Print Started** has no photo support, since there's no
-finished-print snapshot yet at that point.
+Письма **Печать завершена**, **Ошибка печати** и **Печать остановлена** поддерживают то же включение встроенного фото, что и сервис Email: добавьте `{finish_photo_url}` в текст шаблона (**Настройки** → **Уведомления** → **Шаблоны**), и снимок, если он сделан, будет вставлен в этом месте — подробности см. в разделе [Встраивание в текст (Email)](#inline-embed-email). Событие **Печать началась** не поддерживает фото, поскольку снимка завершённой печати ещё нет.
 
-See [Authentication → Per-User Email Notifications](authentication.md#per-user-email-notifications) for full details.
+Подробнее см. [Аутентификация → Персональные уведомления по электронной почте](authentication.md#per-user-email-notifications).
