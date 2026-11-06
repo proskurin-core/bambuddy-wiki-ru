@@ -1,620 +1,546 @@
 ---
-title: Spoolman Integration
-description: Sync filament inventory with Spoolman
+title: Интеграция со Spoolman
+description: Синхронизация учёта филамента со Spoolman
 ---
 
-# Spoolman Integration
+# Интеграция со Spoolman {#spoolman-integration}
 
-Sync your AMS filament with [Spoolman](https://github.com/Donkie/Spoolman) for complete spool tracking and inventory management.
-
----
-
-# Spoolman Integration — Native Inventory UI
-
-Bambuddy ships a full native inventory UI for Spoolman-managed spools.
-When Spoolman is enabled, the **Inventory** tab switches from the embedded
-Spoolman iframe to a built-in interface that shares the exact same design
-as the local inventory — filtering, editing, NFC writes, and AMS
-deep-links all work identically regardless of which backend is active.
+Синхронизируйте филамент AMS со [Spoolman](https://github.com/Donkie/Spoolman) для полного учёта катушек и управления запасами.
 
 ---
 
-## :material-database-sync-outline: What is Spoolman?
+# Интеграция со Spoolman — встроенный интерфейс учёта {#spoolman-integration-native-inventory-ui}
 
-Spoolman is a self-hosted filament inventory manager that:
-
-- Tracks spool quantities
-- Records filament usage
-- Manages multiple materials and vendors
-- Integrates with slicers
-
-Bambuddy syncs your AMS slots with Spoolman for unified tracking.
+Bambuddy предоставляет полноценный встроенный интерфейс учёта катушек, управляемых Spoolman. При включении Spoolman вкладка **Филамент** переключается со встроенного iframe Spoolman на собственный интерфейс, оформленный точно так же, как локальный учёт: фильтрация, редактирование, запись NFC и прямые ссылки на AMS работают одинаково независимо от выбранной базы.
 
 ---
 
-## :material-link: Connection Setup
+## :material-database-sync-outline: Что такое Spoolman? {#what-is-spoolman}
 
-### Requirements
+Spoolman — самостоятельно размещаемая система учёта филамента, которая:
 
-- Spoolman instance running and accessible
-- Network access from Bambuddy to Spoolman
+- Отслеживает количество филамента на катушках
+- Записывает расход филамента
+- Управляет несколькими материалами и производителями
+- Интегрируется со слайсерами
 
-### Configuration
+Bambuddy синхронизирует слоты AMS со Spoolman для единого учёта.
 
-1. Go to **Settings** > **Filament**
-2. The **Spoolman** card is the first card on the page
-3. Toggle **Enable Spoolman** on, then enter:
+---
 
-| Field | Description |
+## :material-link: Настройка подключения {#connection-setup}
+
+### Требования {#requirements}
+
+- Работающий и доступный экземпляр Spoolman
+- Сетевой доступ от Bambuddy к Spoolman
+
+### Настройка {#configuration}
+
+1. Откройте **Настройки** > **Филамент**
+2. Карточка **Spoolman** находится первой на странице
+3. Включите **Включить Spoolman** и введите:
+
+| Поле | Описание |
 |-------|-------------|
-| **URL** | Spoolman server URL (e.g., `http://192.168.1.50:7912`) |
-| **API Key** | If Spoolman requires authentication |
+| **URL** | URL сервера Spoolman (например, `http://192.168.1.50:7912`) |
+| **Ключ API** | Если Spoolman требует аутентификацию |
 
-4. Click **Test Connection**
-5. Click **Save**
+4. Нажмите **Проверить подключение**
+5. Нажмите **Сохранить**
 
-!!! note "Switching modes keeps your slot assignments"
-    Each mode stores AMS slot assignments in its own place, and switching
-    between them changes which one Bambuddy reads — it does not delete either.
-    Turning Spoolman on to see what it does, then turning it back off, returns
-    you to the built-in assignments you had.
+!!! note "Назначения слотов сохраняются при смене режима"
+    Каждый режим хранит назначения слотов AMS отдельно. При переключении Bambuddy начинает читать назначения другого режима и ничего не удаляет. Если включить Spoolman для знакомства, а затем выключить его, прежние встроенные назначения вернутся.
 
-    Only the assignments for the mode you are currently in are used, so after a
-    switch you will need to link spools again in the new mode. Switching back
-    restores what that mode had.
+    Используются только назначения текущего режима, поэтому после переключения в новом режиме катушки нужно связать заново. При обратном переключении вернутся назначения соответствующего режима.
 
 ---
 
-## :material-sync: Sync Features
+## :material-sync: Возможности синхронизации {#sync-features}
 
-### How Sync Works
+### Как работает синхронизация {#how-sync-works}
 
-!!! note "Bambu Lab Spools Only"
-    Only official Bambu Lab spools with RFID are synced automatically. Third-party, refilled, or SpoolEase spools are skipped. Bambu Lab spools are identified by hardware RFID identifiers (`tray_uuid` and `tag_uid`), not by the filament preset type.
+!!! note "Только катушки Bambu Lab"
+    Автоматически синхронизируются только официальные катушки Bambu Lab с RFID. Сторонние, заправленные заново и катушки SpoolEase пропускаются. Катушки Bambu Lab определяются по аппаратным идентификаторам RFID (`tray_uuid` и `tag_uid`), а не по типу пресета филамента.
 
-When AMS data changes:
+Когда данные AMS меняются:
 
-1. Bambuddy detects the filament via RFID
-2. Searches Spoolman for matching spool (by UUID)
-3. If found: Updates remaining weight and location
-4. If not found and **Auto-add unknown RFID spools** is on (default): Auto-creates new spool in Spoolman
-5. If not found and the toggle is off: Bambuddy raises a confirmation modal in the running web UI instead — you decide whether to add it
+1. Bambuddy определяет филамент по RFID
+2. Ищет соответствующую катушку в Spoolman по UUID
+3. Если катушка найдена, обновляет оставшийся вес и расположение
+4. Если катушка не найдена и включено **Автоматически добавлять неизвестные RFID-катушки** (по умолчанию), создаёт новую катушку в Spoolman
+5. Если катушка не найдена и переключатель выключен, показывает окно подтверждения в работающем веб-интерфейсе — вы сами решаете, добавлять ли её
 
-### Auto-add unknown RFID spools
+### Автоматическое добавление неизвестных RFID-катушек {#auto-add-unknown-rfid-spools}
 
-The toggle lives under **Settings → Filament → Filament Tracking** above the Spoolman card and applies to both Built-in Inventory and Spoolman modes. Default is **on** (legacy behaviour). Turn it **off** if you prefer to pre-register new spools in Spoolman before loading them, to avoid the matcher creating a duplicate when the AMS reads the tag.
+Переключатель находится в разделе **Настройки → Филамент → Отслеживание филамента** над карточкой Spoolman и применяется как ко встроенному учёту, так и к режиму Spoolman. По умолчанию он **включён** (поведение прежних версий). Выключите его, если предпочитаете заранее регистрировать новые катушки в Spoolman, чтобы сопоставление не создало дубликат при чтении метки AMS.
 
-With the toggle off:
+При выключенном переключателе:
 
-- Loading an unknown spool no longer writes a Spoolman row silently
-- A modal opens in the Bambuddy UI showing the printer / AMS slot / material / colour
-- **Add to Inventory** creates the spool in Spoolman and binds it to the AMS slot in a single call
-- Manual `Sync AMS` actions report the slot as skipped with the reason "Auto-add disabled; add to inventory manually"
-- The modal does not re-pop on every MQTT push — only when you physically remove and re-insert a spool, or load a different unknown spool
+- Загрузка неизвестной катушки больше не создаёт запись в Spoolman без уведомления
+- В интерфейсе Bambuddy открывается окно с принтером, слотом AMS, материалом и цветом
+- **Добавить в учёт** создаёт катушку в Spoolman и связывает её со слотом AMS за один запрос
+- При ручном действии `Sync AMS` слот помечается пропущенным с причиной "Auto-add disabled; add to inventory manually"
+- Окно не появляется повторно при каждом сообщении MQTT — только при физическом извлечении и повторной установке катушки либо загрузке другой неизвестной катушки
 
-### Sync Modes
+### Режимы синхронизации {#sync-modes}
 
-- **Auto** - Syncs whenever AMS data changes (recommended)
-- **Manual** - Only syncs when you click the Sync button
+- **Авто** — синхронизация при каждом изменении данных AMS (рекомендуется)
+- **Вручную** — синхронизация только после нажатия кнопки
 
-**Sync** and **Sync all** unassign a slot that reads empty, except while its printer is printing (a runout reads empty too) and when the AMS reports a spool in it anyway (a spool without filament data, for example).
+Действия **Синхронизировать** и **Синхронизировать все** снимают назначение со слота, который сообщает, что он пуст. Исключения: принтер печатает (при окончании филамента слот тоже выглядит пустым) или AMS всё же сообщает о катушке в слоте (например, о катушке без данных филамента).
 
-### Bulk actions
+### Массовые действия {#bulk-actions}
 
-Spoolman-mode users get the same bulk actions documented in the Inventory page — select multiple spools in the Inventory table to bulk-edit fields, archive / restore, delete, or reset the "Total Consumed" counter in a single call. See [Inventory → Bulk actions](inventory.md#bulk-actions) for the full action set. The bulk-edit endpoint loops your selection through the same per-spool update path, so Spoolman's filament-linking, vendor resolution, and extra-dict behaviour are identical to single-spool edits.
+Пользователям режима Spoolman доступны те же массовые действия, что описаны на странице учёта филамента: выберите несколько катушек в таблице, чтобы массово изменить поля, архивировать или восстановить, удалить их либо сбросить счётчик «Всего израсходовано» за один запрос. Полный список см. в разделе [Филамент → Массовые действия](inventory.md#bulk-actions). Конечная точка массового изменения обрабатывает выбранные катушки тем же путём, что и по отдельности, поэтому связывание филамента, определение производителя и работа дополнительного словаря Spoolman не отличаются.
 
-If Spoolman is unreachable mid-batch, the backend collects per-spool errors and returns them alongside the success count. The frontend translates that into a partial-success warning toast (or a red "all failed" toast that preserves your selection so you can retry once Spoolman is back online) — bulk actions never silently drop rows.
+Если во время обработки Spoolman станет недоступен, сервер соберёт ошибки по отдельным катушкам и вернёт их вместе с количеством успешных операций. Интерфейс покажет предупреждение о частичном успехе или красное сообщение о полном сбое, сохранив выбор для повторной попытки после восстановления Spoolman. Массовые действия никогда не пропускают строки без уведомления.
 
-### Sync Results
+### Результаты синхронизации {#sync-results}
 
-After syncing, you'll see:
+После синхронизации отображаются:
 
-- **Synced count** - Number of spools successfully synced
-- **Skipped spools** - List of spools that couldn't sync (with reasons)
-- **Errors** - Any issues that occurred
+- **Синхронизировано** — число успешно синхронизированных катушек
+- **Пропущенные катушки** — список катушек, которые не удалось синхронизировать, с причинами
+- **Ошибки** — возникшие проблемы
 
-Skipped spools show:
+Для пропущенных катушек показываются:
 
-- Location (e.g., "AMS A1")
-- Color swatch
-- Reason (e.g., "Non-Bambu Lab spool")
+- Расположение (например, "AMS A1")
+- Образец цвета
+- Причина (например, «Катушка не Bambu Lab»)
 
-### Usage Tracking
+### Учёт расхода {#usage-tracking}
 
-When prints complete, Bambuddy reports **per-filament** usage to Spoolman:
+После завершения печати Bambuddy сообщает Spoolman расход **для каждого филамента**:
 
-1. Bambuddy extracts per-filament usage data from the archived 3MF file (slicer estimates)
-2. For partial prints, the per-layer G-code gives each filament's share fed up to the failure layer, and that share of the slicer estimate is reported
-3. On completion, each spool's usage is reported individually to Spoolman (multi-material support)
-4. Spoolman updates spool quantities accordingly
-5. If no 3MF data is available, AMS remain% delta is used as a fallback
+1. Bambuddy извлекает данные расхода по каждому филаменту из архивного 3MF (оценки слайсера)
+2. Для незавершённой печати G-code по слоям определяет долю каждого филамента до слоя сбоя, и сообщается соответствующая доля оценки слайсера
+3. После завершения расход каждой катушки отдельно передаётся Spoolman, в том числе при печати несколькими материалами
+4. Spoolman соответствующим образом обновляет количество на катушках
+5. Если данных 3MF нет, используется изменение процента остатка AMS
 
-#### When usage cannot be tracked at all
+#### Когда расход совсем не удаётся отследить {#when-usage-cannot-be-tracked-at-all}
 
-Both routes above can be unavailable at once, and the result is a spool whose
-remaining amount never moves:
+Оба описанных способа могут оказаться недоступны одновременно; тогда остаток катушки не меняется:
 
-- **There is no 3MF to read.** A file sent to an H2-series or P2S printer from
-  Bambu Studio is kept on the printer's internal eMMC, which FTPS does not
-  serve, so the print archives without one. Bambuddy probes external storage for
-  a copy by name before giving up, and often finds it, but not always.
-- **And the slot reports no remaining percentage.** The delta fallback needs a
-  reading at the *start* of the print. A spool without an RFID tag — including
-  anything in an AMS HT — reports `-1` until somebody sets a remaining amount
-  on the printer, so there is no starting figure to subtract from.
+- **Нет доступного 3MF.** Файл, отправленный из Bambu Studio на принтер серии H2 или P2S, хранится во внутренней памяти eMMC принтера, недоступной через FTPS, поэтому печать архивируется без него. Bambuddy ищет копию по имени на внешнем накопителе и часто, но не всегда, находит её.
+- **Слот не сообщает процент остатка.** Для расчёта изменения нужны данные на *начало* печати. Катушка без RFID-метки, включая любую катушку в AMS HT, сообщает `-1`, пока кто-то не задаст остаток на принтере; поэтому начального значения для вычитания нет.
 
-Bambuddy logs the slot it could not charge rather than passing over it in
-silence. To get tracking back, either start the print through Bambuddy or
-OrcaSlicer (both upload to external storage, so the 3MF is readable), or set a
-remaining amount for the slot on the printer's own screen so the AMS begins
-reporting a percentage for it.
+Bambuddy записывает в журнал слот, с которого не удалось списать расход, вместо того чтобы пропустить его без уведомления. Чтобы восстановить учёт, запускайте печать через Bambuddy или OrcaSlicer (оба загружают файл на внешний накопитель, откуда можно прочитать 3MF) либо задайте остаток для слота на экране принтера, чтобы AMS начал сообщать процент.
 
-#### How Bambuddy decides which spool a slot used
+#### Как Bambuddy определяет использованную в слоте катушку {#how-bambuddy-decides-which-spool-a-slot-used}
 
-A sliced file numbers its filaments 1, 2, 3, 4. Which AMS tray each of those
-numbers actually came from is a separate decision, made when the job is sent,
-and it is frequently not left-to-right — you can map filament 1 to slot 3 in the
-Print dialog of any slicer. Bambuddy works that mapping out in this order:
+Нарезанный файл нумерует филаменты 1, 2, 3, 4. Сопоставление этих номеров с лотками AMS выбирается отдельно при отправке задания и часто не совпадает с порядком слева направо: в окне печати любого слайсера филамент 1 можно назначить слоту 3. Bambuddy определяет сопоставление в следующем порядке:
 
-1. **The mapping Bambuddy sent**, for prints you start from Bambuddy itself —
-   the Print button, the queue, a reprint. Exact, because Bambuddy chose it.
-2. **The mapping the slicer sent**, captured from the print command when
-   Bambu Studio or OrcaSlicer dispatched the job over your local network.
-3. **The printer's own report.** Most models publish the running job's
-   slot-to-tray assignment in their status. This is what covers a job sent from
-   Bambu Studio through the Bambu cloud, where the command never passes through
-   your network for Bambuddy to see.
-4. **Colour matching**, for the models that publish no such report — the A1,
-   A1 Mini, P1S and P2S. The sliced colour of each filament is matched against
-   the loaded trays, and is only used when every filament matches exactly one.
-5. **Position**, as a last resort: filament 1 to the first loaded tray, filament
-   2 to the second, and so on.
+1. **Сопоставление, отправленное Bambuddy** для печати, запущенной из Bambuddy: кнопкой печати, из очереди или повторно. Оно точное, поскольку выбрано самим Bambuddy.
+2. **Сопоставление, отправленное слайсером**, полученное из команды печати при отправке через локальную сеть из Bambu Studio или OrcaSlicer.
+3. **Данные самого принтера.** Большинство моделей публикует назначение слотов и лотков текущего задания в состоянии. Это позволяет обработать задание, отправленное из Bambu Studio через облако Bambu, когда команда не проходит через локальную сеть и Bambuddy её не видит.
+4. **Сопоставление по цвету** для моделей, не публикующих такие данные: A1, A1 Mini, P1S и P2S. Цвет каждого филамента из нарезанного файла сопоставляется с загруженными лотками; результат используется, только если каждому филаменту соответствует ровно один лоток.
+5. **Порядок расположения** в последнюю очередь: филамент 1 — первый загруженный лоток, филамент 2 — второй и т. д.
 
-Only the last of these can be wrong in a way you would notice, and it is also
-the only one that assumes your AMS is loaded in slicer order. If a print
-consistently deducts from the wrong spool, search the log for `slot_to_tray` —
-the line names the mapping and which of the five produced it.
+Только последний способ может дать заметную ошибку, и только он предполагает, что AMS загружен в порядке слайсера. Если расход постоянно списывается с неверной катушки, найдите в журнале `slot_to_tray`: строка содержит сопоставление и указывает, какой из пяти способов его определил.
 
-!!! note "The archive's filament changes when the print finishes"
-    While a print runs, its archive shows the filaments it was *sliced* for.
-    On completion, Bambuddy replaces them with the material and colour of the
-    Spoolman spools it actually charged, so the archive reflects your curated
-    inventory rather than the slicer's own values. A print whose filament
-    changes colour the moment it finishes is telling you the mapping above
-    resolved to a spool you did not expect.
+!!! note "Филамент в архиве меняется после завершения печати"
+    Во время печати архив показывает филаменты, для которых файл был *нарезан*. После завершения Bambuddy заменяет их материалами и цветами катушек Spoolman, с которых фактически списан расход, чтобы архив отражал ваши учтённые запасы, а не значения слайсера. Если цвет филамента меняется сразу после завершения, приведённое выше сопоставление указало на неожиданную катушку.
 
-#### A spool replaced during a print
+#### Замена катушки во время печати {#a-spool-replaced-during-a-print}
 
-When a spool runs out and you load a new one in the **same** slot (an
-external spool, or an AMS slot without a backup), assign the new spool to the
-slot while the print is still running. Bambuddy notes the layer the printer was
-on, and when the print ends it splits the filament between the two spools: the
-old one is charged up to that layer, the new one from there, weighed by the
-filament the G-code feeds in each part. A slot that had no spool when the print
-started is charged to the spool you assign, for the whole print.
+Если филамент заканчивается и вы устанавливаете новую катушку в **тот же** слот (внешнюю катушку или слот AMS без резервной), назначьте её слоту, пока печать продолжается. Bambuddy запоминает текущий слой принтера и по завершении распределяет расход между двумя катушками: старой до этого слоя и новой после него, пропорционально подаче филамента в каждой части G-code. Если в слоте не было катушки на момент начала печати, весь расход назначается добавленной вами катушке.
 
-#### Disable AMS Estimated Weight Sync
+#### Отключение синхронизации оценочного веса AMS {#disable-ams-estimated-weight-sync}
 
-By default, Bambuddy syncs AMS weight estimates to Spoolman. If you prefer Spoolman's own usage-based tracking:
+По умолчанию Bambuddy синхронизирует оценки веса AMS со Spoolman. Если вы предпочитаете собственный учёт Spoolman по расходу:
 
-1. Go to **Settings** > **Filament** and open the **Spoolman** card
-2. Enable **Disable AMS Estimated Weight Sync**
-3. AMS weight estimates will no longer overwrite Spoolman quantities
-4. New spools still use the AMS estimate as their initial weight
+1. Откройте **Настройки** > **Филамент** и карточку **Spoolman**
+2. Включите **Отключить синхронизацию оценочного веса AMS**
+3. Оценки AMS больше не будут перезаписывать количество в Spoolman
+4. Для новых катушек оценка AMS по-прежнему используется как начальный вес
 
-!!! tip "When to disable weight sync"
-    Use this if you find AMS percentage-based estimates inaccurate. Spoolman's cumulative usage tracking (subtracting grams used per print) is often more precise.
+!!! tip "Когда отключать синхронизацию веса"
+    Используйте этот вариант, если оценки AMS по процентам недостаточно точны. Накопительный учёт расхода Spoolman с вычитанием граммов для каждой печати часто точнее.
 
-#### Partial Usage for Failed Prints
+#### Частичный расход при неудачной печати {#partial-usage-for-failed-prints}
 
-When a print fails or is cancelled, filament was still consumed. Enable partial usage reporting:
+При сбое или отмене печати филамент всё равно расходуется. Включите учёт частичного расхода:
 
-1. Go to **Settings** > **Filament** and open the **Spoolman** card
-2. Enable **Report Partial Usage for Failed Prints**
-3. Bambuddy calculates filament used via per-layer G-code analysis up to the exact failure layer
-4. Falls back to linear scaling (total estimate × progress%) if layer data is unavailable
+1. Откройте **Настройки** > **Филамент** и карточку **Spoolman**
+2. Включите **Учитывать частичный расход при неудачных печатях**
+3. Bambuddy рассчитает расход филамента по G-code до точного слоя сбоя
+4. Если данных по слоям нет, используется линейная оценка (общая оценка × процент выполнения)
 
 ---
 
-## :material-tray-full: AMS Slot Mapping
+## :material-tray-full: Назначение слотов AMS {#ams-slot-mapping}
 
-### Viewing Mappings
+### Просмотр назначений {#viewing-mappings}
 
-Hover over any AMS slot to see:
+Наведите указатель на слот AMS, чтобы увидеть:
 
-- **Vendor** - Bambu Lab or Generic
-- **Profile** - Filament type (e.g., "PLA Basic")
-- **Color** - Color name and swatch
-- **K Factor** - Pressure advance value
-- **Fill Level** - Remaining percentage with visual bar
-- **Spool ID** - Bambu Lab UUID (when Spoolman enabled)
+- **Производитель** — Bambu Lab или Generic
+- **Профиль** — тип филамента (например, "PLA Basic")
+- **Цвет** — название и образец
+- **K-фактор** — значение опережения давления
+- **Уровень заполнения** — процент остатка с индикатором
+- **ID катушки** — UUID Bambu Lab, когда включён Spoolman
 
-#### Fill Level for AMS Lite / External Spools
+#### Уровень заполнения AMS Lite и внешних катушек {#fill-level-for-ams-lite-external-spools}
 
-AMS Lite units (e.g., A1 series) have no weight sensor and always report 0% fill level. When a spool is linked to Spoolman and has weight data, Bambuddy uses Spoolman's remaining weight instead:
+У AMS Lite (например, серии A1) нет датчика веса, поэтому он всегда сообщает заполнение 0%. Если катушка связана со Spoolman и имеет данные веса, Bambuddy использует оставшийся вес из Spoolman:
 
-- **AMS with weight sensor** - Uses AMS percentage directly (no change)
-- **AMS Lite (reports 0%)** - Falls back to Spoolman: `(remaining weight / spool size) × 100`, with the spool size taken as described in [Spool Size (Label Weight)](#spool-size-label-weight)
-- **External spool** - Shows fill level from Spoolman if linked (otherwise shows "—")
+- **AMS с датчиком веса** — напрямую используется процент AMS, без изменений
+- **AMS Lite (сообщает 0%)** — используются данные Spoolman: `(остаток веса / размер катушки) × 100`; размер определяется, как описано в разделе [Размер катушки (вес по этикетке)](#spool-size-label-weight)
+- **Внешняя катушка** — уровень берётся из Spoolman, если она связана с ним (иначе отображается «—»)
 
-When Spoolman data is used, the hover card displays "(Spoolman)" next to the fill percentage so you can distinguish the data source.
+Когда используются данные Spoolman, рядом с процентом в карточке при наведении отображается «(Spoolman)», чтобы был понятен источник данных.
 
-#### Spool Size (Label Weight)
+#### Размер катушки (вес по этикетке) {#spool-size-label-weight}
 
-Spoolman stores how much filament a full spool holds in two places: the spool's own **Initial Weight**, and the filament's **Weight** as the catalogue value. One filament can have spools of different sizes, so Bambuddy uses the spool's **Initial Weight** and falls back to the filament's **Weight** only when the spool has none.
+Spoolman хранит количество филамента на полной катушке в двух местах: собственный **Initial Weight** катушки и **Weight** филамента как значение каталога. У одного филамента могут быть катушки разных размеров, поэтому Bambuddy использует **Initial Weight** катушки и обращается к **Weight** филамента только при отсутствии первого значения.
 
-This is the **Label Weight** in the spool form. It is used for the fill level, for **Sync Weights from AMS** (the AMS percentage is a percentage of this spool), and for print cost. Changing it in the spool form changes only that spool; the filament and any other spools of it are left alone.
+В форме катушки это **Вес по этикетке**. Он используется для уровня заполнения, действия **Синхронизировать вес из AMS** (процент AMS относится к этой катушке) и расчёта стоимости печати. Изменение в форме влияет только на эту катушку; филамент и остальные его катушки не меняются.
 
-The **Cost per kg** in the spool form is stored in Spoolman as the spool's **Price**, which Spoolman treats as the price of the whole spool. Bambuddy converts between the two using the spool's size, so 25 per kg on a 250 g spool is stored as a price of 6.25.
+**Стоимость за кг** из формы хранится в Spoolman как **Price** катушки, которое Spoolman считает ценой всей катушки. Bambuddy пересчитывает значения с учётом размера: 25 за кг для катушки на 250 г сохраняется как цена 6,25.
 
-#### Empty Spool Weight (Tare)
+#### Вес пустой катушки (тара) {#empty-spool-weight-tare}
 
-When you weigh a spool in Bambuddy or on a SpoolBuddy scale, the remaining weight is the scale reading minus the empty spool weight. Bambuddy takes that weight from Spoolman in the same order Spoolman does:
+При взвешивании катушки в Bambuddy или на весах SpoolBuddy остаток равен показанию весов за вычетом веса пустой катушки. Bambuddy получает этот вес из Spoolman в том же порядке, что и сам Spoolman:
 
-1. The spool's own **Spool Weight**
-2. The filament's **Spool Weight**
-3. The vendor's **Empty Spool Weight**
-4. 250 g, if none of the three is set
+1. Собственный **Spool Weight** катушки
+2. **Spool Weight** филамента
+3. **Empty Spool Weight** производителя
+4. 250 г, если ни одно значение не задано
 
-The **Empty Spool Weight** shown in the spool form comes from the same order. Setting it once on the vendor covers every spool of that vendor that has no weight of its own.
+**Вес пустой катушки** в форме определяется в том же порядке. Значение, заданное один раз у производителя, используется для всех его катушек без собственного веса.
 
-### Opening Linked Spools
+### Открытие связанных катушек {#opening-linked-spools}
 
-For spools already linked to Spoolman:
+Для катушек, уже связанных со Spoolman:
 
-1. **Hover** over any AMS slot with a linked spool
-2. Click **Open in Spoolman** button
-3. Opens the spool's page in Spoolman in a new tab
-4. Edit spool details directly in Spoolman
+1. **Наведите указатель** на слот AMS со связанной катушкой
+2. Нажмите **Открыть в Spoolman**
+3. Страница катушки откроется в Spoolman в новой вкладке
+4. Измените сведения непосредственно в Spoolman
 
-!!! info "Quick Access"
-    The "Open in Spoolman" button provides one-click access to edit spool details like vendor, cost, notes, or remaining weight directly in Spoolman.
+!!! info "Быстрый доступ"
+    Кнопка «Открыть в Spoolman» позволяет одним нажатием изменить непосредственно в Spoolman производителя, стоимость, заметки или оставшийся вес.
 
-### Manual Linking
+### Ручное связывание {#manual-linking}
 
-To put an existing Spoolman spool in an AMS slot from the printer card, hover over the slot and click **Assign Spool**. That assigns the spool to the slot; it does not write the spool's tag into Spoolman.
+Чтобы назначить существующую катушку Spoolman слоту AMS с карточки принтера, наведите указатель на слот и нажмите **Назначить катушку**. Это назначает катушку слоту, но не записывает её метку в Spoolman.
 
-To link the spool's RFID tag itself (so the spool is recognised by its tag wherever it is loaded), use SpoolBuddy's [AMS page](../spoolbuddy/usage.md):
+Чтобы связать саму RFID-метку катушки и распознавать её по метке в любом слоте, используйте [страницу AMS](../spoolbuddy/usage.md) SpoolBuddy:
 
-1. Tap the slot with the Bambu Lab spool that is not yet linked
-2. Tap **Assign Spool** (*Link a Spoolman spool to this slot*)
-3. Pick the Spoolman spool from the list of spools without a tag
+1. Нажмите слот с ещё не связанной катушкой Bambu Lab
+2. Нажмите **Назначить катушку** (*связать катушку Spoolman с этим слотом*)
+3. Выберите катушку Spoolman из списка катушек без метки
 
-!!! info "When to use Link"
-    Use this when you already have spools in Spoolman (e.g., from manual entry) and want to connect them to physical spools in your AMS. New Bambu Lab spools are auto-created on sync - no linking needed.
+!!! info "Когда связывать катушку"
+    Используйте это действие, если катушки уже есть в Spoolman, например добавлены вручную, и вы хотите связать их с физическими катушками в AMS. Новые катушки Bambu Lab создаются при синхронизации автоматически и не требуют связывания.
 
-### Spool UUID
+### UUID катушки {#spool-uuid}
 
-Each Bambu Lab spool has a unique identifier (UUID):
+Каждая катушка Bambu Lab имеет уникальный идентификатор UUID:
 
-- Visible in AMS hover card when Spoolman is enabled
-- Click the copy button to copy full UUID
-- Used internally to match spools between AMS and Spoolman
+- Видим в карточке AMS при наведении, если Spoolman включён
+- Кнопка копирования копирует полный UUID
+- Используется для внутреннего сопоставления катушек AMS и Spoolman
 
-### Unlinking
+### Удаление связи {#unlinking}
 
-Remove a link:
+Чтобы удалить связь:
 
-1. Open Spoolman interface
-2. Find the spool
-3. Clear the `extra.tag` field
+1. Откройте интерфейс Spoolman
+2. Найдите катушку
+3. Очистите поле `extra.tag`
 
-On Spoolman 0.27 or later, also remove the spool's tags in Spoolman's own tag list, or the spool is still found by them (see [Native tags](#native-tags-spoolman-027)). Unlinking in Bambuddy, or **Clear RFID Tag** on the spool, removes both for you.
+В Spoolman 0.27 и новее также удалите метки катушки из собственного списка меток Spoolman, иначе катушка будет по-прежнему находиться по ним (см. [Встроенные метки](#native-tags-spoolman-027)). При удалении связи в Bambuddy или использовании **Очистить RFID-метку** у катушки оба значения удаляются автоматически.
 
-### Custom fields Bambuddy registers
+### Пользовательские поля, регистрируемые Bambuddy {#custom-fields-bambuddy-registers}
 
-Spoolman rejects any write naming an extra field it doesn't know about, so Bambuddy registers the four it uses the first time it needs them:
+Spoolman отклоняет запись в неизвестное дополнительное поле, поэтому Bambuddy регистрирует четыре используемых поля при первом обращении:
 
-| Key | Holds |
+| Ключ | Содержимое |
 | --- | --- |
-| `tag` | The spool's Bambu RFID UUID &mdash; what links an AMS tray to a Spoolman spool |
-| `bambu_slicer_filament` | The Bambu filament preset ID (e.g. `GFA00`) |
-| `bambu_slicer_filament_name` | The slicer preset's display name |
-| `bambu_color_name` | The colour's human-readable name |
+| `tag` | UUID RFID катушки Bambu, связывающий лоток AMS с катушкой Spoolman |
+| `bambu_slicer_filament` | ID пресета филамента Bambu (например, `GFA00`) |
+| `bambu_slicer_filament_name` | Отображаемое название пресета слайсера |
+| `bambu_color_name` | Понятное название цвета |
 
-**You can rename these in Spoolman's own field editor, or give them a default, and Bambuddy will leave your changes alone.** It matches on the field's `key`, which never changes, rather than on the display name. Deleting one, though, means Bambuddy re-creates it on the next sync &mdash; it needs the field to exist in order to write to it.
+**Эти поля можно переименовать или задать им значение по умолчанию в редакторе полей Spoolman: Bambuddy сохранит изменения.** Сопоставление выполняется по неизменному `key`, а не по отображаемому названию. Если удалить поле, Bambuddy создаст его снова при следующей синхронизации: оно необходимо для записи.
 
-On Spoolman 0.27 or later, the identifiers in `tag` are also kept as native tags (next section). `tag` keeps being written all the same, so readers that only know `extra.tag` and a downgrade to an older Spoolman lose nothing.
+В Spoolman 0.27 и новее идентификаторы из `tag` также хранятся как встроенные метки (следующий раздел). Поле `tag` по-прежнему заполняется, поэтому программы, знающие только `extra.tag`, и откат к более старому Spoolman не теряют данные.
 
-### :material-nfc-variant: Native tags (Spoolman 0.27+) { #native-tags-spoolman-027 }
+### :material-nfc-variant: Встроенные метки (Spoolman 0.27+) {#native-tags-spoolman-027}
 
-Spoolman 0.27 links NFC tags to spools itself: a spool can carry several tags, a tag belongs to exactly one spool, and Spoolman can say which spool a tag belongs to without anyone loading the whole inventory. When Bambuddy finds a Spoolman that supports this, it uses those tags next to `extra.tag`. On an older Spoolman nothing changes.
+Spoolman 0.27 самостоятельно связывает NFC-метки с катушками: у катушки может быть несколько меток, каждая метка принадлежит только одной катушке, а Spoolman может определить владельца метки без загрузки всего списка. Если Bambuddy обнаруживает поддержку этой функции, он использует такие метки наряду с `extra.tag`. В старых версиях Spoolman ничего не меняется.
 
-What that gives you:
+Преимущества:
 
-- **Every side of a Bambu spool finds it.** A Bambu spool has a tray UUID and two RFID chips, one per side. `extra.tag` holds one identifier; Spoolman's tag list holds all three.
-- **Tags linked elsewhere count.** A tag you link in Spoolman, or with another reader on the same Spoolman, is found by Bambuddy and SpoolBuddy too, and the other way round.
-- **Faster scans.** A SpoolBuddy scan asks Spoolman for the one tag instead of loading every spool.
+- **Катушка Bambu находится с любой стороны.** У неё есть UUID лотка и два RFID-чипа, по одному с каждой стороны. `extra.tag` хранит один идентификатор, а список меток Spoolman — все три.
+- **Учитываются метки, связанные в другом месте.** Метки, связанные в Spoolman или другим считывателем с тем же Spoolman, находят Bambuddy и SpoolBuddy, и наоборот.
+- **Более быстрое сканирование.** SpoolBuddy запрашивает в Spoolman одну метку вместо загрузки всех катушек.
 
-What Bambuddy does with them:
+Действия Bambuddy:
 
-| When | What happens |
+| Когда | Что происходит |
 |------|--------------|
-| SpoolBuddy scans a tag | The tray UUID is looked up first, then the chip UID. Each is first asked of Spoolman with one query, and `extra.tag` is searched as before only if that finds nothing. The spool that is found gets what the scan read added to its tags. |
-| The AMS reads a spool | Same as a scan: the spool collects its tray UUID and the UID of the chip facing the reader. Turning a spool around adds the other chip. |
-| You link a tag | The tag is added to the spool's tags; tags it already had stay. |
-| You unlink, or use **Clear RFID Tag** | The spool's tags are removed together with `extra.tag`. |
-| SpoolBuddy writes a tag | The written tag is linked to the spool and taken from any other spool that held it, since it was just rewritten for this one. |
+| SpoolBuddy сканирует метку | Сначала ищется UUID лотка, затем UID чипа. Каждый сначала запрашивается у Spoolman отдельным запросом, и только при отсутствии результата, как и прежде, ищется в `extra.tag`. Прочитанные данные добавляются в метки найденной катушки. |
+| AMS считывает катушку | Как при сканировании: к катушке добавляются UUID лотка и UID чипа, обращённого к считывателю. Переворачивание катушки добавляет второй чип. |
+| Вы связываете метку | Метка добавляется к катушке; существующие метки сохраняются. |
+| Вы удаляете связь или выбираете **Очистить RFID-метку** | Метки катушки удаляются вместе с `extra.tag`. |
+| SpoolBuddy записывает метку | Записанная метка связывается с катушкой и удаляется у другой катушки, которой она принадлежала, поскольку только что перезаписана для этой. |
 
-!!! note "Chip UIDs from the AMS"
-    The AMS reports a Bambu chip's 4-byte UID padded to 8 bytes: a chip any reader sees as `D3E68F32` arrives as `D3E68F3200000100`. Bambuddy stores the chip's own 4 bytes, so the tag matches what SpoolBuddy and other readers read. **Copy tags** does the same with a padded UID it finds in `extra.tag`.
+!!! note "UID чипов из AMS"
+    AMS дополняет 4-байтовый UID чипа Bambu до 8 байт: чип, который считыватель видит как `D3E68F32`, приходит как `D3E68F3200000100`. Bambuddy хранит собственные 4 байта чипа, чтобы метка совпадала с данными SpoolBuddy и других считывателей. **Копировать метки** аналогично обрабатывает дополненный UID из `extra.tag`.
 
-#### Copying your existing tags
+#### Копирование существующих меток {#copying-your-existing-tags}
 
-Spools linked before you upgraded Spoolman have their tag only in `extra.tag`. They are found as before, and each one moves over by itself the first time it is scanned or read by the AMS. To copy them all at once (archived spools are left out):
+У катушек, связанных до обновления Spoolman, метка находится только в `extra.tag`. Они находятся как раньше, а при первом сканировании или чтении AMS каждая переносится автоматически. Чтобы скопировать все сразу (архивные катушки исключаются):
 
-1. Go to **Settings** > **Filament**. With Spoolman connected and on 0.27 or later, the **Spoolman native tags** section appears.
-2. Click **Check tags**. This is a dry run and changes nothing:
+1. Откройте **Настройки** > **Филамент**. При подключённом Spoolman версии 0.27 или новее появляется раздел **Встроенные метки Spoolman**.
+2. Нажмите **Проверить метки**. Это предварительная проверка без изменений:
 
-    | Line | Meaning |
+    | Строка | Значение |
     |------|---------|
-    | **To copy** | Spools whose `extra.tag` is not a native tag yet |
-    | **Already in Spoolman** | Spools that already carry it |
-    | **AMS slot IDs** | Placeholders Bambuddy uses for a slot without RFID. They name a slot, not a spool, and stay in `extra.tag` only |
-    | **Conflicts** | The tag already belongs to another active spool, a filament or a location, listed by spool number |
+    | **Для копирования** | Катушки, чей `extra.tag` ещё не является встроенной меткой |
+    | **Уже в Spoolman** | Катушки, у которых метка уже есть |
+    | **ID слотов AMS** | Заглушки Bambuddy для слотов без RFID. Они обозначают слот, а не катушку, и остаются только в `extra.tag` |
+    | **Конфликты** | Метка уже принадлежит другой активной катушке, филаменту или месту хранения; указан номер катушки |
 
-3. Click **Copy tags** to copy what the check listed under **To copy**.
+3. Нажмите **Копировать метки**, чтобы скопировать записи из раздела **Для копирования**.
 
-![Native tags check](../assets/spoolman_native_tags_check.png){ .screenshot .centered }
+![Проверка встроенных меток](../assets/spoolman_native_tags_check.png){ .screenshot .centered }
 
-`extra.tag` is left as it is.
+`extra.tag` остаётся без изменений.
 
-#### When a tag belongs to another spool
+#### Если метка принадлежит другой катушке {#when-a-tag-belongs-to-another-spool}
 
-Spoolman lets a tag belong to one spool, filament or location only, and that includes archived spools.
+В Spoolman метка может принадлежать только одной катушке, филаменту или месту, включая архивные катушки.
 
-- **An archived spool** gives the tag up. It was archived because it is used up or was replaced, so the tag belongs to the active spool now. Bambuddy moves it there, and the log says `Native tag … moved from archived spool …`.
-- **Another active spool, a filament or a location** keeps it. Bambuddy does not move it by guessing (the one exception is a tag SpoolBuddy has just written, see above):
-    - linking such a tag answers with the spool that holds it, as linking an already used tag always did
-    - a scan or AMS read still finds the right spool, but does not add that tag, and logs `Native tag … belongs to …` once. The AMS sync tries again after 10 minutes, not on every AMS update; scanning the spool on a reader tries again at once
-    - **Check tags** lists it under **Conflicts**
+- **Архивная катушка** отдаёт метку: она архивирована из-за окончания или замены, поэтому теперь метка принадлежит активной катушке. Bambuddy переносит её и записывает `Native tag … moved from archived spool …` в журнал.
+- **Другая активная катушка, филамент или место** сохраняет метку. Bambuddy не переносит её наугад (единственное исключение — метка, только что записанная SpoolBuddy, см. выше):
+    - при связывании возвращается катушка, которой принадлежит метка, как и раньше при повторном связывании
+    - сканирование или чтение AMS находит правильную катушку, но не добавляет метку и один раз записывает `Native tag … belongs to …`. Синхронизация AMS повторяет попытку через 10 минут, а не при каждом обновлении; сканирование считывателем пробует сразу
+    - **Проверить метки** показывает её в разделе **Конфликты**
 
-To settle a conflict, remove the tag from the wrong spool in Spoolman. Scanning the spool adds it where it belongs right away; otherwise the AMS sync adds it within 10 minutes.
+Чтобы разрешить конфликт, удалите метку с неверной катушки в Spoolman. Сканирование сразу добавит её нужной катушке; иначе синхронизация AMS сделает это в течение 10 минут.
 
-For a Bambu spool, the tray UUID decides: both chips of a spool carry it, so a scan finds the spool by its UUID even if one of its chips was linked to another spool by mistake.
-
----
-
-## :material-plus-circle: Adding Spools
-
-### From AMS
-
-When unknown filament is detected:
-
-1. Click **Add to Spoolman**
-2. Enter spool details:
-   - Material type
-   - Color
-   - Vendor
-   - Initial weight
-   - Cost per kg
-3. Spool is created and linked
-
-### From Spoolman
-
-Add spools directly in Spoolman:
-
-1. Open Spoolman interface
-2. Add new spool
-3. Spool appears in Bambuddy when loaded
-
-### Profile defaults
-
-[Profile defaults](inventory.md#profile-defaults-for-new-spools) work the same in Spoolman mode: a spool added from Bambuddy, or by the AMS sync, starts with its product's presets and K profiles. The default's own preset goes into the spool's `bambu_slicer_filament` fields, except on a spool the AMS sync adds from a tag that names its preset, which keeps the tag's. The presets per model and the K profiles stay in Bambuddy, as they do for any Spoolman spool.
-
-A spool added in Spoolman's own interface never passes through Bambuddy, so it gets no default when it is created. **Settings → Filament → Profile defaults → Apply to existing spools** fills it in afterwards.
+Для катушки Bambu решающим является UUID лотка: оба чипа содержат его, поэтому сканирование находит катушку по UUID, даже если один чип ошибочно связан с другой катушкой.
 
 ---
 
-## :material-database: Inventory View
+## :material-plus-circle: Добавление катушек {#adding-spools}
 
-View your complete inventory:
+### Из AMS {#from-ams}
 
-### In Bambuddy
+Когда обнаружен неизвестный филамент:
 
-- AMS slots with linked spools
-- Quick view of what's loaded
-- Remaining quantities
-- Per-print usage history of each spool, shown in its spool dialog and used by the stock forecast
+1. Нажмите **Добавить в Spoolman**
+2. Введите сведения о катушке:
+   - Тип материала
+   - Цвет
+   - Производитель
+   - Начальный вес
+   - Стоимость за кг
+3. Катушка создаётся и связывается
 
-### In Spoolman
+### Из Spoolman {#from-spoolman}
 
-- Full spool database
-- Usage history
-- Cost tracking
-- Vendor management
+Добавьте катушки непосредственно в Spoolman:
 
----
+1. Откройте интерфейс Spoolman
+2. Добавьте новую катушку
+3. При загрузке катушка появится в Bambuddy
 
-## :material-chart-line: Usage Statistics
+### Профили по умолчанию {#profile-defaults}
 
-Track filament consumption:
+[Профили по умолчанию](inventory.md#profile-defaults-for-new-spools) работают в режиме Spoolman так же: катушка, добавленная из Bambuddy или при синхронизации AMS, получает пресеты продукта и K-профили. Собственный пресет значения по умолчанию записывается в поля `bambu_slicer_filament`, кроме катушки, добавленной синхронизацией AMS по метке, в которой указан пресет: она сохраняет пресет из метки. Пресеты по моделям и K-профили остаются в Bambuddy, как и для любой катушки Spoolman.
 
-### Per-Print Usage
-
-Each archived print records per-filament data:
-
-- Each spool used (tracked individually for multi-material prints)
-- Grams consumed per spool (from G-code extrusion analysis)
-- Material type and slot mapping
-
-### Spoolman Integration
-
-Usage syncs to Spoolman:
-
-- Spool quantities update
-- History recorded
-- Low stock alerts
+Катушка, добавленная в интерфейсе самого Spoolman, не проходит через Bambuddy и при создании не получает профиль по умолчанию. Позже его можно заполнить через **Настройки → Филамент → Профили по умолчанию → Применить к существующим катушкам**.
 
 ---
 
-## :material-robot: Automatic Features
+## :material-database: Просмотр запасов {#inventory-view}
 
-### Auto-Sync on Print Complete
+Просмотрите весь учёт:
 
-After each print:
+### В Bambuddy {#in-bambuddy}
 
-1. Calculate per-filament usage from G-code layer data
-2. Report each spool's consumption individually to Spoolman
-3. Spoolman updates spool quantities, and Bambuddy records the print in the spool's usage history (Spoolman itself keeps only the totals)
-4. For multi-material prints, each filament is tracked separately
+- Слоты AMS со связанными катушками
+- Быстрый просмотр загруженного филамента
+- Остатки
+- История расхода каждой катушки по печатям в её диалоговом окне; используется также для прогноза запасов
 
-!!! warning "Spoolman must be reachable when a print ends"
-    A print's usage is sent to Spoolman once, when the print finishes. If Spoolman cannot be reached at that moment (restarting, offline, network down), that print's usage is not sent later: the Bambuddy log records it as "Not reachable for usage reporting", and the spool's weight has to be corrected in Spoolman by hand. Keep Spoolman running while prints are in progress.
+### В Spoolman {#in-spoolman}
 
-### Auto-Detect on AMS Change
-
-When AMS filament changes:
-
-1. Detect new configuration
-2. Match with Spoolman
-3. Update slot mappings
-
-### Auto-Clear Location on Removal
-
-When spools are removed from AMS:
-
-1. Bambuddy detects the empty slot
-2. Finds spools with matching location (e.g., "Workshop X1C - AMS A Slot 1")
-3. Clears the location field in Spoolman
-4. Spool is now available for other printers
-
-!!! info "Location Format"
-    Spoolman locations use the format: `Printer Name - AMS X Slot Y`
+- Полная база катушек
+- История расхода
+- Учёт стоимости
+- Управление производителями
 
 ---
 
-## :material-alert: Low Stock Alerts
+## :material-chart-line: Статистика расхода {#usage-statistics}
 
-Get notified when spools run low:
+Отслеживайте расход филамента:
 
-Bambuddy sends the alert; Spoolman supplies the remaining weight.
+### Расход по печатям {#per-print-usage}
 
-1. Assign your Spoolman spools to AMS slots in Bambuddy.
-2. Set the low-stock threshold on the **Inventory** page (default 20 %).
-3. Enable the **Low Filament** event on a notification provider.
+Каждая архивная печать содержит данные по каждому филаменту:
 
-When an assigned spool drops below the threshold you get one notification, such as "X2D: Slot A1 at 15%". It can fire again once the spool goes back above the threshold, for example when you load a fresh one.
+- Каждую использованную катушку (при печати несколькими материалами учёт ведётся отдельно)
+- Расход в граммах для каждой катушки (по анализу экструзии G-code)
+- Тип материала и назначение слотов
+
+### Интеграция со Spoolman {#spoolman-integration_1}
+
+Расход синхронизируется со Spoolman:
+
+- Остатки катушек обновляются
+- История записывается
+- Доступны уведомления о низком запасе
+
+---
+
+## :material-robot: Автоматические функции {#automatic-features}
+
+### Автоматическая синхронизация после печати {#auto-sync-on-print-complete}
+
+После каждой печати:
+
+1. Рассчитывается расход каждого филамента по данным слоёв G-code
+2. Расход каждой катушки отдельно отправляется в Spoolman
+3. Spoolman обновляет остатки, а Bambuddy записывает печать в историю расхода катушки (сам Spoolman хранит только суммарные значения)
+4. При печати несколькими материалами каждый филамент учитывается отдельно
+
+!!! warning "Spoolman должен быть доступен в момент завершения печати"
+    Расход печати отправляется в Spoolman один раз, при её завершении. Если в этот момент Spoolman недоступен (перезапускается, отключён или сеть не работает), расход позднее не отправляется: в журнале Bambuddy появляется "Not reachable for usage reporting", а вес катушки нужно исправить в Spoolman вручную. Оставляйте Spoolman работающим во время печати.
+
+### Автоматическое обнаружение изменений AMS {#auto-detect-on-ams-change}
+
+При смене филамента AMS:
+
+1. Обнаруживается новая конфигурация
+2. Выполняется сопоставление со Spoolman
+3. Обновляются назначения слотов
+
+### Автоматическая очистка расположения при извлечении {#auto-clear-location-on-removal}
+
+При извлечении катушки из AMS:
+
+1. Bambuddy обнаруживает пустой слот
+2. Находит катушки с соответствующим расположением (например, "Workshop X1C - AMS A Slot 1")
+3. Очищает поле расположения в Spoolman
+4. Катушка становится доступной для других принтеров
+
+!!! info "Формат расположения"
+    Расположение в Spoolman имеет формат: `Printer Name - AMS X Slot Y`
+
+---
+
+## :material-alert: Уведомления о низком запасе {#low-stock-alerts}
+
+Получайте уведомления, когда филамент заканчивается:
+
+Bambuddy отправляет уведомление, а Spoolman предоставляет оставшийся вес.
+
+1. Назначьте катушки Spoolman слотам AMS в Bambuddy.
+2. Установите порог низкого запаса на странице **Филамент** (по умолчанию 20 %).
+3. Включите событие **Мало филамента** у поставщика уведомлений.
+
+Когда остаток назначенной катушки опустится ниже порога, вы получите одно уведомление, например "X2D: Slot A1 at 15%". Оно может появиться снова после того, как остаток поднимется выше порога, например при установке новой катушки.
 
 !!! note
-    In Spoolman mode only the global threshold applies. The per-spool override is a field of Bambuddy's own inventory and has no counterpart in Spoolman.
+    В режиме Spoolman применяется только общий порог. Индивидуальное значение катушки относится к собственному учёту Bambuddy и не имеет аналога в Spoolman.
 
-[:material-arrow-right: Notification setup](notifications.md)
-
----
-
-## :material-cog: Advanced Configuration
-
-### Multiple Printers
-
-Each printer's AMS syncs independently:
-
-- Different spools per printer
-- Separate usage tracking
-- Unified inventory in Spoolman
-
-### Bambu Lab Filaments
-
-Bambu Lab filaments include RFID data:
-
-- Material type auto-detected
-- Color recognized
-- Can match or create in Spoolman
+[:material-arrow-right: Настройка уведомлений](notifications.md)
 
 ---
 
-## :material-help-circle: Troubleshooting
+## :material-cog: Дополнительная настройка {#advanced-configuration}
 
-### Connection Failed
+### Несколько принтеров {#multiple-printers}
 
-1. Verify Spoolman URL is correct
-2. Check network connectivity
-3. Ensure Spoolman is running
-4. Check firewall rules
+AMS каждого принтера синхронизируется независимо:
 
-### Sync Not Working
+- Отдельные катушки для каждого принтера
+- Раздельный учёт расхода
+- Общий учёт в Spoolman
 
-1. Verify connection is configured
-2. Check Spoolman logs
-3. Restart Bambuddy if needed
-4. Manually trigger sync
+### Филамент Bambu Lab {#bambu-lab-filaments}
 
-### Wrong Spool Linked
+Филаменты Bambu Lab содержат данные RFID:
 
-1. Unlink the incorrect spool
-2. Manually link correct spool
-3. Check RFID data matches
-
-### A Tag Is Not Added to a Spool
-
-On Spoolman 0.27 or later, the log says `Native tag … belongs to …` when a tag is already linked to another active spool, a filament or a location. Remove it from that spool in Spoolman; see [When a tag belongs to another spool](#when-a-tag-belongs-to-another-spool).
+- Тип материала определяется автоматически
+- Цвет распознаётся
+- Катушку можно сопоставить или создать в Spoolman
 
 ---
 
-## :material-currency-usd: Print cost
+## :material-help-circle: Устранение неполадок {#troubleshooting}
 
-When a print finishes, each filament slot is charged to the spool that fed it
-and priced from that spool, then the per-slot costs are added up. A
-multi-material print is billed at each slot's own rate rather than at one rate
-for the whole job.
+### Ошибка подключения {#connection-failed}
 
-The price comes from Spoolman, in this order:
+1. Убедитесь, что URL Spoolman указан верно
+2. Проверьте сетевое соединение
+3. Убедитесь, что Spoolman работает
+4. Проверьте правила межсетевого экрана
 
-1. **The spool's own `Price`**, if set. Use this when a particular purchase cost
-   something other than the catalogue figure.
-2. **The filament's `Price`**, otherwise.
+### Синхронизация не работает {#sync-not-working}
 
-The rate per gram is that price divided by the net filament weight it was paid
-for, not including the spool core. The spool's own price is divided by the
-spool's **`Initial Weight`** (or the filament's **`Weight`** if the spool has
-none), so a 250 g spool is priced as a 250 g spool. The filament's price is
-divided by the filament's **`Weight`**.
+1. Проверьте настройку подключения
+2. Проверьте журналы Spoolman
+3. При необходимости перезапустите Bambuddy
+4. Запустите синхронизацию вручную
 
-!!! note "While the print is running"
-    When a print starts, Bambuddy already prices it the same way from the
-    sliced file's per-slot estimate and the spools in the mapped trays. The
-    archive card shows that figure with a `~` until the print finishes and the
-    cost of what was actually used replaces it. A print whose slots can't be
-    matched to trays at the start (no mapping from the slicer or the queue, and
-    no colour match) keeps the default-rate figure until then.
+### Связана неверная катушка {#wrong-spool-linked}
 
-!!! note "When a price is missing"
-    Grams that no spool could price are charged at **Settings → Default
-    Filament Cost**, which is a per-kilogram rate. That covers a spool with no
-    price entered, a tray with no linked spool, and any filament the sliced file
-    did not attribute to a slot. If nothing in the print could be priced from
-    Spoolman at all, the cost recorded when the print was archived is left
-    as it is.
+1. Удалите неверную связь
+2. Свяжите правильную катушку вручную
+3. Проверьте соответствие данных RFID
 
-!!! note "Reprints"
-    The archive keeps the cost of one full print: the **first** run's, if it
-    completed, else the estimate it carried when that run started. A short failed run, first
-    or later, does not overwrite it. Per-run costs, partial ones included, are
-    recorded separately in the print log.
+### Метка не добавляется к катушке {#a-tag-is-not-added-to-a-spool}
 
-    **Recalculate Costs** (in the Statistics dashboard header) prices each
-    recorded Spoolman charge at the spool's current price in Spoolman, and the
-    archive and its print in the Print Log follow. A charge to a spool gone
-    from Spoolman keeps its figure, and a print whose spools have no price
-    keeps its cost. A print from before
-    Spoolman charges were recorded has none to rebuild its cost from: the
-    spool-to-slot resolution only exists while the print is being completed,
-    so its cost is not overwritten.
+В Spoolman 0.27 и новее запись `Native tag … belongs to …` означает, что метка уже связана с другой активной катушкой, филаментом или местом хранения. Удалите её у этого объекта в Spoolman; см. [Если метка принадлежит другой катушке](#when-a-tag-belongs-to-another-spool).
 
-## :material-lightbulb: Tips
+---
 
-!!! tip "Initial Setup"
-    Add your existing spools to Spoolman first, then configure Bambuddy integration.
+## :material-currency-usd: Стоимость печати {#print-cost}
 
-!!! tip "Consistent Naming"
-    Use consistent naming in Spoolman for easier matching.
+По завершении печати расход каждого слота филамента списывается с подававшей его катушки и оценивается по её цене, после чего стоимость слотов суммируется. При печати несколькими материалами для каждого слота используется собственная цена, а не одна цена для всего задания.
 
-!!! tip "Track Everything"
-    Add all filaments to Spoolman, even partials, for accurate inventory.
+Цена берётся из Spoolman в следующем порядке:
 
-!!! tip "Regular Check"
-    Periodically verify AMS mappings match physical reality.
+1. Собственная **`Price` катушки**, если задана. Используйте её, если конкретная покупка стоила иначе, чем указано в каталоге.
+2. Иначе — **`Price` филамента**.
 
-!!! tip "Cost Tracking"
-    Enter costs in Spoolman for complete print cost calculations. See
-    [Print cost](#print-cost) for how a price is chosen.
+Цена за грамм равна этой цене, делённой на оплаченный вес филамента нетто без сердечника катушки. Собственная цена катушки делится на её **`Initial Weight`** (или **`Weight`** филамента, если значение катушки не задано), поэтому катушка на 250 г оценивается как 250 г. Цена филамента делится на его **`Weight`**.
+
+!!! note "Во время печати"
+    При запуске Bambuddy уже рассчитывает стоимость таким же способом по оценке каждого слота из нарезанного файла и катушкам в сопоставленных лотках. До завершения карточка архива показывает эту сумму со знаком `~`, после чего её заменяет стоимость фактически израсходованного материала. Если при запуске слоты невозможно сопоставить с лотками (нет сопоставления из слайсера или очереди и не найдено совпадение цветов), до завершения сохраняется сумма по ставке по умолчанию.
+
+!!! note "Если цена не указана"
+    Граммы, для которых ни одна катушка не предоставила цену, оцениваются по **Настройки → Стоимость филамента по умолчанию** за килограмм. Это относится к катушкам без цены, лоткам без связанной катушки и филаменту нарезанного файла, не отнесённому к слоту. Если ни одну часть печати вообще не удалось оценить по Spoolman, стоимость, записанная при архивации, остаётся без изменений.
+
+!!! note "Повторные печати"
+    Архив хранит стоимость одной полной печати: первого запуска, если он завершился, иначе оценку на момент его запуска. Короткий неудачный запуск, первый или последующий, не перезаписывает её. Стоимость каждого запуска, включая частичный, записывается отдельно в журнале печати.
+
+    **Пересчитать стоимость** (в заголовке панели статистики) оценивает каждое записанное списание Spoolman по текущей цене катушки в Spoolman; стоимость в архиве и журнале печати соответственно обновляется. Списание с удалённой из Spoolman катушки сохраняет прежнюю сумму, а печать без цены катушек — прежнюю стоимость. У печатей до введения записи списаний Spoolman нет данных для пересчёта: сопоставление катушек и слотов существует только при завершении печати, поэтому их стоимость не перезаписывается.
+
+## :material-lightbulb: Советы {#tips}
+
+!!! tip "Начальная настройка"
+    Сначала добавьте существующие катушки в Spoolman, затем настройте интеграцию Bambuddy.
+
+!!! tip "Единые названия"
+    Используйте последовательные названия в Spoolman для удобства сопоставления.
+
+!!! tip "Учитывайте всё"
+    Добавьте в Spoolman все филаменты, в том числе частично использованные, для точного учёта.
+
+!!! tip "Регулярная проверка"
+    Периодически проверяйте, что назначения AMS соответствуют установленным катушкам.
+
+!!! tip "Учёт стоимости"
+    Введите стоимость в Spoolman для полного расчёта стоимости печати. Как выбирается цена, см. в разделе [Стоимость печати](#print-cost).
