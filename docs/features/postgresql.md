@@ -1,42 +1,40 @@
 ---
-title: PostgreSQL Support
-description: Optional external PostgreSQL database for larger setups
+title: Поддержка PostgreSQL
+description: Необязательная внешняя база данных PostgreSQL для крупных установок
 ---
 
-# PostgreSQL Support
+# Поддержка PostgreSQL {#postgresql-support}
 
-Bambuddy supports an optional external PostgreSQL database as an alternative to the built-in SQLite. SQLite remains the default and requires zero configuration.
-
----
-
-## :material-help-circle: When to Use PostgreSQL
-
-SQLite works great for most users. Consider PostgreSQL if you:
-
-- Run a **large print farm** (10+ printers) with high write concurrency
-- Want a **dedicated database server** shared across services
-- Need **point-in-time recovery** or streaming replication
-- Already have PostgreSQL infrastructure (e.g., for other services)
-
-!!! tip "SQLite is Fine for Most Users"
-    SQLite with WAL mode handles concurrent reads + single writer well. Bambuddy tunes busy_timeout and synchronous mode automatically. If you're not hitting performance issues, there's no reason to switch.
-
-!!! info "Part of a bigger picture"
-    On a large farm the database is the *second* thing to fix — camera streaming
-    usually dominates by an order of magnitude. See
-    [Running a Large Farm](../reference/farm-sizing.md).
+Bambuddy поддерживает внешнюю базу PostgreSQL как альтернативу встроенной SQLite. По умолчанию используется SQLite, не требующая настройки.
 
 ---
 
-## :rocket: Setup
+## :material-help-circle: Когда использовать PostgreSQL {#when-to-use-postgresql}
 
-### 1. Install PostgreSQL
+SQLite отлично подходит большинству пользователей. Рассмотрите PostgreSQL, если вы:
 
-Skip this step if you already have a PostgreSQL server running. It must be **PostgreSQL 13 or newer**; Bambuddy does not start on 12 or older.
+- Управляете **большой фермой печати** (от 10 принтеров) с большим числом одновременных записей
+- Хотите использовать **выделенный сервер базы данных** для нескольких служб
+- Нуждаетесь в **восстановлении на определённый момент времени** или потоковой репликации
+- Уже используете инфраструктуру PostgreSQL, например для других служб
 
-=== ":material-docker: Docker (Recommended)"
+!!! tip "SQLite подходит большинству пользователей"
+    SQLite в режиме WAL хорошо справляется с одновременным чтением и одной записью. Bambuddy автоматически настраивает busy_timeout и режим synchronous. Если проблем с производительностью нет, переходить необязательно.
 
-    Create a `docker-compose.yml` for PostgreSQL (or add to an existing one):
+!!! info "Часть общей картины"
+    На большой ферме база данных — *второе*, что стоит оптимизировать: трансляция с камер обычно потребляет на порядок больше ресурсов. См. [Работа с большой фермой](../reference/farm-sizing.md).
+
+---
+
+## :rocket: Установка {#setup}
+
+### 1. Установите PostgreSQL {#1-install-postgresql}
+
+Пропустите этот шаг, если сервер PostgreSQL уже работает. Необходима версия **PostgreSQL 13 или новее**; с версией 12 и старше Bambuddy не запускается.
+
+=== ":material-docker: Docker (рекомендуется)"
+
+    Создайте `docker-compose.yml` для PostgreSQL или добавьте настройки в существующий файл:
 
     ```yaml
     services:
@@ -57,13 +55,13 @@ Skip this step if you already have a PostgreSQL server running. It must be **Pos
       pgdata:
     ```
 
-    Start it:
+    Запустите его:
 
     ```bash
     docker compose up -d
     ```
 
-    That's it — the database and user are created automatically from the environment variables.
+    Готово: база данных и пользователь создаются автоматически из переменных окружения.
 
 === ":material-ubuntu: Debian / Ubuntu"
 
@@ -76,26 +74,26 @@ Skip this step if you already have a PostgreSQL server running. It must be **Pos
     sudo -u postgres psql -c "CREATE DATABASE bambuddy OWNER bambuddy;"
     ```
 
-    PostgreSQL starts automatically after installation. Verify it's running:
+    После установки PostgreSQL запускается автоматически. Проверьте его состояние:
 
     ```bash
     sudo systemctl status postgresql
     ```
 
-    !!! note "Remote Access"
-        By default, PostgreSQL only accepts local connections. To allow connections from another host (e.g., Bambuddy on a different machine), edit `/etc/postgresql/*/main/pg_hba.conf` and add:
+    !!! note "Удалённый доступ"
+        По умолчанию PostgreSQL принимает только локальные подключения. Чтобы разрешить подключение с другого хоста (например, Bambuddy на другом компьютере), откройте `/etc/postgresql/*/main/pg_hba.conf` и добавьте:
 
         ```
         host    bambuddy    bambuddy    192.168.0.0/16    scram-sha-256
         ```
 
-        And in `/etc/postgresql/*/main/postgresql.conf`, set:
+        В `/etc/postgresql/*/main/postgresql.conf` задайте:
 
         ```
         listen_addresses = '*'
         ```
 
-        Then restart: `sudo systemctl restart postgresql`
+        Затем перезапустите: `sudo systemctl restart postgresql`
 
 === ":material-fedora: Fedora / RHEL"
 
@@ -110,16 +108,16 @@ Skip this step if you already have a PostgreSQL server running. It must be **Pos
     sudo -u postgres psql -c "CREATE DATABASE bambuddy OWNER bambuddy;"
     ```
 
-=== ":material-server: Existing Server"
+=== ":material-server: Существующий сервер"
 
-    If you already have a PostgreSQL server, create the user and database:
+    Если сервер PostgreSQL уже есть, создайте пользователя и базу данных:
 
     ```bash
     psql -U postgres -c "CREATE USER bambuddy WITH PASSWORD 'your-secure-password';"
     psql -U postgres -c "CREATE DATABASE bambuddy OWNER bambuddy;"
     ```
 
-    Or from inside a Docker container:
+    Или выполните из контейнера Docker:
 
     ```bash
     docker exec -it your-postgres-container psql -U postgres -d postgres \
@@ -128,9 +126,9 @@ Skip this step if you already have a PostgreSQL server running. It must be **Pos
       -c "CREATE DATABASE bambuddy OWNER bambuddy;"
     ```
 
-### 2. Configure Bambuddy
+### 2. Настройте Bambuddy {#2-configure-bambuddy}
 
-Set the `DATABASE_URL` environment variable:
+Установите переменную окружения `DATABASE_URL`:
 
 ```
 DATABASE_URL=postgresql+asyncpg://bambuddy:your-secure-password@db-host:5432/bambuddy
@@ -138,7 +136,7 @@ DATABASE_URL=postgresql+asyncpg://bambuddy:your-secure-password@db-host:5432/bam
 
 === ":material-docker: Docker"
 
-    Add to `docker-compose.override.yml` (create if it doesn't exist):
+    Добавьте в `docker-compose.override.yml` (создайте файл, если его нет):
 
     ```yaml
     services:
@@ -147,7 +145,7 @@ DATABASE_URL=postgresql+asyncpg://bambuddy:your-secure-password@db-host:5432/bam
           - DATABASE_URL=postgresql+asyncpg://bambuddy:your-password@db-host:5432/bambuddy
     ```
 
-    Then restart:
+    Затем перезапустите:
 
     ```bash
     docker compose up -d
@@ -155,120 +153,106 @@ DATABASE_URL=postgresql+asyncpg://bambuddy:your-secure-password@db-host:5432/bam
 
 === ":material-linux: Systemd"
 
-    Add to your `.env` file:
+    Добавьте в файл `.env`:
 
     ```bash
     DATABASE_URL=postgresql+asyncpg://bambuddy:your-password@db-host:5432/bambuddy
     ```
 
-    Then restart:
+    Затем перезапустите:
 
     ```bash
     sudo systemctl restart bambuddy
     ```
 
-### 3. Start Bambuddy
+### 3. Запустите Bambuddy {#3-start-bambuddy}
 
-Bambuddy automatically creates all tables on first startup. No manual schema setup needed.
-
----
-
-## :material-backup-restore: Migrating from SQLite
-
-To migrate your existing data from SQLite to PostgreSQL:
-
-1. **Create a backup** from your current SQLite install (Settings > Backup & Restore > Create Backup)
-2. **Configure** the `DATABASE_URL` as described above
-3. **Restart** Bambuddy (it creates empty tables on the new database)
-4. **Restore** the backup ZIP through Settings > Backup & Restore > Restore Backup
-
-Bambuddy automatically handles the cross-database import:
-
-- Converts SQLite integer booleans (0/1) to PostgreSQL native booleans
-- Parses SQLite datetime strings into proper datetime objects
-- Fills default values for columns added after the backup was created
-- Handles foreign key constraints and duplicate detection
-- Resets PostgreSQL sequences to match imported data
+При первом запуске Bambuddy автоматически создаёт все таблицы. Настраивать схему вручную не нужно.
 
 ---
 
-## :material-swap-horizontal: Portable Backups
+## :material-backup-restore: Переход с SQLite {#migrating-from-sqlite}
 
-Backups are always in portable SQLite format, regardless of which database backend you use. This means:
+Чтобы перенести данные из SQLite в PostgreSQL:
 
-- A backup from a **PostgreSQL** install can be restored on a **SQLite** install
-- A backup from a **SQLite** install can be restored on a **PostgreSQL** install
-- Backups work across different Bambuddy versions (forward-compatible)
+1. **Создайте резервную копию** текущей установки SQLite (Настройки > Резервное копирование и восстановление > Создать резервную копию)
+2. **Настройте** `DATABASE_URL`, как описано выше
+3. **Перезапустите** Bambuddy (он создаст пустые таблицы в новой базе)
+4. **Восстановите** ZIP-копию через Настройки > Резервное копирование и восстановление > Восстановить резервную копию
+
+Bambuddy автоматически выполняет импорт между базами данных:
+
+- Преобразует целочисленные логические значения SQLite (0/1) в логический тип PostgreSQL
+- Преобразует строки даты и времени SQLite в соответствующие объекты
+- Заполняет значениями по умолчанию столбцы, добавленные после создания копии
+- Обрабатывает ограничения внешних ключей и обнаруживает дубликаты
+- Сбрасывает последовательности PostgreSQL в соответствии с импортированными данными
 
 ---
 
-## :material-database-check: Health Diagnostics
+## :material-swap-horizontal: Переносимые резервные копии {#portable-backups}
 
-The support bundle (Settings > System > Support Bundle) automatically detects the database backend and reports:
+Резервные копии всегда создаются в переносимом формате SQLite независимо от используемой базы данных. Это означает:
 
-| Metric | SQLite | PostgreSQL |
+- Копию установки с **PostgreSQL** можно восстановить в установке с **SQLite**
+- Копию установки с **SQLite** можно восстановить в установке с **PostgreSQL**
+- Копии работают между разными версиями Bambuddy (совместимы с более новыми версиями)
+
+---
+
+## :material-database-check: Диагностика состояния {#health-diagnostics}
+
+Пакет поддержки (Настройки > Система > Пакет поддержки) автоматически определяет тип базы данных и сообщает:
+
+| Показатель | SQLite | PostgreSQL |
 |--------|--------|------------|
-| Backend type | `sqlite` | `postgresql` |
-| Version | Journal mode | PostgreSQL version |
-| Database size | File size + WAL size | `pg_database_size()` |
-| Integrity check | `PRAGMA quick_check` | Connection test |
+| Тип базы данных | `sqlite` | `postgresql` |
+| Версия | Режим журнала | Версия PostgreSQL |
+| Размер базы | Размер файла + размер WAL | `pg_database_size()` |
+| Проверка целостности | `PRAGMA quick_check` | Проверка подключения |
 
 ---
 
-## :material-text-search: Full-Text Search
+## :material-text-search: Полнотекстовый поиск {#full-text-search}
 
-Archive search works on both backends with the best available engine:
+Поиск по архиву работает с обеими базами, используя наиболее подходящий механизм:
 
-| Backend | Technology | Features |
+| База данных | Технология | Возможности |
 |---------|-----------|----------|
-| SQLite | FTS5 virtual table | Prefix matching, ranking by relevance |
-| PostgreSQL | tsvector + GIN index | Prefix matching, language-aware stemming |
+| SQLite | FTS5 virtual table | Поиск по префиксу, ранжирование по релевантности |
+| PostgreSQL | tsvector + GIN index | Поиск по префиксу, выделение основы слова с учётом языка |
 
-The search experience is identical from the user's perspective.
+С точки зрения пользователя поиск работает одинаково.
 
 ---
 
-## :material-cog: Connection Settings
+## :material-cog: Настройки подключения {#connection-settings}
 
-| Setting | SQLite | PostgreSQL |
+| Настройка | SQLite | PostgreSQL |
 |---------|--------|------------|
-| Pool size | 20 connections | 20 connections |
-| Max overflow | 200 | 80 |
-| Pre-ping / recycle | N/A | Enabled / 1800s |
-| WAL mode | Enabled | N/A |
-| Busy timeout | 15 seconds | N/A (uses pool) |
+| Размер пула | 20 соединений | 20 соединений |
+| Максимальное превышение пула | 200 | 80 |
+| Предварительная проверка / обновление | Не применяется | Включено / 1800 с |
+| Режим WAL | Включён | Не применяется |
+| Тайм-аут ожидания | 15 секунд | Не применяется (используется пул) |
 
-The defaults suit most installs — no configuration needed. `pool_size + max_overflow`
-is the ceiling on concurrent database connections (per app worker process).
+Значения по умолчанию подходят большинству установок и не требуют настройки. `pool_size + max_overflow` — верхний предел одновременных соединений с базой для каждого рабочего процесса приложения.
 
-### Tuning for large printer farms
+### Настройка для больших ферм принтеров {#tuning-for-large-printer-farms}
 
-On large farms (many dozens of printers), the default 80-connection ceiling can be
-raised. Each of these is optional and overrides the default when set:
+Для больших ферм (много десятков принтеров) предел в 80 соединений можно увеличить. Все параметры ниже необязательны и при задании заменяют значения по умолчанию:
 
-| Variable | Default (PostgreSQL) | Purpose |
+| Переменная | По умолчанию (PostgreSQL) | Назначение |
 |----------|----------------------|---------|
-| `DB_POOL_SIZE` | `20` | Base connections kept open |
-| `DB_MAX_OVERFLOW` | `60` (`80` before 1.2.5.7) | Extra connections opened on demand |
-| `DB_POOL_TIMEOUT` | `30` | Seconds a request waits for a free connection before erroring |
-| `DB_POOL_RECYCLE` | `1800` | Seconds before a pooled connection is recycled |
-| `DB_POOL_USE_LIFO` | `true` | Reuse the most-recently-returned connection so a bursty farm keeps a small hot set busy and lets excess overflow connections age out via `DB_POOL_RECYCLE` instead of churning the whole pool. Set `false` for strict round-robin (FIFO) |
-| `DB_POOL_PRE_PING` | `true` | Check each connection with a cheap ping before handing it out, so connections dropped by the server or a proxy are replaced instead of failing the request. Set `false` to skip it, for a database on the same host or LAN only (see the note below) |
+| `DB_POOL_SIZE` | `20` | Базовое количество постоянно открытых соединений |
+| `DB_MAX_OVERFLOW` | `60` (`80` до версии 1.2.5.7) | Дополнительные соединения, открываемые по запросу |
+| `DB_POOL_TIMEOUT` | `30` | Время ожидания свободного соединения в секундах до выдачи ошибки |
+| `DB_POOL_RECYCLE` | `1800` | Время в секундах до обновления соединения в пуле |
+| `DB_POOL_USE_LIFO` | `true` | Повторно использовать последнее возвращённое соединение, чтобы при скачках нагрузки работал небольшой набор соединений, а лишние постепенно закрывались через `DB_POOL_RECYCLE`, вместо постоянной смены всего пула. Для строгой очереди FIFO задайте `false` |
+| `DB_POOL_PRE_PING` | `true` | Проверять соединение простым запросом перед выдачей: соединения, закрытые сервером или прокси, заменяются без ошибки запроса. Установите `false`, чтобы пропустить проверку, только для базы на том же хосте или в локальной сети (см. примечание ниже) |
 
-!!! note "Rollback ratio on PostgreSQL monitoring"
-    Bambuddy ends most of its database sessions with a `ROLLBACK` instead of a `COMMIT`:
-    read-only sessions are closed without committing, and with `DB_POOL_PRE_PING` on every
-    pooled session is also preceded by an empty `BEGIN; ROLLBACK;` from the connection
-    ping. `pg_stat_database` therefore shows a high `xact_rollback` share (about 80 % on a
-    small install), and monitoring that alerts on the rollback ratio (for example Netdata's
-    `postgres_db_transactions_rollback_ratio`, which warns above 2 %) stays raised. No
-    statement has failed. `DB_POOL_PRE_PING=false` roughly halves the count; the rest is
-    normal read-only session cleanup, so raise or scope the alert threshold for the
-    Bambuddy database. **The trade-off:** with the check off, a connection the server
-    dropped (PostgreSQL restart, firewall or NAT idle timeout) is no longer replaced quietly;
-    it fails the first request that picks it up. `DB_POOL_RECYCLE` only limits how old a
-    connection gets. Turn it off only for a database on the same host or LAN, and keep it on
-    behind a firewall, NAT or PgBouncer.
+!!! note "Доля откатов в мониторинге PostgreSQL"
+    Bambuddy завершает большинство сеансов базы через `ROLLBACK`, а не `COMMIT`: сеансы только для чтения закрываются без фиксации, а при включённом `DB_POOL_PRE_PING` каждому сеансу пула также предшествует пустая последовательность `BEGIN; ROLLBACK;` для проверки соединения. Поэтому `pg_stat_database` показывает высокую долю `xact_rollback` (около 80 % в небольшой установке), а мониторинг доли откатов (например, `postgres_db_transactions_rollback_ratio` в Netdata, предупреждающий при значении выше 2 %) постоянно выдаёт предупреждение. Ни один запрос при этом не завершился ошибкой. `DB_POOL_PRE_PING=false` примерно вдвое уменьшает количество откатов; остальные — обычное закрытие сеансов чтения, поэтому увеличьте порог предупреждения или измените его область для базы Bambuddy. **Компромисс:** без проверки соединение, разорванное сервером (при перезапуске PostgreSQL, тайм-ауте межсетевого экрана или NAT), больше не заменяется незаметно: первый использующий его запрос завершится ошибкой. `DB_POOL_RECYCLE` лишь ограничивает возраст соединения. Отключайте проверку только для базы на том же хосте или в локальной сети; за межсетевым экраном, NAT или PgBouncer оставляйте её включённой.
 
 ```bash
 # Example for a ~100-printer farm
@@ -276,60 +260,46 @@ DB_POOL_SIZE=20
 DB_MAX_OVERFLOW=180   # 200-connection ceiling
 ```
 
-!!! warning "Size PostgreSQL `max_connections` to match"
-    PostgreSQL must allow at least `DB_POOL_SIZE + DB_MAX_OVERFLOW` connections
-    **per app worker process**, plus headroom for admin/backup tools. Raise
-    `max_connections` in `postgresql.conf` accordingly (and note each connection
-    costs memory server-side).
+!!! warning "Согласуйте `max_connections` PostgreSQL с размером пула"
+    PostgreSQL должен допускать не менее `DB_POOL_SIZE + DB_MAX_OVERFLOW` соединений **на каждый рабочий процесс приложения**, а также иметь запас для средств администрирования и резервного копирования. Соответственно увеличьте `max_connections` в `postgresql.conf` (каждое соединение потребляет память сервера).
 
-    The default ceiling is `20 + 60 = 80`, which fits a stock PostgreSQL:
-    it ships `max_connections = 100` and reserves 3 of those for superusers,
-    leaving 97. Up to 1.2.5.6 the default was `20 + 80 = 100`, already over
-    that budget; on those versions set `DB_MAX_OVERFLOW=60`. When you raise the
-    pool, raise the server with it:
+    Предел по умолчанию `20 + 60 = 80` укладывается в стандартную конфигурацию PostgreSQL: `max_connections = 100`, из которых 3 зарезервированы для суперпользователей, оставляя 97. До версии 1.2.5.6 значение по умолчанию составляло `20 + 80 = 100` и превышало этот предел; в этих версиях установите `DB_MAX_OVERFLOW=60`. При увеличении пула увеличьте и лимит сервера:
 
     ```conf
     # postgresql.conf
     max_connections = 200
     ```
 
-    Bambuddy checks this at startup and logs a warning naming both numbers when
-    the pool could ask for more than the server allows.
+    При запуске Bambuddy проверяет это и записывает предупреждение с обоими значениями, если пул может запросить больше соединений, чем разрешает сервер.
 
-!!! info "Which error means what"
-    The two failure modes look similar and have opposite fixes:
+!!! info "Значение ошибок"
+    Эти две ошибки похожи, но требуют противоположных действий:
 
-    | Error | Meaning | Fix |
+    | Ошибка | Значение | Решение |
     |-------|---------|-----|
-    | `asyncpg ... TooManyConnectionsError` | The pool's ceiling is **above** what the server allows, so it never queues — it asks the server, which refuses | Lower `DB_MAX_OVERFLOW` or raise `max_connections` |
-    | `QueuePool limit ... connection timed out` | The pool itself is the bottleneck: too much concurrency, or connections held too long | Raise `DB_POOL_SIZE` / `DB_MAX_OVERFLOW`, or investigate what is holding connections |
+    | `asyncpg ... TooManyConnectionsError` | Предел пула **превышает** лимит сервера: вместо ожидания пул обращается к серверу и получает отказ | Уменьшите `DB_MAX_OVERFLOW` или увеличьте `max_connections` |
+    | `QueuePool limit ... connection timed out` | Узкое место — сам пул: слишком много одновременных запросов или соединения удерживаются слишком долго | Увеличьте `DB_POOL_SIZE` / `DB_MAX_OVERFLOW` или выясните, что удерживает соединения |
 
-    `TooManyConnectionsError` surfaces at whatever needed a connection next,
-    which can be far from the real cause — a queue dispatch, a notification, a
-    web request. `GET /api/v1/system/db-pool` reports both sides under
-    `server_limits`, and so does the support bundle.
+    `TooManyConnectionsError` возникает при следующем запросе соединения, который может быть далёк от истинной причины: при отправке из очереди, уведомлении или веб-запросе. `GET /api/v1/system/db-pool` сообщает оба значения в `server_limits`; они также входят в пакет поддержки.
 
-!!! tip "Watch the live pool"
-    `GET /api/v1/system/db-pool` reports the resolved configuration plus live
-    `checked_out` / `checked_in` / `overflow` gauges (requires the `system:read`
-    permission). If `checked_out` sits pinned at the ceiling, connections are
-    being held across slow work — raising the pool only buys time.
+!!! tip "Следите за состоянием пула"
+    `GET /api/v1/system/db-pool` возвращает действующую конфигурацию и текущие значения `checked_out` / `checked_in` / `overflow` (требуется разрешение `system:read`). Если `checked_out` постоянно достигает предела, соединения удерживаются во время медленных операций: увеличение пула лишь временно поможет.
 
 ---
 
-## :material-frequently-asked-questions: FAQ
+## :material-frequently-asked-questions: FAQ {#faq}
 
-**Can I switch back to SQLite?**
-:   Yes. Remove the `DATABASE_URL` environment variable and restart. Bambuddy falls back to the built-in SQLite database. Your PostgreSQL data remains untouched — create a backup first if you want to keep it.
+**Можно ли вернуться к SQLite?**
+:   Да. Удалите переменную окружения `DATABASE_URL` и перезапустите Bambuddy — он вернётся к встроенной SQLite. Данные PostgreSQL останутся нетронутыми; сначала создайте резервную копию, если хотите их сохранить.
 
-**Do I need `pg_dump` installed on the Bambuddy host?**
-:   No. Bambuddy's backup system exports data using pure Python (SQLAlchemy + sqlite3), so no external PostgreSQL tools are required on the Bambuddy server.
+**Нужно ли устанавливать `pg_dump` на хост Bambuddy?**
+:   Нет. Система резервного копирования Bambuddy экспортирует данные средствами Python (SQLAlchemy + sqlite3), поэтому внешние инструменты PostgreSQL на сервере Bambuddy не нужны.
 
-**What PostgreSQL version is supported?**
-:   PostgreSQL **13 or newer** is required; 14 or newer is recommended, and 16 is what the examples here and the Bambuddy Appliance use. Bambuddy is tested on 13 to 16. **PostgreSQL 12 and older are not supported:** Bambuddy does not start on them, because some of its startup migrations use column types those versions reject. PostgreSQL 12 itself has been out of support since November 2024. The `asyncpg` driver would connect to older servers, but that does not make them usable.
+**Какая версия PostgreSQL поддерживается?**
+:   Требуется PostgreSQL **13 или новее**; рекомендуется 14 или новее, а в примерах и Bambuddy Appliance используется версия 16. Bambuddy тестируется с версиями 13–16. **PostgreSQL 12 и старше не поддерживаются:** Bambuddy не запускается, поскольку некоторые миграции при запуске используют типы столбцов, не поддерживаемые этими версиями. Поддержка самой PostgreSQL 12 завершилась в ноябре 2024 года. Драйвер `asyncpg` может подключиться к старым серверам, но это не делает их пригодными для работы.
 
-**Can I share a PostgreSQL server with other applications?**
-:   Yes. Create a separate database and user for Bambuddy. It won't interfere with other databases on the same server.
+**Можно ли использовать сервер PostgreSQL совместно с другими приложениями?**
+:   Да. Создайте отдельную базу данных и пользователя для Bambuddy. Это не повлияет на другие базы на том же сервере.
 
-**What happens if the PostgreSQL server goes down?**
-:   Bambuddy will show connection errors until the server is back. No data is lost — PostgreSQL is ACID-compliant. Bambuddy automatically reconnects when the server recovers.
+**Что произойдёт при отключении сервера PostgreSQL?**
+:   Bambuddy будет показывать ошибки подключения до восстановления сервера. Данные не теряются: PostgreSQL соответствует ACID. После восстановления сервера Bambuddy подключится автоматически.
