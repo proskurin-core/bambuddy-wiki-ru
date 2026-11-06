@@ -1,5 +1,5 @@
 ---
-title: Let me Bambuddy that for you
+title: Позвольте Bambuddy найти это за вас
 hide:
   - navigation
   - toc
@@ -228,11 +228,11 @@ search:
   if (!rawQuery) {
     root.innerHTML = [
       '<div class="lmbtfy-stage lmbtfy-empty">',
-      '  <h2>Let me Bambuddy that for you</h2>',
-      '  <p>Generate a polite-but-pointed link that walks someone through searching the wiki.</p>',
+      '  <h2>Позвольте Bambuddy найти это за вас</h2>',
+      '  <p>Создайте вежливую ссылку с намёком, которая покажет, как искать в Wiki.</p>',
       '  <div class="lmbtfy-share-input">',
-      '    <input id="lmbtfy-build-query" type="text" placeholder="what they should have searched for">',
-      '    <button id="lmbtfy-build-button" type="button">Build link</button>',
+      '    <input id="lmbtfy-build-query" type="text" placeholder="что следовало найти">',
+      '    <button id="lmbtfy-build-button" type="button">Создать ссылку</button>',
       '  </div>',
       '  <p id="lmbtfy-build-output" style="margin-top:1rem; word-break:break-all;"></p>',
       '</div>'
@@ -258,7 +258,7 @@ search:
 
   root.innerHTML = [
     '<div class="lmbtfy-stage" id="lmbtfy-stage">',
-    '  <div class="lmbtfy-instructions" id="lmbtfy-instructions">Step 1: open the wiki search.</div>',
+    '  <div class="lmbtfy-instructions" id="lmbtfy-instructions">Шаг 1: откройте поиск по Wiki.</div>',
     '  <div class="lmbtfy-searchbar" id="lmbtfy-searchbar">',
     '    <svg class="lmbtfy-searchicon" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>',
     '    <span class="lmbtfy-query" id="lmbtfy-query"></span><span class="lmbtfy-caret" id="lmbtfy-caret"></span>',
@@ -269,15 +269,15 @@ search:
     '  </svg>',
     '  <span class="lmbtfy-ripple" id="lmbtfy-ripple"></span>',
     '  <div class="lmbtfy-finale" id="lmbtfy-finale">',
-    '    <p>Was that so hard?</p>',
-    '    <a href="' + searchUrl + '" class="lmbtfy-button" id="lmbtfy-go">Take me to the search results &rarr;</a>',
+    '    <p>Разве это было так сложно?</p>',
+    '    <a href="' + searchUrl + '" class="lmbtfy-button" id="lmbtfy-go">Перейти к результатам поиска &rarr;</a>',
     '  </div>',
     '</div>',
     '<div class="lmbtfy-share">',
-    '  Next time, share this with them so they can learn:',
+    '  В следующий раз поделитесь этой ссылкой, чтобы показать, как искать:',
     '  <div class="lmbtfy-share-input">',
     '    <input id="lmbtfy-share-url" type="text" readonly>',
-    '    <button id="lmbtfy-share-copy" type="button">Copy</button>',
+    '    <button id="lmbtfy-share-copy" type="button">Копировать</button>',
     '  </div>',
     '</div>'
   ].join('\n');
@@ -298,8 +298,8 @@ search:
     shareInput.select();
     try {
       navigator.clipboard.writeText(shareInput.value);
-      shareCopy.textContent = 'Copied!';
-      setTimeout(function () { shareCopy.textContent = 'Copy'; }, 1500);
+      shareCopy.textContent = 'Скопировано!';
+      setTimeout(function () { shareCopy.textContent = 'Копировать'; }, 1500);
     } catch (e) {
       document.execCommand('copy');
     }
@@ -347,13 +347,13 @@ search:
     clickPulse();
     searchbar.classList.add('is-focused');
     await wait(420);
-    instructions.innerHTML = 'Step 2: type <strong>' + displayQuery.replace(/[&<>"']/g, function (c) {
+    instructions.innerHTML = 'Шаг 2: введите <strong>' + displayQuery.replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     }) + '</strong>.';
     await wait(350);
     await typeQuery(displayQuery);
     await wait(550);
-    instructions.innerHTML = 'Step 3: hit <strong>Enter</strong>.';
+    instructions.innerHTML = 'Шаг 3: нажмите <strong>Enter</strong>.';
     await wait(800);
     finale.classList.add('is-visible');
     await wait(2500);
