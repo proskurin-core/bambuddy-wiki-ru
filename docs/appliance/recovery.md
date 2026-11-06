@@ -1,108 +1,108 @@
 ---
-title: Recovery
-description: Factory reset, lockouts, and what to try when the Bambuddy Appliance won't come up
+title: Восстановление
+description: Сброс к заводским настройкам, потеря доступа и восстановление работы Bambuddy Appliance
 ---
 
-# Recovery
+# Восстановление {#recovery}
 
 ---
 
-## Factory reset
+## Сброс к заводским настройкам {#factory-reset}
 
-Two ways in, both ending in the same wipe.
+Есть два способа сброса; оба удаляют одни и те же данные.
 
-=== ":material-view-dashboard: Admin panel"
+=== ":material-view-dashboard: Панель администратора"
 
-    **Dashboard &rsaquo; Factory reset**, on the panel at `:8001`. The normal path. It asks twice, because there is no undo.
+    На панели по адресу `:8001` откройте **Dashboard &rsaquo; Factory reset**. Это обычный способ. Подтверждение запрашивается дважды, поскольку отменить сброс нельзя.
 
-    Download a backup first, from the card right above it: **Dashboard &rsaquo; [Bambuddy Backup](admin-panel.md#bambuddy-backup)**. The reset erases the backups saved on the appliance too.
+    Сначала скачайте резервную копию с расположенной выше карточки **Dashboard &rsaquo; [Bambuddy Backup](admin-panel.md#bambuddy-backup)**. Сброс удалит и резервные копии, сохранённые на устройстве.
 
-=== ":material-console: Over SSH"
+=== ":material-console: Через SSH"
 
     ```bash
     sudo bambuddy-appliance factory-reset
     ```
 
-    Prompts for a typed `YES` unless you pass `--yes`. This is the path when the panel itself is unreachable.
+    Команда попросит ввести `YES`, если не указан параметр `--yes`. Используйте этот способ, когда панель недоступна.
 
-The appliance stops Bambuddy, wipes its user data, forgets the first-boot marker, and reboots into a fresh setup wizard &mdash; exactly as a newly flashed card would.
+Устройство остановит Bambuddy, удалит пользовательские данные, очистит отметку первого запуска и перезагрузится в мастер первоначальной настройки, как после записи нового образа на карту.
 
-| Erased | Kept |
+| Удаляется | Сохраняется |
 |---|---|
-| Bambuddy's database &mdash; printers, queue, history, user accounts | The operating system and Bambuddy itself |
-| All uploads, archives, and timelapses | Partner branding |
-| Session and encryption secrets | The registration identity and the licence key |
-| Saved WiFi credentials | |
-| Hostname, timezone, locale | |
-| **The appliance password** | |
-| SSH host keys (regenerated on next boot) | |
+| База данных Bambuddy: принтеры, очередь, история, учётные записи | Операционная система и сам Bambuddy |
+| Все загруженные файлы, архивы и таймлапсы | Фирменное оформление партнёра |
+| Секреты сеансов и шифрования | Идентификатор регистрации и лицензионный ключ |
+| Сохранённые данные Wi-Fi | |
+| Имя хоста, часовой пояс, язык и регион | |
+| **Пароль устройства** | |
+| Ключи хоста SSH (создаются заново при следующей загрузке) | |
 
-!!! success "It resets the appliance password too"
-    A factory reset recovers a forgotten **Bambuddy** account, because those live in the database it erases &mdash; and it now also recovers a forgotten **appliance** password, the one covering the admin panel, the console, and SSH.
+!!! success "Пароль устройства также сбрасывается"
+    Сброс позволяет восстановить доступ к забытой учётной записи **Bambuddy**, поскольку она хранится в удаляемой базе данных. Он также сбрасывает забытый пароль **устройства**, защищающий панель администратора, консоль и SSH.
 
-    This changed. The password used to survive a reset, because clearing it would have left the panel failing closed on `:8001` with no way back in while the wizard's password step was skippable. That step is mandatory now, so the wizard the reset reboots into is guaranteed to set a new one.
+    Раньше пароль сохранялся: его удаление блокировало бы доступ к панели на `:8001`, поскольку шаг установки пароля в мастере можно было пропустить. Теперь этот шаг обязателен, поэтому после сброса мастер установит новый пароль.
 
-    Between the reboot and the end of setup the panel answers `503`. That is the wizard's window, and finishing the wizard is what reopens it. The new appliance password is written to `bambuddy-password.txt` on the boot partition, as on a freshly flashed card.
+    Между перезагрузкой и завершением настройки панель отвечает кодом `503`. Она снова станет доступной после завершения мастера. Новый пароль устройства записывается в `bambuddy-password.txt` на загрузочном разделе, как и на свежеустановленной карте.
 
-!!! danger "There is no undo, and no confirmation prompt beyond the two asks"
-    Your print history is gone. Take a [backup](updates.md#backups) while things are working, not when they aren't.
+!!! danger "Сброс нельзя отменить; дополнительных подтверждений после двух запросов нет"
+    История печати будет удалена. Создавайте [резервные копии](updates.md#backups), пока всё работает.
 
-!!! info "There is no reset button, and no reset page in Bambuddy"
-    Earlier appliances documented a recessed GPIO button on the case. It was never part of a shipped unit and the handler has been removed &mdash; the two paths above are the only ones. There is also no factory-reset URL anywhere inside Bambuddy itself; the reset belongs to the appliance panel on `:8001`, not to Bambuddy on `:8000`.
+!!! info "Кнопки сброса и страницы сброса внутри Bambuddy нет"
+    Ранее в документации устройств упоминалась утопленная кнопка GPIO на корпусе. Она не входила в поставку, а её обработчик удалён. Доступны только два описанных выше способа. В самом Bambuddy также нет URL для сброса: сброс выполняется в панели устройства на `:8001`, а не в Bambuddy на `:8000`.
 
 ---
 
-## Lockouts
+## Потеря доступа {#lockouts}
 
-=== "Forgot the appliance password"
+=== "Забыт пароль устройства"
 
-    If you can still get in over SSH, change it in place and keep your data:
+    Если доступ по SSH сохранился, измените пароль без потери данных:
 
     ```bash
     sudo bambuddy-appliance set-admin-password
     ```
 
-    If SSH is unreachable too, a **factory reset** clears it and the wizard asks for a new one &mdash; at the cost of your Bambuddy data. Restore a [backup](updates.md#backups) afterwards.
+    Если SSH тоже недоступен, **сброс к заводским настройкам** удалит пароль, а мастер предложит задать новый. При этом данные Bambuddy будут удалены. После этого восстановите [резервную копию](updates.md#backups).
 
-    If the card has never finished its setup wizard, the password it generated for itself is in `bambuddy-password.txt` on the boot partition. Power the appliance down, put the card in any computer, and read it.
+    Если мастер первоначальной настройки на карте ещё не был завершён, автоматически созданный пароль находится в `bambuddy-password.txt` на загрузочном разделе. Выключите устройство, вставьте карту в компьютер и прочитайте файл.
 
-=== "Admin panel says the password isn't set"
+=== "Панель сообщает, что пароль не установлен"
 
-    The panel fails closed when `/etc/bambuddy/admin-auth` is missing. That is the expected state between a factory reset and the end of the setup wizard &mdash; finish the wizard on `:8000` and the panel comes back.
+    Если `/etc/bambuddy/admin-auth` отсутствует, панель блокирует доступ. Это ожидаемое состояние между сбросом и завершением мастера настройки: завершите мастер на `:8000`, и панель снова заработает.
 
-    Outside that window, set one directly:
+    В других случаях задайте пароль напрямую:
 
     ```bash
     sudo bambuddy-appliance set-admin-password
     ```
 
-=== "Forgot the Bambuddy password"
+=== "Забыт пароль Bambuddy"
 
-    That's Bambuddy's own account, not the appliance's. See [Authentication](../features/authentication.md).
+    Это пароль учётной записи самого Bambuddy, а не устройства. См. [Аутентификация](../features/authentication.md).
 
 ---
 
-## When it won't come up
+## Если устройство не запускается {#when-it-wont-come-up}
 
-| Symptom | Try |
+| Признак | Что попробовать |
 |---|---|
-| `bambuddy.local` doesn't resolve | Find the IP in your router's client list and use `http://<ip>:8000` |
-| Wizard won't advance past Welcome | It's waiting for the clock. Give it a minute with a working uplink. |
-| Setup WiFi network never appears | Wait two minutes for first boot. If ethernet is plugged in, the appliance uses it and never raises the access point. |
-| Bambuddy is down, panel still works | **Diagnostics** &rarr; Bambuddy log. Then `sudo bambuddy-appliance restart`. |
-| Panel is down too | SSH in and check `systemctl status bambuddy-admin` |
-| Everything is unreachable | SSH in and `sudo bambuddy-appliance factory-reset`, or re-flash the card |
-| Random slowdowns, printer disconnects | **Dashboard** &rarr; check the *since boot* undervoltage and throttling flags. A weak USB-C supply will set them. |
+| `bambuddy.local` не определяется | Найдите IP-адрес в списке клиентов маршрутизатора и используйте `http://<ip>:8000` |
+| Мастер не переходит со страницы приветствия | Он ожидает установки времени. Подождите минуту при работающем подключении к сети. |
+| Сеть Wi-Fi для настройки не появляется | Подождите две минуты после первого запуска. При подключённом Ethernet устройство использует его и не создаёт точку доступа. |
+| Bambuddy не работает, но панель доступна | Откройте **Diagnostics** &rarr; журнал Bambuddy. Затем выполните `sudo bambuddy-appliance restart`. |
+| Панель тоже недоступна | Подключитесь по SSH и проверьте `systemctl status bambuddy-admin` |
+| Ничего не доступно | Подключитесь по SSH и выполните `sudo bambuddy-appliance factory-reset` либо запишите образ на карту заново |
+| Случайные замедления, отключения принтеров | На **Dashboard** проверьте признаки пониженного напряжения и ограничения частоты с момента загрузки. Их может вызывать слабый блок питания USB-C. |
 
 ---
 
-## Reporting a problem
+## Сообщение о проблеме {#reporting-a-problem}
 
-Two support bundles exist, and a good bug report usually wants both:
+Существуют два пакета поддержки; для хорошего отчёта об ошибке обычно нужны оба:
 
-- The **appliance** bundle, from the panel's **Diagnostics** tab. Host-side: service logs, container state, network configuration.
-- **Bambuddy's** own bundle, from the **System** page inside Bambuddy. Application-side.
+- Пакет **устройства** со вкладки **Diagnostics** панели: журналы служб, состояние контейнеров и конфигурация сети на стороне хоста.
+- Пакет самого **Bambuddy** со страницы **Система** внутри приложения: данные на стороне приложения.
 
-Both strip credentials before they're written, so they're safe to attach to a public issue.
+Из обоих пакетов перед записью удаляются учётные данные, поэтому их можно прикреплять к публичному обращению.
 
-File it at [github.com/maziggy/bambuddy/issues](https://github.com/maziggy/bambuddy/issues). Say which appliance image version you're on &mdash; the Dashboard shows it.
+Создайте обращение на [github.com/maziggy/bambuddy/issues](https://github.com/maziggy/bambuddy/issues). Укажите версию образа устройства: она отображается на Dashboard.

@@ -1,173 +1,173 @@
-# :material-tools: SpoolBuddy Assembly Guide
+# :material-tools: Руководство по сборке SpoolBuddy {#spoolbuddy-assembly-guide}
 
-This guide walks you through assembling the SpoolBuddy from 3D-printed parts and electronics. Follow the steps in order — each section builds on the previous one.
+Это руководство поможет собрать SpoolBuddy из напечатанных на 3D-принтере деталей и электронных компонентов. Выполняйте шаги по порядку: каждый раздел опирается на предыдущий.
 
 <div class="grid" markdown>
-![SpoolBuddy assembly — front angle](../assets/spoolbuddy-assembly-1.png)
-![SpoolBuddy assembly — three-quarter view](../assets/spoolbuddy-assembly-2.png)
-![SpoolBuddy assembly — side profile](../assets/spoolbuddy-assembly-3.png)
+![Сборка SpoolBuddy — вид спереди под углом](../assets/spoolbuddy-assembly-1.png)
+![Сборка SpoolBuddy — вид в три четверти](../assets/spoolbuddy-assembly-2.png)
+![Сборка SpoolBuddy — вид сбоку](../assets/spoolbuddy-assembly-3.png)
 </div>
 
 ---
 
-## :material-play-circle: Assembly Video
+## :material-play-circle: Видео сборки {#assembly-video}
 
-Prefer to watch instead of read? The full assembly walkthrough is available on YouTube:
+Предпочитаете смотреть, а не читать? Полное видео сборки доступно на YouTube:
 
 <div class="video-wrapper">
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/ZoVvW2rr7SI" title="SpoolBuddy assembly video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/ZoVvW2rr7SI" title="Видео сборки SpoolBuddy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>
 
-[:material-youtube: Watch on YouTube](https://www.youtube.com/watch?v=ZoVvW2rr7SI)
+[:material-youtube: Смотреть на YouTube](https://www.youtube.com/watch?v=ZoVvW2rr7SI)
 
 ---
 
-## :material-printer-3d: Download Printed Parts
+## :material-printer-3d: Скачать детали для печати {#download-printed-parts}
 
-All parts are designed for SpoolBuddy and printed in PLA or PETG. Download the full project as a single **`.3mf`** file (recommended — all parts pre-arranged for slicing) or grab individual **`.stl`** files if you only need specific pieces. The editable **`.f3d`** Fusion 360 source is also available if you want to tweak the design.
+Все детали разработаны для SpoolBuddy и печатаются из PLA или PETG. Скачайте весь проект одним файлом **`.3mf`** (рекомендуется: все детали уже расположены для нарезки) или отдельные файлы **`.stl`**, если нужны только определённые детали. Также доступен редактируемый исходный файл Fusion 360 в формате **`.f3d`** для изменения конструкции.
 
-**[:material-download: SpoolBuddy.3mf — full project (all parts)](../assets/3d-models/SpoolBuddy.3mf)**
+**[:material-download: SpoolBuddy.3mf — полный проект (все детали)](../assets/3d-models/SpoolBuddy.3mf)**
 
-**[:material-download: SpoolBuddy_V2.1.f3d — Fusion 360 source](../assets/3d-models/SpoolBuddy_V2.1.f3d)**
+**[:material-download: SpoolBuddy_V2.1.f3d — исходный файл Fusion 360](../assets/3d-models/SpoolBuddy_V2.1.f3d)**
 
-| Part | File | Description |
+| Деталь | Файл | Описание |
 |------|------|-------------|
-| Case — Part 1 (Electronics) | [:material-download: case_part_1_electronics.stl](../assets/3d-models/case_part_1_electronics.stl) | Electronics base — holds scale module, display rail guides |
-| Case — Part 2 (Scale) | [:material-download: case_part_2_scale.stl](../assets/3d-models/case_part_2_scale.stl) | Scale housing — load cell channel, joins to Part 1 via dovetails |
-| Case Cover | [:material-download: case_cover.stl](../assets/3d-models/case_cover.stl) | Lid for the scale housing (Case Part 2) |
-| Case Back Cover | [:material-download: case_backcover.stl](../assets/3d-models/case_backcover.stl) | Back cover for the main enclosure |
-| Display Holder | [:material-download: display_holder.stl](../assets/3d-models/display_holder.stl) | Back bracket for the display, screws to case |
-| Display Cover | [:material-download: display_cover.stl](../assets/3d-models/display_cover.stl) | Front bezel frame, clips over the display |
-| NFC Reader Cover | [:material-download: nfc_reader_cover.stl](../assets/3d-models/nfc_reader_cover.stl) | Cover for the PN5180 module on the spool plate underside |
-| Spool Holder - 10mm Version | [:material-download: spool_holder.stl](../assets/3d-models/spool_holder.stl) | Spool plate — mounts on load cell (10mm), holds filament spool |
-| Spool Holder - 15mm Version | [:material-download: spool_holder_-_15mm.stl](../assets/3d-models/spool_holder_-_15mm.stl) | Spool plate — mounts on load cell (15mm), holds filament spool |
-| Spool Stopper | [:material-download: spool_stopper.stl](../assets/3d-models/spool_stopper.stl) | Curved arc, clips into spool plate rim |
+| Корпус — часть 1 (электроника) | [:material-download: case_part_1_electronics.stl](../assets/3d-models/case_part_1_electronics.stl) | Основание электроники: крепление модуля весов и направляющие дисплея |
+| Корпус — часть 2 (весы) | [:material-download: case_part_2_scale.stl](../assets/3d-models/case_part_2_scale.stl) | Корпус весов: канал весового датчика и соединение с частью 1 типа «ласточкин хвост» |
+| Крышка корпуса | [:material-download: case_cover.stl](../assets/3d-models/case_cover.stl) | Крышка корпуса весов (часть 2) |
+| Задняя крышка корпуса | [:material-download: case_backcover.stl](../assets/3d-models/case_backcover.stl) | Задняя крышка основного корпуса |
+| Держатель дисплея | [:material-download: display_holder.stl](../assets/3d-models/display_holder.stl) | Задний кронштейн дисплея, прикручивается к корпусу |
+| Накладка дисплея | [:material-download: display_cover.stl](../assets/3d-models/display_cover.stl) | Передняя рамка на защёлках |
+| Крышка NFC-считывателя | [:material-download: nfc_reader_cover.stl](../assets/3d-models/nfc_reader_cover.stl) | Крышка модуля PN5180 снизу платформы катушки |
+| Держатель катушки — версия 10 мм | [:material-download: spool_holder.stl](../assets/3d-models/spool_holder.stl) | Платформа катушки: крепится к весовому датчику (10 мм) и удерживает катушку филамента |
+| Держатель катушки — версия 15 мм | [:material-download: spool_holder_-_15mm.stl](../assets/3d-models/spool_holder_-_15mm.stl) | Платформа катушки: крепится к весовому датчику (15 мм) и удерживает катушку филамента |
+| Ограничитель катушки | [:material-download: spool_stopper.stl](../assets/3d-models/spool_stopper.stl) | Изогнутая дуга, защёлкивается на краю платформы |
 
 ---
 
-## :material-package-variant: Parts Inventory
+## :material-package-variant: Список деталей {#parts-inventory}
 
-Before starting, confirm you have all printed parts:
+Перед началом убедитесь, что у вас есть все напечатанные детали:
 
-| Part | Qty | Notes |
+| Деталь | Кол-во | Примечания |
 |------|-----|-------|
-| Case Part 1 — Electronics | 1 | Holds scale module, has display rail guides |
-| Case Part 2 — Scale | 1 | Load cell channel, dovetail joins to Part 1 |
-| Case Cover | 1 | Snaps onto Case Part 2 (scale housing) |
-| Case Back Cover | 1 | Closes the back of the case, shared screws with display holder |
-| Display Holder | 1 | Bracket screwed into display standoffs, slides into case rails |
-| Display Front Cover Frame | 1 | Beveled bezel frame, clips over the front of the display |
-| Spool Plate | 1 | Multiple hole positions for adjusting distance from display |
-| Spool Stopper | 1 | Curved arc, clips into spool plate cutout |
-| NFC Module Cover | 1 | Clips onto spool plate underside |
+| Часть корпуса 1 — электроника | 1 | Удерживает модуль весов, имеет направляющие дисплея |
+| Часть корпуса 2 — весы | 1 | Канал весового датчика, соединение с частью 1 типа «ласточкин хвост» |
+| Крышка корпуса | 1 | Защёлкивается на части корпуса 2 (корпус весов) |
+| Задняя крышка корпуса | 1 | Закрывает заднюю часть корпуса, крепится общими винтами с держателем дисплея |
+| Держатель дисплея | 1 | Кронштейн крепится к стойкам дисплея и вставляется в направляющие корпуса |
+| Передняя рамка дисплея | 1 | Рамка со скошенными краями, защёлкивается спереди дисплея |
+| Платформа катушки | 1 | Несколько положений отверстий для регулировки расстояния до дисплея |
+| Ограничитель катушки | 1 | Изогнутая дуга, защёлкивается в вырезе платформы |
+| Крышка NFC-модуля | 1 | Защёлкивается снизу платформы |
 
 ---
 
-## :material-screw-flat-top: Hardware Required
+## :material-screw-flat-top: Необходимый крепёж {#hardware-required}
 
-| Screw | Qty | Used for |
+| Винт | Кол-во | Назначение |
 |-------|-----|----------|
-| M4 × 25 mm hex socket | 4 | Load cell → Case Part 2 (2), Spool plate → load cell (2) |
-| M3 × 5 mm self-tapping | 2 | Display assembly → case rail lock |
+| M4 × 25 мм с внутренним шестигранником | 4 | Весовой датчик → часть корпуса 2 (2), платформа катушки → весовой датчик (2) |
+| M3 × 5 мм самонарезающий | 2 | Фиксация дисплея в направляющих корпуса |
 
 ---
 
-## :material-printer-3d: Before You Print — NFC Module Cover
+## :material-printer-3d: Перед печатью крышки NFC-модуля {#before-you-print-nfc-module-cover}
 
-!!! warning "Do this before printing the NFC Module Cover"
-    The NFC Module Cover has a circular wire exit hole on the right side. If your NFC wiring requires a larger or differently shaped cutout, **use a negative body/part in your slicer** to enlarge it before printing. It is much easier to do this now than to modify a finished print.
-
----
-
-## Step 1 — Join Case Part 1 and Case Part 2
-
-1. Align the **two dovetail joints** on Case Part 1 (Electronics Base) and Case Part 2 (Scale Housing)
-2. Slide the two parts together until they are fully seated
-3. No screws are required — the dovetails hold the parts together firmly
-4. If you want extra rigidity, a small amount of superglue can be applied to the joint, but this is usually not necessary
+!!! warning "Сделайте это перед печатью крышки NFC-модуля"
+    Справа на крышке NFC-модуля расположено круглое отверстие для проводов. Если для вашей проводки нужен более крупный вырез или вырез другой формы, **используйте в слайсере отрицательное тело или деталь**, чтобы увеличить отверстие до печати. Это намного проще, чем изменять готовую деталь.
 
 ---
 
-## Step 2 — Install the Scale Module (NAU7802)
+## Шаг 1 — соедините части корпуса 1 и 2 {#step-1-join-case-part-1-and-case-part-2}
 
-1. Place the NAU7802 PCB onto the **4 standoffs** inside Case Part 1
-2. Press down until the board seats on all four standoffs
-3. Route the NAU7802 cables through the **oval cable routing hole** in the case wall
-
----
-
-## Step 3 — Mount the Load Cell
-
-1. Lower the load cell beam into the **channel** in Case Part 2 from above
-2. Secure it with **2x M4 × 25 mm hex socket screws** through the top holes
-3. Route the load cell wires through the **oval cutout** on the side wall of Case Part 2
+1. Совместите **два соединения типа «ласточкин хвост»** на части 1 (основание электроники) и части 2 (корпус весов)
+2. Сдвиньте детали вместе до полной посадки
+3. Винты не нужны: соединения прочно удерживают детали
+4. Для дополнительной жёсткости можно нанести на соединение немного суперклея, но обычно это не требуется
 
 ---
 
-## Step 4 — Fit the Case Cover
+## Шаг 2 — установите модуль весов (NAU7802) {#step-2-install-the-scale-module-nau7802}
 
-1. Align the Case Cover over Case Part 2 with the open gap facing the front (towards the load cell beam)
-2. Press down until the **two rear clips** snap in and hold the lid in place
-3. The front gap is intentional — it allows the load cell beam to pass through freely
-
----
-
-## Step 5 — Display Sub-Assembly
-
-!!! note "LAFVIN display standoffs"
-    The LAFVIN 7" HDMI Touch display comes with standoffs in the box. Use these to mount the Raspberry Pi — no separate standoffs are needed.
-
-1. Mount the Raspberry Pi onto the back of the display using the included standoffs
-2. Connect the HDMI and USB cables between the Pi and the display
-3. Attach the **Display Holder** to the back of the display — press it onto the display standoffs
-4. Press the **Display Front Cover Frame** onto the front of the display until the retention clip engages
+1. Поместите плату NAU7802 на **четыре стойки** внутри части корпуса 1
+2. Нажмите на плату, чтобы она села на все четыре стойки
+3. Проложите кабели NAU7802 через **овальное отверстие для проводов** в стенке корпуса
 
 ---
 
-## Step 6 — Install Display Assembly into Case
+## Шаг 3 — закрепите весовой датчик {#step-3-mount-the-load-cell}
 
-1. Tilt the display assembly at an angle and align it with the **two sliding rail guides** on Case Part 1
-2. Slide the assembly along the rails until it is fully seated
-
----
-
-## Step 7 — Install Case Back Cover
-
-1. Place the **Case Back Cover** against the back of the case, aligning it over the display holder
-2. Fasten the **2x M3 × 5 mm self-tapping screws** into the Case Part 1 holes to lock the display assembly in place
+1. Опустите балку весового датчика сверху в **канал** в части корпуса 2
+2. Закрепите её через верхние отверстия **двумя винтами M4 × 25 мм с внутренним шестигранником**
+3. Проложите провода весового датчика через **овальный вырез** в боковой стенке части корпуса 2
 
 ---
 
-## Step 8 — Spool Plate Sub-Assembly
+## Шаг 4 — установите крышку корпуса {#step-4-fit-the-case-cover}
 
-1. Mount the **PN5180 NFC module** into the bracket on the underside of the spool plate
-2. Route the NFC cables through the wire cutout in the NFC Module Cover
-3. Clip the **NFC Module Cover** onto the underside bracket — it secures with side clips, no screws needed
-
----
-
-## Step 9 — Mount the Spool Plate
-
-1. Choose a **screw hole position** on the spool plate based on how far you want it from the display
-2. Lower the spool plate onto the load cell, aligning the chosen hole with the load cell mounting point
-3. Secure with **2x M4 × 25 mm hex socket screws** from the top
+1. Совместите крышку с частью корпуса 2 так, чтобы открытый зазор был направлен вперёд, к балке весового датчика
+2. Нажмите до фиксации **двух задних защёлок**
+3. Передний зазор предусмотрен конструкцией: через него должна свободно проходить балка весового датчика
 
 ---
 
-## Step 10 — Attach the Spool Stopper
+## Шаг 5 — соберите дисплей {#step-5-display-sub-assembly}
 
-1. Align the curved spool stopper arc with the **cutout on the spool plate rim**
-2. Press/clip it into place — no screws needed
+!!! note "Стойки дисплея LAFVIN"
+    В комплект 7-дюймового сенсорного HDMI-дисплея LAFVIN входят стойки. Используйте их для крепления Raspberry Pi; отдельные стойки не нужны.
+
+1. Закрепите Raspberry Pi на задней стороне дисплея с помощью комплектных стоек
+2. Подключите кабели HDMI и USB между Pi и дисплеем
+3. Установите **держатель дисплея** сзади, прижав его к стойкам дисплея
+4. Прижмите **переднюю рамку дисплея** к его передней стороне до срабатывания защёлки
 
 ---
 
-## :material-check-circle: Assembly Complete
+## Шаг 6 — установите дисплей в корпус {#step-6-install-display-assembly-into-case}
 
-Your SpoolBuddy is now fully assembled. Before powering on:
+1. Наклоните собранный дисплей и совместите его с **двумя направляющими** части корпуса 1
+2. Задвиньте узел по направляющим до полной посадки
 
-- Check all screw connections are snug
-- Confirm the load cell beam moves freely through the case lid gap
-- Verify NFC module cables are routed and not pinched
-- Plug in the angled USB-C connector to the Pi's USB-C port — the cable exits through the cutout on the back of the case
+---
 
-Proceed to the [Installation](installation.md) guide to set up the software.
+## Шаг 7 — установите заднюю крышку корпуса {#step-7-install-case-back-cover}
+
+1. Приложите **заднюю крышку** к корпусу, совместив её с держателем дисплея
+2. Вверните **два самонарезающих винта M3 × 5 мм** в отверстия части корпуса 1, чтобы зафиксировать дисплей
+
+---
+
+## Шаг 8 — соберите платформу катушки {#step-8-spool-plate-sub-assembly}
+
+1. Установите **NFC-модуль PN5180** в кронштейн снизу платформы катушки
+2. Проложите кабели NFC через вырез в крышке NFC-модуля
+3. Защёлкните **крышку NFC-модуля** на нижнем кронштейне: её удерживают боковые защёлки, винты не нужны
+
+---
+
+## Шаг 9 — закрепите платформу катушки {#step-9-mount-the-spool-plate}
+
+1. Выберите **положение отверстий для винтов** на платформе в зависимости от желаемого расстояния до дисплея
+2. Опустите платформу на весовой датчик, совместив выбранное отверстие с местом крепления датчика
+3. Закрепите сверху **двумя винтами M4 × 25 мм с внутренним шестигранником**
+
+---
+
+## Шаг 10 — установите ограничитель катушки {#step-10-attach-the-spool-stopper}
+
+1. Совместите изогнутую дугу ограничителя с **вырезом на краю платформы**
+2. Нажмите до фиксации; винты не нужны
+
+---
+
+## :material-check-circle: Сборка завершена {#assembly-complete}
+
+Теперь SpoolBuddy полностью собран. Перед включением питания:
+
+- Убедитесь, что все винты затянуты
+- Проверьте, что балка весового датчика свободно проходит через зазор крышки
+- Убедитесь, что кабели NFC-модуля проложены и не пережаты
+- Подключите угловой разъём USB-C к порту питания Pi; кабель выходит через вырез на задней стенке корпуса
+
+Перейдите к руководству [Установка](installation.md), чтобы настроить программное обеспечение.

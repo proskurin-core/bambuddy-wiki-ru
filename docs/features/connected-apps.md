@@ -1,72 +1,72 @@
 ---
-title: Connected Apps
-description: Let external applications sign people in with their Bambuddy account ("Sign in with Bambuddy")
+title: Подключённые приложения
+description: Вход во внешние приложения через учётную запись Bambuddy
 keywords:
-  - connected apps
-  - sign in with bambuddy
-  - single sign-on
+  - подключённые приложения
+  - вход через Bambuddy
+  - единый вход
   - sso
   - oauth
   - pkce
   - client id
   - client secret
-  - integration
+  - интеграция
 ---
 
-# Connected Apps
+# Подключённые приложения {#connected-apps}
 
-A connected app is an external application that lets people sign in with their Bambuddy account instead of a separate password. When the app is opened from Bambuddy's sidebar, sign-in happens without the user doing anything.
+Подключённое приложение — внешнее приложение, в которое можно войти с учётной записью Bambuddy вместо отдельного пароля. При открытии приложения из боковой панели Bambuddy вход происходит автоматически.
 
-The app never receives the user's password or Bambuddy session. It receives the user's name, email address, groups and permissions, once per sign-in, and decides from those what the person may do in the app.
+Приложение никогда не получает пароль пользователя или сеанс Bambuddy. При каждом входе оно получает имя, адрес электронной почты, группы и разрешения пользователя и на их основе определяет, что ему доступно.
 
-!!! note "Requires authentication"
-    Connected apps only work while Bambuddy authentication is enabled. With authentication off there are no accounts to sign in with, so apps must use their own login.
+!!! note "Требуется аутентификация"
+    Подключённые приложения работают, только когда в Bambuddy включена аутентификация. Без неё нет учётных записей для входа, поэтому приложения должны использовать собственную систему входа.
 
 ---
 
-## :material-link-variant: Adding an App
+## :material-link-variant: Добавление приложения {#adding-an-app}
 
-Only an administrator can add, change or remove connected apps: an app's callback URL decides where people's sign-ins are sent.
+Только администратор может добавлять, изменять и удалять подключённые приложения: URL обратного вызова определяет, куда отправляются данные входа.
 
-1. Go to **Settings** > **API Keys** > **Connected Apps**.
-2. Enter a name and the app's **callback URL**. The app's documentation gives this URL; it must match exactly, including the port and path.
-3. Click **Add app**.
-4. Copy the **client ID** and **client secret** into the app's settings.
+1. Откройте **Настройки** > **Ключи API** > **Подключённые приложения**.
+2. Введите название и **URL обратного вызова** приложения. Этот URL указан в документации приложения; он должен совпадать в точности, включая порт и путь.
+3. Нажмите **Добавить приложение**.
+4. Скопируйте **идентификатор клиента** и **секрет клиента** в настройки приложения.
 
-!!! warning "The secret is shown once"
-    The client secret is displayed only right after adding the app (or creating a new secret). If it is lost, click **New secret** and paste the new one into the app. The old secret stops working immediately.
+!!! warning "Секрет отображается один раз"
+    Секрет клиента показывается только сразу после добавления приложения или создания нового секрета. Если он потерян, нажмите **Новый секрет** и вставьте его в приложение. Старый секрет немедленно перестанет работать.
 
-To show the app in Bambuddy's sidebar, add it as an [external link](external-links.md).
+Чтобы приложение отображалось в боковой панели Bambuddy, добавьте его как [внешнюю ссылку](external-links.md).
 
-### What users see
+### Что видят пользователи {#what-users-see}
 
-The first time someone signs in to an app, Bambuddy asks them once:
+При первом входе в приложение Bambuddy один раз запрашивает согласие:
 
-> *Order Desk wants to sign you in. Signed in to Bambuddy as martin.*
+> *Order Desk запрашивает вход. Вы вошли в Bambuddy как martin.*
 
-They choose **Allow** or **Cancel**. After that, sign-in is automatic. If someone isn't logged in to Bambuddy yet, they see Bambuddy's normal login page first, including two-factor authentication, OIDC and LDAP if configured.
+Пользователь выбирает **Разрешить** или **Отмена**. После этого вход выполняется автоматически. Если пользователь ещё не вошёл в Bambuddy, сначала отображается обычная страница входа, включая двухфакторную аутентификацию, OIDC и LDAP, если они настроены.
 
-### Managing apps
+### Управление приложениями {#managing-apps}
 
-| Action | Effect |
+| Действие | Результат |
 |---|---|
-| **Disable** | Nobody can sign in through the app until it is enabled again. |
-| **New secret** | Replaces the secret. The app stops working until it has the new one. |
-| **Delete** | Removes the app and everyone's consent. Adding it again asks everyone again. |
+| **Отключить** | Через приложение нельзя войти, пока его снова не включат. |
+| **Новый секрет** | Заменяет секрет. Приложение не работает, пока в него не введён новый секрет. |
+| **Удалить** | Удаляет приложение и согласия всех пользователей. При повторном добавлении согласие будет запрошено снова. |
 
-Removing a user's account or disabling it also stops their sign-in to every app.
+Удаление или отключение учётной записи пользователя также прекращает его доступ ко всем приложениям.
 
 ---
 
-## :material-code-braces: For App Developers
+## :material-code-braces: Для разработчиков приложений {#for-app-developers}
 
-Bambuddy implements the OAuth 2.0 authorization-code flow with PKCE (RFC 7636), limited to what an app on the same network needs to identify a user. It does not issue access tokens: the result of a sign-in is the user's identity, and the app keeps its own session. To call Bambuddy's API, the app uses an [API key](api-keys.md).
+Bambuddy реализует поток OAuth 2.0 с кодом авторизации и PKCE (RFC 7636), ограниченный тем, что нужно приложению в той же сети для идентификации пользователя. Токены доступа не выдаются: результат входа — данные пользователя, а приложение поддерживает собственный сеанс. Для вызова API Bambuddy приложение использует [ключ API](api-keys.md).
 
-### 1. Check that sign-in is available
+### 1. Проверьте доступность входа {#1-check-that-sign-in-is-available}
 
-`GET /api/v1/auth/status` returns `auth_enabled`. If it is `false`, don't start the flow; use your own login.
+`GET /api/v1/auth/status` возвращает `auth_enabled`. Если значение равно `false`, не запускайте этот поток; используйте собственный вход.
 
-### 2. Send the browser to Bambuddy
+### 2. Перенаправьте браузер в Bambuddy {#2-send-the-browser-to-bambuddy}
 
 ```
 GET {bambuddy}/connect/authorize
@@ -77,18 +77,18 @@ GET {bambuddy}/connect/authorize
     &code_challenge_method=S256
 ```
 
-Only `S256` is accepted. `redirect_uri` must be exactly the registered URL.
+Принимается только `S256`. Значение `redirect_uri` должно в точности совпадать с зарегистрированным URL.
 
-### 3. Handle the callback
+### 3. Обработайте обратный вызов {#3-handle-the-callback}
 
-Bambuddy sends the browser to your callback URL with either:
+Bambuddy перенаправляет браузер на URL обратного вызова с одним из параметров:
 
-- `?code=...&state=...` on success, or
-- `?error=access_denied&state=...` if the user clicked Cancel.
+- `?code=...&state=...` при успехе;
+- `?error=access_denied&state=...`, если пользователь нажал «Отмена».
 
-Check that `state` matches what you sent. If the request itself was invalid (unknown app, disabled app, wrong callback URL), Bambuddy shows an error page and does **not** redirect.
+Проверьте, что `state` совпадает с отправленным значением. Если сам запрос недействителен (неизвестное или отключённое приложение, неверный URL обратного вызова), Bambuddy показывает страницу ошибки и **не** выполняет перенаправление.
 
-### 4. Exchange the code (server side)
+### 4. Обменяйте код на сервере {#4-exchange-the-code-server-side}
 
 ```http
 POST {bambuddy}/api/v1/connect/token
@@ -104,7 +104,7 @@ Content-Type: application/json
 }
 ```
 
-Response:
+Ответ:
 
 ```json
 {
@@ -120,31 +120,31 @@ Response:
 }
 ```
 
-Errors:
+Ошибки:
 
-| Status | `detail` | Meaning |
+| Статус | `detail` | Значение |
 |---|---|---|
-| 401 | `{"error": "invalid_client"}` | Unknown client ID, wrong secret, or app disabled |
-| 400 | `{"error": "invalid_grant"}` | Code unknown, expired, already used, issued to another app, callback URL or verifier mismatch, or the user was disabled |
-| 400 | `{"error": "auth_disabled"}` | Bambuddy authentication is off |
-| 429 | | Too many failed exchanges; wait and retry |
+| 401 | `{"error": "invalid_client"}` | Неизвестный идентификатор клиента, неверный секрет или приложение отключено |
+| 400 | `{"error": "invalid_grant"}` | Код неизвестен, просрочен, уже использован или выдан другому приложению; URL обратного вызова или verifier не совпадает либо пользователь отключён |
+| 400 | `{"error": "auth_disabled"}` | Аутентификация Bambuddy отключена |
+| 429 | | Слишком много неудачных попыток обмена; подождите и повторите |
 
-### Rules a code follows
+### Правила использования кода {#rules-a-code-follows}
 
-- Valid for **60 seconds**, usable **once**. A failed exchange spends it.
-- Bound to the app it was issued to, its registered callback URL and the PKCE challenge.
-- Redeemable only with the app's client secret, which never leaves the app's server.
-- Bambuddy stores only a hash of the code and of the secret.
+- Действителен **60 секунд**, используется **один раз**. Неудачная попытка обмена расходует код.
+- Привязан к приложению, которому выдан, его зарегистрированному URL обратного вызова и запросу PKCE.
+- Может быть обменян только с секретом клиента приложения, который никогда не покидает сервер приложения.
+- Bambuddy хранит только хеши кода и секрета.
 
 ---
 
-## :material-help-circle: Troubleshooting
+## :material-help-circle: Устранение неполадок {#troubleshooting}
 
-**"Can't sign you in": this sign-in request isn't valid**
-:   The app is not registered, is disabled, or sent a callback URL that differs from its registration. Compare the URL character by character, including `http`/`https`, the port and any trailing `/`.
+**«Не удалось выполнить вход»: запрос входа недействителен**
+:   Приложение не зарегистрировано, отключено или отправило URL обратного вызова, отличающийся от зарегистрированного. Сравните URL посимвольно, включая `http`/`https`, порт и завершающий `/`.
 
-**The app says the exchange failed with `invalid_client`**
-:   The secret in the app is wrong or was replaced. Create a new secret and paste it into the app.
+**Приложение сообщает об ошибке обмена `invalid_client`**
+:   Секрет приложения неверен или был заменён. Создайте новый секрет и вставьте его в приложение.
 
-**Sign-in inside Bambuddy's sidebar shows the login page every time**
-:   Bambuddy's login lasts for the browser tab. Tick **Remember Me** at login to keep it across tabs.
+**При входе через боковую панель Bambuddy каждый раз появляется страница входа**
+:   Сеанс входа Bambuddy действует в пределах вкладки браузера. При входе отметьте **Запомнить меня**, чтобы сохранять его между вкладками.

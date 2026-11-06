@@ -1,19 +1,19 @@
 ---
-title: Supported Printers
-description: Compatibility information for Bambu Lab printer models
+title: Поддерживаемые принтеры
+description: Информация о совместимости принтеров Bambu Lab
 ---
 
-# Supported Printers
+# Поддерживаемые принтеры {#supported-printers}
 
-Bambuddy supports Bambu Lab 3D printers with Developer Mode capability.
+Bambuddy поддерживает 3D-принтеры Bambu Lab с режимом разработчика.
 
 ---
 
-## :material-check-circle: Supported Printers
+## :material-check-circle: Поддерживаемые принтеры {#supported-printers_1}
 
-All Bambu Lab printer models are supported:
+Поддерживаются все модели принтеров Bambu Lab:
 
-| Model | Series | LAN Mode | Camera | AMS |
+| Модель | Серия | Режим локальной сети | Камера | AMS |
 |-------|--------|:--------:|:------:|:---:|
 | **X1** | X1 | :material-check: | :material-check: | :material-check: |
 | **X1 Carbon** | X1 | :material-check: | :material-check: | :material-check: |
@@ -23,7 +23,7 @@ All Bambu Lab printer models are supported:
 | **H2D Pro** | H2 | :material-check: | :material-check: | :material-check: |
 | **H2C** | H2 | :material-check: | :material-check: | :material-check: |
 | **H2S** | H2 | :material-check: | :material-check: | :material-check: |
-| **P1P** | P1 | :material-check: | Add-on | :material-check: |
+| **P1P** | P1 | :material-check: | Дополнительно | :material-check: |
 | **P1S** | P1 | :material-check: | :material-check: | :material-check: |
 | **P2S** | P2 | :material-check: | :material-check: | :material-check: |
 | **A1** | A1 | :material-check: | :material-check: | AMS Lite |
@@ -32,139 +32,139 @@ All Bambu Lab printer models are supported:
 
 ---
 
-## :material-printer-3d: Feature Comparison by Series
+## :material-printer-3d: Сравнение возможностей по сериям {#feature-comparison-by-series}
 
-### X1 Series
+### Серия X1 {#x1-series}
 
-| Feature | X1 | X1 Carbon | X1E |
+| Возможность | X1 | X1 Carbon | X1E |
 |---------|:--:|:---------:|:---:|
-| LAN Mode | :material-check: | :material-check: | :material-check: |
-| Camera | :material-check: | :material-check: | :material-check: |
-| AMS Support | 4 units | 4 units | 4 units |
-| Chamber Heating | :material-close: | :material-close: | :material-check: |
-| Dual Nozzle | :material-close: | :material-close: | :material-close: |
+| Режим локальной сети | :material-check: | :material-check: | :material-check: |
+| Камера | :material-check: | :material-check: | :material-check: |
+| Поддержка AMS | 4 устройства | 4 устройства | 4 устройства |
+| Подогрев камеры | :material-close: | :material-close: | :material-check: |
+| Два сопла | :material-close: | :material-close: | :material-close: |
 
-### X2 Series
+### Серия X2 {#x2-series}
 
-| Feature | X2D |
+| Возможность | X2D |
 |---------|:---:|
-| LAN Mode | :material-check: |
-| Camera | :material-check: (RTSP, port 322) |
-| AMS Support | AMS 2 Pro / AMS HT |
-| Chamber Heating | :material-check: |
-| Dual Nozzle | :material-check: |
-| Steel Rod Gantry | :material-check: (hardened steel, shared with P2S) |
-| Airduct Mode | :material-check: |
-| Enclosure Door Sensor | :material-check: |
+| Режим локальной сети | :material-check: |
+| Камера | :material-check: (RTSP, порт 322) |
+| Поддержка AMS | AMS 2 Pro / AMS HT |
+| Подогрев камеры | :material-check: |
+| Два сопла | :material-check: |
+| Портал со стальными направляющими | :material-check: (закалённая сталь, как у P2S) |
+| Режим воздуховода | :material-check: |
+| Датчик дверцы корпуса | :material-check: |
 
-!!! note "X2D added in Bambuddy 0.2.3b4"
-    X2D support was added in April 2026 after the printer's launch. It is treated
-    as a dual-nozzle family alongside H2D for K-profile management and print-command
-    formatting, and inherits the P2S wiki pages for steel-rod lubrication, belt
-    tension, cold-pull maintenance, and PTFE tube replacement.
+!!! note "X2D добавлен в Bambuddy 0.2.3b4"
+    Поддержка X2D добавлена в апреле 2026 года после выхода принтера. Вместе с H2D он относится
+    к семейству с двумя соплами при управлении K-профилями и формировании команд печати.
+    Для смазки стальных направляющих, натяжения ремней, холодной протяжки и замены
+    трубки PTFE используются страницы Wiki для P2S.
 
-### H2 Series
+### Серия H2 {#h2-series}
 
-| Feature | H2D | H2D Pro | H2C | H2S |
+| Возможность | H2D | H2D Pro | H2C | H2S |
 |---------|:---:|:-------:|:---:|:---:|
-| LAN Mode | :material-check: | :material-check: | :material-check: | :material-check: |
-| Camera | :material-check: | :material-check: | :material-check: | :material-check: |
-| AMS Support | 4 units | 4 units | 4 units | 4 units |
-| Chamber Heating | :material-check: | :material-check: | :material-check: | :material-check: |
-| Dual Nozzle | :material-check: | :material-check: | :material-check: | :material-close: |
-| Nozzle Rack | :material-close: | :material-close: | 6-slot | :material-close: |
+| Режим локальной сети | :material-check: | :material-check: | :material-check: | :material-check: |
+| Камера | :material-check: | :material-check: | :material-check: | :material-check: |
+| Поддержка AMS | 4 устройства | 4 устройства | 4 устройства | 4 устройства |
+| Подогрев камеры | :material-check: | :material-check: | :material-check: | :material-check: |
+| Два сопла | :material-check: | :material-check: | :material-check: | :material-close: |
+| Держатель сопел | :material-close: | :material-close: | 6 слотов | :material-close: |
 
-### P1 Series
+### Серия P1 {#p1-series}
 
-| Feature | P1P | P1S |
+| Возможность | P1P | P1S |
 |---------|:---:|:---:|
-| LAN Mode | :material-check: | :material-check: |
-| Camera | Add-on | :material-check: |
-| AMS Support | 4 units | 4 units |
-| Remote AMS Drying | :material-close: | :material-close: |
-| Chamber Heating | :material-close: | :material-close: |
-| Dual Nozzle | :material-close: | :material-close: |
+| Режим локальной сети | :material-check: | :material-check: |
+| Камера | Дополнительно | :material-check: |
+| Поддержка AMS | 4 устройства | 4 устройства |
+| Удалённая сушка AMS | :material-close: | :material-close: |
+| Подогрев камеры | :material-close: | :material-close: |
+| Два сопла | :material-close: | :material-close: |
 
-!!! note "P1 AMS drying is screen-only"
-    A P1 with an AMS 2 Pro or AMS-HT can dry filament, but only from the printer's own screen — the firmware ignores drying commands sent over the network. See [AMS & Drying](../features/ams.md#remote-ams-drying).
+!!! note "Сушка AMS на P1 запускается только с экрана"
+    P1 с AMS 2 Pro или AMS-HT может сушить филамент, но только при запуске с экрана принтера: прошивка игнорирует команды сушки, отправленные по сети. См. [AMS и сушка](../features/ams.md#remote-ams-drying).
 
-### P2 Series
+### Серия P2 {#p2-series}
 
-| Feature | P2S |
+| Возможность | P2S |
 |---------|:---:|
-| LAN Mode | :material-check: |
-| Camera | :material-check: |
-| AMS Support | 4 units |
-| Chamber Heating | :material-close: |
-| Dual Nozzle | :material-close: |
+| Режим локальной сети | :material-check: |
+| Камера | :material-check: |
+| Поддержка AMS | 4 устройства |
+| Подогрев камеры | :material-close: |
+| Два сопла | :material-close: |
 
-### A1 Series
+### Серия A1 {#a1-series}
 
-| Feature | A1 | A1 Mini |
+| Возможность | A1 | A1 Mini |
 |---------|:--:|:-------:|
-| LAN Mode | :material-check: | :material-check: |
-| Camera | :material-check: | :material-check: |
-| AMS Support | AMS Lite | :material-close: |
-| Chamber Heating | :material-close: | :material-close: |
-| Dual Nozzle | :material-close: | :material-close: |
+| Режим локальной сети | :material-check: | :material-check: |
+| Камера | :material-check: | :material-check: |
+| Поддержка AMS | AMS Lite | :material-close: |
+| Подогрев камеры | :material-close: | :material-close: |
+| Два сопла | :material-close: | :material-close: |
 
-### A2 Series
+### Серия A2 {#a2-series}
 
-| Feature | A2L |
+| Возможность | A2L |
 |---------|:---:|
-| LAN Mode | :material-check: |
-| Camera | :material-check: (Chamber Image, port 6000) |
-| AMS Support | AMS Lite |
-| Chamber Heating | :material-close: |
-| Dual Nozzle | :material-close: (single FDM extruder) |
-| Linear Rails | :material-check: |
-| Ethernet | :material-close: (Wi-Fi 2.4 GHz only) |
-| Integrated Cutter / Plotter | :material-check: |
+| Режим локальной сети | :material-check: |
+| Камера | :material-check: (Chamber Image, порт 6000) |
+| Поддержка AMS | AMS Lite |
+| Подогрев камеры | :material-close: |
+| Два сопла | :material-close: (один экструдер FDM) |
+| Линейные направляющие | :material-check: |
+| Ethernet | :material-close: (только Wi-Fi 2,4 ГГц) |
+| Встроенный резак / плоттер | :material-check: |
 
-!!! note "A2L added in Bambuddy 0.2.5b1"
-    A2L support shipped in June 2026. Internal model code `N9`, serial prefix `26A19`.
-    The BambuStudio profile flag `use_double_extruder_default_texture: true` covers the
-    two TOOL HEADS (FDM extruder + cutter/plotter), not dual filament extrusion —
-    A2L is treated as single-nozzle for AMS routing, K-profile management, and
-    print-command formatting. The cutter / plotter capability is not yet modelled
-    in Bambuddy; FDM control works as on any A-series printer.
-
----
-
-## :material-lan: Developer Mode Requirements
-
-### Why Developer Mode?
-
-Since the January 2025 firmware update, **Developer Mode is required** for full printer control:
-
-- **LAN Only Mode (without Developer Mode)**: Read-only access - monitoring only
-- **Developer Mode**: Full access - control, file transfers, print scheduling
-
-### Enabling Developer Mode
-
-All supported printers require Developer Mode for full functionality:
-
-1. Go to printer **Settings > Network > LAN Only Mode**
-2. Enable **LAN Only Mode**
-3. Enable **Developer Mode** (appears after LAN Only Mode is enabled)
-4. Note the **Access Code** (8 characters)
-5. Access code changes when these modes are toggled
+!!! note "A2L добавлен в Bambuddy 0.2.5b1"
+    Поддержка A2L выпущена в июне 2026 года. Внутренний код модели — `N9`, префикс серийного номера — `26A19`.
+    Флаг профиля BambuStudio `use_double_extruder_default_texture: true` относится к двум
+    РАБОЧИМ ГОЛОВКАМ (экструдер FDM и резак/плоттер), а не к двойной экструзии филамента.
+    При маршрутизации AMS, управлении K-профилями и формировании команд печати A2L считается
+    принтером с одним соплом. Функции резака/плоттера пока не реализованы в Bambuddy;
+    управление FDM работает так же, как на других принтерах серии A.
 
 ---
 
-## :material-video: Camera Support
+## :material-lan: Требования к режиму разработчика {#developer-mode-requirements}
 
-### RTSP Streaming
+### Зачем нужен режим разработчика? {#why-developer-mode}
 
-Bambuddy uses RTSP to access printer cameras:
+Начиная с обновления прошивки за январь 2025 года для полного управления принтером **необходим режим разработчика**:
 
-- Requires ffmpeg installed
-- Converts to MJPEG for browser viewing
-- Port varies by printer model
+- **Режим «Только локальная сеть» (без режима разработчика)**: доступ только для чтения и мониторинга
+- **Режим разработчика**: полный доступ — управление, передача файлов и планирование печати
 
-### Camera Ports
+### Включение режима разработчика {#enabling-developer-mode}
 
-| Series | Protocol | Port |
+Для полной функциональности всех поддерживаемых принтеров необходим режим разработчика:
+
+1. На принтере откройте **Настройки > Сеть > Только локальная сеть**
+2. Включите **Только локальная сеть**
+3. Включите **Режим разработчика** (появится после включения режима локальной сети)
+4. Запишите **код доступа** (8 символов)
+5. Код доступа меняется при переключении этих режимов
+
+---
+
+## :material-video: Поддержка камеры {#camera-support}
+
+### Трансляция RTSP {#rtsp-streaming}
+
+Bambuddy использует RTSP для доступа к камерам принтеров:
+
+- Требуется установленный ffmpeg
+- Поток преобразуется в MJPEG для просмотра в браузере
+- Порт зависит от модели принтера
+
+### Порты камер {#camera-ports}
+
+| Серия | Протокол | Порт |
 |--------|:--------:|:----:|
 | X1 | RTSP | 322 |
 | X2 | RTSP | 322 |
@@ -174,110 +174,110 @@ Bambuddy uses RTSP to access printer cameras:
 | A1 | Chamber Image | 6000 |
 | A2 | Chamber Image | 6000 |
 
-### Cam Wall view
+### Вид камер плиткой {#cam-wall-view}
 
-The Printers page has a **Cards / Cam wall** toggle next to the card-size selector. Cam Wall replaces the printer cards with a responsive grid of live camera tiles for at-a-glance monitoring across the whole farm.
+На странице принтеров рядом с выбором размера карточек находится переключатель **Карточки / Стена камер**. Стена камер заменяет карточки принтеров адаптивной сеткой трансляций для быстрого наблюдения за всей фермой.
 
-To keep the host CPU and LAN bandwidth bounded — especially on Raspberry Pi installs — Cam Wall only streams tiles that are currently visible on screen, up to a per-user **Max live streams** cap. Tiles that are visible but over the cap fall back to periodic **snapshot polling** at a configurable interval. Tiles that scroll off-screen pause entirely and release their backend transcoder slot. Disconnected printers also render paused (with the offline indicator) and do not consume a live-stream slot — only working tiles count against the cap.
+Чтобы ограничить нагрузку на процессор и локальную сеть, особенно на Raspberry Pi, стена камер транслирует только видимые на экране плитки в пределах пользовательского лимита **Максимум онлайн-трансляций**. Видимые плитки сверх лимита периодически получают **снимки** с заданным интервалом. Плитки за пределами экрана полностью приостанавливаются и освобождают слот транскодера. Отключённые принтеры также показываются на паузе с индикатором отключения и не занимают слот: учитываются только работающие плитки.
 
-#### Tile size
+#### Размер плиток {#tile-size}
 
-While the Cam Wall is showing, the **S / M / L / XL** selector sizes the camera tiles instead of the cards. On a wide screen S fits up to five tiles per row, M four (the default), L two, and XL one tile across the full width, which suits a setup with only one or two printers. Tiles keep their 16:9 shape. The Cam Wall remembers its own size, so changing it leaves the card size alone. Larger tiles also mean fewer of them on screen, and so fewer live streams.
+Когда открыта стена камер, переключатель **S / M / L / XL** задаёт размер плиток камер, а не карточек. На широком экране S помещает до пяти плиток в ряд, M — четыре (по умолчанию), L — две, XL — одну во всю ширину, что удобно для одного или двух принтеров. Пропорции плиток сохраняются 16:9. Стена камер запоминает собственный размер, не меняя размер карточек. Чем крупнее плитки, тем меньше их на экране и тем меньше одновременных трансляций.
 
-#### Settings
+#### Настройки {#settings}
 
-The gear icon above the grid exposes three per-user knobs:
+Значок шестерёнки над сеткой открывает три пользовательские настройки:
 
-| Setting | Default | Range / Options | Stored |
+| Настройка | По умолчанию | Диапазон / варианты | Хранение |
 |---|:---:|:---:|---|
-| Max live streams | 4 | 1 – 16 | per-user `localStorage` |
-| Snapshot interval (s) | 8 | 2 – 60 | per-user `localStorage` |
-| Status overlay | Full | Off / Compact / Full | per-user `localStorage` |
+| Максимум онлайн-трансляций | 4 | 1 – 16 | `localStorage` пользователя |
+| Интервал снимков (с) | 8 | 2 – 60 | `localStorage` пользователя |
+| Наложение статуса | Полный | Выкл. / Компактный / Полный | `localStorage` пользователя |
 
-**Status overlay** controls how much of the printer's state is drawn on top of each tile:
+**Наложение статуса** определяет объём сведений о принтере поверх каждой плитки:
 
-- **Off** — camera image only.
-- **Compact** — colour-coded state chip in the top-left corner (`Printing`, `Paused`, `Finished`, `Error`). Idle printers stay clean (no chip) so a wall of cold printers reads as quiet. A warning icon appears in the chip when the printer has active HMS errors.
-- **Full** — Compact chip plus a bottom info strip on currently-printing or paused tiles: filename, progress percent, current/total layers, and remaining time. The numbers match what the printer card shows for the same printer at the same moment.
+- **Выкл.** — только изображение с камеры.
+- **Компактный** — цветной индикатор состояния в левом верхнем углу (`Printing`, `Paused`, `Finished`, `Error`). У простаивающих принтеров индикатор не показывается. При активных ошибках HMS на нём появляется предупреждающий значок.
+- **Полный** — компактный индикатор и нижняя информационная полоса для выполняющихся или приостановленных печатей: имя файла, прогресс в процентах, текущий и общий слои и оставшееся время. Данные совпадают с карточкой того же принтера в тот же момент.
 
-#### Clicking a tile
+#### Нажатие на плитку {#clicking-a-tile}
 
-Click any tile to open it in the floating camera viewer or in a dedicated window, matching your existing **Settings → Camera view** preference. Opening the larger viewer while the cam-wall tile is still on screen no longer interrupts the tile — both viewers share the same backend MJPEG fan-out, and closing the larger viewer leaves the tile streaming. The cam-wall toggle requires the `camera:view` permission.
+Нажмите любую плитку, чтобы открыть камеру в плавающем или отдельном окне согласно параметру **Настройки → Вид камеры**. Открытие увеличенного просмотра не прерывает видимую плитку: оба просмотра используют общий поток MJPEG на сервере, а после закрытия увеличенного окна трансляция в плитке продолжается. Для переключения на стену камер требуется разрешение `camera:view`.
 
-#### Cam Wall on its own URL
+#### Отдельный адрес стены камер {#cam-wall-on-its-own-url}
 
-The wall is also a page in its own right at **`/camwall`** — bookmarkable, and linkable from the button that appears next to the Cards / Cam wall toggle while the wall is showing.
+Стена также доступна как отдельная страница по адресу **`/camwall`**: её можно добавить в закладки или открыть кнопкой рядом с переключателем карточек и стены камер.
 
-For a wall-mounted TV or a Raspberry Pi in kiosk mode, which has no login session, append a **Cam Wall**-scoped camera token: `/camwall?token=…`. Bambuddy hands you the finished URL when you create the token. A token wall shows the state badge but never the print filename, drops the settings popover and click-through, and cannot see printer addresses or access codes.
+Для настенного телевизора или Raspberry Pi в режиме киоска без сеанса входа добавьте токен камеры с областью **Стена камер**: `/camwall?token=…`. Bambuddy выдаёт готовый URL при создании токена. Стена с токеном показывает состояние, но не имя файла печати, не предоставляет настройки и переход по нажатию и не раскрывает адреса принтеров или коды доступа.
 
-See [Long-Lived Camera Tokens](../features/camera.md#cam-wall-on-a-tv-or-kiosk) for the full setup, the optional `maxLive` / `interval` / `status` / `size` URL parameters, and what a leaked kiosk URL does and doesn't expose.
-
----
-
-## :material-tray-full: AMS Support
-
-### Standard AMS
-
-- Up to 4 units per printer
-- 4 slots per unit (16 total)
-- Humidity monitoring
-- RFID filament detection
-
-### AMS-HT (High Temperature)
-
-- Active drying capability
-- Temperature monitoring
-- For hygroscopic filaments
-
-### AMS Lite (A1)
-
-- Simplified AMS for A1
-- 4 slots
-- No active drying
+Полную настройку, необязательные параметры URL `maxLive` / `interval` / `status` / `size` и сведения о том, какие данные раскрывает утечка адреса киоска, см. в разделе [Долгосрочные токены камеры](../features/camera.md#cam-wall-on-a-tv-or-kiosk).
 
 ---
 
-## :material-help: Feedback & Issues
+## :material-tray-full: Поддержка AMS {#ams-support}
 
-If you encounter any issues with your printer model:
+### Стандартный AMS {#standard-ams}
 
-1. Check the [Troubleshooting Guide](troubleshooting.md)
-2. Search [existing issues](https://github.com/maziggy/bambuddy/issues) for your problem
-3. If not found, [open a new issue](https://github.com/maziggy/bambuddy/issues/new) with:
-    - Printer model and firmware version
-    - What works and what doesn't
-    - Any error messages or logs
+- До 4 устройств на принтер
+- 4 слота на устройство (всего 16)
+- Контроль влажности
+- Определение филамента по RFID
+
+### AMS-HT (высокотемпературный) {#ams-ht-high-temperature}
+
+- Возможность активной сушки
+- Контроль температуры
+- Для гигроскопичных филаментов
+
+### AMS Lite (A1) {#ams-lite-a1}
+
+- Упрощённая AMS для A1
+- 4 слота
+- Без активной сушки
 
 ---
 
-## :material-close-circle: Known Issues
+## :material-help: Обратная связь и проблемы {#feedback-issues}
 
-### By Model
+Если у вас возникли проблемы с вашей моделью принтера:
 
-| Model | Issue | Workaround |
+1. Ознакомьтесь с [руководством по устранению неполадок](troubleshooting.md)
+2. Поищите вашу проблему среди [существующих обращений](https://github.com/maziggy/bambuddy/issues)
+3. Если её нет, [создайте обращение](https://github.com/maziggy/bambuddy/issues/new), указав:
+    - Модель принтера и версию прошивки
+    - Что работает и что нет
+    - Сообщения об ошибках и журналы
+
+---
+
+## :material-close-circle: Известные проблемы {#known-issues}
+
+### По модели {#by-model}
+
+| Модель | Проблема | Обходное решение |
 |-------|-------|------------|
 | - | - | - |
 
-*No known model-specific issues currently reported*
+*Сейчас нет сообщений об известных проблемах конкретных моделей*
 
-### By Feature
+### По функции {#by-feature}
 
-| Feature | Issue | Affected Models |
+| Возможность | Проблема | Затронутые модели |
 |---------|-------|-----------------|
 | - | - | - |
 
-*No known feature-specific issues currently reported*
+*Сейчас нет сообщений об известных проблемах конкретных функций*
 
 ---
 
-## :material-update: Firmware Compatibility
+## :material-update: Совместимость прошивок {#firmware-compatibility}
 
-Bambuddy is tested with recent firmware versions. If you encounter issues:
+Bambuddy проверяется с актуальными версиями прошивок. Если возникли проблемы:
 
-1. Check if firmware is up to date
-2. Try updating firmware
-3. Report the firmware version with any issues
+1. Проверьте актуальность прошивки
+2. Попробуйте обновить прошивку
+3. При сообщении о проблеме укажите версию прошивки
 
-### Minimum Firmware
+### Минимальная версия прошивки {#minimum-firmware}
 
-Specific minimum versions aren't defined yet. Modern firmware (2024+) should work.
+Конкретные минимальные версии пока не определены. Современная прошивка (2024 года и новее) должна работать.

@@ -1,118 +1,118 @@
 ---
-title: Updates & Backups
-description: How the Bambuddy Appliance upgrades itself, what a backup covers, and what it leaves behind
+title: Обновления и резервные копии
+description: Как обновляется Bambuddy Appliance и что входит в резервную копию
 ---
 
-# Updates &amp; Backups
+# Обновления и резервные копии {#updates-backups}
 
-The appliance is five layers, and each updates differently.
+Устройство состоит из пяти уровней, каждый из которых обновляется по-своему.
 
-| Layer | How it updates | Reversible? |
+| Уровень | Способ обновления | Можно отменить? |
 |---|---|---|
-| **Bambuddy** (the container) | In place, from the Updates tab | Yes &mdash; automatic rollback |
-| **PostgreSQL** (the second container) | With the image; the major is pinned | N/A |
-| **The appliance layer** (wizard, panel, CLI, units) | In place, from the Updates tab | Yes &mdash; automatic rollback |
-| **Operating system** (Debian packages) | In place, from the Updates tab | No |
-| **Kernel, firmware, partition layout** | Re-flash | N/A |
+| **Bambuddy** (контейнер) | На месте, на вкладке Updates | Да, автоматический откат |
+| **PostgreSQL** (второй контейнер) | Вместе с образом; основная версия зафиксирована | Не применимо |
+| **Компоненты устройства** (мастер, панель, CLI, службы) | На месте, на вкладке Updates | Да, автоматический откат |
+| **Операционная система** (пакеты Debian) | На месте, на вкладке Updates | Нет |
+| **Ядро, прошивка, разметка разделов** | Повторная запись образа | Не применимо |
 
-Nothing installs itself. Every lane is a button you press, with one exception: a freshly flashed card brings its appliance layer up to date once, on the first boot that has a network, so a card written from an older image does not start out behind.
+Ничто не устанавливается самостоятельно. Для каждого обновления нужно нажать кнопку, за одним исключением: карта со свежезаписанным образом один раз обновляет компоненты устройства при первой загрузке с доступом к сети. Это позволяет сразу обновить компоненты старого образа.
 
 ---
 
-## Upgrading Bambuddy
+## Обновление Bambuddy {#upgrading-bambuddy}
 
-This is the one you'll do most, and it's the safe one.
+Эту операцию вы будете выполнять чаще всего; она безопасна.
 
-The appliance pulls the new container, repins the compose file, starts it, and waits for Bambuddy's health check to pass. If it doesn't, the previous tag goes back and gets restarted. Your database and uploads are never touched &mdash; only the image changes.
+Устройство загружает новый контейнер, обновляет зафиксированную версию в файле Compose, запускает контейнер и ждёт успешной проверки работоспособности Bambuddy. Если она не проходит, возвращается и запускается предыдущий тег. База данных и загруженные файлы не затрагиваются, меняется только образ.
 
-From the panel: **Updates** &rarr; **Check for updates** &rarr; **Upgrade**.
+В панели: **Updates** &rarr; **Check for updates** &rarr; **Upgrade**.
 
-From the shell:
+В командной строке:
 
 ```bash
 sudo bambuddy-appliance upgrade-bambuddy v0.2.5
 ```
 
-If the pull itself fails &mdash; no network, bad tag &mdash; nothing changes at all. The compose file still points at the version you were running.
+Если загрузка не удалась, например из-за отсутствия сети или неверного тега, ничего не изменится. Файл Compose по-прежнему будет указывать на текущую версию.
 
 ---
 
-## Upgrading the appliance layer
+## Обновление компонентов устройства {#upgrading-the-appliance-layer}
 
-The wizard, the admin panel, the CLI, the systemd units and the gate configuration &mdash; everything around Bambuddy, and where nearly every fix lands.
+Это мастер настройки, панель администратора, CLI, службы systemd и конфигурация шлюза — всё, что окружает Bambuddy и куда поступает большинство исправлений.
 
-From the panel: **Updates** &rarr; **Check for updates** &rarr; **Update appliance**. From the shell:
+В панели: **Updates** &rarr; **Check for updates** &rarr; **Update appliance**. В командной строке:
 
 ```bash
 sudo bambuddy-appliance upgrade-check-appliance   # is there one? (JSON)
 sudo bambuddy-appliance upgrade-appliance
 ```
 
-It is a Debian package from Bambuddy's own signed archive, installed in place &mdash; no reboot, no card. The lane health-checks Bambuddy afterwards and puts the previous version back if it does not come up, the same as the Bambuddy lane.
+Пакет Debian устанавливается на месте из собственного подписанного репозитория Bambuddy; перезагрузка и запись карты не нужны. Затем проверяется работоспособность Bambuddy, и, если он не запускается, возвращается предыдущая версия — как и при обновлении самого Bambuddy.
 
-!!! info "This lane needs an active licence"
-    The archive hands the package only to a registered appliance that is entitled to it. An expired or revoked unit keeps running and keeps getting Debian security updates; it stops getting the appliance layer. See [Registration](registration.md).
+!!! info "Для этого обновления нужна действующая лицензия"
+    Репозиторий выдаёт пакет только зарегистрированному устройству с действующим правом доступа. Устройство с истёкшим или отозванным доступом продолжает работать и получать обновления безопасности Debian, но перестаёт получать обновления компонентов устройства. См. [Регистрация](registration.md).
 
-!!! success "The signature is what is trusted, not the server"
-    The archive is generated and signed away from the machine that serves it, and the appliance verifies it against a key baked into the image. Someone who took over the archive host could delete or corrupt packages, but not forge an update.
-
----
-
-## Upgrading the OS
-
-!!! danger "There is no rollback"
-    `apt full-upgrade` cannot be undone. The appliance refuses to start one with less than 1 GB free and warns when the clock isn't synchronised, but past that point you are trusting Debian. **Take a backup first.**
-
-From the panel: **Updates** &rarr; **Update OS packages**. It will tell you if a reboot is required.
+!!! success "Проверяется подпись, а не сервер"
+    Репозиторий создаётся и подписывается отдельно от обслуживающего его сервера. Устройство проверяет подпись по ключу, встроенному в образ. Злоумышленник, захвативший сервер репозитория, мог бы удалить или повредить пакеты, но не подделать обновление.
 
 ---
 
-## Backups
+## Обновление ОС {#upgrading-the-os}
 
-Bambuddy backs itself up from **Settings** &rarr; **Backup &amp; Restore**. You get one zip containing the database and every data directory, and it restores onto either SQLite or PostgreSQL &mdash; the export is portable between them.
+!!! danger "Откат невозможен"
+    `apt full-upgrade` нельзя отменить. Устройство не запускает обновление, если свободно менее 1 ГБ, и предупреждает, если часы не синхронизированы. Далее работа зависит от Debian. **Сначала создайте резервную копию.**
 
-Back up before an OS upgrade, before re-flashing, and on a schedule. Keep the file **somewhere other than the appliance**; a backup on the card you are about to overwrite is not a backup.
-
-See [Backup &amp; Restore](../features/backup.md) for the full picture, including scheduled backups.
-
-The backups Bambuddy saves on the appliance itself &mdash; **Scheduled Backups**, on the schedule or with **Run Now** &mdash; can also be downloaded from the [admin panel](admin-panel.md#bambuddy-backup), under **Dashboard** &rarr; **Bambuddy Backup**. That works when Bambuddy is down, which is when you need it most.
-
-### What the backup does not contain
-
-The backup covers *Bambuddy*. It does not cover the *appliance*:
-
-- the admin panel password
-- the Tailscale login
-- your WiFi credentials
-- any secondary IP aliases
-
-Restore a backup onto a freshly flashed card and you get all your printers, queue, and print history back &mdash; and you redo the appliance setup by hand. Budget ten minutes for that, and don't discover it at the worst possible moment.
+В панели: **Updates** &rarr; **Update OS packages**. Панель сообщит, нужна ли перезагрузка.
 
 ---
 
-## Re-flashing the image
+## Резервные копии {#backups}
 
-The image carries the operating system, the appliance layer and the partition layout. The version of the appliance layer you are running is shown on the Dashboard.
+Bambuddy создаёт резервные копии через **Настройки** &rarr; **Резервное копирование и восстановление**. Вы получаете один ZIP-файл с базой данных и всеми каталогами данных; его можно восстановить как в SQLite, так и в PostgreSQL — экспорт переносим между ними.
 
-Very little requires a re-flash. Bambuddy, the appliance layer and Debian all update in place. In practice you re-flash for two reasons: the SD card died, or a change below the appliance layer &mdash; the kernel, the firmware, the partition table &mdash; which no in-place lane can deliver.
+Создавайте копии перед обновлением ОС, перед повторной записью образа и по расписанию. Храните файл **не на устройстве**: копия на карте, которую вы собираетесь перезаписать, не поможет восстановиться.
 
-!!! warning "Re-flashing erases the card"
-    Everything on it. The appliance's data lives on that card and nowhere else.
+Подробности, включая резервное копирование по расписанию, см. в разделе [Резервное копирование и восстановление](../features/backup.md).
 
-    1. Back up Bambuddy, and copy the file off the appliance.
-    2. Flash the new image.
-    3. Run the setup wizard again.
-    4. Restore the backup.
+Копии, которые Bambuddy сохраняет на самом устройстве через **Scheduled Backups** по расписанию или по кнопке **Run Now**, можно также скачать из [панели администратора](admin-panel.md#bambuddy-backup): **Dashboard** &rarr; **Bambuddy Backup**. Это работает и при недоступности Bambuddy, когда копия особенно нужна.
 
-!!! info "A re-flashed unit has to be let back in"
-    The identity comes from the board, so the appliance comes back as the same device &mdash; but its credential lived on the card, and the registrar will not replace one on the strength of a serial number. An operator opens a one-shot re-claim window, and the unit takes a fresh credential by itself. See [Registration](registration.md#re-flashing-a-registered-unit).
+### Что не входит в резервную копию {#what-the-backup-does-not-contain}
 
-    Keep your licence key: the wizard asks for it again.
+Копия содержит данные *Bambuddy*, но не настройки *устройства*:
+
+- пароль панели администратора;
+- данные входа Tailscale;
+- учётные данные Wi-Fi;
+- дополнительные IP-псевдонимы.
+
+Восстановив копию на карту со свежим образом, вы получите все принтеры, очередь и историю печати, но настройку устройства придётся повторить вручную. Предусмотрите на это около десяти минут.
 
 ---
 
-## What upgrades cannot break
+## Повторная запись образа {#re-flashing-the-image}
 
-No in-place lane touches `/var/lib/bambuddy/`, where the database and uploads live. An upgrade that fails leaves your data exactly as it was &mdash; that is why the Bambuddy lane can roll back at all.
+Образ содержит операционную систему, компоненты устройства и разметку разделов. Версия работающих компонентов устройства отображается на Dashboard.
 
-The one thing that *does* destroy data is re-flashing, and the [factory reset](recovery.md). Both are deliberate, and both start with a backup.
+Повторная запись требуется редко: Bambuddy, компоненты устройства и Debian обновляются на месте. На практике образ перезаписывают, если SD-карта вышла из строя или требуется изменить нижележащие компоненты — ядро, прошивку или таблицу разделов, которые нельзя обновить на месте.
+
+!!! warning "При повторной записи содержимое карты стирается"
+    Удаляется всё её содержимое. Данные устройства находятся только на этой карте.
+
+    1. Создайте резервную копию Bambuddy и скопируйте её с устройства.
+    2. Запишите новый образ.
+    3. Снова пройдите мастер настройки.
+    4. Восстановите резервную копию.
+
+!!! info "После повторной записи устройство нужно снова допустить к регистрации"
+    Идентификатор определяется платой, поэтому устройство сохраняет свою идентичность. Однако его учётные данные хранились на карте, а регистратор не выдаёт новые только по серийному номеру. Оператор открывает одноразовое окно повторной регистрации, и устройство само получает новые учётные данные. См. [Регистрация](registration.md#re-flashing-a-registered-unit).
+
+    Сохраните лицензионный ключ: мастер снова его запросит.
+
+---
+
+## Что не затрагивают обновления {#what-upgrades-cannot-break}
+
+Обновления на месте не изменяют `/var/lib/bambuddy/`, где находятся база данных и загруженные файлы. При неудачном обновлении данные остаются в прежнем состоянии; именно поэтому обновление Bambuddy можно откатить.
+
+Данные удаляются при повторной записи образа и [сбросе к заводским настройкам](recovery.md). Оба действия выполняются намеренно и должны начинаться с создания резервной копии.

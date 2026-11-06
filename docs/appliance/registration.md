@@ -1,113 +1,113 @@
 ---
-title: Registration
-description: What a Bambuddy Appliance sends home, what the licence key is for, why a self-built one sends nothing, and what happens when the registrar says no
+title: Регистрация
+description: Какие данные отправляет Bambuddy Appliance, зачем нужен лицензионный ключ и как работает регистратор
 ---
 
-# Registration
+# Регистрация {#registration}
 
-Registration is how an appliance is matched to its licence and offered updates. It is **not** a licence check on the software: Bambuddy is AGPL-3.0 and is never gated, whatever the registrar says about your box.
+Регистрация связывает устройство с лицензией и предоставляет обновления. Это **не** проверка лицензии программного обеспечения: Bambuddy распространяется по AGPL-3.0 и никогда не блокируется независимо от ответа регистратора об устройстве.
 
-There are three kinds of unit, and they behave differently:
+Существуют три типа устройств с разным поведением:
 
-| Unit | Registers? | What authorises it |
+| Устройство | Регистрируется? | Чем подтверждается право |
 |---|---|---|
-| **Bought as a download** | Yes | The licence key from your purchase email |
-| **Built by a reseller** | Yes | The batch identifier baked into their image |
-| **Built by you from source** | **Never** | Nothing &mdash; it carries no batch and no key, so it contacts nothing |
+| **Купленное для скачивания** | Да | Лицензионным ключом из письма о покупке |
+| **Собранное реселлером** | Да | Идентификатором партии, встроенным в образ |
+| **Самостоятельно собранное из исходного кода** | **Никогда** | Ничем: нет ни партии, ни ключа, поэтому сетевых обращений нет |
 
-A self-built appliance not contacting anything is not a setting you have to find and switch off. It is what "no batch identifier and no key" means in the code, and you can confirm it in a file (see [Checking for yourself](#checking-for-yourself)).
+Для самостоятельно собранного устройства не нужно искать и отключать настройку отправки данных. Отсутствие идентификатора партии и ключа означает именно такое поведение в коде; это можно проверить в файле (см. [Самостоятельная проверка](#checking-for-yourself)).
 
 ---
 
-## The licence key
+## Лицензионный ключ {#the-licence-key}
 
-The key arrives by email after the purchase, twenty characters in four groups. The [setup wizard](quick-start.md#your-licence-key) asks for it, and the appliance sends it every time it registers or heartbeats.
+Ключ приходит по электронной почте после покупки: двадцать символов в четырёх группах. Его запрашивает [мастер настройки](quick-start.md#your-licence-key), а устройство отправляет его при каждой регистрации или сигнале состояния.
 
-Every customer downloads the **same image**, so the batch identifier inside it is worth nothing as authorisation &mdash; anyone who ever got hold of the file would have it. The purchase is what authorises, and the key is what carries the purchase.
+Все покупатели скачивают **один и тот же образ**, поэтому его идентификатор партии сам по себе не подтверждает право доступа: он есть у любого, кто получил файл. Право даёт покупка, подтверждаемая ключом.
 
-!!! tip "Entering it is optional, at first boot and afterwards"
-    Skip the screen and the appliance runs exactly as it would otherwise; it simply receives no appliance updates. The admin panel then shows an **Enter a key** notice until one is entered, and the key rides along with the next heartbeat. Nothing has to be reset or re-flashed.
+!!! tip "Ключ необязателен как при первом запуске, так и позднее"
+    Если пропустить экран ввода, устройство будет работать как обычно, но не получит обновления компонентов устройства. Панель администратора будет показывать уведомление **Enter a key**, пока ключ не введён; затем он будет отправлен со следующим сигналом состояния. Сбрасывать устройство или повторно записывать образ не нужно.
 
     ```bash
     sudo bambuddy-appliance license XXXXX-XXXXX-XXXXX-XXXXX
     ```
 
-    Setting it this way asks the registrar immediately, so a mistyped key tells you now rather than on a timer you cannot see.
+    При таком вводе запрос к регистратору выполняется сразу, поэтому ошибку в ключе можно увидеть немедленно, не ожидая фоновой проверки.
 
 ---
 
-## What is sent
+## Какие данные отправляются {#what-is-sent}
 
-| Field | What it is |
+| Поле | Значение |
 |---|---|
-| `device_uuid` | An identifier derived from the board's serial number, so the same board is always the same device |
-| `batch_id` | Which image the unit was flashed from |
-| `license_key` | Your licence key, when one is set |
-| `model` | The hardware model string, e.g. `Raspberry Pi 5 Model B` |
-| `appliance_version` | Which version of the appliance layer is running |
+| `device_uuid` | Идентификатор на основе серийного номера платы: одна и та же плата всегда считается одним устройством |
+| `batch_id` | Образ, из которого записано устройство |
+| `license_key` | Ваш лицензионный ключ, если задан |
+| `model` | Строка модели оборудования, например `Raspberry Pi 5 Model B` |
+| `appliance_version` | Работающая версия компонентов устройства |
 
-**No printer data. No print history. No user accounts. No credentials.** Nothing about what you print, when, or with what.
+**Данные принтеров, история печати, учётные записи и пароли не отправляются.** Сведения о том, что, когда и на чём вы печатаете, также не передаются.
 
-The registrar records the connecting IP address as a salted hash, never in the clear, and uses it only to notice when one identity turns up from many places at once.
+Регистратор сохраняет IP-адрес подключения только в виде хеша с солью, никогда в открытом виде, и использует его исключительно для обнаружения случаев, когда один идентификатор одновременно появляется в нескольких местах.
 
-The unit claims once on first boot, then heartbeats roughly once a day. In between, an hourly timer asks one question &mdash; am I still entitled? &mdash; which writes nothing on the registrar and exists so that a revoked, renewed or upgraded unit finds out within the hour rather than at its next heartbeat.
+Устройство регистрируется один раз при первом запуске, затем отправляет сигнал состояния примерно раз в день. Между сигналами ежечасный таймер проверяет, сохраняется ли право доступа. Эта проверка ничего не записывает у регистратора и позволяет узнать об отзыве, продлении или изменении лицензии в течение часа, не дожидаясь следующего сигнала.
 
-!!! info "It never blocks anything"
-    If the registrar is unreachable, the attempt is logged and retried later. Registration never blocks boot, and the appliance is fully usable whether or not it ever succeeds.
-
----
-
-## What registration buys
-
-One thing: **appliance updates**. The archive that serves the appliance package answers only a registered unit whose licence is active ([Updates](updates.md#upgrading-the-appliance-layer)).
-
-Two things it does **not** touch:
-
-- **Bambuddy itself.** It is never intercepted, gated or watermarked. The API, websockets and the camera stream are untouched, and the container is the ordinary AGPL one from `ghcr.io/maziggy/bambuddy`.
-- **Debian security updates.** The archive's package index is open to everyone, so `apt` keeps working on a unit that is not entitled. Revocation stops the appliance layer, not the operating system.
-
-A unit the registrar has **flagged or revoked** gets one more consequence: the appliance's own admin panel goes read-only behind a notice explaining why. That panel is the proprietary part, and it is the only part that is ever gated.
+!!! info "Работа устройства не блокируется"
+    Если регистратор недоступен, попытка записывается в журнал и повторяется позже. Регистрация не задерживает загрузку; устройством можно полностью пользоваться независимо от успешности регистрации.
 
 ---
 
-## When the registrar says no
+## Что даёт регистрация {#what-registration-buys}
 
-A claim is refused when the batch is unknown, when the batch needs a key and none was sent, when the key is not recognised, when the licence's updates have ended or it was withdrawn, or when a reseller's batch has already used every unit it was cut for.
+Только **обновления компонентов устройства**. Репозиторий пакета устройства отвечает только зарегистрированным устройствам с действующей лицензией ([Обновления](updates.md#upgrading-the-appliance-layer)).
 
-The reason is the registrar's own sentence, and the appliance keeps it:
+Регистрация **не влияет** на два компонента:
+
+- **Сам Bambuddy.** Его работа никогда не перехватывается и не блокируется, водяные знаки не добавляются. API, WebSocket и поток камеры не изменяются; используется обычный контейнер AGPL из `ghcr.io/maziggy/bambuddy`.
+- **Обновления безопасности Debian.** Индекс пакетов открыт всем, поэтому `apt` продолжает работать на устройстве без права доступа. Отзыв останавливает обновления компонентов устройства, но не операционной системы.
+
+Для устройства, которое регистратор **пометил или отозвал**, есть ещё одно последствие: собственная панель администратора устройства переходит в режим только для чтения с объяснением причины. Эта панель — проприетарный компонент и единственная часть, доступ к которой может ограничиваться.
+
+---
+
+## Если регистратор отказывает {#when-the-registrar-says-no}
+
+В регистрации отказывается, если партия неизвестна, для партии требуется ключ, но он не передан, ключ не распознан, срок обновлений лицензии истёк или лицензия отозвана, либо исчерпан лимит устройств партии реселлера.
+
+Устройство сохраняет объяснение регистратора:
 
 ```bash
 sudo bambuddy-appliance license          # shows the key state and the last refusal
 journalctl -u bambuddy-register.service -b
 ```
 
-The admin panel shows the same sentence on its Dashboard, with an **Enter a key** button beside it &mdash; except after a re-flash, where a key is not what is missing and no button appears. A unit that has a key but has not reached the registrar yet reads **Waiting for the registrar**: that is a first boot without a network, and it resolves itself on the next tick. Retrying on its own will not fix a refusal &mdash; something has to change first, usually the key.
+Панель администратора показывает то же сообщение на Dashboard с кнопкой **Enter a key**. Исключение — устройство после повторной записи образа: там не хватает не ключа, поэтому кнопка не появляется. Если ключ есть, но устройство ещё не связалось с регистратором, отображается **Waiting for the registrar**. Это происходит при первом запуске без сети и устраняется при следующей попытке. Повторные попытки сами по себе не исправят отказ; сначала нужно что-то изменить, обычно ключ.
 
 ---
 
-## Checking for yourself
+## Самостоятельная проверка {#checking-for-yourself}
 
 ```bash
 cat /etc/bambuddy/provisioning.json
 ```
 
-An empty `batch_id` is what a self-built appliance looks like. With no key either, the unit never contacts the registrar at all:
+Пустой `batch_id` характерен для самостоятельно собранного устройства. Если ключа тоже нет, устройство вообще не обращается к регистратору:
 
 ```json
 { "batch_id": "", "registrar_url": "https://appliance.bambuddy.cool" }
 ```
 
-The rest of the state lives in `/var/lib/bambuddy/registrar/`, on the data partition:
+Остальное состояние находится в `/var/lib/bambuddy/registrar/` на разделе данных:
 
-| File | What it holds |
+| Файл | Содержимое |
 |---|---|
-| `device-uuid` | This unit's identity |
-| `token` | Its credential. Also the password apt uses for the archive |
-| `license-key` | The licence key, `0600` |
-| `entitlement`, `entitled-until`, `tier` | The registrar's last word on the licence: its state, the date updates run until, and the edition |
-| `last-status` | `active`, `flagged` or `revoked` |
-| `refused` | Why the last claim was turned away, when it was |
-| `refused-kind` | `refused` (a key is what is missing) or `reclaim` (a re-flashed card) |
+| `device-uuid` | Идентификатор устройства |
+| `token` | Учётные данные устройства; также используются как пароль apt для репозитория |
+| `license-key` | Лицензионный ключ, права `0600` |
+| `entitlement`, `entitled-until`, `tier` | Последние сведения регистратора о лицензии: состояние, дата окончания обновлений и редакция |
+| `last-status` | `active`, `flagged` или `revoked` |
+| `refused` | Причина последнего отказа в регистрации, если он был |
+| `refused-kind` | `refused` (отсутствует ключ) или `reclaim` (карта после повторной записи образа) |
 
 ```bash
 systemctl status bambuddy-register.timer          # is it scheduled?
@@ -116,13 +116,13 @@ journalctl -u bambuddy-register.service -b        # what did it do?
 
 ---
 
-## Re-flashing a registered unit
+## Повторная запись образа зарегистрированного устройства {#re-flashing-a-registered-unit}
 
-A unit's identity comes from the board's serial number, so a re-flashed card comes back as **the same device** &mdash; but with no token, because the token lived on the card.
+Идентификатор устройства определяется серийным номером платы, поэтому после повторной записи образа оно возвращается как **то же устройство**, но без токена, который хранился на карте.
 
-**With a licence key, it fixes itself.** The key is the proof of purchase, it is your secret, and it is not readable off the board &mdash; so a unit that comes back presenting the key it activated with re-claims on its next tick, with nobody pressing anything.
+**При наличии лицензионного ключа восстановление происходит автоматически.** Ключ подтверждает покупку, известен только вам и не считывается с платы. Поэтому устройство, которое снова предъявляет использованный при активации ключ, повторно регистрируется при следующей проверке без дополнительных действий.
 
-Without a key &mdash; a reseller unit, where the board serial is the only identifier &mdash; the registrar will not hand over a replacement, because a serial is readable by anyone holding the board. The unit is refused, and says so, until an operator opens a one-shot re-claim window for it. It then mints and stores a fresh token by itself; there is nothing for you to copy anywhere.
+Без ключа — у устройства реселлера, где единственный идентификатор — серийный номер платы, — регистратор не выдаёт замену, поскольку любой владелец платы может прочитать номер. Устройство получает отказ и сообщает об этом, пока оператор не откроет одноразовое окно повторной регистрации. Затем устройство самостоятельно создаёт и сохраняет новый токен; копировать его никуда не нужно.
 
-!!! info "Re-claiming restores a credential, not an entitlement"
-    A revoked unit that re-claims is still revoked. And re-flashing never affects Bambuddy's own data, which the [backup](updates.md#backups) covers separately.
+!!! info "Повторная регистрация восстанавливает учётные данные, но не право доступа"
+    Отозванное устройство остаётся отозванным и после повторной регистрации. Повторная запись образа не влияет на собственные данные Bambuddy, которые отдельно сохраняются в [резервной копии](updates.md#backups).

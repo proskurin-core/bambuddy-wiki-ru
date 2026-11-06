@@ -1,144 +1,98 @@
 ---
-title: Manyfold Integration
-description: Browse and search your self-hosted Manyfold library from Bambuddy and import its 3MF, STL and STEP files to slice and print them.
+title: Интеграция с Manyfold
+description: Просматривайте библиотеку Manyfold из Bambuddy, ищите модели и импортируйте файлы 3MF, STL и STEP для нарезки и печати.
 ---
 
-# Manyfold Integration
+# Интеграция с Manyfold {#manyfold-integration}
 
-[Manyfold](https://manyfold.app) is a self-hosted library for 3D models.
-Bambuddy can browse and search it and import single files into the
-Bambuddy library, from where you slice and print them like any other file.
+[Manyfold](https://manyfold.app) — самостоятельно размещаемая библиотека 3D-моделей. Bambuddy позволяет просматривать её, искать модели и импортировать отдельные файлы в библиотеку Bambuddy, где их можно нарезать и печатать как любые другие файлы.
 
-Nothing is copied ahead of time: Bambuddy only downloads a file when you
-import it, and never changes anything in Manyfold.
+Заранее ничего не копируется: Bambuddy загружает файл только при импорте и никогда ничего не меняет в Manyfold.
 
 ---
 
-## :material-link-variant: Connecting Manyfold
+## :material-link-variant: Подключение Manyfold {#connecting-manyfold}
 
-Bambuddy signs in to Manyfold with an OAuth application.
+Bambuddy входит в Manyfold через приложение OAuth.
 
-1. In Manyfold, open **Settings → API** and create a new application.
-   Give it the scopes **`public`** and **`read`**. Bambuddy needs nothing
-   more.
-2. Note the application's **client ID** and **client secret**.
-3. In Bambuddy, open **Model Sources** in the sidebar and pick the
-   **Manyfold** tab.
-4. Enter Manyfold's URL (for example `http://192.168.1.10:3214`, or
-   `https://example.com/manyfold` behind a reverse proxy), the client ID and
-   the client secret.
-5. Click **Test connection**. Bambuddy signs in and shows how many models it
-   can see. Then click **Save**.
+1. В Manyfold откройте **Settings → API** и создайте новое приложение. Предоставьте ему области доступа **`public`** и **`read`**. Больше Bambuddy не требуется.
+2. Запишите **client ID** и **client secret** приложения.
+3. В Bambuddy откройте **Источники моделей** в боковой панели и выберите вкладку **Manyfold**.
+4. Введите URL Manyfold (например, `http://192.168.1.10:3214` или `https://example.com/manyfold` при использовании обратного прокси), client ID и client secret.
+5. Нажмите **Проверить подключение**. Bambuddy войдёт в систему и покажет количество доступных моделей. Затем нажмите **Сохранить**.
 
-!!! info "What Bambuddy can see"
-    Bambuddy sees the models that the application's **owner** can see in
-    Manyfold. To limit what Bambuddy shows, create the application with a
-    Manyfold user whose access covers just those models.
+!!! info "Что доступно Bambuddy"
+    Bambuddy видит модели, доступные **владельцу** приложения в Manyfold. Чтобы ограничить список, создайте приложение от имени пользователя Manyfold, у которого есть доступ только к нужным моделям.
 
-To change the connection later, click **Connection** at the top of the
-Manyfold tab. Leave the secret field empty to keep the stored secret.
-**Disconnect** makes Bambuddy forget the URL, client ID and secret. Files you
-imported stay in your library.
+Чтобы позже изменить подключение, нажмите **Подключение** в верхней части вкладки Manyfold. Оставьте поле секрета пустым, чтобы сохранить прежнее значение. При выборе **Отключить** Bambuddy забудет URL, client ID и секрет. Импортированные файлы останутся в библиотеке.
 
-The client secret is never sent back to the browser and is left out of
-[GitHub backups](backup.md). After restoring one, enter it again.
+Client secret никогда не отправляется обратно в браузер и не включается в [резервные копии GitHub](backup.md). После восстановления его нужно ввести снова.
 
 ---
 
-## :material-magnify: Browsing and importing
+## :material-magnify: Просмотр и импорт {#browsing-and-importing}
 
-- **Search** takes Manyfold's own search syntax. The page size is the
-  application owner's Manyfold setting.
-- **Previews** come from Manyfold. A 3D file shows a picture only when
-  Manyfold rendered one: turn on **3D Renders** in Manyfold under
-  **Settings → File Derivatives**. Otherwise the card shows a placeholder.
-- **Open a model** to see its description, tags, licence, a link to it in
-  Manyfold, and its files.
-- **Import** downloads a **3MF**, **STL** or **STEP** file into the library.
-  The default destination is a **Manyfold** folder, created on first use;
-  **Import to** picks another folder. Other file types are listed but
-  can't be imported, because Bambuddy can't slice or print them.
-- An imported file shows **In library**, with **Show in library** and
-  **Slice**. Importing it again doesn't download it twice. A file you
-  deleted from the library can be imported again. Only copies you can
-  open in the File Manager count: if you see only your own files, a file a
-  colleague imported is imported again as yours.
-- Files are limited to 200 MB.
+- **Поиск** использует собственный синтаксис Manyfold. Размер страницы задаётся в настройках Manyfold владельца приложения.
+- **Предпросмотр** поступает из Manyfold. Для 3D-файла изображение появится только в том случае, если Manyfold его создал: включите **3D Renders** в Manyfold в разделе **Settings → File Derivatives**. Иначе на карточке будет заглушка.
+- **Откройте модель**, чтобы увидеть её описание, теги, лицензию, ссылку на неё в Manyfold и файлы.
+- **Импорт** загружает файл **3MF**, **STL** или **STEP** в библиотеку. По умолчанию используется папка **Manyfold**, создаваемая при первом использовании; через **Импортировать в** можно выбрать другую папку. Файлы других типов отображаются, но импортировать их нельзя, поскольку Bambuddy не может их нарезать или напечатать.
+- Для импортированного файла отображается **В библиотеке**, а также действия **Показать в библиотеке** и **Нарезать**. Повторный импорт не загружает файл ещё раз. Удалённый из библиотеки файл можно импортировать снова. Учитываются только копии, которые вы можете открыть в файловом менеджере: если вы видите только свои файлы, файл, импортированный коллегой, будет импортирован повторно как ваш.
+- Размер файла ограничен 200 МБ.
 
-### Importing several files
+### Импорт нескольких файлов {#importing-several-files}
 
-- **In a model:** tick files, or tick **Select all**, then click **Import
-  selected**. **Import all** imports every printable file that isn't in the
-  library yet.
-- **From the grid:** tick models with the box in each card's corner, or
-  click **Select page**. The ticks stay while you page and search. **Import
-  their files** imports every printable file of those models that isn't in
-  the library yet, into the folder chosen next to it. **Clear selection**
-  removes all ticks.
+- **В модели:** отметьте файлы или выберите **Выбрать все**, затем нажмите **Импортировать выбранные**. Действие **Импортировать все** импортирует все пригодные для печати файлы, которых ещё нет в библиотеке.
+- **В сетке:** отметьте модели флажком в углу каждой карточки или нажмите **Выбрать страницу**. Отметки сохраняются при переходе между страницами и поиске. **Импортировать их файлы** импортирует все пригодные для печати файлы этих моделей, которых ещё нет в библиотеке, в выбранную рядом папку. **Очистить выбор** снимает все отметки.
 
-Files import one after another. A file that fails doesn't stop the rest;
-at the end a message says how many were imported, were already in the
-library, or failed, and names the ones that failed.
+Файлы импортируются последовательно. Ошибка одного файла не останавливает остальные; по завершении сообщение показывает, сколько файлов импортировано, сколько уже было в библиотеке и сколько не удалось импортировать, с перечислением последних.
 
 ---
 
-## :material-shield-account: Permissions
+## :material-shield-account: Разрешения {#permissions}
 
-| Permission | Allows |
+| Разрешение | Доступ |
 |---|---|
-| `manyfold:view` | Browse and search Manyfold and open models |
-| `manyfold:import` | Import files into the library |
-| `settings:update` | Connect, change or disconnect Manyfold |
+| `manyfold:view` | Просмотр и поиск Manyfold, открытие моделей |
+| `manyfold:import` | Импорт файлов в библиотеку |
+| `settings:update` | Подключение, изменение или отключение Manyfold |
 
-When you update, every group gets the Manyfold permissions that match its
-MakerWorld permissions: `makerworld:view` brings `manyfold:view`, and
-`makerworld:import` brings `manyfold:import`. This happens once, so a
-permission you take away later stays away.
+При обновлении каждая группа получает разрешения Manyfold, соответствующие её разрешениям MakerWorld: `makerworld:view` даёт `manyfold:view`, а `makerworld:import` — `manyfold:import`. Это происходит один раз, поэтому разрешение, отозванное позже, не возвращается автоматически.
 
-Until Manyfold is connected, the Manyfold tab is shown only to users who can
-connect it.
+Пока Manyfold не подключён, вкладку Manyfold видят только пользователи, которым разрешено его подключить.
 
 ---
 
-## :material-api: API
+## :material-api: API {#api}
 
-| Endpoint | Method | Permission | Purpose |
+| Конечная точка | Метод | Разрешение | Назначение |
 |---|---|---|---|
-| `/api/v1/manyfold/config` | GET | `settings:read` | URL, client ID and whether a secret is stored |
-| `/api/v1/manyfold/config` | PUT | `settings:update` | Store the connection; an empty secret keeps the stored one |
-| `/api/v1/manyfold/config` | DELETE | `settings:update` | Disconnect |
-| `/api/v1/manyfold/config/test` | POST | `settings:update` | Sign in with the given values and count the models; stores nothing |
-| `/api/v1/manyfold/status` | GET | `manyfold:view` | Whether Manyfold is connected, and its URL |
-| `/api/v1/manyfold/models` | GET | `manyfold:view` | One page of models; `q` searches, `page` pages |
-| `/api/v1/manyfold/models/{id}` | GET | `manyfold:view` | A model's details and files, with the library file of each earlier import |
-| `/api/v1/manyfold/models/{id}/preview` | GET | `manyfold:view` | The model's preview image; 404 when it has none |
-| `/api/v1/manyfold/import` | POST | `manyfold:import` | Import one file: `{"model_id", "file_id", "folder_id"}` |
+| `/api/v1/manyfold/config` | GET | `settings:read` | URL, client ID и признак сохранённого секрета |
+| `/api/v1/manyfold/config` | PUT | `settings:update` | Сохранить подключение; пустое поле секрета сохраняет прежнее значение |
+| `/api/v1/manyfold/config` | DELETE | `settings:update` | Отключить |
+| `/api/v1/manyfold/config/test` | POST | `settings:update` | Войти с указанными данными и подсчитать модели, ничего не сохраняя |
+| `/api/v1/manyfold/status` | GET | `manyfold:view` | Подключён ли Manyfold и его URL |
+| `/api/v1/manyfold/models` | GET | `manyfold:view` | Одна страница моделей; `q` задаёт поиск, `page` — страницу |
+| `/api/v1/manyfold/models/{id}` | GET | `manyfold:view` | Сведения и файлы модели с файлом библиотеки для каждого предыдущего импорта |
+| `/api/v1/manyfold/models/{id}/preview` | GET | `manyfold:view` | Изображение предпросмотра модели; 404 при его отсутствии |
+| `/api/v1/manyfold/import` | POST | `manyfold:import` | Импорт одного файла: `{"model_id", "file_id", "folder_id"}` |
 
-Errors from Manyfold come back with a `code`, such as
-`manyfold_credentials`, `manyfold_scope` or `manyfold_unreachable`. They use
-HTTP 502, never 401, so a refused Manyfold secret doesn't look like an
-expired Bambuddy session.
+Ошибки Manyfold возвращаются с `code`, например `manyfold_credentials`, `manyfold_scope` или `manyfold_unreachable`. Используется HTTP 502, а не 401, поэтому отклонённый секрет Manyfold нельзя спутать с истёкшей сессией Bambuddy.
 
 ---
 
-## :material-help-circle: Troubleshooting
+## :material-help-circle: Устранение неполадок {#troubleshooting}
 
-**"Manyfold did not accept the client ID or secret"**
-: Check both values in Manyfold under **Settings → API**.
+**«Manyfold не принял client ID или секрет»**
+: Проверьте оба значения в Manyfold в разделе **Settings → API**.
 
-**"The Manyfold application needs the read scope"**
-: Edit the application in Manyfold and add the `read` scope.
+**«Приложению Manyfold нужна область доступа read»**
+: Измените приложение в Manyfold и добавьте область `read`.
 
-**"Manyfold is limiting sign-ins"**
-: Manyfold allows 10 sign-ins in 3 minutes. Bambuddy keeps its sign-in
-  for about two hours, so this mostly happens while trying out credentials.
-  Wait a few minutes.
+**«Manyfold ограничивает вход»**
+: Manyfold допускает 10 входов за 3 минуты. Bambuddy сохраняет сеанс около двух часов, поэтому это обычно происходит при проверке учётных данных. Подождите несколько минут.
 
-**"Bambuddy can't reach Manyfold"**
-: The URL must be reachable from the machine Bambuddy runs on, not just
-  from your browser. In Docker, `localhost` is the Bambuddy container
-  itself: use the host's address instead. HTTPS needs a certificate the
-  Bambuddy host trusts.
+**«Bambuddy не может подключиться к Manyfold»**
+: URL должен быть доступен с компьютера, на котором работает Bambuddy, а не только из браузера. В Docker `localhost` указывает на сам контейнер Bambuddy: используйте адрес хоста. Для HTTPS нужен сертификат, которому доверяет хост Bambuddy.
 
-**A model shows no files or isn't found**
-: The application's owner can't see it in Manyfold.
+**Модель не найдена или в ней нет файлов**
+: Владелец приложения не имеет к ней доступа в Manyfold.

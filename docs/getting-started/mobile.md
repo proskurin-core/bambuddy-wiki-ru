@@ -1,85 +1,81 @@
 ---
-title: Mobile Access
-description: Access Bambuddy from your phone or tablet
+title: Доступ с мобильных устройств
+description: Доступ к Bambuddy с телефона или планшета
 ---
 
-# Mobile Access
+# Доступ с мобильных устройств {#mobile-access}
 
-Bambuddy is fully responsive and works great on mobile devices. Access your print farm from anywhere on your network.
+Bambuddy адаптируется к экрану и хорошо работает на мобильных устройствах. Управляйте своей фермой с любого устройства в сети.
 
 ---
 
-## :material-cellphone: Progressive Web App (PWA)
+## :material-cellphone: Прогрессивное веб-приложение (PWA) {#progressive-web-app-pwa}
 
-Bambuddy can be installed as a PWA for a native app-like experience — full screen, home screen icon, and no browser UI. However, PWA support varies significantly between browsers and platforms.
+Bambuddy можно установить как PWA: приложение будет работать на весь экран, с иконкой на главном экране и без элементов браузера. Поддержка PWA существенно различается в зависимости от браузера и платформы.
 
-### :material-lock: HTTPS Requirement
+### :material-lock: Требование HTTPS {#https-requirement}
 
-!!! warning "Chromium Browsers Require HTTPS"
-    **Chrome, Edge, and Samsung Internet** require a secure connection (HTTPS) to install a PWA. If you access Bambuddy over plain HTTP (e.g., `http://192.168.1.100:8000`), the install option **will not appear** in these browsers.
+!!! warning "Браузерам Chromium нужен HTTPS"
+    **Chrome, Edge и Samsung Internet** требуют защищённое соединение (HTTPS) для установки PWA. Если открыть Bambuddy по обычному HTTP (например, `http://192.168.1.100:8000`), пункт установки в этих браузерах **не появится**.
 
-    **Safari on iOS** does **not** have this restriction — Add to Home Screen works over plain HTTP.
+    В **Safari на iOS** такого ограничения **нет**: добавить приложение на экран «Домой» можно и по HTTP.
 
-| Connection | Safari (iOS) | Chrome / Edge | Firefox |
+| Соединение | Safari (iOS) | Chrome / Edge | Firefox |
 |:-----------|:------------:|:-------------:|:-------:|
-| `https://bambuddy.local` | :material-check: Works | :material-check: Works | No PWA support |
-| `http://192.168.1.100:8000` | :material-check: Works | :material-close: Blocked | No PWA support |
-| `http://localhost:8000` | :material-check: Works | :material-check: Works | No PWA support |
+| `https://bambuddy.local` | :material-check: Работает | :material-check: Работает | PWA не поддерживается |
+| `http://192.168.1.100:8000` | :material-check: Работает | :material-close: Заблокировано | PWA не поддерживается |
+| `http://localhost:8000` | :material-check: Работает | :material-check: Работает | PWA не поддерживается |
 
-### :material-apple: Installing on iOS (Safari)
+### :material-apple: Установка на iOS (Safari) {#installing-on-ios-safari}
 
-Safari does not show an install prompt — you add the app manually:
+Safari не предлагает установить приложение автоматически — добавьте его вручную:
 
-1. Open Bambuddy in **Safari** (other iOS browsers don't support PWA)
-2. Tap the **Share** button :material-share:
-3. Scroll down and tap **Add to Home Screen**
-4. Tap **Add** to confirm
+1. Откройте Bambuddy в **Safari** (другие браузеры iOS не поддерживают установку PWA)
+2. Нажмите кнопку **Поделиться** :material-share:
+3. Прокрутите вниз и нажмите **На экран «Домой»**
+4. Нажмите **Добавить** для подтверждения
 
-!!! note "Safari Only"
-    On iOS, only Safari supports PWA installation. Chrome, Firefox, and other browsers on iOS cannot install PWAs to the home screen.
+!!! note "Только Safari"
+    В iOS установить PWA может только Safari. Chrome, Firefox и другие браузеры iOS не могут устанавливать PWA на главный экран.
 
-### :material-android: Installing on Android (Chrome / Edge)
+### :material-android: Установка на Android (Chrome / Edge) {#installing-on-android-chrome-edge}
 
-The easiest way is the **Install app** button (:material-download:) in the
-Bambuddy sidebar footer, next to the GitHub link. It appears automatically
-once the browser considers the app installable — just tap it and confirm.
+Самый простой способ — кнопка **Установить приложение** (:material-download:) внизу боковой панели Bambuddy, рядом со ссылкой на GitHub. Она появляется автоматически, когда браузер определяет, что приложение можно установить. Нажмите её и подтвердите установку.
 
-!!! note "Chrome no longer pops up an install banner"
-    Chrome for Android stopped showing an automatic install banner back in
-    Chrome 108. Bambuddy's own **Install app** button replaces it, so you no
-    longer need to wait for a prompt or hunt through the browser menu.
+!!! note "Chrome больше не показывает баннер установки"
+    Chrome для Android перестал автоматически показывать баннер установки ещё в версии 108. Вместо него используйте кнопку **Установить приложение** в Bambuddy: ждать приглашения или искать его в меню браузера больше не нужно.
 
-You can also install from the browser menu:
+Также можно установить приложение через меню браузера:
 
-1. Open Bambuddy in Chrome or Edge **over HTTPS**
-2. Tap the **menu** button :material-dots-vertical:
-3. Tap **Install app** or **Add to Home Screen**
-4. Tap **Install** to confirm
+1. Откройте Bambuddy в Chrome или Edge **по HTTPS**
+2. Нажмите кнопку **меню** :material-dots-vertical:
+3. Выберите **Установить приложение** или **Добавить на главный экран**
+4. Подтвердите установку
 
-If neither the in-app button nor the menu option appears, check that:
+Если нет ни кнопки в приложении, ни пункта меню, проверьте следующее:
 
-- You are using **HTTPS** (not plain HTTP)
-- The page has fully loaded
-- You are not in incognito/private mode
+- Используется **HTTPS**, а не обычный HTTP
+- Страница полностью загружена
+- Браузер не работает в режиме инкогнито или приватном режиме
 
-### :material-monitor: Installing on Desktop
+### :material-monitor: Установка на компьютере {#installing-on-desktop}
 
-| Browser | PWA Support |
+| Браузер | Поддержка PWA |
 |:--------|:-----------:|
-| Chrome | :material-check: Yes (HTTPS required) |
-| Edge | :material-check: Yes (HTTPS required) |
-| Firefox | :material-close: No (removed PWA support) |
-| Safari (macOS) | :material-close: No |
+| Chrome | :material-check: Да (нужен HTTPS) |
+| Edge | :material-check: Да (нужен HTTPS) |
+| Firefox | :material-close: Нет (поддержка PWA удалена) |
+| Safari (macOS) | :material-close: Нет |
 
-In Chrome or Edge, click the **Install app** button (:material-download:) in the Bambuddy sidebar footer, look for the install icon (:material-download:) in the address bar, or go to **Menu → Install Bambuddy**.
+В Chrome или Edge нажмите **Установить приложение** (:material-download:) внизу боковой панели Bambuddy, найдите значок установки (:material-download:) в адресной строке или выберите **Меню → Установить Bambuddy**.
 
-### :material-shield-check: Setting Up HTTPS for Local Network
+### :material-shield-check: Настройка HTTPS в локальной сети {#setting-up-https-for-local-network}
 
-If you want PWA installation in Chrome/Edge, you need HTTPS. Here are your options:
+Для установки PWA в Chrome или Edge необходим HTTPS. Доступны следующие варианты:
 
-=== "Reverse Proxy (Recommended)"
+=== "Обратный прокси (рекомендуется)"
 
-    Use **Caddy** or **nginx** as a reverse proxy with a self-signed or local CA certificate:
+    Используйте **Caddy** или **nginx** в качестве обратного прокси с самоподписанным сертификатом или сертификатом локального центра сертификации:
 
     ```
     # Example Caddy config (automatic self-signed cert)
@@ -89,192 +85,192 @@ If you want PWA installation in Chrome/Edge, you need HTTPS. Here are your optio
     }
     ```
 
-    Then access Bambuddy at `https://bambuddy.local`.
+    Затем откройте Bambuddy по адресу `https://bambuddy.local`.
 
 === "Tailscale"
 
-    [Tailscale](https://tailscale.com/) provides automatic HTTPS certificates for devices on your tailnet:
+    [Tailscale](https://tailscale.com/) автоматически выдаёт сертификаты HTTPS устройствам в вашей сети tailnet:
 
-    1. Install Tailscale on your Bambuddy server
-    2. Enable [HTTPS certificates](https://tailscale.com/kb/1153/enabling-https)
-    3. Access via `https://your-machine.your-tailnet.ts.net:8000`
+    1. Установите Tailscale на сервер Bambuddy
+    2. Включите [сертификаты HTTPS](https://tailscale.com/kb/1153/enabling-https)
+    3. Откройте `https://your-machine.your-tailnet.ts.net:8000`
 
-=== "Chrome Flag (Development Only)"
+=== "Флаг Chrome (только для разработки)"
 
-    For testing purposes only, you can tell Chrome to treat a specific HTTP origin as secure:
+    Только для тестирования можно указать Chrome считать определённый источник HTTP безопасным:
 
-    1. Open `chrome://flags/#unsafely-treat-insecure-origin-as-secure`
-    2. Add your Bambuddy URL (e.g., `http://192.168.1.100:8000`)
-    3. Restart Chrome
+    1. Откройте `chrome://flags/#unsafely-treat-insecure-origin-as-secure`
+    2. Добавьте URL Bambuddy (например, `http://192.168.1.100:8000`)
+    3. Перезапустите Chrome
 
-    !!! danger "Not Recommended for Production"
-        This flag lowers browser security. Use only for testing PWA installation on your own network.
+    !!! danger "Не рекомендуется для рабочего использования"
+        Этот флаг снижает безопасность браузера. Используйте его только для тестирования установки PWA в собственной сети.
 
-### :material-compare: PWA Feature Comparison
+### :material-compare: Сравнение возможностей PWA {#pwa-feature-comparison}
 
-| Feature | Safari (iOS) | Chrome (Android) | Chrome (Desktop) | Edge (Desktop) |
+| Возможность | Safari (iOS) | Chrome (Android) | Chrome (компьютер) | Edge (компьютер) |
 |:--------|:------------:|:----------------:|:-----------------:|:--------------:|
-| Home screen icon | :material-check: | :material-check: | :material-check: | :material-check: |
-| Full screen (no browser UI) | :material-check: | :material-check: | :material-check: | :material-check: |
-| Works over HTTP | :material-check: | :material-close: | :material-close: | :material-close: |
-| In-app **Install app** button | :material-close: | :material-check: | :material-check: | :material-check: |
-| Offline caching | :material-check: | :material-check: | :material-check: | :material-check: |
-| Push notifications | iOS 16.4+ | :material-check: | :material-check: | :material-check: |
-| Background sync | :material-close: | :material-check: | :material-check: | :material-check: |
+| Значок на главном экране | :material-check: | :material-check: | :material-check: | :material-check: |
+| Полный экран (без интерфейса браузера) | :material-check: | :material-check: | :material-check: | :material-check: |
+| Работа по HTTP | :material-check: | :material-close: | :material-close: | :material-close: |
+| Кнопка **Установить приложение** в приложении | :material-close: | :material-check: | :material-check: | :material-check: |
+| Офлайн-кэширование | :material-check: | :material-check: | :material-check: | :material-check: |
+| Push-уведомления | iOS 16.4+ | :material-check: | :material-check: | :material-check: |
+| Фоновая синхронизация | :material-close: | :material-check: | :material-check: | :material-check: |
 
-!!! tip "Best Experience"
-    For the best PWA experience on all platforms, set up HTTPS using one of the methods above. This unlocks PWA installation in Chrome and Edge while also securing your connection.
+!!! tip "Для удобной работы"
+    Настройте HTTPS одним из описанных способов. Это позволит устанавливать PWA в Chrome и Edge и защитит соединение.
 
 ---
 
-## :material-gesture-tap: Touch-Friendly Interface
+## :material-gesture-tap: Удобный сенсорный интерфейс {#touch-friendly-interface}
 
-The mobile interface is optimized for touch:
+Мобильный интерфейс оптимизирован для сенсорного управления:
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### :material-menu: Hamburger Navigation
-Tap the menu icon to open the navigation drawer on smaller screens.
+### :material-menu: Кнопка меню {#hamburger-navigation}
+На небольшом экране нажмите значок меню, чтобы открыть навигационную панель.
 </div>
 
 <div class="feature-card" markdown>
-### :material-gesture-tap-hold: Long Press Menus
-Long press on cards to open context menus (like right-click on desktop).
+### :material-gesture-tap-hold: Меню по длительному нажатию {#long-press-menus}
+Длительно нажмите на карточку, чтобы открыть контекстное меню, как при щелчке правой кнопкой мыши.
 </div>
 
 <div class="feature-card" markdown>
-### :material-gesture-swipe: Large Touch Targets
-All buttons and interactive elements are at least 44px for easy tapping.
+### :material-gesture-swipe: Крупные элементы управления {#large-touch-targets}
+Все кнопки и интерактивные элементы имеют размер не менее 44 пикселей для удобного нажатия.
 </div>
 
 <div class="feature-card" markdown>
-### :material-cellphone-screenshot: Safe Area Support
-Works with notched devices (iPhone X+, etc.) with proper safe area insets.
+### :material-cellphone-screenshot: Поддержка безопасной области {#safe-area-support}
+Интерфейс учитывает безопасные отступы на устройствах с вырезом экрана (iPhone X и новее и т. д.).
 </div>
 
 </div>
 
 ---
 
-## :material-monitor-cellphone: Responsive Layouts
+## :material-monitor-cellphone: Адаптивная компоновка {#responsive-layouts}
 
-### Printers Page
+### Страница принтеров {#printers-page}
 
-| Desktop | Mobile |
+| Компьютер | Мобильное устройство |
 |---------|--------|
-| Multi-column grid | Single column cards |
-| Side-by-side AMS | Stacked AMS display |
-| Full temperature readouts | Compact temp display |
+| Сетка в несколько столбцов | Карточки в один столбец |
+| AMS рядом | AMS друг под другом |
+| Полные показания температуры | Компактные показания температуры |
 
-### Archives Page
+### Страница архива {#archives-page}
 
-| Desktop | Mobile |
+| Компьютер | Мобильное устройство |
 |---------|--------|
-| Card grid with filters | Single column with collapsible filters |
-| Right-click context menu | Long press for menu |
-| Inline editing | Modal editing |
+| Сетка карточек с фильтрами | Один столбец со сворачиваемыми фильтрами |
+| Контекстное меню правой кнопкой | Меню по длительному нажатию |
+| Редактирование на месте | Редактирование в окне |
 
-### Statistics Page
+### Страница статистики {#statistics-page}
 
-| Desktop | Mobile |
+| Компьютер | Мобильное устройство |
 |---------|--------|
-| Multi-widget dashboard | Single column widgets |
-| Side-by-side charts | Stacked charts |
-| Drag to reorder | Simplified ordering |
+| Панель с несколькими виджетами | Виджеты в один столбец |
+| Графики рядом | Графики друг под другом |
+| Перетаскивание для изменения порядка | Упрощённое изменение порядка |
 
 ---
 
-## :material-wifi: Accessing from Your Network
+## :material-wifi: Доступ через сеть {#accessing-from-your-network}
 
-### Local Network Access
+### Доступ из локальной сети {#local-network-access}
 
-Access Bambuddy from any device on your local network:
+Откройте Bambuddy с любого устройства в локальной сети:
 
-1. Find your server's IP address (e.g., `192.168.1.100`)
-2. Open `http://192.168.1.100:8000` on your phone
-3. Bookmark or install as PWA
+1. Узнайте IP-адрес сервера (например, `192.168.1.100`)
+2. Откройте `http://192.168.1.100:8000` на телефоне
+3. Добавьте страницу в закладки или установите как PWA
 
-!!! tip "Finding Your IP"
-    On Linux/macOS: `ip addr` or `ifconfig`
+!!! tip "Как узнать IP-адрес"
+    В Linux/macOS: `ip addr` или `ifconfig`
 
-    On Windows: `ipconfig`
+    В Windows: `ipconfig`
 
-### Remote Access (Advanced)
+### Удалённый доступ (для опытных пользователей) {#remote-access-advanced}
 
-For access outside your home network:
+Для доступа вне домашней сети:
 
-=== "VPN (Recommended)"
+=== "VPN (рекомендуется)"
 
-    Set up a VPN (like WireGuard or Tailscale) to securely access your home network from anywhere. Tailscale also provides [automatic HTTPS certificates](https://tailscale.com/kb/1153/enabling-https) which enables PWA installation in Chrome/Edge.
+    Настройте VPN, например WireGuard или Tailscale, чтобы безопасно подключаться к домашней сети из любого места. Tailscale также предоставляет [автоматические сертификаты HTTPS](https://tailscale.com/kb/1153/enabling-https), позволяющие устанавливать PWA в Chrome/Edge.
 
-=== "Reverse Proxy + HTTPS"
+=== "Обратный прокси + HTTPS"
 
-    Set up a reverse proxy with HTTPS. See the [Installation guide → Reverse Proxy](installation.md#reverse-proxy) for Nginx and Caddy configs. This also enables PWA installation in Chrome/Edge — see [HTTPS setup](#setting-up-https-for-local-network) above.
+    Настройте обратный прокси с HTTPS. Примеры конфигурации Nginx и Caddy приведены в [руководстве по установке → Обратный прокси](installation.md#reverse-proxy). Это также позволяет устанавливать PWA в Chrome/Edge — см. раздел [Настройка HTTPS](#setting-up-https-for-local-network) выше.
 
-!!! warning "Security"
-    Never expose Bambuddy directly to the internet without proper authentication and HTTPS. Your printer access codes would be vulnerable!
+!!! warning "Безопасность"
+    Никогда не открывайте Bambuddy напрямую в интернет без надлежащей аутентификации и HTTPS. Иначе коды доступа к принтерам будут уязвимы!
 
 ---
 
-## :material-keyboard: Mobile Shortcuts
+## :material-keyboard: Быстрые действия на мобильном устройстве {#mobile-shortcuts}
 
-While physical keyboard shortcuts don't apply on mobile, Bambuddy provides quick-access buttons:
+Сочетания физических клавиш на мобильных устройствах не применяются, но Bambuddy предоставляет кнопки быстрого доступа:
 
-| Action | How to Access |
+| Действие | Как выполнить |
 |--------|---------------|
-| Add printer | Floating action button on Printers page |
-| Quick search | Search icon in header |
-| Refresh | Pull down to refresh (PWA) |
-| Context menu | Long press on cards |
+| Добавить принтер | Плавающая кнопка на странице принтеров |
+| Быстрый поиск | Значок поиска в заголовке |
+| Обновить | Потянуть вниз для обновления (PWA) |
+| Контекстное меню | Длительно нажать на карточку |
 
 ---
 
-## :material-bell-ring: Mobile Notifications
+## :material-bell-ring: Уведомления на мобильном устройстве {#mobile-notifications}
 
-Get push notifications on your phone when prints complete, fail, or encounter errors.
+Получайте push-уведомления на телефон при завершении печати, неудаче или ошибке.
 
-Bambuddy supports:
+Bambuddy поддерживает:
 
-- **ntfy** - Install the ntfy app and subscribe to your topic
-- **Telegram** - Receive messages from your Bambuddy bot
-- **Pushover** - Professional push notification app
-- **WhatsApp** - Via CallMeBot integration
+- **ntfy** — установите приложение ntfy и подпишитесь на свой топик
+- **Telegram** — получайте сообщения от своего бота Bambuddy
+- **Pushover** — приложение для push-уведомлений
+- **WhatsApp** — через интеграцию CallMeBot
 
-[:material-arrow-right: Set up notifications](../features/notifications.md)
-
----
-
-## :material-camera: Camera on Mobile
-
-Watch your prints from anywhere:
-
-1. Tap the camera icon on any printer card
-2. Choose **Live** for real-time streaming or **Snapshot** for still images
-3. Pinch to zoom on the live feed
-
-!!! note "Bandwidth"
-    Live streaming uses more data than snapshots. On cellular, consider using snapshot mode.
+[:material-arrow-right: Настроить уведомления](../features/notifications.md)
 
 ---
 
-## :material-battery-alert: Tips for Mobile Use
+## :material-camera: Камера на мобильном устройстве {#camera-on-mobile}
 
-1. **Use WiFi** - Live streaming and real-time updates work best on WiFi
-2. **Enable notifications** - Get alerted without keeping the app open
-3. **Install as PWA** - Faster launch and better experience
-4. **Bookmark important pages** - Quick access to specific printers or stats
+Следите за печатью из любого места:
+
+1. Нажмите значок камеры на карточке принтера
+2. Выберите **Прямой эфир** для трансляции в реальном времени или **Снимок** для статичных изображений
+3. Масштабируйте трансляцию жестом сведения или разведения пальцев
+
+!!! note "Расход трафика"
+    Трансляция расходует больше данных, чем снимки. В мобильной сети можно использовать режим снимков.
 
 ---
 
-## :checkered_flag: Next Steps
+## :material-battery-alert: Советы по использованию на мобильном устройстве {#tips-for-mobile-use}
+
+1. **Используйте Wi-Fi** — трансляция и обновления в реальном времени работают лучше через Wi-Fi
+2. **Включите уведомления** — получайте оповещения, не держа приложение открытым
+3. **Установите PWA** — оно быстрее запускается и удобнее в работе
+4. **Добавьте важные страницы в закладки** — быстро открывайте нужные принтеры и статистику
+
+---
+
+## :checkered_flag: Следующие шаги {#next-steps}
 
 <div class="quick-start" markdown>
 
-[:material-bell-ring: **Set Up Notifications**<br><small>Never miss a print event</small>](../features/notifications.md)
+[:material-bell-ring: **Настроить уведомления**<br><small>Не пропускайте события печати</small>](../features/notifications.md)
 
-[:material-camera: **Camera Streaming**<br><small>Watch prints remotely</small>](../features/camera.md)
+[:material-camera: **Трансляция с камеры**<br><small>Наблюдайте за печатью удалённо</small>](../features/camera.md)
 
-[:material-chart-line: **Statistics**<br><small>Track your prints</small>](../features/statistics.md)
+[:material-chart-line: **Статистика**<br><small>Отслеживайте свои печати</small>](../features/statistics.md)
 
 </div>

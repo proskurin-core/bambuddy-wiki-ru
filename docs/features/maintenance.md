@@ -1,261 +1,261 @@
 ---
-title: Maintenance Tracker
-description: Schedule and track printer maintenance tasks
+title: Учёт обслуживания
+description: Планирование и учёт задач обслуживания принтера
 ---
 
-# Maintenance Tracker
+# Учёт обслуживания {#maintenance-tracker}
 
-Schedule and track maintenance tasks to keep your printers running reliably.
+Планируйте и отслеживайте задачи обслуживания, чтобы принтеры работали надёжно.
 
-![Maintenance](../assets/maintenance-1.png){ .screenshot }
+![Обслуживание](../assets/maintenance-1.png){ .screenshot }
 
-!!! tip "Looking for the per-printer on/off switch?"
-    The **Maintenance Tracker** on this page is for **interval-based scheduled tasks** (clean nozzle every 100 hours, check belts every 200 hours, etc.). If you want to take a single printer **out of service right now** — stop MQTT, drop it from the queue, hide it from notifications — that's **[Maintenance Mode](printer-control.md#maintenance-mode)** on the Printer Control page. The two pair well: when you start a real task from the tracker, you can flip the same printer to Maintenance Mode while the cover is open.
-
----
-
-## :material-tools: Overview
-
-The maintenance tracker helps you:
-
-- **Schedule** recurring maintenance tasks
-- **Track** when maintenance was last performed
-- **Get notified** when maintenance is due
-- **Log** maintenance history
+!!! tip "Ищете переключатель обслуживания отдельного принтера?"
+    **Учёт обслуживания** на этой странице предназначен для **периодических задач**: чистки сопла каждые 100 часов, проверки ремней каждые 200 часов и т. д. Если нужно **прямо сейчас вывести принтер из эксплуатации**, остановить MQTT, исключить его из очереди и скрыть из уведомлений, используйте **[Режим обслуживания](printer-control.md#maintenance-mode)** на странице управления принтером. Эти функции дополняют друг друга: когда приступите к задаче из списка, включите режим обслуживания принтера на время работ.
 
 ---
 
-## :material-format-list-checks: Maintenance Types
+## :material-tools: Обзор {#overview}
 
-### Default Types
+Учёт обслуживания помогает:
 
-Bambuddy includes common maintenance tasks:
+- **Планировать** регулярные задачи
+- **Отслеживать** время последнего обслуживания
+- **Получать уведомления**, когда обслуживание подходит к сроку
+- **Вести журнал** обслуживания
 
-| Type | Default Interval | Applies To |
+---
+
+## :material-format-list-checks: Виды обслуживания {#maintenance-types}
+
+### Стандартные виды {#default-types}
+
+Bambuddy включает распространённые задачи обслуживания:
+
+| Вид | Интервал по умолчанию | Принтеры |
 |------|-----------------|------------|
-| **Clean Build Plate** | Every 25 hours | All printers |
-| **Clean Nozzle/Hotend** | Every 100 hours | All printers |
-| **Check Belt Tension** | Every 200 hours | All printers |
-| **Check PTFE Tube** | Every 500 hours | All printers |
-| **Lubricate Carbon Rods** | Every 50 hours | X1/P1 |
-| **Clean Carbon Rods** | Every 100 hours | X1/P1 |
-| **Lubricate Steel Rods** | Every 50 hours | P2S |
-| **Clean Steel Rods** | Every 100 hours | P2S |
-| **Lubricate Linear Rails** | Every 50 hours | A1/H2D |
-| **Clean Linear Rails** | Every 100 hours | A1/H2D |
+| **Очистить печатную пластину** | Каждые 25 часов | Все |
+| **Очистить сопло/хотэнд** | Каждые 100 часов | Все |
+| **Проверить натяжение ремней** | Каждые 200 часов | Все |
+| **Проверить трубку PTFE** | Каждые 500 часов | Все |
+| **Смазать карбоновые стержни** | Каждые 50 часов | X1/P1 |
+| **Очистить карбоновые стержни** | Каждые 100 часов | X1/P1 |
+| **Смазать стальные стержни** | Каждые 50 часов | P2S |
+| **Очистить стальные стержни** | Каждые 100 часов | P2S |
+| **Смазать линейные направляющие** | Каждые 50 часов | A1/H2D |
+| **Очистить линейные направляющие** | Каждые 100 часов | A1/H2D |
 
-### Hiding Default Types
+### Скрытие стандартных видов {#hiding-default-types}
 
-If a default maintenance type isn't relevant to your setup, you can remove it:
+Если стандартный вид обслуживания вам не нужен, его можно убрать:
 
-1. Go to **Settings** > **Maintenance**
-2. Click the :material-delete: icon next to the default type
-3. Confirm deletion
+1. Откройте **Настройки** > **Обслуживание**
+2. Нажмите значок :material-delete: рядом со стандартным видом
+3. Подтвердите удаление
 
-Hidden default types can be restored at any time — click **Restore Default Tasks** to bring them all back.
+Скрытые стандартные виды можно восстановить в любое время кнопкой **Восстановить стандартные задачи**.
 
-### Custom Types
+### Пользовательские виды {#custom-types}
 
-Create your own maintenance tasks:
+Создавайте собственные задачи обслуживания:
 
-1. Go to **Settings** > **Maintenance**
-2. Click **Add Maintenance Type**
-3. Enter name and description
-4. Set default interval
-5. Click **Save**
+1. Откройте **Настройки** > **Обслуживание**
+2. Нажмите **Добавить вид обслуживания**
+3. Введите название и описание
+4. Установите интервал по умолчанию
+5. Нажмите **Сохранить**
 
-Maintenance types are shared by all printers. Deleting a custom type removes it, with its maintenance history, from every printer, including printers of other teams when [printer access](authentication.md#printer-access) is limited.
+Виды обслуживания общие для всех принтеров. Удаление пользовательского вида удаляет его и его историю со всех принтеров, включая принтеры других команд при ограниченном [доступе к принтерам](authentication.md#printer-access).
 
-![Maintenance Settings](../assets/maintenance-2.png){ .screenshot }
-
----
-
-## :material-calendar-clock: Interval Types
-
-### Print Hours
-
-Schedule based on actual print time:
-
-- Example: Lubricate every 100 hours
-- Accumulated from print durations
-
-### Calendar Days
-
-Schedule based on calendar time:
-
-- Example: Check belts every 30 days
-- Counts calendar days regardless of usage
+![Настройки обслуживания](../assets/maintenance-2.png){ .screenshot }
 
 ---
 
-## :material-plus-circle: Setting Up Maintenance
+## :material-calendar-clock: Типы интервалов {#interval-types}
 
-### Per-Printer Configuration
+### Часы печати {#print-hours}
 
-Each printer has its own maintenance schedule:
+Планирование по фактическому времени печати:
 
-1. Go to **Maintenance** page
-2. Select your printer
-3. Click **Configure**
-4. Enable/disable maintenance types
-5. Adjust intervals as needed
-6. Click **Save**
+- Например, смазывать каждые 100 часов
+- Время накапливается по длительности печатей
 
-### Interval Customization
+### Календарные дни {#calendar-days}
 
-Override default intervals per printer:
+Планирование по календарному времени:
 
-| Printer | Clean Build Plate |
+- Например, проверять ремни каждые 30 дней
+- Дни считаются независимо от использования
+
+---
+
+## :material-plus-circle: Настройка обслуживания {#setting-up-maintenance}
+
+### Настройка отдельного принтера {#per-printer-configuration}
+
+У каждого принтера собственный график обслуживания:
+
+1. Откройте страницу **Обслуживание**
+2. Выберите принтер
+3. Нажмите **Настроить**
+4. Включите или выключите виды обслуживания
+5. При необходимости измените интервалы
+6. Нажмите **Сохранить**
+
+### Изменение интервалов {#interval-customization}
+
+Для каждого принтера можно переопределить интервалы по умолчанию:
+
+| Принтер | Очистка печатной пластины |
 |---------|:-----------------:|
-| Workshop X1C | Every 25 hours |
-| Office P1S | Every 15 hours |
-| Garage A1 | Every 50 hours |
+| Workshop X1C | Каждые 25 часов |
+| Office P1S | Каждые 15 часов |
+| Garage A1 | Каждые 50 часов |
 
 ---
 
-## :material-check-circle: Logging Maintenance
+## :material-check-circle: Запись обслуживания {#logging-maintenance}
 
-### Marking Complete
+### Отметка о выполнении {#marking-complete}
 
-When you perform maintenance:
+После обслуживания:
 
-1. Go to **Maintenance** page
-2. Find the due/overdue item
-3. Click **Mark Complete**
-4. Optionally add notes
-5. Counter resets
+1. Откройте страницу **Обслуживание**
+2. Найдите задачу, срок которой наступил или истёк
+3. Нажмите **Отметить выполненным**
+4. При желании добавьте заметки
+5. Счётчик сбросится
 
-### Logging Details
+### Сведения в журнале {#logging-details}
 
-Add information to maintenance logs:
+В журнал обслуживания можно добавить:
 
-| Field | Description |
+| Поле | Описание |
 |-------|-------------|
-| **Date** | When performed |
-| **Notes** | What you did |
-| **Parts** | Any parts replaced |
+| **Дата** | Когда выполнено |
+| **Заметки** | Что было сделано |
+| **Детали** | Какие детали были заменены |
 
 ---
 
-## :material-alert: Due Status
+## :material-alert: Срок обслуживания {#due-status}
 
-### Status Indicators
+### Индикаторы состояния {#status-indicators}
 
-| Status | Meaning |
+| Состояние | Значение |
 |:------:|---------|
-| :material-check-circle:{ style="color: #4caf50" } OK | Not due yet |
-| :material-alert:{ style="color: #ff9800" } Due Soon | Approaching due |
-| :material-alert-circle:{ style="color: #f44336" } Overdue | Past due |
+| :material-check-circle:{ style="color: #4caf50" } OK | Срок ещё не наступил |
+| :material-alert:{ style="color: #ff9800" } Скоро | Срок приближается |
+| :material-alert-circle:{ style="color: #f44336" } Просрочено | Срок истёк |
 
-### Due Soon Threshold
+### Порог предупреждения {#due-soon-threshold}
 
-Configure when "Due Soon" triggers:
+Настройте момент появления состояния «Скоро»:
 
-- Default: 80% of interval
-- Example: Clean Build Plate every 25 hours → "Due Soon" at 20 hours
-
----
-
-## :material-bell-ring: Notifications
-
-Get notified when maintenance is due:
-
-1. Go to **Settings** > **Notifications**
-2. Enable **Maintenance Due** event
-3. Configure your notification provider
-
-### Notification Timing
-
-- **Due Soon**: When threshold reached
-- **Overdue**: When interval exceeded
-
-[:material-arrow-right: Notification setup](notifications.md)
+- По умолчанию: 80% интервала
+- Например: очистка пластины каждые 25 часов → предупреждение через 20 часов
 
 ---
 
-## :material-history: Maintenance History
+## :material-bell-ring: Уведомления {#notifications}
 
-View past maintenance for each printer:
+Чтобы получать уведомления о сроке обслуживания:
 
-### History Log
+1. Откройте **Настройки** > **Уведомления**
+2. Включите событие **Срок обслуживания**
+3. Настройте поставщика уведомлений
 
-| Date | Type | Notes |
+### Время уведомлений {#notification-timing}
+
+- **Скоро**: при достижении порога
+- **Просрочено**: при превышении интервала
+
+[:material-arrow-right: Настройка уведомлений](notifications.md)
+
+---
+
+## :material-history: История обслуживания {#maintenance-history}
+
+Просматривайте историю обслуживания каждого принтера:
+
+### Журнал истории {#history-log}
+
+| Дата | Вид | Заметки |
 |------|------|-------|
-| Dec 14 | Clean Build Plate | IPA wipe |
-| Dec 10 | Lubricate Carbon Rods | Rails and screws |
-| Dec 1 | Clean Nozzle/Hotend | Replaced with 0.4mm |
+| 14 декабря | Очистка пластины | Протёрта изопропиловым спиртом |
+| 10 декабря | Смазка карбоновых стержней | Направляющие и винты |
+| 1 декабря | Очистка сопла/хотэнда | Замена на 0,4 мм |
 
-### Exporting History
+### Экспорт истории {#exporting-history}
 
-Export maintenance logs for records:
+Экспортируйте журнал для хранения:
 
-- CSV format
-- Date range selection
-- Per-printer or all printers
+- Формат CSV
+- Выбор диапазона дат
+- Для отдельного принтера или всех принтеров
 
 ---
 
-## :material-printer: Per-Printer View
+## :material-printer: Представление принтера {#per-printer-view}
 
-### Dashboard
+### Панель {#dashboard}
 
-Each printer shows maintenance status:
+Для каждого принтера показано состояние обслуживания:
 
 ```
 Workshop X1C
 ─────────────────────────────
-✅ Clean Build Plate     12 hours until due
-⚠️ Lubricate Carbon Rods  8 hours until due
-❌ Check Belt Tension    OVERDUE
-✅ Clean Nozzle/Hotend   65 hours until due
+✅ Очистка пластины       осталось 12 часов
+⚠️ Смазка стержней        осталось 8 часов
+❌ Проверка ремней        ПРОСРОЧЕНО
+✅ Очистка сопла/хотэнда  осталось 65 часов
 ```
 
-### Quick Actions
+### Быстрые действия {#quick-actions}
 
-- **View Details**: See full maintenance info
-- **Mark Complete**: Log completed maintenance
-- **View History**: See past maintenance
-
----
-
-## :material-lightbulb: Maintenance Tips
-
-!!! tip "Bed Cleaning"
-    Clean with IPA between prints for best adhesion. Deep clean with dish soap weekly.
-
-!!! tip "Lubrication"
-    Use appropriate grease for linear rails. Don't over-lubricate.
-
-!!! tip "Belt Tension"
-    Belts should be firm but not overly tight. Use the "guitar string" test.
-
-!!! tip "Nozzle Inspection"
-    Check for wear, especially with abrasive filaments. Replace when worn.
-
-!!! tip "Filters"
-    HEPA and carbon filters lose effectiveness over time. Replace as recommended.
-
-!!! tip "Document Everything"
-    Add notes when logging maintenance to build a history of what works.
+- **Подробнее**: полные сведения об обслуживании
+- **Отметить выполненным**: записать выполненное обслуживание
+- **История**: посмотреть прошлое обслуживание
 
 ---
 
-## :material-cog: Best Practices
+## :material-lightbulb: Советы по обслуживанию {#maintenance-tips}
 
-### Regular Schedule
+!!! tip "Очистка стола"
+    Для лучшей адгезии протирайте стол изопропиловым спиртом между печатями. Раз в неделю тщательно мойте его средством для посуды.
 
-- Check maintenance status weekly
-- Don't skip overdue items
-- Build maintenance into your routine
+!!! tip "Смазка"
+    Используйте подходящую смазку для линейных направляющих. Не наносите её слишком много.
 
-### Preventive vs Reactive
+!!! tip "Натяжение ремней"
+    Ремни должны быть натянуты, но не чрезмерно. Проверьте их как гитарную струну.
 
-- Preventive: Follow intervals
-- Reactive: Fix when broken
-- **Preventive is better!**
+!!! tip "Проверка сопла"
+    Проверяйте износ, особенно при печати абразивным филаментом. Заменяйте изношенное сопло.
 
-### Track Everything
+!!! tip "Фильтры"
+    HEPA- и угольные фильтры со временем теряют эффективность. Заменяйте их в соответствии с рекомендациями.
 
-- Log all maintenance
-- Note any issues found
-- Track parts replaced
+!!! tip "Записывайте всё"
+    Добавляйте заметки при регистрации обслуживания, чтобы сохранять историю эффективных действий.
+
+---
+
+## :material-cog: Рекомендации {#best-practices}
+
+### Регулярный график {#regular-schedule}
+
+- Проверяйте состояние обслуживания каждую неделю
+- Не пропускайте просроченные задачи
+- Включите обслуживание в привычный распорядок
+
+### Профилактика и ремонт {#preventive-vs-reactive}
+
+- Профилактика: соблюдайте интервалы
+- Ремонт: исправляйте поломки по мере появления
+- **Профилактика лучше!**
+
+### Фиксируйте всё {#track-everything}
+
+- Записывайте всё обслуживание
+- Отмечайте обнаруженные проблемы
+- Отслеживайте заменённые детали

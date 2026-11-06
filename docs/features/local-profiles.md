@@ -1,168 +1,168 @@
 ---
-title: Local Profiles
-description: Import OrcaSlicer presets without Bambu Cloud
+title: Локальные профили
+description: Импорт пресетов OrcaSlicer без Bambu Cloud
 ---
 
-# Local Profiles
+# Локальные профили {#local-profiles}
 
-Import and manage slicer presets from OrcaSlicer without needing a Bambu Cloud account.
-
----
-
-## :material-harddisk: Overview
-
-Local Profiles lets you:
-
-- **Import** OrcaSlicer preset exports (filament, process, and printer profiles)
-- **Resolve** OrcaSlicer inheritance chains automatically
-- **Browse** presets in a searchable 3-column layout
-- **Configure** AMS slots using imported filament presets
-- **Delete** presets you no longer need
-
-This is ideal for users who use OrcaSlicer without Bambu Cloud and want to manage their presets through Bambuddy.
+Импортируйте пресеты слайсера из OrcaSlicer и управляйте ими без учётной записи Bambu Cloud.
 
 ---
 
-## :material-file-import: Supported File Types
+## :material-harddisk: Обзор {#overview}
 
-| Format | Extension | Description |
+Локальные профили позволяют:
+
+- **Импортировать** экспортированные пресеты OrcaSlicer: профили филамента, процесса и принтера
+- Автоматически **разрешать** цепочки наследования OrcaSlicer
+- **Просматривать** пресеты в трёх колонках с поиском
+- **Настраивать** слоты AMS с помощью импортированных пресетов филамента
+- **Удалять** ненужные пресеты
+
+Эта функция подходит тем, кто использует OrcaSlicer без Bambu Cloud и хочет управлять пресетами через Bambuddy.
+
+---
+
+## :material-file-import: Поддерживаемые типы файлов {#supported-file-types}
+
+| Формат | Расширение | Описание |
 |--------|-----------|-------------|
-| OrcaSlicer Filament | `.orca_filament` | Single filament preset bundle |
-| OrcaSlicer Config Bundle | `.bbscfg` | Full OrcaSlicer config bundle (filament, process, printer) |
-| OrcaSlicer Filament Bundle | `.bbsflmt` | Filament preset bundle |
-| ZIP Archive | `.zip` | ZIP containing OrcaSlicer JSON configs |
-| JSON | `.json` | Single OrcaSlicer preset file |
+| Филамент OrcaSlicer | `.orca_filament` | Пакет одного пресета филамента |
+| Пакет конфигурации OrcaSlicer | `.bbscfg` | Полный пакет конфигурации OrcaSlicer (филамент, процесс, принтер) |
+| Пакет филамента OrcaSlicer | `.bbsflmt` | Пакет пресетов филамента |
+| Архив ZIP | `.zip` | ZIP с конфигурациями OrcaSlicer в формате JSON |
+| JSON | `.json` | Один файл пресета OrcaSlicer |
 
 ---
 
-## :material-upload: Importing Presets
+## :material-upload: Импорт пресетов {#importing-presets}
 
-### Drag and Drop
+### Перетаскивание {#drag-and-drop}
 
-1. Go to **Profiles** > **Local Profiles** tab
-2. Drag your export file onto the import zone
-3. Wait for the import to complete
-4. Imported presets appear in their respective columns
+1. Откройте **Профили** > вкладку **Локальные профили**
+2. Перетащите экспортированный файл в область импорта
+3. Дождитесь завершения импорта
+4. Импортированные пресеты появятся в соответствующих колонках
 
-### File Picker
+### Выбор файла {#file-picker}
 
-1. Click the import zone to open a file picker
-2. Select one or more files to import
-3. Multiple files can be imported at once
+1. Нажмите на область импорта, чтобы открыть окно выбора файлов
+2. Выберите один или несколько файлов для импорта
+3. Можно импортировать несколько файлов одновременно
 
-### Import Results
+### Результаты импорта {#import-results}
 
-After import, you'll see toast notifications:
+После импорта появятся всплывающие уведомления:
 
-- **Green**: Successfully imported presets with count
-- **Orange**: Skipped presets (duplicates already in database)
-- **Red**: Errors during import
+- **Зелёное**: успешный импорт и количество пресетов
+- **Оранжевое**: пропущенные пресеты (дубликаты уже есть в базе)
+- **Красное**: ошибки импорта
 
 ---
 
-## :material-file-tree: Profile Types
+## :material-file-tree: Типы профилей {#profile-types}
 
-Imported presets are automatically classified into three categories:
+Импортированные пресеты автоматически делятся на три категории:
 
-| Type | Description | Examples |
+| Тип | Описание | Примеры |
 |------|-------------|---------|
-| **Filament** | Material presets with temperature, flow, and color settings | `Overture PLA Matte @BBL X1C`, `eSUN PETG @Bambu Lab H2D` |
-| **Process** | Print quality presets with layer height, speed, and infill settings | `0.20mm Standard @BBL X1C`, `0.08mm Extra Fine @BBL H2D` |
-| **Printer** | Machine configuration presets | `Bambu Lab X1 Carbon 0.4 nozzle` |
+| **Филамент** | Пресеты материала с настройками температуры, потока и цвета | `Overture PLA Matte @BBL X1C`, `eSUN PETG @Bambu Lab H2D` |
+| **Процесс** | Пресеты качества печати с настройками высоты слоя, скорости и заполнения | `0.20mm Standard @BBL X1C`, `0.08mm Extra Fine @BBL H2D` |
+| **Принтер** | Пресеты конфигурации устройства | `Bambu Lab X1 Carbon 0.4 nozzle` |
 
-Profile type is detected using multiple heuristics:
+Тип профиля определяется по нескольким признакам:
 
-1. Explicit `type` field in the JSON
-2. ZIP directory path (`filament/`, `process/`, `machine/`)
-3. Settings ID keys (`print_settings_id`, `filament_settings_id`, `printer_settings_id`)
-4. Content-based keys (e.g., `layer_height` for process, `filament_type` for filament)
-5. Name patterns (e.g., `0.20mm` indicates process)
-
----
-
-## :material-link-variant: Inheritance Resolution
-
-Many OrcaSlicer presets use inheritance — they specify an `inherits` field pointing to a base Bambu profile and only override specific settings. For example, a custom PLA preset might inherit from `Bambu PLA Basic @BBL X1C` and only change the temperature.
-
-During import, Bambuddy:
-
-1. Detects the `inherits` field in the preset
-2. Fetches the base profile from the [OrcaSlicer GitHub repository](https://github.com/SoftFever/OrcaSlicer/tree/main/resources/profiles/BBL)
-3. Recursively resolves the full inheritance chain (up to 10 levels deep)
-4. Merges parent and child settings (child keys override parent)
-5. Stores the fully resolved preset in the database
-6. Caches base profiles locally with a 7-day TTL
-
-!!! tip "Offline Import"
-    Presets without inheritance work fine without internet access. Base profile cache persists across imports — after the first import resolves a base profile, subsequent imports reuse the cache.
-
-!!! note "GitHub Unreachable"
-    If GitHub is unreachable during import, presets with `inherits` will be stored with their override-only data. The preset will still work but may have fewer fields populated.
+1. Явному полю `type` в JSON
+2. Пути каталога в ZIP (`filament/`, `process/`, `machine/`)
+3. Ключам ID настроек (`print_settings_id`, `filament_settings_id`, `printer_settings_id`)
+4. Ключам содержимого (например, `layer_height` для процесса, `filament_type` для филамента)
+5. Шаблону имени (например, `0.20mm` указывает на процесс)
 
 ---
 
-## :material-format-list-bulleted: Preset Details
+## :material-link-variant: Разрешение наследования {#inheritance-resolution}
 
-Click on any preset card to expand its details:
+Многие пресеты OrcaSlicer используют наследование: поле `inherits` указывает на базовый профиль Bambu, а в самом пресете переопределяются только отдельные настройки. Например, пользовательский пресет PLA может наследовать `Bambu PLA Basic @BBL X1C` и менять только температуру.
 
-| Field | Description |
+При импорте Bambuddy:
+
+1. Обнаруживает поле `inherits` в пресете
+2. Получает базовый профиль из [репозитория OrcaSlicer на GitHub](https://github.com/SoftFever/OrcaSlicer/tree/main/resources/profiles/BBL)
+3. Рекурсивно разрешает всю цепочку наследования (до 10 уровней)
+4. Объединяет настройки родительского и дочернего профилей (ключи дочернего имеют приоритет)
+5. Сохраняет полностью разрешённый пресет в базе данных
+6. Кэширует базовые профили локально на 7 дней
+
+!!! tip "Импорт без интернета"
+    Пресеты без наследования работают без доступа к интернету. Кэш базовых профилей сохраняется между импортами: после первого получения профиля последующие импорты используют кэш.
+
+!!! note "GitHub недоступен"
+    Если при импорте GitHub недоступен, пресеты с `inherits` сохраняются только с данными переопределений. Пресет будет работать, но некоторые поля могут остаться незаполненными.
+
+---
+
+## :material-format-list-bulleted: Сведения о пресете {#preset-details}
+
+Нажмите карточку пресета, чтобы раскрыть сведения:
+
+| Поле | Описание |
 |-------|-------------|
-| **Type** | Material type (PLA, PETG, ABS, etc.) |
-| **Vendor** | Filament manufacturer |
-| **Nozzle Temp** | Min-max nozzle temperature range |
-| **Cost** | Filament cost per unit |
-| **Density** | Filament density (g/cm3) |
-| **Pressure Advance** | PA/K-factor value |
-| **Printers** | Compatible printer models |
-| **Inherits** | Base profile name (hidden if same as preset name) |
-| **Source** | Import source (e.g., "orcaslicer") |
+| **Тип** | Тип материала (PLA, PETG, ABS и т. д.) |
+| **Производитель** | Производитель филамента |
+| **Температура сопла** | Диапазон минимальной и максимальной температуры сопла |
+| **Стоимость** | Стоимость единицы филамента |
+| **Плотность** | Плотность филамента (г/см³) |
+| **Опережение давления** | Значение PA/K-фактора |
+| **Принтеры** | Совместимые модели принтеров |
+| **Наследует** | Название базового профиля (скрыто, если совпадает с названием пресета) |
+| **Источник** | Источник импорта (например, "orcaslicer") |
 
-Filament presets show a color dot:
+У пресетов филамента отображается цветная точка:
 
-- **Full opacity**: Explicit color from the preset
-- **50% opacity**: Color inferred from material type
-- **25% opacity**: No color information available
-
----
-
-## :material-water-percent: AMS Slot Configuration
-
-Imported local filament presets automatically appear in the AMS slot configuration modal alongside cloud presets:
-
-- Local presets are shown with a green **Local** badge
-- Local presets appear first in the list, followed by cloud presets
-- When configuring a slot with a local preset, Bambuddy uses the extracted nozzle temperature, material type, and color data
+- **Полная непрозрачность**: цвет явно задан в пресете
+- **Непрозрачность 50%**: цвет определён по типу материала
+- **Непрозрачность 25%**: информация о цвете отсутствует
 
 ---
 
-## :material-api: API Endpoints
+## :material-water-percent: Настройка слота AMS {#ams-slot-configuration}
 
-| Method | Endpoint | Description |
+Импортированные локальные пресеты филамента автоматически появляются в окне настройки слота AMS рядом с облачными:
+
+- Локальные пресеты отмечены зелёной меткой **Локальный**
+- В списке сначала идут локальные пресеты, затем облачные
+- При настройке слота локальным пресетом Bambuddy использует извлечённые температуру сопла, тип материала и цвет
+
+---
+
+## :material-api: Конечные точки API {#api-endpoints}
+
+| Метод | Конечная точка | Описание |
 |--------|----------|-------------|
-| `GET` | `/api/v1/local-presets/` | List all presets grouped by type |
-| `GET` | `/api/v1/local-presets/{id}` | Get full preset detail with settings JSON |
-| `POST` | `/api/v1/local-presets/import` | Import presets from uploaded file |
-| `POST` | `/api/v1/local-presets/` | Manually create a preset |
-| `PUT` | `/api/v1/local-presets/{id}` | Rename a preset or replace its settings JSON |
-| `DELETE` | `/api/v1/local-presets/{id}` | Delete a preset |
-| `GET` | `/api/v1/local-presets/base-cache/status` | Check base profile cache status |
-| `POST` | `/api/v1/local-presets/base-cache/refresh` | Force refresh cached base profiles |
-| `POST` | `/api/v1/local-presets/reclassify` | Re-evaluate preset types for all presets |
+| `GET` | `/api/v1/local-presets/` | Список всех пресетов по типам |
+| `GET` | `/api/v1/local-presets/{id}` | Полные сведения о пресете с настройками JSON |
+| `POST` | `/api/v1/local-presets/import` | Импорт пресетов из загруженного файла |
+| `POST` | `/api/v1/local-presets/` | Создание пресета вручную |
+| `PUT` | `/api/v1/local-presets/{id}` | Переименование пресета или замена его настроек JSON |
+| `DELETE` | `/api/v1/local-presets/{id}` | Удаление пресета |
+| `GET` | `/api/v1/local-presets/base-cache/status` | Проверка состояния кэша базовых профилей |
+| `POST` | `/api/v1/local-presets/base-cache/refresh` | Принудительное обновление кэша базовых профилей |
+| `POST` | `/api/v1/local-presets/reclassify` | Повторное определение типов всех пресетов |
 
-All endpoints respect authentication permissions when auth is enabled (`SETTINGS_READ` for reads, `SETTINGS_UPDATE` for writes).
+При включённой аутентификации все конечные точки учитывают разрешения (`SETTINGS_READ` для чтения, `SETTINGS_UPDATE` для записи).
 
 ---
 
-## :material-frequently-asked-questions: FAQ
+## :material-frequently-asked-questions: Частые вопросы {#faq}
 
-**Q: Do I need a Bambu Cloud account?**
-No. Local Profiles work entirely without Bambu Cloud. The only external request is fetching base profiles from OrcaSlicer's public GitHub repository during import.
+**В: Нужна ли учётная запись Bambu Cloud?**
+Нет. Локальные профили работают полностью без Bambu Cloud. Единственный внешний запрос — получение базовых профилей из публичного репозитория OrcaSlicer на GitHub при импорте.
 
-**Q: Can I use both Cloud Profiles and Local Profiles?**
-Yes. Both appear in the AMS slot configuration, with local presets shown first.
+**В: Можно ли использовать облачные и локальные профили одновременно?**
+Да. Оба вида отображаются при настройке слота AMS, причём локальные пресеты идут первыми.
 
-**Q: What happens if I import the same file twice?**
-Duplicate presets (matched by name) are skipped. You'll see an orange toast showing the skip count.
+**В: Что произойдёт, если импортировать один и тот же файл дважды?**
+Дубликаты пресетов, определяемые по имени, пропускаются. Оранжевое уведомление покажет их количество.
 
-**Q: How do I export presets from OrcaSlicer?**
-In OrcaSlicer, go to **File** > **Export** > **Export Preset Bundle** and choose your format (.bbscfg, .bbsflmt, or .zip).
+**В: Как экспортировать пресеты из OrcaSlicer?**
+В OrcaSlicer откройте **Файл** > **Экспорт** > **Экспорт пакета пресетов** и выберите формат (.bbscfg, .bbsflmt или .zip).

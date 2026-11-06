@@ -1,132 +1,114 @@
 ---
-title: Bug Report
-description: Submit bug reports directly from the Bambuddy UI
+title: Сообщение об ошибке
+description: Отправка сообщений об ошибках прямо из интерфейса Bambuddy
 ---
 
-# Bug Report
+# Сообщение об ошибке {#bug-report}
 
-Submit bug reports directly from the Bambuddy UI without leaving the application.
-
----
-
-## :material-bug: Overview
-
-The in-app bug report feature provides a quick way to report issues:
-
-- **One-click access** — Floating bug button in the bottom-right corner on wide screens, or in the top bar on narrower ones
-- **Screenshot support** — Upload, paste from clipboard, or drag & drop images
-- **Interactive debug capture** — Start logging, reproduce the issue at your own pace, stop, review and submit
-- **Privacy-first** — All sensitive data is sanitized before submission
-- **GitHub integration** — Reports create GitHub issues automatically
+Сообщайте об ошибках прямо из интерфейса Bambuddy, не покидая приложение.
 
 ---
 
-## :material-stethoscope: Setup-problem check
+## :material-bug: Обзор {#overview}
 
-When you open the bug report form, Bambuddy quietly runs a
-[Connection Diagnostic](../reference/troubleshooting.md) against your printers.
-If a printer has a connection problem — a blocked port, LAN Developer Mode
-turned off, Docker bridge networking, wrong access code — the detected issue
-and its fix are shown right in the form.
+Встроенная форма позволяет быстро сообщить о проблеме:
 
-Most bug reports turn out to be setup issues, so it's worth reading this panel
-first: fixing the highlighted problem often resolves things without a report.
-You can still submit a report regardless.
+- **Доступ одним нажатием** — плавающая кнопка с изображением жука справа внизу на широком экране или кнопка на верхней панели на узком
+- **Снимки экрана** — загрузка, вставка из буфера обмена или перетаскивание изображений
+- **Интерактивный сбор отладочных данных** — включите журналирование, воспроизведите проблему в удобном темпе, остановите запись, проверьте и отправьте отчёт
+- **Конфиденциальность** — чувствительные данные очищаются перед отправкой
+- **Интеграция с GitHub** — по отчётам автоматически создаются обращения
 
 ---
 
-## :material-send: Submitting a Report
+## :material-stethoscope: Проверка настройки {#setup-problem-check}
 
-1. Click the red **bug icon**. Where it sits depends on your window width:
+При открытии формы Bambuddy в фоновом режиме запускает [диагностику подключения](../reference/troubleshooting.md) принтеров. Обнаруженная проблема — заблокированный порт, выключенный режим разработчика в локальной сети, мостовая сеть Docker или неверный код доступа — и способ её устранения отображаются прямо в форме.
 
-    === "Wide window (1144px and up)"
-
-        Floating red button in the **bottom-right corner** of any page.
-
-    === "Narrow window, tablet, or phone"
-
-        Red bug icon in the **top bar**, at the right-hand end beside the
-        Bambuddy logo — the same bar that holds the menu button.
-
-    !!! info "Why it moves"
-        The bottom-right corner is where most on-screen controls live: the
-        scroll-to-top button, the floating camera window, page action bars, and
-        the buttons on file and archive cards. On a narrow screen a fixed button
-        pinned to that corner sits on top of whichever of them happens to be
-        underneath. Once the sidebar collapses into a menu button, the bug icon
-        moves into that top bar so the corner stays clear. Nothing is hidden and
-        the report form is identical either way.
-
-2. **Describe the issue** — What went wrong? Steps to reproduce?
-3. **Add a screenshot** (optional) — Upload a file, paste from clipboard (Ctrl+V), or drag & drop an image onto the upload area. Images are automatically compressed to JPEG.
-4. **Add your email** (optional) — If provided, your email will be included in a collapsed section of the GitHub issue so the maintainer can follow up. Bambuddy itself does not keep it.
-5. Click **Start Debug Logging**
+Многие сообщения об ошибках связаны с настройкой, поэтому сначала прочитайте этот раздел: устранение указанной проблемы часто помогает обойтись без отчёта. При желании отчёт всё равно можно отправить.
 
 ---
 
-## :material-bug-play: Debug Log Capture
+## :material-send: Отправка отчёта {#submitting-a-report}
 
-After clicking Start Debug Logging, a 3-step guided flow begins:
+1. Нажмите красный **значок жука**. Его положение зависит от ширины окна:
 
-1. **:material-check-circle: Debug logging enabled** — Bambuddy enables debug-level logging and queries all connected printers for fresh status data
-2. **:material-circle: Reproduce the issue now** — An elapsed timer counts up while you reproduce the bug at your own pace. Take as long as you need (auto-stops after 5 minutes).
-3. **:material-circle-outline: Stop logging and review the report** — Click **Stop Logging** when you're done reproducing
+    === "Широкое окно (от 1144 пикселей)"
 
-Stopping turns debug logging back off and collects the logs, but sends nothing yet. The panel then says what submitting will do and how many log lines were collected:
+        Плавающая красная кнопка в **правом нижнем углу** любой страницы.
 
-- **Submit** posts the report as a public issue on GitHub, with your description, screenshot, email (in a collapsed section), system info and the sanitized logs.
-- **Discard** throws the report away. Nothing is sent.
+    === "Узкое окно, планшет или телефон"
 
-The 5-minute auto-stop ends on the same review, so a capture left running is never filed on its own. Closing the panel during the review keeps it; a page reload loses it.
+        Красный значок жука справа на **верхней панели** рядом с логотипом Bambuddy — там же находится кнопка меню.
 
-!!! tip "Close the panel to get at the thing you're reproducing"
+    !!! info "Почему кнопка перемещается"
+        В правом нижнем углу расположены многие элементы управления: кнопка прокрутки вверх, плавающее окно камеры, панели действий и кнопки карточек файлов и архивов. На узком экране закреплённая в этом углу кнопка перекрывала бы их. Когда боковая панель сворачивается в кнопку меню, значок жука перемещается на верхнюю панель, освобождая угол. Ничего не скрывается; форма отчёта в обоих случаях одинакова.
 
-    The panel sits over part of the page, which is awkward when the bug you're
-    reproducing is behind it. Close it — recording keeps going. The bug button
-    turns amber while a capture is running, and clicking it puts you back on
-    step 2 with your description and the timer intact. A page reload is fine
-    too. Only **Stop Logging** (or the 5-minute auto-stop) ends the capture
-    and turns debug logging back off.
+2. **Опишите проблему** — что произошло и как это воспроизвести?
+3. **Добавьте снимок экрана** (необязательно) — загрузите файл, вставьте из буфера обмена (Ctrl+V) или перетащите изображение в область загрузки. Изображения автоматически сжимаются в JPEG.
+4. **Укажите адрес электронной почты** (необязательно) — он будет включён в свёрнутый раздел обращения на GitHub, чтобы сопровождающий мог связаться с вами. Сам Bambuddy его не хранит.
+5. Нажмите **Начать отладочное журналирование**.
 
 ---
 
-## :material-shield-lock: Data Privacy
+## :material-bug-play: Сбор отладочного журнала {#debug-log-capture}
 
-The bug report includes a detailed, expandable privacy notice explaining exactly what data is collected.
+После запуска отладочного журналирования начинается процесс из трёх шагов:
 
-### Included in the report
+1. **:material-check-circle: Отладочное журналирование включено** — Bambuddy включает отладочный уровень журнала и запрашивает актуальное состояние всех подключённых принтеров.
+2. **:material-circle: Воспроизведите проблему** — таймер отсчитывает время, пока вы воспроизводите ошибку в удобном темпе. Доступно до 5 минут; затем запись остановится автоматически.
+3. **:material-circle-outline: Остановите журналирование и проверьте отчёт** — закончив воспроизведение, нажмите **Остановить журналирование**.
 
-- App version, OS, architecture, Python version
-- Database statistics (counts only)
-- Printer models, nozzle counts, firmware versions
-- Connectivity status
-- Integration status (Spoolman, MQTT, Home Assistant)
-- Non-sensitive settings
-- Network interface count
-- Docker details
-- Dependency versions
-- Sanitized application logs (last 200 lines)
+При остановке отладочное журналирование выключается и журналы собираются, но ничего ещё не отправляется. Панель сообщает, что произойдёт при отправке и сколько строк собрано:
 
-### Never included
+- **Отправить** публикует обращение на GitHub с описанием, снимком экрана, адресом электронной почты (в свёрнутом разделе), сведениями о системе и очищенными журналами.
+- **Отменить** удаляет отчёт без отправки.
 
-- Printer names or serial numbers
-- Access codes or passwords
-- IP addresses
-- Email addresses (except your own, if you provide it)
-- API keys or tokens
-- Webhook URLs
-- Hostnames or usernames
-- LDAP Distinguished Names (a DN's `CN` is the user's real name)
+Автоматическая остановка через 5 минут также открывает проверку, поэтому оставленная запись никогда не отправляется сама. Закрытие панели на этапе проверки сохраняет отчёт; перезагрузка страницы удаляет его.
+
+!!! tip "Закройте панель, чтобы получить доступ к элементу с ошибкой"
+
+    Панель перекрывает часть страницы, что неудобно, если нужный элемент находится под ней. Закройте панель — запись продолжится. Во время сбора кнопка с жуком становится жёлтой; повторное нажатие вернёт вас к шагу 2 с сохранёнными описанием и таймером. Страницу также можно перезагрузить. Только **Остановить журналирование** или автоматическая остановка через 5 минут завершает запись и выключает отладочное журналирование.
 
 ---
 
-## :material-server: How It Works
+## :material-shield-lock: Конфиденциальность данных {#data-privacy}
 
-Bug reports are submitted through a secure relay service on `bambuddy.cool`. This relay:
+В форме есть подробное раскрывающееся уведомление о конфиденциальности с перечнем собираемых данных.
 
-- Holds the GitHub API token server-side (never shipped in the application)
-- Uploads screenshots and log files to GitHub
-- Creates issues with appropriate labels
-- Rate-limited to prevent abuse (5 reports per hour)
+### Включается в отчёт {#included-in-the-report}
 
-Your Bambuddy instance never needs a GitHub token — the relay handles all GitHub communication.
+- Версия приложения, ОС, архитектура, версия Python
+- Статистика базы данных (только количество записей)
+- Модели принтеров, количество сопел, версии прошивок
+- Состояние подключения
+- Состояние интеграций (Spoolman, MQTT, Home Assistant)
+- Настройки без чувствительных данных
+- Количество сетевых интерфейсов
+- Сведения о Docker
+- Версии зависимостей
+- Очищенные журналы приложения (последние 200 строк)
+
+### Никогда не включается {#never-included}
+
+- Названия и серийные номера принтеров
+- Коды доступа и пароли
+- IP-адреса
+- Адреса электронной почты (кроме вашего, если вы его указали)
+- Ключи API и токены
+- URL вебхуков
+- Имена хостов и пользователей
+- Различающие имена LDAP (поле `CN` в DN содержит настоящее имя пользователя)
+
+---
+
+## :material-server: Как это работает {#how-it-works}
+
+Отчёты отправляются через защищённый промежуточный сервис на `bambuddy.cool`. Этот сервис:
+
+- Хранит токен GitHub API на сервере, не включая его в приложение
+- Загружает снимки экрана и журналы на GitHub
+- Создаёт обращения с соответствующими метками
+- Ограничивает частоту отправки для предотвращения злоупотреблений (5 отчётов в час)
+
+Вашему экземпляру Bambuddy токен GitHub не нужен: всю работу с GitHub выполняет промежуточный сервис.

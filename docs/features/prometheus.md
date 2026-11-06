@@ -1,125 +1,125 @@
-# Prometheus Metrics
+# Метрики Prometheus {#prometheus-metrics}
 
-Bambuddy can expose printer telemetry in Prometheus format, enabling integration with **Grafana**, **Prometheus**, and other monitoring systems.
+Bambuddy может предоставлять телеметрию принтеров в формате Prometheus для интеграции с **Grafana**, **Prometheus** и другими системами мониторинга.
 
-## Configuration
+## Настройка {#configuration}
 
-Navigate to **Settings → Network → Prometheus Metrics** to enable the endpoint.
+Чтобы включить конечную точку, откройте **Настройки → Сеть → Метрики Prometheus**.
 
-### Settings
+### Настройки {#settings}
 
-| Setting | Description | Default |
+| Настройка | Описание | По умолчанию |
 |---------|-------------|---------|
-| **Enable Metrics Endpoint** | Toggle metrics endpoint on/off | Off |
-| **Bearer Token** | Optional authentication token | Empty (no auth) |
+| **Включить конечную точку метрик** | Включить или выключить конечную точку | Выключено |
+| **Bearer Token** | Необязательный токен аутентификации | Пусто (без аутентификации) |
 
-!!! note "Saved token"
-    Once saved, the token is never shown again: the field shows `********` instead. Leave it as is to keep the saved value, clear it to remove it, or enter a new one. Keep a copy for your Prometheus configuration.
+!!! note "Сохранённый токен"
+    После сохранения токен больше не показывается: вместо него в поле отображается `********`. Оставьте поле как есть, чтобы сохранить значение, очистите его для удаления или введите новый токен. Сохраните копию для конфигурации Prometheus.
 
-## Endpoint
+## Конечная точка {#endpoint}
 
 ```
 GET /api/v1/metrics
 ```
 
-Returns metrics in [Prometheus text exposition format](https://prometheus.io/docs/instrumenting/exposition_formats/).
+Возвращает метрики в [текстовом формате Prometheus](https://prometheus.io/docs/instrumenting/exposition_formats/).
 
-### Authentication
+### Аутентификация {#authentication}
 
-If a bearer token is configured, requests must include the `Authorization` header:
+Если настроен bearer-токен, запросы должны содержать заголовок `Authorization`:
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" http://bambuddy:8000/api/v1/metrics
 ```
 
-Without a token configured, the endpoint is publicly accessible (when enabled).
+Если токен не настроен, включённая конечная точка доступна всем.
 
 ---
 
-## Available Metrics
+## Доступные метрики {#available-metrics}
 
-### Printer Connection
+### Подключение принтера {#printer-connection}
 
-| Metric | Type | Description |
+| Метрика | Тип | Описание |
 |--------|------|-------------|
-| `bambuddy_printer_connected` | gauge | Connection status (1=connected, 0=disconnected) |
-| `bambuddy_printer_state` | gauge | Printer state (0=unknown, 1=idle, 2=running, 3=pause, 4=finish, 5=failed) |
+| `bambuddy_printer_connected` | gauge | Состояние подключения (1 — подключён, 0 — отключён) |
+| `bambuddy_printer_state` | gauge | Состояние принтера (0 — неизвестно, 1 — ожидание, 2 — работает, 3 — пауза, 4 — завершено, 5 — ошибка) |
 
-### Print Progress
+### Ход печати {#print-progress}
 
-| Metric | Type | Description |
+| Метрика | Тип | Описание |
 |--------|------|-------------|
-| `bambuddy_print_progress` | gauge | Current print progress (0-100%) |
-| `bambuddy_print_remaining_seconds` | gauge | Estimated remaining time in seconds |
-| `bambuddy_print_layer_current` | gauge | Current layer number |
-| `bambuddy_print_layer_total` | gauge | Total layers in current print |
+| `bambuddy_print_progress` | gauge | Ход текущей печати (0–100%) |
+| `bambuddy_print_remaining_seconds` | gauge | Расчётное оставшееся время в секундах |
+| `bambuddy_print_layer_current` | gauge | Номер текущего слоя |
+| `bambuddy_print_layer_total` | gauge | Общее количество слоёв текущей печати |
 
-### Temperatures
+### Температуры {#temperatures}
 
-| Metric | Type | Description |
+| Метрика | Тип | Описание |
 |--------|------|-------------|
-| `bambuddy_bed_temp_celsius` | gauge | Current bed temperature |
-| `bambuddy_bed_target_celsius` | gauge | Target bed temperature |
-| `bambuddy_nozzle_temp_celsius` | gauge | Current nozzle temperature (label: nozzle=0/1) |
-| `bambuddy_nozzle_target_celsius` | gauge | Target nozzle temperature |
-| `bambuddy_chamber_temp_celsius` | gauge | Chamber temperature (X1/H2/P2 series only) |
+| `bambuddy_bed_temp_celsius` | gauge | Текущая температура стола |
+| `bambuddy_bed_target_celsius` | gauge | Целевая температура стола |
+| `bambuddy_nozzle_temp_celsius` | gauge | Текущая температура сопла (метка: nozzle=0/1) |
+| `bambuddy_nozzle_target_celsius` | gauge | Целевая температура сопла |
+| `bambuddy_chamber_temp_celsius` | gauge | Температура камеры (только серии X1/H2/P2) |
 
-### Fans
+### Вентиляторы {#fans}
 
-| Metric | Type | Description |
+| Метрика | Тип | Описание |
 |--------|------|-------------|
-| `bambuddy_fan_speed_percent` | gauge | Fan speed (label: fan=part/aux/chamber) |
+| `bambuddy_fan_speed_percent` | gauge | Скорость вентилятора (метка: fan=part/aux/chamber) |
 
-### Network
+### Сеть {#network}
 
-| Metric | Type | Description |
+| Метрика | Тип | Описание |
 |--------|------|-------------|
-| `bambuddy_wifi_signal_dbm` | gauge | WiFi signal strength in dBm |
+| `bambuddy_wifi_signal_dbm` | gauge | Уровень сигнала Wi-Fi в дБм |
 
-### Statistics (Counters)
+### Статистика (счётчики) {#statistics-counters}
 
-| Metric | Type | Description |
+| Метрика | Тип | Описание |
 |--------|------|-------------|
-| `bambuddy_prints_total` | counter | Total prints by result (label: result=completed/failed/etc) |
-| `bambuddy_printer_prints_total` | counter | Total prints per printer |
-| `bambuddy_filament_used_grams` | counter | Total filament used in grams |
-| `bambuddy_print_time_seconds` | counter | Total print time in seconds |
+| `bambuddy_prints_total` | counter | Число печатей по результату (метка: result=completed/failed/и т. д.) |
+| `bambuddy_printer_prints_total` | counter | Общее число печатей на принтер |
+| `bambuddy_filament_used_grams` | counter | Общий расход филамента в граммах |
+| `bambuddy_print_time_seconds` | counter | Общее время печати в секундах |
 
-### Queue
+### Очередь {#queue}
 
-| Metric | Type | Description |
+| Метрика | Тип | Описание |
 |--------|------|-------------|
-| `bambuddy_queue_pending` | gauge | Number of pending queue items |
-| `bambuddy_queue_printing` | gauge | Number of currently printing queue items |
+| `bambuddy_queue_pending` | gauge | Число ожидающих заданий в очереди |
+| `bambuddy_queue_printing` | gauge | Число заданий очереди, которые сейчас печатаются |
 
-### System
+### Система {#system}
 
-| Metric | Type | Description |
+| Метрика | Тип | Описание |
 |--------|------|-------------|
-| `bambuddy_printers_connected` | gauge | Total connected printers |
-| `bambuddy_printers_total` | gauge | Total configured printers |
+| `bambuddy_printers_connected` | gauge | Число подключённых принтеров |
+| `bambuddy_printers_total` | gauge | Число настроенных принтеров |
 
 ---
 
-## Labels
+## Метки {#labels}
 
-Most metrics include labels for filtering:
+Большинство метрик содержат метки для фильтрации:
 
-| Label | Description |
+| Метка | Описание |
 |-------|-------------|
-| `printer_id` | Numeric printer ID |
-| `printer_name` | Human-readable printer name |
-| `serial` | Printer serial number |
-| `model` | Printer model (X1C, H2D, etc.) |
-| `nozzle` | Nozzle index (0 or 1) for dual-nozzle printers |
-| `fan` | Fan type (part, aux, chamber) |
-| `result` | Print result (completed, failed, archived, etc.) |
+| `printer_id` | Числовой ID принтера |
+| `printer_name` | Понятное название принтера |
+| `serial` | Серийный номер принтера |
+| `model` | Модель принтера (X1C, H2D и т. д.) |
+| `nozzle` | Индекс сопла (0 или 1) для принтеров с двумя соплами |
+| `fan` | Тип вентилятора (part, aux, chamber) |
+| `result` | Результат печати (completed, failed, archived и т. д.) |
 
 ---
 
-## Prometheus Configuration
+## Настройка Prometheus {#prometheus-configuration}
 
-Add Bambuddy to your `prometheus.yml`:
+Добавьте Bambuddy в `prometheus.yml`:
 
 ```yaml
 scrape_configs:
@@ -132,7 +132,7 @@ scrape_configs:
     bearer_token: 'YOUR_TOKEN'
 ```
 
-For Docker networks, use the container name or `host.docker.internal`:
+В сетях Docker используйте имя контейнера или `host.docker.internal`:
 
 ```yaml
 static_configs:
@@ -141,44 +141,44 @@ static_configs:
 
 ---
 
-## Grafana Dashboard
+## Панель Grafana {#grafana-dashboard}
 
-### Example Queries
+### Примеры запросов {#example-queries}
 
-**Printer temperatures:**
+**Температуры принтера:**
 ```promql
 bambuddy_bed_temp_celsius{printer_name="X1C-1"}
 bambuddy_nozzle_temp_celsius{printer_name="X1C-1", nozzle="0"}
 ```
 
-**Print progress:**
+**Ход печати:**
 ```promql
 bambuddy_print_progress
 ```
 
-**Success rate (last 24h):**
+**Доля успешных печатей (за последние 24 часа):**
 ```promql
 increase(bambuddy_prints_total{result="completed"}[24h]) /
 (increase(bambuddy_prints_total{result="completed"}[24h]) + increase(bambuddy_prints_total{result="failed"}[24h]))
 ```
 
-**Filament usage rate:**
+**Скорость расхода филамента:**
 ```promql
 rate(bambuddy_filament_used_grams[1h]) * 3600
 ```
 
-### Sample Dashboard Panels
+### Примеры панелей {#sample-dashboard-panels}
 
-1. **Stat Panel**: Printers online (`bambuddy_printers_connected`)
-2. **Gauge Panel**: Print progress per printer
-3. **Time Series**: Temperature graphs (bed, nozzle, chamber)
-4. **Time Series**: WiFi signal strength over time
-5. **Bar Chart**: Prints by result (`bambuddy_prints_total`)
-6. **Table**: Printer status overview
+1. **Stat Panel**: подключённые принтеры (`bambuddy_printers_connected`)
+2. **Gauge Panel**: ход печати каждого принтера
+3. **Time Series**: графики температуры (стол, сопло, камера)
+4. **Time Series**: изменение уровня сигнала Wi-Fi
+5. **Bar Chart**: печати по результату (`bambuddy_prints_total`)
+6. **Table**: обзор состояния принтеров
 
 ---
 
-## Example Output
+## Пример вывода {#example-output}
 
 ```
 # HELP bambuddy_printer_connected Printer connection status (1=connected, 0=disconnected)
@@ -213,29 +213,29 @@ bambuddy_printers_connected 2
 
 ---
 
-## Troubleshooting
+## Устранение неполадок {#troubleshooting}
 
-### Endpoint Returns 404
+### Конечная точка Returns 404 {#endpoint-returns-404}
 
-Prometheus metrics are disabled. Enable in **Settings → Network → Prometheus Metrics**.
+Метрики Prometheus отключены. Включите их в **Настройки → Сеть → Метрики Prometheus**.
 
-### Endpoint Returns 401
+### Конечная точка Returns 401 {#endpoint-returns-401}
 
-A bearer token is configured. Include the `Authorization` header:
+Настроен bearer-токен. Добавьте заголовок `Authorization`:
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" http://bambuddy:8000/api/v1/metrics
 ```
 
-### No Printer Metrics
+### Нет метрик принтера {#no-printer-metrics}
 
-If printer-specific metrics are missing:
+Если метрики отдельных принтеров отсутствуют:
 
-- Verify printers are connected (check Bambuddy dashboard)
-- Check that printers are marked as active
+- Убедитесь, что принтеры подключены (проверьте панель Bambuddy)
+- Убедитесь, что принтеры отмечены как активные
 
-### Prometheus Shows "Down"
+### Prometheus показывает "Down" {#prometheus-shows-down}
 
-- Verify Bambuddy is reachable from Prometheus
-- Check firewall rules allow port 8000
-- Verify the bearer token matches (if configured)
+- Убедитесь, что Bambuddy доступен из Prometheus
+- Проверьте, разрешают ли правила межсетевого экрана порт 8000
+- Проверьте совпадение bearer-токена, если он настроен
