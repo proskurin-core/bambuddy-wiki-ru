@@ -1,109 +1,109 @@
 ---
-title: Projects
-description: Group related prints into projects with progress tracking
+title: Проекты
+description: Группировка связанных печатей в проекты с отслеживанием прогресса
 ---
 
-# Projects
+# Проекты {#projects}
 
-Group related prints into projects to track multi-part builds, gift sets, or any collection of related prints.
+Объединяйте связанные печати в проекты, чтобы отслеживать сборки из нескольких деталей, подарочные наборы и любые другие коллекции.
 
-![Projects Page](../assets/projects.png){ .screenshot }
+![Страница проектов](../assets/projects.png){ .screenshot }
 
 ---
 
-## :material-folder-multiple: What Are Projects?
+## :material-folder-multiple: Что такое проекты? {#what-are-projects}
 
-Projects let you:
+Проекты позволяют:
 
-- **Group prints** - Organize related archives together
-- **Track progress** - See completion status
-- **Set targets** - Define how many items needed
-- **Track quantities** - Count items per print for batch printing
-- **Bill of materials** - Track sourced parts (screws, electronics)
-- **Cost tracking** - Budget and expense tracking
-- **Color code** - Visual identification
-- **Add notes** - Document the project
+- **Группировать печати** — объединять связанные архивы
+- **Отслеживать прогресс** — видеть состояние выполнения
+- **Задавать цели** — указывать необходимое количество изделий
+- **Учитывать количество** — подсчитывать изделия в каждой печати при серийном производстве
+- **Вести список материалов** — учитывать покупные детали, например винты и электронику
+- **Учитывать затраты** — отслеживать бюджет и расходы
+- **Использовать цветовые метки** — быстро различать проекты
+- **Добавлять заметки** — документировать проект
 
-### Use Cases
+### Примеры использования {#use-cases}
 
-| Project | Description |
+| Проект | Описание |
 |---------|-------------|
-| **Voron Build** | All parts for a Voron printer |
-| **Gift Set** | Prints for a birthday gift |
-| **Home Organizers** | Kitchen and bathroom organizers |
-| **Prototypes** | Iterations of a design |
-| **Commission** | Client order tracking |
+| **Сборка Voron** | Все детали принтера Voron |
+| **Подарочный набор** | Печати для подарка на день рождения |
+| **Органайзеры для дома** | Органайзеры для кухни и ванной |
+| **Прототипы** | Версии одной конструкции |
+| **Заказ** | Учёт заказа клиента |
 
 ---
 
-## :material-plus-circle: Creating a Project
+## :material-plus-circle: Создание проекта {#creating-a-project}
 
-1. Go to the **Projects** page
-2. Click **New Project**
-3. Fill in the details:
+1. Перейдите на страницу **Проекты**
+2. Нажмите **Новый проект**
+3. Заполните поля:
 
-| Field | Description |
+| Поле | Описание |
 |-------|-------------|
-| **Name** | Project name (required) |
-| **Description** | What the project is for |
-| **Color** | Badge color for identification |
-| **Target Plates** | Number of print jobs needed |
-| **Target Parts** | Total number of parts/objects needed |
-| **Copies per File** | How many times each printable file should be printed (enables per-file progress and the Complete Sets bar) |
-| **Parent Project** | Nest this project under another one — see [Sub-Projects](#sub-projects) |
+| **Название** | Название проекта (обязательно) |
+| **Описание** | Назначение проекта |
+| **Цвет** | Цвет метки для различения проектов |
+| **Целевое количество пластин** | Необходимое число заданий печати |
+| **Целевое количество деталей** | Общее необходимое число деталей или объектов |
+| **Копий каждого файла** | Сколько раз нужно напечатать каждый файл; включает прогресс по файлам и индикатор полных комплектов |
+| **Родительский проект** | Вложить этот проект в другой — см. [Подпроекты](#sub-projects) |
 
-4. Click **Create**
+4. Нажмите **Создать**
 
-!!! tip "Plates vs Parts"
-    - **Plates** = Number of print jobs (each time you click print)
-    - **Parts** = Total objects printed (can be multiple per plate)
+!!! tip "Пластины и детали"
+    - **Пластины** — число заданий печати (каждый запуск печати)
+    - **Детали** — общее число напечатанных объектов; на пластине их может быть несколько
 
-    Example: A Voron build might need 25 plates to print 150 parts total.
-
----
-
-## :material-folder-arrow-down: Adding Archives to Projects
-
-### From Archive Card
-
-1. Right-click an archive card
-2. Select **Add to Project**
-3. Choose the project
-4. Archive is linked
-
-### From Archive Details
-
-1. Open an archive
-2. Click the **Project** dropdown
-3. Select a project
-4. Changes save automatically
-
-### Bulk Assignment
-
-Assign multiple archives at once using the multi-select toolbar:
-
-1. Click **Select** button (or Shift+click / Ctrl+click archives)
-2. Select the archives you want to assign
-3. Click the **Project** button in the bottom toolbar
-4. Choose a project from the list
-5. All selected archives are assigned instantly
-
-!!! tip "Remove from Project"
-    The same modal has a "Remove from project" option to unassign archives in bulk.
-
-### Shared Projects, Your Own Prints
-
-Projects are shared by everyone who can open them, but the archives and queue jobs in them stay their owners'. A project shows you the archives and queue jobs, and the timeline events, that you can see on the Archives and Queue pages: everyone's if you may see everyone's, otherwise your own, on the printers you can see. The same goes for the archive previews on the project cards and for the archives a BOM item or a File Manager folder is linked to: a link to an archive you cannot see reads as no link. You add, and remove, only the archives and jobs you could edit there. The project's progress and totals still count every print in it.
+    Например, для сборки Voron может потребоваться напечатать 25 пластин со 150 деталями.
 
 ---
 
-## :material-progress-check: Progress Tracking
+## :material-folder-arrow-down: Добавление архивов в проекты {#adding-archives-to-projects}
 
-Track how close you are to completing a project with separate progress for plates and parts:
+### Из карточки архива {#from-archive-card}
 
-### Dual Progress Bars
+1. Щёлкните карточку архива правой кнопкой мыши
+2. Выберите **Добавить в проект**
+3. Выберите проект
+4. Архив будет привязан к нему
 
-When you set both target plates and target parts, you'll see two progress bars:
+### Из сведений об архиве {#from-archive-details}
+
+1. Откройте архив
+2. Нажмите выпадающий список **Проект**
+3. Выберите проект
+4. Изменения сохранятся автоматически
+
+### Массовое назначение {#bulk-assignment}
+
+Используйте панель множественного выбора, чтобы назначить сразу несколько архивов:
+
+1. Нажмите **Выбрать** или выделите архивы с помощью Shift+щелчка / Ctrl+щелчка
+2. Выберите нужные архивы
+3. Нажмите **Проект** на нижней панели
+4. Выберите проект из списка
+5. Все выбранные архивы будут назначены сразу
+
+!!! tip "Удаление из проекта"
+    В том же окне доступен пункт «Удалить из проекта» для массовой отвязки архивов.
+
+### Общие проекты и ваши печати {#shared-projects-your-own-prints}
+
+Проект доступен всем, кто может его открыть, но архивы и задания очереди в нём остаются собственностью своих владельцев. В проекте отображаются те архивы, задания очереди и события истории, которые вам доступны на страницах архива и очереди: все, если у вас есть соответствующее разрешение, или только ваши собственные на доступных вам принтерах. То же относится к предпросмотрам архивов на карточках проекта и архивам, связанным с позицией списка материалов или папкой файлового менеджера: ссылка на недоступный архив выглядит как отсутствующая. Добавлять и удалять можно только архивы и задания, которые вы могли бы изменить на соответствующих страницах. При этом прогресс и итоги проекта учитывают все печати в нём.
+
+---
+
+## :material-progress-check: Отслеживание прогресса {#progress-tracking}
+
+Отслеживайте выполнение проекта отдельно по пластинам и деталям:
+
+### Два индикатора прогресса {#dual-progress-bars}
+
+Если задать цели и по пластинам, и по деталям, появятся два индикатора:
 
 ```
 Plates Progress
@@ -115,68 +115,66 @@ Parts Progress
 10 of 25 parts
 ```
 
-### Progress States
+### Состояния прогресса {#progress-states}
 
-| State | Description |
+| Состояние | Описание |
 |:-----:|-------------|
-| :material-circle-outline: | Not started (0%) |
-| :material-circle-half-full: | In progress |
-| :material-check-circle:{ style="color: #4caf50" } | Complete (100%) |
+| :material-circle-outline: | Не начато (0%) |
+| :material-circle-half-full: | В процессе |
+| :material-check-circle:{ style="color: #4caf50" } | Завершено (100%) |
 
-### Plates Progress
+### Прогресс по пластинам {#plates-progress}
 
-Tracks the number of print jobs completed:
+Учитывает число завершённых заданий печати:
 
-- **Plates Target: 5** with **2 prints done** = **40%**
-- Based on archive count (not quantities)
+- **Цель: 5 пластин**, **напечатано 2** = **40%**
+- Основан на числе архивов, а не количестве изделий
 
-### Parts Progress
+### Прогресс по деталям {#parts-progress}
 
-Tracks the total number of parts/objects printed:
+Учитывает общее число напечатанных деталей или объектов:
 
-- **Parts Target: 25** with **10 parts printed** = **40%**
-- Sum of all archive quantities
+- **Цель: 25 деталей**, **напечатано 10** = **40%**
+- Суммируется количество изделий во всех архивах
 
-### Per-File Progress & Complete Sets
+### Прогресс по файлам и полные комплекты {#per-file-progress-complete-sets}
 
-For projects made of many distinct files that each need to be printed N times (e.g. 13 plates, 10 copies each), set the optional **Copies per File** target in the project dialog:
+Для проектов из нескольких разных файлов, каждый из которых нужно напечатать N раз (например, 13 пластин по 10 копий), задайте необязательную цель **Копий каждого файла** в окне проекта:
 
-- Every printable file in the project's linked folders shows an **X / N** badge with a mini progress bar: gray = not started, amber = in progress, green = target reached.
-- The progress card gains a **Complete Sets** bar: the *minimum* per-file count across all printable files — the number of finished assemblies you can ship right now. If 12 of 13 plates are at 3 copies but one is at 2, you have 2 complete sets.
-- Without the target, printable files simply show how many times they've been printed (e.g. **3×**).
+- Каждый пригодный для печати файл в связанных папках проекта получает метку **X / N** с небольшим индикатором: серый — не начато, жёлтый — в процессе, зелёный — цель достигнута.
+- На карточке прогресса появляется индикатор **Полные комплекты**: *минимальное* количество копий среди всех пригодных для печати файлов, то есть число готовых сборок, которые можно отправить прямо сейчас. Если у 12 из 13 пластин напечатано по 3 копии, а у одной — 2, готово 2 полных комплекта.
+- Без этой цели файлы показывают только число выполненных печатей, например **3×**.
 
-Only **completed** prints count — failed, cancelled, and in-progress runs don't advance a file's count. Counting is scoped to the project: prints started from the project page or queued from a project-linked File Manager folder are attributed automatically.
+Учитываются только **завершённые** печати: неудачные, отменённые и выполняющиеся задания счётчик не увеличивают. Подсчёт привязан к проекту: печати со страницы проекта или из очереди, добавленные из связанной с проектом папки файлового менеджера, относятся к нему автоматически.
 
-### Auto-Detection from 3MF
+### Автоматическое определение по 3MF {#auto-detection-from-3mf}
 
-When a print is archived, BamBuddy automatically detects how many parts/objects were on the plate:
+При архивации печати Bambuddy автоматически определяет число деталей или объектов на пластине:
 
-- Reads `slice_info.config` from the 3MF file
-- Counts non-skipped objects
-- Sets the archive quantity automatically
+- Читает `slice_info.config` из файла 3MF
+- Подсчитывает непропущенные объекты
+- Автоматически задаёт количество в архиве
 
-!!! example "Auto-Detection Example"
-    You print a plate with 4 copies of a bracket:
+!!! example "Пример автоматического определения"
+    Вы печатаете пластину с четырьмя копиями кронштейна:
 
-    - BamBuddy detects 4 objects in the 3MF
-    - Archive quantity is set to 4 automatically
-    - Project parts count increases by 4
+    - Bambuddy обнаруживает 4 объекта в 3MF
+    - Количество в архиве автоматически устанавливается равным 4
+    - Число деталей проекта увеличивается на 4
 
-### Manual Quantity Override
+### Изменение количества вручную {#manual-quantity-override}
 
-You can still manually adjust the quantity:
+Вы также можете скорректировать количество вручную:
 
-1. Open the archive in edit mode
-2. Set **Items Printed** to the correct number
-3. Project progress updates automatically
+1. Откройте архив для редактирования
+2. Укажите правильное значение **Напечатано изделий**
+3. Прогресс проекта обновится автоматически
 
-Set it to **0** when a print finished but nothing on the plate was usable - a jam
-that the printer still reported as a success, for example. The job then counts as
-producing no items towards the project.
+Установите **0**, если печать завершилась, но ни одно изделие на пластине непригодно, например после засора, который принтер всё равно посчитал успешной печатью. Такое задание не добавит изделий к прогрессу проекта.
 
-### Updating Existing Archives
+### Обновление существующих архивов {#updating-existing-archives}
 
-If you have existing archives with quantity=1, run the migration script:
+Если в существующих архивах указано quantity=1, запустите скрипт миграции:
 
 ```bash
 # Preview changes
@@ -186,37 +184,37 @@ python scripts/update_archive_quantities.py --dry-run
 python scripts/update_archive_quantities.py
 ```
 
-This re-parses all 3MF files to extract the correct object counts.
+Скрипт повторно разбирает все файлы 3MF и определяет правильное число объектов.
 
 ---
 
-## :material-palette: Color Coding
+## :material-palette: Цветовые метки {#color-coding}
 
-Each project has a color-coded badge:
+У каждого проекта есть цветная метка:
 
-### Available Colors
+### Доступные цвета {#available-colors}
 
-- :material-circle:{ style="color: #f44336" } Red
-- :material-circle:{ style="color: #ff9800" } Orange
-- :material-circle:{ style="color: #ffeb3b" } Yellow
-- :material-circle:{ style="color: #4caf50" } Green
-- :material-circle:{ style="color: #2196f3" } Blue
-- :material-circle:{ style="color: #9c27b0" } Purple
-- :material-circle:{ style="color: #607d8b" } Gray
+- :material-circle:{ style="color: #f44336" } Красный
+- :material-circle:{ style="color: #ff9800" } Оранжевый
+- :material-circle:{ style="color: #ffeb3b" } Жёлтый
+- :material-circle:{ style="color: #4caf50" } Зелёный
+- :material-circle:{ style="color: #2196f3" } Синий
+- :material-circle:{ style="color: #9c27b0" } Фиолетовый
+- :material-circle:{ style="color: #607d8b" } Серый
 
-### Badge Display
+### Где отображаются метки {#badge-display}
 
-Project badges appear on:
+Метки проекта отображаются:
 
-- Archive cards
-- Archive list view
-- Project overview
+- На карточках архивов
+- В списке архивов
+- В обзоре проектов
 
 ---
 
-## :material-view-dashboard: Project Cards
+## :material-view-dashboard: Карточки проектов {#project-cards}
 
-Each project displays as a card with plates and parts stats:
+Каждый проект отображается карточкой со статистикой пластин и деталей:
 
 ```
 ┌────────────────────────────────────────┐
@@ -234,31 +232,26 @@ Each project displays as a card with plates and parts stats:
 └────────────────────────────────────────┘
 ```
 
-### Card Information
+### Сведения на карточке {#card-information}
 
-- **Color badge** - Visual identification
-- **Name** - Project title
-- **Progress badge** - Parts completed / target
-- **Plates progress** - Print jobs completed
-- **Parts progress** - Objects printed
-- **Stats footer** - Quick view of plates and parts count
-- **Sub-project count** - How many projects sit directly beneath this one
-- **Part of ...** - Which project this one belongs to, when it is a sub-project
+- **Цветная метка** — визуальное различение
+- **Название** — название проекта
+- **Метка прогресса** — завершённые детали / цель
+- **Прогресс по пластинам** — завершённые задания печати
+- **Прогресс по деталям** — напечатанные объекты
+- **Статистика внизу** — краткие сведения о числе пластин и деталей
+- **Количество подпроектов** — число проектов непосредственно под этим
+- **Часть проекта ...** — родительский проект, если данный проект вложен в другой
 
 ---
 
-## :material-file-tree: Sub-Projects
+## :material-file-tree: Подпроекты {#sub-projects}
 
-A large build usually is not one flat list. Set a **Parent Project** on the
-project dialog and it becomes a sub-project of that one; nesting goes as deep
-as the work needs, so an assembly can sit under a section which sits under the
-whole build.
+Большая сборка обычно не состоит из одного плоского списка. Укажите **Родительский проект** в окне проекта, чтобы сделать его подпроектом. Глубина вложенности не ограничена: сборка может находиться внутри раздела, который, в свою очередь, входит в общий проект.
 
-### On the Projects Page
+### На странице проектов {#on-the-projects-page}
 
-Sub-projects are not scattered through the grid. A project that has them takes
-the full width of the row and its sub-projects are drawn inside it, indented
-behind a rule in the project's own colour:
+Подпроекты не разбросаны по сетке. Проект с подпроектами занимает всю ширину строки, а подпроекты расположены внутри с отступом за линией цвета родительского проекта:
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -271,277 +264,248 @@ behind a rule in the project's own colour:
    │  └───────────────────────┘  └───────────────────────┘
 ```
 
-The nesting repeats at every level, so a sub-project that has its own
-sub-projects gets its own rule and its own group.
+Вложенность повторяется на каждом уровне: у подпроекта со своими подпроектами будет собственная линия и группа.
 
-!!! note "When the status filter hides a parent"
-    Filtering to **Active** can hide a completed parent while its sub-projects
-    are still active. Those sub-projects stay on the page as ordinary cards and
-    carry a **Part of ...** caption instead, so nothing disappears just because
-    its parent did.
+!!! note "Когда фильтр состояния скрывает родительский проект"
+    Фильтр **Активные** может скрыть завершённый родительский проект, пока его подпроекты ещё активны. Эти подпроекты остаются на странице как обычные карточки с подписью **Часть проекта ...**, поэтому они не исчезают вместе с родителем.
 
-### Folding Sub-Projects Away
+### Сворачивание подпроектов {#folding-sub-projects-away}
 
-A deep hierarchy over a few hundred archives turns the page into one long
-scroll, so every group can be shut:
+Глубокая иерархия с сотнями архивов делает страницу очень длинной, поэтому любую группу можно свернуть:
 
-- **One group** - click its **Sub-projects of ...** caption. The caption stays
-  where it is with the chevron pointing right, so you can see what is folded
-  and click it again to unfold.
-- **The whole page** - the **Collapse** button next to the status filter tabs
-  sets the default for every group and is remembered across reloads. Press it
-  again to go back to everything expanded.
+- **Одну группу** — нажмите её заголовок **Подпроекты ...**. Заголовок останется на месте, а стрелка будет направлена вправо; нажмите его ещё раз, чтобы развернуть группу.
+- **Всю страницу** — кнопка **Свернуть** рядом с вкладками фильтра состояния задаёт значение по умолчанию для всех групп и сохраняется после перезагрузки страницы. Нажмите её ещё раз, чтобы развернуть всё.
 
-The number on the caption counts the sub-projects that are actually in that
-group, which is not always the number on the parent card's badge: the badge
-counts sub-projects in every status, so a parent with one active and one
-archived sub-project shows **2** on its badge and **1** on its caption while
-the **Active** filter is on.
+Число в заголовке показывает подпроекты, фактически находящиеся в группе, и может отличаться от числа на карточке родителя: метка учитывает подпроекты всех состояний. Поэтому при фильтре **Активные** родитель с одним активным и одним архивным подпроектом покажет **2** на карточке и **1** в заголовке группы.
 
-!!! note "Folding one group is a passing choice"
-    Shutting or opening a single group applies until you press **Collapse**,
-    which resets every group to the new default. Only the **Collapse** setting
-    itself is remembered across reloads.
+!!! note "Сворачивание одной группы временно"
+    Отдельная группа остаётся открытой или закрытой до нажатия **Свернуть**, которое сбрасывает все группы к новому значению по умолчанию. После перезагрузки сохраняется только сама настройка **Свернуть**.
 
-### The Master Project View
+### Обзор родительского проекта {#the-master-project-view}
 
-Open a project that has sub-projects and it gains a second card covering the
-whole tree:
+При открытии проекта с подпроектами появляется вторая карточка для всего дерева:
 
-- Print jobs and parts
-- Print time
-- Filament used
-- Total cost (filament, energy, printer wear and BOM)
-- Progress against every target in the tree added together
+- Задания печати и детали
+- Время печати
+- Расход филамента
+- Общая стоимость (филамент, энергия, износ принтера и список материалов)
+- Прогресс по сумме всех целей в дереве
 
-!!! important "Two sets of numbers, and they mean different things"
-    The stats at the top of the page are still **this project's own prints**.
-    The roll-up card below them is **this project plus everything nested under
-    it**. A project with no sub-projects shows only the first set — there is
-    nothing to add, so there is no second card.
+!!! important "Два набора показателей"
+    Статистика вверху страницы по-прежнему относится только к **собственным печатям этого проекта**. Сводная карточка под ней охватывает **этот проект и все вложенные в него**. У проекта без подпроектов отображается только первый набор: складывать нечего, поэтому вторая карточка не нужна.
 
-Each sub-project listed on the page carries its own branch's totals, not just
-its own prints. So a sub-project that is itself a parent reports what its whole
-branch did, and the listed rows add up to the roll-up card minus the master's
-own prints.
+Для каждого подпроекта на странице приведены итоги всей его ветви, а не только собственных печатей. Поэтому подпроект, который сам является родительским, показывает итог всей своей ветви, а сумма строк равна сводной карточке за вычетом собственных печатей главного проекта.
 
-### Rules
+### Правила {#rules}
 
-- A project cannot be its own parent, and cannot be moved underneath one of its
-  own sub-projects — that is a loop, not a hierarchy. The parent picker leaves
-  those options out rather than letting you pick one and fail.
-- Deleting a project in the middle of a tree lifts its sub-projects up to its
-  own parent. Deleting a top-level project leaves its sub-projects as top-level
-  projects. Nothing beneath a deleted project is deleted with it.
-- Archives, queue items and BOM entries belong to the project they were assigned
-  to. Nesting does not move them; it only decides what the roll-up adds together.
+- Проект не может быть собственным родителем или находиться внутри одного из своих подпроектов: это образовало бы цикл. В списке выбора родителя такие варианты исключены.
+- При удалении проекта в середине дерева его подпроекты перемещаются к его родителю. При удалении проекта верхнего уровня его подпроекты сами становятся проектами верхнего уровня. Ничто из вложенного не удаляется вместе с проектом.
+- Архивы, задания очереди и позиции списка материалов принадлежат проекту, которому они назначены. Вложенность их не перемещает, а только определяет, что включать в сводные итоги.
 
 ---
 
-## :material-pencil: Editing Projects
+## :material-pencil: Редактирование проектов {#editing-projects}
 
-1. Open the three-dot menu (:material-dots-vertical:) in the top-right corner of
-   a project card and choose **Edit**. On a mouse the menu button appears when
-   you hover the card; on a phone or tablet it is simply always there.
-2. Modify any field
-3. Click **Save**
+1. Откройте меню с тремя точками (:material-dots-vertical:) в правом верхнем углу карточки проекта и выберите **Изменить**. При работе мышью кнопка меню появляется при наведении на карточку; на телефоне или планшете она видна постоянно.
+2. Измените нужные поля
+3. Нажмите **Сохранить**
 
-**Delete** lives in the same menu.
+В том же меню находится действие **Удалить**.
 
-### Editable Fields
+### Редактируемые поля {#editable-fields}
 
-- Name
-- Description
-- Color
-- Target Plates (print jobs)
-- Target Parts (objects)
-- Parent Project
+- Название
+- Описание
+- Цвет
+- Целевое количество пластин (заданий печати)
+- Целевое количество деталей (объектов)
+- Родительский проект
 
 ---
 
-## :material-filter: Filtering by Project
+## :material-filter: Фильтрация по проекту {#filtering-by-project}
 
-Filter archives to show only those in a project:
+Чтобы показать только архивы определённого проекта:
 
-1. Go to **Archives** page
-2. Click the **Project** filter
-3. Select a project
-4. Only linked archives are shown
-
----
-
-## :material-printer: Printing Files from a Project
-
-If a project has one or more linked library folders, the project detail page lists the printable files from every folder inline — no need to detour through the File Manager to reprint.
-
-### What Shows Up
-
-Under each linked folder header you'll see a row per file with:
-
-- A thumbnail (if one is available)
-- The file name and a type badge (3MF, GCODE, STL, …)
-- **Print** button — only on sliced files (`.gcode` and `.gcode.3mf`)
-
-Files that can't be printed directly (`.stl`, `.step`, etc.) still appear in the list but without action buttons.
-
-### Workflow
-
-1. Open the project detail page
-2. Find the file under the linked folder you want
-3. Click **Print**
-4. Pick your printer, plate, dispatch option, and print options
-5. Start the print
-
-### Auto-Linking
-
-Prints triggered from the project detail page are automatically associated with the originating project. The resulting archive shows up under the project's archive list as soon as the print completes — no manual "Assign to project" step required.
-
-!!! note "Prints Started from Elsewhere"
-    If you print the same file from the File Manager, Archives page, or a link that wasn't launched from the project view, the archive is **not** auto-linked. Only prints launched from the project detail page get the implicit project association.
+1. Перейдите на страницу **Архив**
+2. Нажмите фильтр **Проект**
+3. Выберите проект
+4. Отобразятся только связанные архивы
 
 ---
 
-## :material-delete: Deleting Projects
+## :material-printer: Печать файлов из проекта {#printing-files-from-a-project}
 
-Deleting a project:
+Если к проекту привязана хотя бы одна папка библиотеки, на странице проекта прямо в списке отображаются пригодные для печати файлы из каждой папки — для повторной печати не нужно переходить в файловый менеджер.
 
-1. Click the **delete** icon on a project card
-2. Confirm deletion
+### Что отображается {#what-shows-up}
 
-!!! note "Archives Preserved"
-    Deleting a project does NOT delete the archives. They remain in your archive but are no longer linked to a project.
+Под заголовком каждой связанной папки находится строка для каждого файла:
 
----
+- Миниатюра, если она доступна
+- Имя файла и метка типа (3MF, GCODE, STL и т. д.)
+- Кнопка **Печать** — только для нарезанных файлов (`.gcode` и `.gcode.3mf`)
 
-## :material-export: Import & Export
+Файлы, которые нельзя напечатать напрямую (`.stl`, `.step` и т. д.), тоже отображаются в списке, но без кнопок действий.
 
-Share projects between Bambuddy instances or backup your project data.
+### Порядок работы {#workflow}
 
-### Exporting a Single Project (ZIP)
+1. Откройте страницу проекта
+2. Найдите файл в нужной связанной папке
+3. Нажмите **Печать**
+4. Выберите принтер, пластину, способ отправки и параметры печати
+5. Запустите печать
 
-Export a complete project bundle including all files from linked library folders:
+### Автоматическая привязка {#auto-linking}
 
-1. Open the project detail page
-2. Click the **Export** button
-3. A ZIP file is downloaded containing:
-   - `project.json` - Project settings, BOM items, and folder metadata
-   - `files/` - All files from linked library folders
+Печати, запущенные со страницы проекта, автоматически связываются с ним. Сразу после завершения архив появляется в списке архивов проекта — вручную назначать его не нужно.
 
-The export carries the linked folders and files you can open in the File Manager: everything with **library:read_all**, your own files in the folders you see with **library:read_own**, and no folders or files without library access.
-
-!!! tip "Complete Bundles"
-    ZIP export includes the actual 3MF/gcode files from linked folders, making it easy to share complete project bundles.
-
-### Exporting All Projects (JSON)
-
-Export all projects as metadata only (no files):
-
-1. Go to the **Projects** page
-2. Click the **Export** button in the header
-3. A JSON file is downloaded with all project metadata
-
-!!! info "Metadata Only"
-    Bulk export is JSON format without files. Use single-project ZIP export if you need the files.
-
-### Importing Projects
-
-Import projects from ZIP or JSON files:
-
-1. Go to the **Projects** page
-2. Click the **Import** button
-3. Select a `.zip` or `.json` file
-
-**ZIP Import:**
-
-- Creates the project with all settings
-- Creates linked library folders
-- Extracts and stores all files from the ZIP
-- Files are available in File Manager
-
-**JSON Import:**
-
-- Creates the project with all settings
-- Creates empty linked folders (names only)
-- Supports single project or batch import (array of projects)
-
-**Existing folders:** a folder of the same name at the top of the library is linked to the imported project only if you have **library:update_all**, the permission that links folders by hand. Otherwise the import creates a new folder of that name.
-
-!!! example "Use Cases"
-    - **Share project templates** - Export a project setup for others to use
-    - **Migrate instances** - Move projects between Bambuddy servers
-    - **Backup projects** - Archive important project bundles with all files
-    - **Collaborate** - Share complete project bundles with team members
+!!! note "Печати, запущенные из других мест"
+    Если напечатать тот же файл из файлового менеджера, со страницы архива или по ссылке вне проекта, архив **не будет** автоматически привязан. Неявная связь создаётся только для печатей, запущенных со страницы проекта.
 
 ---
 
-## :material-archive-arrow-up: Project Archives View
+## :material-delete: Удаление проектов {#deleting-projects}
 
-Click a project card to see all its archives:
+Чтобы удалить проект:
 
-![Project Detail View](../assets/project-detail-1.png){ .screenshot }
+1. Нажмите значок **удаления** на карточке проекта
+2. Подтвердите удаление
 
-- Grid view of all linked prints
-- Same filtering and sorting as main Archives
-- Quick access to add more prints
+!!! note "Архивы сохраняются"
+    Удаление проекта НЕ удаляет архивы. Они остаются в архиве, но больше не связаны с проектом.
 
 ---
 
-## :material-clipboard-list: Bill of Materials
+## :material-export: Импорт и экспорт {#import-export}
 
-Track non-printed parts needed for your project (screws, electronics, hardware):
+Обменивайтесь проектами между экземплярами Bambuddy и создавайте резервные копии данных проектов.
 
-### Adding BOM Items
+### Экспорт одного проекта (ZIP) {#exporting-a-single-project-zip}
 
-1. Open a project
-2. Scroll to **Bill of Materials**
-3. Click **Add Item**
-4. Fill in the details:
+Экспортируйте полный пакет проекта со всеми файлами связанных папок библиотеки:
 
-| Field | Description |
+1. Откройте страницу проекта
+2. Нажмите **Экспорт**
+3. Скачивается ZIP-файл, содержащий:
+   - `project.json` — настройки проекта, позиции списка материалов и метаданные папок
+   - `files/` — все файлы из связанных папок библиотеки
+
+В экспорт входят связанные папки и файлы, которые вы можете открыть в файловом менеджере: все при наличии **library:read_all**, ваши собственные файлы в видимых папках при наличии **library:read_own** и ни одной папки или файла без доступа к библиотеке.
+
+!!! tip "Полные пакеты"
+    При экспорте ZIP в него включаются сами файлы 3MF/gcode из связанных папок, поэтому полными пакетами проектов удобно обмениваться.
+
+### Экспорт всех проектов (JSON) {#exporting-all-projects-json}
+
+Экспортируйте метаданные всех проектов без файлов:
+
+1. Перейдите на страницу **Проекты**
+2. Нажмите **Экспорт** в заголовке
+3. Скачивается JSON-файл с метаданными всех проектов
+
+!!! info "Только метаданные"
+    Массовый экспорт использует формат JSON без файлов. Если нужны файлы, экспортируйте отдельный проект в ZIP.
+
+### Импорт проектов {#importing-projects}
+
+Импортируйте проекты из файлов ZIP или JSON:
+
+1. Перейдите на страницу **Проекты**
+2. Нажмите **Импорт**
+3. Выберите файл `.zip` или `.json`
+
+**Импорт ZIP:**
+
+- Создаёт проект со всеми настройками
+- Создаёт связанные папки библиотеки
+- Извлекает и сохраняет все файлы ZIP
+- Файлы доступны в файловом менеджере
+
+**Импорт JSON:**
+
+- Создаёт проект со всеми настройками
+- Создаёт пустые связанные папки (только названия)
+- Поддерживает импорт одного проекта или нескольких (массива проектов)
+
+**Существующие папки:** папка с тем же именем в корне библиотеки связывается с импортируемым проектом только при наличии разрешения **library:update_all**, которое позволяет привязывать папки вручную. В противном случае при импорте создаётся новая одноимённая папка.
+
+!!! example "Примеры использования"
+    - **Обмен шаблонами проектов** — экспортируйте настройки проекта для других
+    - **Перенос между экземплярами** — переносите проекты между серверами Bambuddy
+    - **Резервное копирование проектов** — сохраняйте важные пакеты проектов вместе со всеми файлами
+    - **Совместная работа** — делитесь полными пакетами проектов с командой
+
+---
+
+## :material-archive-arrow-up: Просмотр архивов проекта {#project-archives-view}
+
+Нажмите карточку проекта, чтобы увидеть все его архивы:
+
+![Подробности проекта](../assets/project-detail-1.png){ .screenshot }
+
+- Сетка всех связанных печатей
+- Те же фильтрация и сортировка, что в основном архиве
+- Быстрый доступ к добавлению печатей
+
+---
+
+## :material-clipboard-list: Список материалов {#bill-of-materials}
+
+Учитывайте необходимые для проекта ненапечатанные детали: винты, электронику и крепёж.
+
+### Добавление позиций {#adding-bom-items}
+
+1. Откройте проект
+2. Прокрутите до раздела **Список материалов**
+3. Нажмите **Добавить позицию**
+4. Заполните поля:
+
+| Поле | Описание |
 |-------|-------------|
-| **Name** | Part name (e.g., "M3x8 SHCS") |
-| **Quantity** | How many needed |
-| **Unit Price** | Cost per item |
-| **Sourcing URL** | Where to buy |
-| **Remarks** | Additional notes |
+| **Название** | Название детали (например, "M3x8 SHCS") |
+| **Количество** | Сколько требуется |
+| **Цена за единицу** | Стоимость одной детали |
+| **Ссылка на магазин** | Где купить |
+| **Примечания** | Дополнительные заметки |
 
-### Tracking Acquisition
+### Учёт приобретения {#tracking-acquisition}
 
-- Check the box when a part is acquired
-- Progress bar shows acquired/total items
-- Use **Hide done** to focus on remaining items
-
----
-
-## :material-currency-usd: Cost Tracking
-
-Track project expenses:
-
-### Cost Categories
-
-- **Parts cost** - Sum of BOM item prices
-- **Additional costs** - Manual entries for other expenses
-- **Printer wear** - Wear of the project's prints on printers that have a [wear cost per printing hour](statistics.md#printer-wear-cost). Counts toward the total cost and the budget
-
-### Currency
-
-Uses your configured currency from Settings → General.
+- Отметьте флажок, когда деталь приобретена
+- Индикатор показывает приобретённое / общее количество
+- Используйте **Скрыть выполненное**, чтобы сосредоточиться на оставшихся позициях
 
 ---
 
-## :material-lightbulb: Project Ideas
+## :material-currency-usd: Учёт затрат {#cost-tracking}
 
-!!! tip "Multi-Part Prints"
-    Create a project for complex models that print in multiple pieces. Track which parts are done.
+Отслеживайте расходы проекта:
 
-!!! tip "Gift Planning"
-    Start a project before a birthday or holiday. Add prints as you complete them.
+### Категории затрат {#cost-categories}
 
-!!! tip "Printer Builds"
-    Building a Voron, Trident, or other kit? Track every printed part.
+- **Стоимость деталей** — сумма цен позиций списка материалов
+- **Дополнительные расходы** — введённые вручную прочие расходы
+- **Износ принтера** — износ от печатей проекта на принтерах с заданной [стоимостью износа за час печати](statistics.md#printer-wear-cost). Учитывается в общей стоимости и бюджете
 
-!!! tip "Iterative Design"
-    Group prototypes of the same design to see your progression.
+### Валюта {#currency}
 
-!!! tip "Client Orders"
-    Track prints for commission work or client requests.
+Используется валюта, настроенная в разделе Настройки → Общие.
+
+---
+
+## :material-lightbulb: Идеи проектов {#project-ideas}
+
+!!! tip "Печать из нескольких деталей"
+    Создайте проект для сложной модели, которая печатается по частям, и отслеживайте готовые детали.
+
+!!! tip "Планирование подарка"
+    Начните проект перед днём рождения или праздником. Добавляйте печати по мере их завершения.
+
+!!! tip "Сборка принтера"
+    Собираете Voron, Trident или другой комплект? Учитывайте каждую напечатанную деталь.
+
+!!! tip "Итеративное проектирование"
+    Объедините прототипы одной конструкции, чтобы видеть развитие проекта.
+
+!!! tip "Заказы клиентов"
+    Отслеживайте печати для заказов и запросов клиентов.
