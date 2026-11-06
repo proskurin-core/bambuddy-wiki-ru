@@ -1,22 +1,22 @@
 ---
-title: Print Archiving
-description: Automatic 3MF archiving with metadata extraction
+title: Архивация печати
+description: Автоматическая архивация 3MF с извлечением метаданных
 ---
 
-# Print Archiving
+# Архивация печати {#print-archiving}
 
-Bambuddy automatically archives every print with full metadata, 3D previews, and duplicate detection.
+Bambuddy автоматически архивирует каждую печать с полными метаданными, 3D-предпросмотром и обнаружением дубликатов.
 
-![Archives Page](../assets/archives.png){ .screenshot }
+![Страница архива](../assets/archives.png){ .screenshot }
 
 ---
 
-## :material-archive: How Archiving Works
+## :material-archive: Как работает архивация {#how-archiving-works}
 
-!!! warning "SD Card Required"
-    An SD card must be inserted in your printer for archiving to work. Bambuddy downloads the 3MF file from the printer's SD card after each print completes.
+!!! warning "Необходима SD-карта"
+    Для архивации в принтер должна быть вставлена SD-карта. После завершения каждой печати Bambuddy скачивает с неё файл 3MF.
 
-When a print completes:
+Когда печать завершена:
 
 ```mermaid
 graph LR
@@ -27,132 +27,132 @@ graph LR
     E --> F[Save to Archive]
 ```
 
-### What Gets Archived
+### Что сохраняется в архиве {#what-gets-archived}
 
-| Data | Description |
+| Данные | Описание |
 |------|-------------|
-| **3MF File** | Complete print file from printer |
-| **Thumbnail** | Preview image from slicer |
-| **Metadata** | Print settings, layers, filament, etc. |
-| **Print result** | Success, failed, or stopped |
-| **Duration** | Actual print time |
-| **Filament used** | Grams consumed |
-| **Camera snapshot** | Photo at completion (if enabled) |
+| **Файл 3MF** | Полный файл печати с принтера |
+| **Миниатюра** | Изображение предпросмотра из слайсера |
+| **Метаданные** | Настройки печати, слои, филамент и т. д. |
+| **Результат печати** | Успешно, неудачно или остановлено |
+| **Длительность** | Фактическое время печати |
+| **Расход филамента** | Израсходованные граммы |
+| **Снимок камеры** | Фото по завершении, если функция включена |
 
-### What Gets Skipped
+### Что пропускается {#what-gets-skipped}
 
-Bambuddy automatically skips archiving for:
+Bambuddy автоматически пропускает архивацию для:
 
-- **Calibration prints** — Internal printer operations like flow rate calibration, vibration compensation, and bed leveling (gcode files under `/usr/` on the printer)
-- **Prints with auto-archive disabled** — **Settings → General → Archive Settings → Auto-archive prints** switches it off for every printer. While it is on, each printer's own toggle in its printer settings decides. This applies to prints started outside Bambuddy; prints sent from Bambuddy are archived as before
+- **Калибровочных печатей** — внутренних операций принтера, например калибровки потока, компенсации вибрации и выравнивания стола (файлы gcode в `/usr/` на принтере)
+- **Печатей с выключенной автоархивацией** — настройка **Настройки → Общие → Настройки архива → Автоматически архивировать печати** выключает её для всех принтеров. Пока она включена, действует отдельный переключатель в настройках каждого принтера. Это относится к печатям, запущенным вне Bambuddy; отправленные из Bambuddy по-прежнему архивируются
 
-### Manual Upload via Drag-and-Drop
+### Загрузка вручную перетаскиванием {#manual-upload-via-drag-and-drop}
 
-Drop `.3mf` files anywhere on the Archives page to upload them directly — the upload modal opens pre-populated. Non-`.3mf` drops surface a "only .3mf files are supported" toast. The overlay self-clears on cancel: drag back outside the browser window, press Escape mid-drag, or release outside the page all return you to the normal view without a refresh.
-
----
-
-## :material-cube-scan: 3D GCode Preview
-
-Click the **3D-preview badge** (layers icon) on an archive card — or the **3D Preview** context-menu entry — to open the G-code viewer for that archive. It draws the sliced toolpath with the same renderer OrcaSlicer uses for its own preview, so extrusions are solid volumes that occlude one another and the print reads the way it does on the desktop — you can inspect exactly what the printer will do without leaving the app.
-
-### Opening the Viewer
-
-- **Archive card badge** - Click the layers icon in the bottom-right corner of any card
-- **Context menu** - Right-click an archive → **3D Preview**
-- **List-view menu** - Works the same way in compact list layout
-
-The viewer opens in the main content pane with the Bambuddy sidebar still visible. Reloading the page keeps you in the shell — the viewer URL carries the archive reference so it re-renders correctly.
-
-### Plate Picker
-
-For multi-plate 3MF files, a picker modal appears first:
-
-- **Grid layout** - Plate thumbnails from the slicer, two columns on wider screens
-- **Object lists** - Each row shows the first few object names on that plate + print time
-- **Scrollable** - Archives with dozens of plates scroll inside the modal rather than overflow the page
-
-Single-plate archives skip the picker and open the viewer directly.
-
-Once the viewer is open, a **plate switcher** in its header moves between the plates of the same file without going back to the picker. The plate you are on is part of the viewer's URL, so a link to one particular plate keeps working, and reloading stays where you were. Sliced files opened from the **File Manager** take the same viewer but have no picker modal in front of them — they open on the file's first plate and you switch from the header.
-
-### Viewer Controls
-
-- **Colour by** - Four ways to read the same toolpath:
-    - **Filament** (the default) shows the print in the colours you assigned at slice time, so a multi-material model looks like what will come off the plate.
-    - **Feature** gives walls, sparse and solid infill, bridges, supports, skirt, gap fill, ironing and the prime tower each their own colour — the slicer's own palette, so it matches what you are used to.
-    - **Height** and **Width** shade the toolpath along a graduated scale, for spotting a variable layer height or an unexpectedly thin wall.
-- **Hide what is in the way** - Every entry in the legend is a switch. Click a filament or a feature to take it out of the view; it is removed rather than merely hidden, so it stops covering whatever sits behind it and you can look inside a part without its supports in the way. Click again to bring it back.
-- **Layer range** (right side) - Two handles, so you can isolate a band of layers rather than only cap the top.
-- **Travel moves** - Off by default; switch on to see where the nozzle moves without printing.
-- **Mouse** - Left-drag to rotate, scroll to zoom, right-drag to pan
-- **Bed size** - Automatically matches the printer model the archive was sliced for (H2D → 350 × 320 × 325 mm, X1C/P1S → 256³, A1 → 256³, etc.), no configuration needed
-
-### Source-Only Archives
-
-Pure project 3MF files — exported from BambuStudio without being sliced — don't contain any G-code to preview. Clicking 3D Preview on those archives shows a short toast telling you to slice the file in BambuStudio first; the viewer isn't opened.
+Перетащите файлы `.3mf` в любое место страницы архива, чтобы загрузить их напрямую: откроется окно с уже выбранными файлами. Для файлов другого типа появится уведомление о поддержке только `.3mf`. Подсветка снимается автоматически при отмене: перетащите файлы обратно за пределы окна браузера, нажмите Escape во время перетаскивания или отпустите за пределами страницы, чтобы вернуться к обычному виду без обновления.
 
 ---
 
-## :material-content-duplicate: Duplicate Detection
+## :material-cube-scan: 3D-предпросмотр G-code {#3d-gcode-preview}
 
-Bambuddy automatically detects duplicate prints:
+Нажмите **значок 3D-предпросмотра** (слои) на карточке архива или пункт **3D-предпросмотр** контекстного меню, чтобы открыть просмотр G-code. Траектория инструмента отображается тем же механизмом, что использует OrcaSlicer: экструдированные линии представлены объёмными телами и перекрывают друг друга, как в настольном слайсере. Так можно подробно изучить действия принтера, не выходя из приложения.
 
-### How It Works
+### Открытие просмотра {#opening-the-viewer}
 
-1. Extracts file hash from 3MF
-2. Compares with existing archives
-3. Marks potential duplicates
-4. You decide what to keep
+- **Значок карточки** — нажмите значок слоёв в правом нижнем углу карточки
+- **Контекстное меню** — щёлкните архив правой кнопкой → **3D-предпросмотр**
+- **Меню в списке** — работает так же в компактном представлении
 
-### Duplicate Indicators
+Просмотр открывается в основной области с видимой боковой панелью Bambuddy. После перезагрузки страницы он остаётся в интерфейсе: URL содержит ссылку на архив, поэтому просмотр восстанавливается.
 
-- Badge showing "Duplicate"
-- Link to original print
-- Side-by-side comparison available
+### Выбор пластины {#plate-picker}
 
-### Managing Duplicates
+Для файла 3MF с несколькими пластинами сначала появляется окно выбора:
 
-- **Keep both** - Sometimes you intentionally reprint
-- **Delete duplicate** - Remove the newer one
+- **Сетка** — миниатюры пластин из слайсера, на широком экране в двух столбцах
+- **Списки объектов** — в строке показаны первые несколько названий объектов пластины и время печати
+- **Прокрутка** — архивы с десятками пластин прокручиваются внутри окна, не выходя за пределы страницы
 
-### Printing a file again
+Архивы с одной пластиной открываются сразу, без выбора.
 
-A file printed from the File Manager, a project or the queue gets one archive. Printing it again, the same plate or another plate of it, adds the print as a run to that archive's [Print Log](#per-archive-print-log) instead of archiving the file a second time. The card shows the latest run, with every run's finish photos and a count of their timelapse videos: with more than one, the video button opens the archive, where each run's video plays.
+В заголовке просмотра есть **переключатель пластин**, позволяющий переходить между ними без возврата к выбору. Текущая пластина входит в URL, поэтому ссылка на конкретную пластину продолжает работать и после перезагрузки. Нарезанные файлы из **Файлового менеджера** открываются в том же просмотрщике, но без окна выбора: сначала показывается первая пластина, остальные выбираются в заголовке.
 
-A print joins the archive when it is the same file (same content), printed by the same user, in the same project, and the archive came from the same File Manager file or from none (that file was deleted since, or the print was started from the slicer). Otherwise it gets an archive of its own, as before.
+### Управление просмотром {#viewer-controls}
 
-This also holds while the file prints elsewhere: the same file sent to two printers at once is one archive with two runs, each with its own outcome, charge, energy, timelapse and photos.
+- **Окраска по** — четыре способа отображения одной траектории:
+    - **Филамент** (по умолчанию) показывает цвета, назначенные при нарезке; многоцветная модель выглядит как готовая печать.
+    - **Тип линии** окрашивает стенки, разреженное и сплошное заполнение, мосты, поддержки, юбку, заполнение зазоров, глажение и башню очистки разными цветами из палитры слайсера.
+    - **Высота** и **Ширина** окрашивают траекторию по шкале, чтобы заметить переменную высоту слоя или неожиданно тонкую стенку.
+- **Скрытие лишнего** — каждый элемент легенды служит переключателем. Нажмите филамент или тип линии, чтобы убрать его из просмотра: он именно удаляется из отображения и больше не закрывает находящееся за ним, поэтому можно заглянуть внутрь детали без поддержек. Повторное нажатие возвращает элемент.
+- **Диапазон слоёв** справа — два ползунка позволяют выделить интервал, а не только ограничить верхний слой.
+- **Перемещения** — по умолчанию выключены; включите их, чтобы видеть движение сопла без печати.
+- **Мышь** — левая кнопка с перетаскиванием вращает, колесо масштабирует, правая кнопка перемещает вид
+- **Размер стола** автоматически соответствует модели, для которой нарезан архив (H2D → 350 × 320 × 325 мм, X1C/P1S → 256³, A1 → 256³ и т. д.); настройка не нужна
 
-Prints started from the slicer or on the printer, and uploaded files, still get an archive each.
+### Архивы только с исходным файлом {#source-only-archives}
 
-### Merging duplicates
-
-Archives created before this, or by the slicer and printer screen, can still hold the same file more than once. **Merge duplicates** in the Archives page header (also offered in the **Duplicates** collection) makes them one.
-
-Archives are one when they hold the same file (same content), belong to the same user and are in the same project. In each group:
-
-- The **oldest** archive stays. It takes in every print of the others as runs of its Print Log, with their photos, timelapses, source 3MF and F3D files, queue history, batches, project BOM entries and spool usage. A print logged before Print Logs existed gets a run written from its archive, so it is not lost.
-- Notes are joined, tags combined, and the archive stays a favourite if any of them was one.
-- The others disappear from the archives. Links to them in Bambuddy still work and open the archive they went into: Archives page bookmarks, notification links and one-tap outcome links, and queued prints of them print it.
-- Wallet charges and budget reservations stay where they were booked: merging never changes money already accounted for.
-
-The dialog lists every group, with the archive that stays and the ones merging into it. Untick a group to leave it as it is. Some groups are left out for now, with the reason:
-
-- **In use** - one of its archives is printing, queued, being sent, tracked by Spoolman, being sliced or edited, or finished printing in the last half hour (its timelapse and finish photo may still be on their way). Try again later.
-- **Different files** - its archives carry different source 3MF or F3D files, or a video attached by hand beside another one. Only one can stay, so keep the one you want by hand first.
-
-A group can also be left out when you merge, when something changed since the dialog opened (a print started, or the merge of that group failed and was undone). The dialog then stays open and lists those groups with their reason.
-
-While duplicates exist, the Archives page shows a banner offering the merge (after an update, or a restore of an older backup). Dismissing it hides it in that browser until there are more groups than when it was dismissed.
-
-Merging needs both `archives:update_all` and `archives:delete_all`. A user limited to some printers merges only archives every print of which ran on their printers.
+В файлах 3MF проекта, экспортированных из BambuStudio без нарезки, нет G-code для просмотра. При нажатии 3D-предпросмотра появится уведомление с предложением сначала нарезать файл в BambuStudio; просмотрщик не откроется.
 
 ---
 
-## :material-card-text: Archive Cards
+## :material-content-duplicate: Обнаружение дубликатов {#duplicate-detection}
 
-Each archive displays as a card with key information:
+Bambuddy автоматически обнаруживает повторяющиеся печати:
+
+### Как это работает {#how-it-works}
+
+1. Извлекает хеш файла 3MF
+2. Сравнивает его с существующими архивами
+3. Отмечает возможные дубликаты
+4. Вы решаете, что сохранить
+
+### Признаки дубликата {#duplicate-indicators}
+
+- Метка «Дубликат»
+- Ссылка на исходную печать
+- Возможность сравнения рядом
+
+### Работа с дубликатами {#managing-duplicates}
+
+- **Сохранить оба** — иногда повторная печать намеренна
+- **Удалить дубликат** — удалить более новый архив
+
+### Повторная печать файла {#printing-a-file-again}
+
+Для файла, напечатанного из файлового менеджера, проекта или очереди, создаётся один архив. Повторная печать той же или другой пластины добавляется как запуск в [журнал печати](#per-archive-print-log) этого архива вместо создания второго. Карточка показывает последний запуск, фотографии завершения всех запусков и количество их таймлапсов: если видео несколько, кнопка открывает архив, где можно посмотреть видео каждого запуска.
+
+Печать присоединяется к архиву, если это тот же файл (с тем же содержимым), тот же пользователь и проект, а архив получен из того же файла файлового менеджера либо не связан с ним (файл удалили или печать запустили из слайсера). Иначе, как и раньше, создаётся отдельный архив.
+
+Это действует и при одновременной печати на разных устройствах: один файл, отправленный на два принтера, даёт один архив с двумя запусками, каждый со своим результатом, списанием, энергией, таймлапсом и фото.
+
+Для печатей из слайсера или с экрана принтера и для загруженных файлов по-прежнему создаётся отдельный архив.
+
+### Объединение дубликатов {#merging-duplicates}
+
+В архивах, созданных до появления этой функции либо из слайсера или с экрана принтера, один файл может встречаться несколько раз. Кнопка **Объединить дубликаты** в заголовке страницы архива (также доступная в коллекции **Дубликаты**) объединяет их.
+
+Архивы объединяются, если содержат один файл с одинаковым содержимым, принадлежат одному пользователю и находятся в одном проекте. В каждой группе:
+
+- Остаётся **самый старый** архив. Он принимает все печати остальных как запуски журнала вместе с фото, таймлапсами, исходными файлами 3MF и F3D, историей очереди, пакетами, позициями списка материалов проекта и расходом катушек. Для печати, сохранённой до появления журналов, создаётся запись запуска, чтобы данные не потерялись.
+- Заметки объединяются, теги собираются вместе; архив остаётся избранным, если хотя бы один из них был избранным.
+- Остальные исчезают из списка архивов. Ссылки на них в Bambuddy продолжают работать и открывают получившийся архив: закладки страницы, ссылки уведомлений и ссылки подтверждения результата; задания очереди тоже печатают его.
+- Списания кошелька и резервирование бюджета остаются на прежних местах: объединение не меняет уже учтённые деньги.
+
+Окно показывает каждую группу, сохраняемый архив и объединяемые с ним архивы. Снимите отметку группы, чтобы оставить её без изменений. Некоторые группы пока исключаются с указанием причины:
+
+- **Используется** — один из архивов печатается, находится в очереди, отправляется, отслеживается Spoolman, нарезается или редактируется либо напечатан в последние полчаса (таймлапс и фото завершения ещё могут поступать). Повторите попытку позже.
+- **Разные файлы** — архивы содержат разные исходные 3MF или F3D либо видео, вручную приложенное вместе с другим. Сохранить можно только один вариант, поэтому сначала выберите его вручную.
+
+Группа может быть исключена и в момент объединения, если после открытия окна что-то изменилось (началась печать или объединение группы завершилось ошибкой и откатилось). Окно остаётся открытым и перечисляет такие группы с причинами.
+
+Пока есть дубликаты, страница архива предлагает объединение в баннере (после обновления или восстановления старой копии). Закрытие скрывает его в этом браузере до тех пор, пока число групп не увеличится.
+
+Для объединения нужны оба разрешения: `archives:update_all` и `archives:delete_all`. Пользователь с доступом только к некоторым принтерам объединяет лишь те архивы, все печати которых выполнены на доступных ему принтерах.
+
+---
+
+## :material-card-text: Карточки архива {#archive-cards}
+
+Каждый архив отображается карточкой с основными сведениями:
 
 ```
 ┌────────────────────────────────────────┐
@@ -166,795 +166,788 @@ Each archive displays as a card with key information:
 └────────────────────────────────────────┘
 ```
 
-### Card Information
+### Сведения на карточке {#card-information}
 
-- **Thumbnail** - Visual preview
-- **Filename** - Original file name
-- **Printer** - Which printer completed it
-- **Duration** - How long its latest print took, with a badge comparing it to the slicer's estimate for the plate that print printed (hover for both). A multi-plate file is measured plate by plate, not against the whole file
-- **Result** - Success, failed, or stopped
-- **Filament** - Material and weight used (slicer estimate from the 3MF — actual per-run usage lives in the [Print Log](#per-archive-print-log) below)
-- **Object Count** - Number of printable objects in the 3MF
-- **Tags** - Custom labels
-- **Project** - Assigned project badge
-- **Uploaded by** - Username who uploaded (when authentication is enabled)
-- **N prints badge** - Orange badge shown when this archive has been printed more than once. Click it to open the [archive window](#the-archive-window) with every print of it.
-- **AMS mapping saved badge** - Green badge shown when the archive carries the AMS slots the slicer itself picked, saved by a virtual printer with [Save AMS mapping](virtual-printer.md#print-queue-mode-save-ams-mapping) on. It names the printer the slots were resolved against, because tray numbers only mean something on that printer — see [Reuse the slicer's saved mapping](#reuse-the-slicers-saved-mapping) below.
+- **Миниатюра** — визуальный предпросмотр
+- **Имя файла** — исходное имя
+- **Принтер** — устройство, выполнившее печать
+- **Длительность** — время последней печати и метка сравнения с оценкой слайсера для напечатанной пластины (наведите для обоих значений). Файл с несколькими пластинами сравнивается по каждой пластине, а не по всему файлу
+- **Результат** — успех, ошибка или остановка
+- **Филамент** — материал и вес (оценка слайсера из 3MF; фактический расход каждого запуска находится в [журнале печати](#per-archive-print-log) ниже)
+- **Количество объектов** — число пригодных для печати объектов в 3MF
+- **Теги** — пользовательские метки
+- **Проект** — метка назначенного проекта
+- **Загрузил** — имя пользователя, загрузившего файл (при включённой аутентификации)
+- **Метка N печатей** — оранжевая метка, если архив напечатан более одного раза. Нажмите её, чтобы открыть [окно архива](#the-archive-window) со всеми печатями.
+- **Метка сохранённого сопоставления AMS** — зелёная метка, если архив содержит слоты AMS, выбранные слайсером и сохранённые виртуальным принтером с включённой настройкой [Сохранять сопоставление AMS](virtual-printer.md#print-queue-mode-save-ams-mapping). В ней указан принтер, относительно которого определены слоты, поскольку номера лотков имеют смысл только для него; см. [Повторное использование сохранённого сопоставления](#reuse-the-slicers-saved-mapping) ниже.
 
-Click a card (or the name in the list view) to open the [archive window](#the-archive-window). The buttons and badges on a card still do what they say, and the right-click menu is unchanged.
+Нажмите карточку или имя в списке, чтобы открыть [окно архива](#the-archive-window). Кнопки и метки карточки сохраняют свои действия, контекстное меню не меняется.
 
-### The archive window
+### Окно архива {#the-archive-window}
 
-A click on an archive's card (or its name in the list) opens it over the archives list. **Escape**, a click outside it or **X** closes it. Its address is `/archives/<id>`, so a link to an archive opens it the same way. It shows the file at the top, then its details, its plates and every print of it. An archive is one file; printing it again, or printing another of its plates, adds a print to the same archive.
+При нажатии карточки архива или его названия в списке окно открывается поверх списка. Закрыть его можно клавишей **Escape**, нажатием вне окна или кнопкой **X**. Его адрес — `/archives/<id>`, поэтому ссылка на архив открывает то же окно. Сверху показан файл, затем сведения о нём, пластины и все печати. Архив содержит один файл; повторная печать или печать другой пластины добавляется к тому же архиву.
 
-**The file:**
+**Файл:**
 
-- Thumbnail (pointing at it, or at a plate's, shows it larger), name, what it was sliced for (printer, nozzle, bed type) and its project
-- How many times it was printed, good and failed, and the slicer's estimate for the whole file
-- The archive's note, which belongs to the file
-- **Print** (a sliced file only; a source file offers **Slice**), **Slice** and **Edit**. A greyed-out button says why when you point at it. The **...** menu holds **3D preview**, **Download**, **All photos** (every photo of the archive) and **Delete**
-- **File:** layer height, nozzle, bed type, the printer it was sliced for, layers, size, when it was archived, its MakerWorld source and its tags
+- Миниатюра (при наведении на неё или на миниатюру пластины показывается увеличенное изображение), название, параметры нарезки (принтер, сопло, тип стола) и проект
+- Количество успешных и неудачных печатей и оценка слайсера для всего файла
+- Заметка архива, относящаяся к файлу
+- **Печать** (только для нарезанного файла; для исходного предлагается **Нарезать**), **Нарезать** и **Изменить**. Наведение на неактивную кнопку объясняет причину. Меню **...** содержит **3D-предпросмотр**, **Скачать**, **Все фото** (все фотографии архива) и **Удалить**
+- **Файл:** высота слоя, сопло, тип стола, принтер, для которого выполнена нарезка, число слоёв, размер, время архивации, источник MakerWorld и теги
 
-**Plates:** a multi-plate file shows each plate with its thumbnail, objects, estimate and filaments, how often it printed good and failed, and how far its last finished print ran from the plate's estimate (`+9%` took 9 % longer). Its prints' finish photos and the newest print's **Timelapse video** open from the card. **Print this plate** opens the print dialog on that plate; **Show its prints** narrows the print table to it, as do the plate buttons above the table.
+**Пластины:** для файла с несколькими пластинами каждая показана с миниатюрой, объектами, оценкой и филаментом, количеством успешных и неудачных печатей и отклонением последней завершённой печати от оценки (`+9%` означает, что она заняла на 9 % больше времени). Фотографии завершения и **таймлапс** последней печати открываются из карточки. **Напечатать эту пластину** открывает диалог печати с выбранной пластиной; **Показать её печати** фильтрует таблицу, как и кнопки пластин над ней.
 
-**Each print, newest first,** one row each: when it started, the plate, the printer, its outcome and verdict, its time against its plate's estimate (`1h 0m vs 55m (+9%)`, or `20m of 1h 0m` for one that stopped), filament (`40.0 g (est. 42.0 g)`), cost, and its filament (a dot in each colour, then the types). A `~` marks a time that wasn't measured. A print still waiting for its verdict shows **outcome?** in its row. On a narrower screen each row's values are stacked instead of laid out as columns. A click on a row opens the print:
+**Каждая печать, начиная с новой**, занимает строку: начало, пластина, принтер, статус и оценка результата, время относительно оценки пластины (`1h 0m vs 55m (+9%)` или `20m of 1h 0m` для остановленной), филамент (`40.0 g (est. 42.0 g)`), стоимость и материалы (точка каждого цвета, затем типы). Символ `~` обозначает неизмеренное время. Ожидающая оценки печать отмечается в строке значком **результат?**. На узком экране значения располагаются друг под другом, а не в столбцах. Нажмите строку, чтобы открыть печать:
 
-- **Timelapse video** and photos of that print. Each plate keeps its own video, so a file printed plate by plate has one per plate. A print from before prints kept their own photos shows the archive's photos that no other print holds (and the archive's video, if it has none of its own)
-- When it started and ended, its energy, its failure reason and who started it
-- **Its own note:** **Add note** keeps a note on that print, beside the archive's note on the file
-- **Set outcome** / **Change outcome**, which answers for that print only, and **Reprint this print**, which opens the print dialog on its plate
+- **Таймлапс** и фотографии этой печати. У каждой пластины собственное видео, поэтому у файла, напечатанного по пластинам, есть видео каждой из них. Для печати до появления отдельных фотографий показываются фото архива, не принадлежащие другим печатям (и видео архива, если своего нет)
+- Время начала и завершения, энергия, причина ошибки и запустивший пользователь
+- **Собственная заметка:** **Добавить заметку** сохраняет её у этой печати наряду с заметкой файла в архиве
+- **Задать результат** / **Изменить результат** отвечает только за эту печать; **Повторить эту печать** открывает диалог с её пластиной
 
-A link to an archive that was [merged](#merging-duplicates) into another opens the one it went into. A link from the calendar or the Print Log (`/archives/<id>?run=<print id>`) marks the print it points at and opens it.
+Ссылка на архив, [объединённый](#merging-duplicates) с другим, открывает итоговый архив. Ссылка из календаря или журнала печати (`/archives/<id>?run=<print id>`) выделяет и открывает указанную печать.
 
-!!! info "Printer-scoped users"
-    A user limited to some printers sees only their prints of an archive in its window, with their videos and photos.
+!!! info "Пользователи с доступом к определённым принтерам"
+    Пользователь с ограничением по принтерам видит в окне только печати архива, выполненные на доступных ему устройствах, вместе с их видео и фото.
 
-### Per-archive Print Log
+### Журнал печати отдельного архива {#per-archive-print-log}
 
-Every time you print or reprint an archive, Bambuddy records the event independently — date, status, duration, actual filament used, cost, failure reason. The archive card itself stays representative of the *file* (one card per unique 3MF), but the full per-print history is always one click away.
+При каждой печати или повторной печати архива Bambuddy отдельно записывает дату, статус, длительность, фактический расход филамента, стоимость и причину ошибки. Сама карточка по-прежнему представляет *файл* (одна карточка на уникальный 3MF), но полная история всегда доступна одним нажатием.
 
-**Access paths:**
+**Как открыть:**
 
-- **The [archive window](#the-archive-window)**, from a click on the card or the orange `N prints` badge
-- **Right-click the card → Print Log** (visible on every archive, including single-run ones)
-- The same log also renders at the top of the **Edit Archive** dialog for context
+- Через **[окно архива](#the-archive-window)**, нажав карточку или оранжевую метку `N prints`
+- **Щёлкните карточку правой кнопкой → Журнал печати** (доступен у каждого архива, даже с одной печатью)
+- Тот же журнал отображается вверху окна **Редактировать архив**
 
-**What you'll see in the log:**
+**Что показано в журнале:**
 
-| Column | Description |
+| Столбец | Описание |
 |--------|-------------|
-| **Date** | When this specific run started |
-| **Plate** | The plate of a multi-plate file that this run printed. Shown once a run printed a plate other than plate 1 |
-| **Status** | Completed, Failed, Cancelled, Stopped, or Skipped |
-| **Duration** | Actual elapsed time for this run |
-| **Filament** | Actual grams used for this run (from spool tracking when configured, otherwise scaled to the print's progress percentage) |
-| **Cost** | Actual cost for this run |
-| **Failure reason** | Shown under failed runs, when one was recorded |
+| **Дата** | Время начала конкретного запуска |
+| **Пластина** | Напечатанная пластина файла с несколькими пластинами; показывается после печати пластины, отличной от первой |
+| **Статус** | Завершено, ошибка, отменено, остановлено или пропущено |
+| **Длительность** | Фактическое время запуска |
+| **Филамент** | Фактический расход в граммах по учёту катушек, если он настроен; иначе расчёт по проценту завершения печати |
+| **Стоимость** | Фактическая стоимость запуска |
+| **Причина ошибки** | Показывается для неудачного запуска, если она записана |
 
-**Why this matters:** a failed reprint at 10 g no longer overwrites a previous successful 100 g print on the same archive — both runs stay visible, and Quick Stats correctly sum to 110 g across the two events.
+**Зачем это нужно:** неудачная повторная печать с расходом 10 г больше не перезаписывает предыдущую успешную печать того же архива с расходом 100 г. Оба запуска видны, а краткая статистика правильно суммирует 110 г.
 
-### Correcting the status by hand
+### Исправление статуса вручную {#correcting-the-status-by-hand}
 
-**Edit Archive** can set an archive's outcome to **Completed**, **Failed**, **Aborted** or **Cancelled**; the change lands on the print's most recent run in the Print Log as well. Failed and Aborted count as failures in the statistics. Cancelled counts as stopped and does not lower the success rate. An archive that is still printing, or was uploaded and never printed, shows that status until you pick an outcome; it cannot be set back to printing.
+В окне **Редактировать архив** можно задать результат **Завершено**, **Ошибка**, **Прервано** или **Отменено**; изменение также попадёт в последний запуск журнала печати. Ошибка и прерывание учитываются статистикой как неудачи. Отмена считается остановкой и не снижает долю успеха. Архив текущей печати или загруженный, но ещё ни разу не напечатанный, показывает этот статус до выбора результата; вернуть статус печати после выбора нельзя.
 
-### Correcting the filament figure by hand
+### Исправление расхода филамента вручную {#correcting-the-filament-figure-by-hand}
 
-**Edit Archive** has a **Filament used (g)** field. Most prints never need it — the figure comes out of the sliced 3MF — but a print that archived *without* its 3MF has no figure at all, and no way to get one: the figure is read from the 3MF, and that archive has no file to read. Typing the weight in is the only route.
+В окне **Редактировать архив** есть поле **Израсходовано филамента (г)**. Обычно оно не требуется: значение берётся из нарезанного 3MF. Но у печати, архивированной *без* 3MF, значения нет и получить его неоткуда: оно читается из отсутствующего файла. Ввести вес вручную — единственный способ.
 
-Where to find the real number: the 3MF the printer kept — `slice_info.config` carries `weight` per filament — or the slicer's own estimate for that plate.
+Фактическое значение можно найти в 3MF, сохранённом принтером: `slice_info.config` содержит `weight` каждого филамента, либо в оценке слайсера для этой пластины.
 
-The correction stays inside Bambuddy. It does not deduct anything from a [Spoolman](spoolman.md) spool or from internal inventory: those are charged at print completion from what was actually tracked, and a print that recorded nothing has nothing to reverse. Correct the spool's remaining weight in Spoolman itself if it needs it.
+Исправление остаётся в Bambuddy. Оно ничего не списывает с катушки [Spoolman](spoolman.md) или внутреннего учёта: они обновляются при завершении печати по фактически отслеженному расходу, а если расход не записан, отменять нечего. При необходимости исправьте остаток непосредственно в Spoolman.
 
-The figure counts towards the filament totals on the Projects page and in the metrics, because it lands on the print's most recent run as well as on the card — that run is what the totals are summed from. The exception is a run that measured its own weight through spool tracking: there the measurement stands and only the card changes.
+Значение учитывается в итогах филамента на странице проектов и в метриках, поскольку попадает и на карточку, и в последний запуск, по которому считаются суммы. Исключение — запуск, измеривший вес через учёт катушек: его измерение сохраняется, а меняется только карточка.
 
-The cost follows the new weight, priced the way **Recalculate Costs** prices it (see [Statistics](statistics.md#recalculate-costs)), on the card and on the run that took the weight. With [Spoolman](spoolman.md) pricing the print, the cost it recorded is scaled to the new weight instead. An API request that sets `cost` along with the weight keeps that cost.
+Стоимость пересчитывается по новому весу так же, как при действии **Пересчитать стоимость** (см. [Статистика](statistics.md#recalculate-costs)), на карточке и в запуске, получившем вес. Если стоимость рассчитывал [Spoolman](spoolman.md), записанная им стоимость масштабируется пропорционально новому весу. Запрос API, задающий `cost` вместе с весом, сохраняет указанную стоимость.
 
-Later prints of an archive are charged from its cost and weight, so setting either takes `archives:update_all`. With `archives:update_own` you can type a weight in only for an archive that archived without its 3MF and has no weight yet: it cannot be printed again. Everywhere else the field is locked. The cost is then priced only if the archive had none either. See [Authentication](authentication.md#ownership-based-permissions).
+Последующие печати архива рассчитываются по его стоимости и весу, поэтому изменение любого из них требует `archives:update_all`. С `archives:update_own` можно указать вес только архиву, созданному без 3MF и ещё не имеющему веса: напечатать его повторно нельзя. В остальных случаях поле заблокировано. Стоимость при этом рассчитывается, только если её тоже ещё не было. См. [Аутентификация](authentication.md#ownership-based-permissions).
 
-!!! note "An archive that has its 3MF"
-    The field is editable there too with `archives:update_all`, but on those archives the 3MF stays the authority: when the archive records which plate was printed, a later print of it takes its weight from that plate in the 3MF, not from what you typed, and its cost is scaled to that weight.
+!!! note "Архив с файлом 3MF"
+    Поле редактируется и там при наличии `archives:update_all`, но источником данных остаётся 3MF: когда архив записывает напечатанную пластину, последующая печать берёт вес из этой пластины в 3MF, а не из введённого значения; стоимость масштабируется соответственно.
 
-### Card Action Buttons
+### Кнопки действий карточки {#card-action-buttons}
 
-Each archive card has action buttons at the bottom for quick access:
+Внизу каждой карточки есть кнопки быстрого доступа:
 
-| Button | Description |
+| Кнопка | Описание |
 |--------|-------------|
-| **Print** | Open the print modal to choose ASAP, Queue, Schedule |
-| :material-open-in-new: | Open in Slicer (Bambu Studio or OrcaSlicer — set via **Settings → Workflow → Slicer → Open in Slicer**, which can differ from the API slicer) |
-| :material-web: | Open external link (if set) |
-| :material-cube-outline: | 3D Preview |
-| :material-download: | Download 3MF file |
-| :material-pencil: | Edit archive details |
+| **Печать** | Открыть окно печати с вариантами как можно скорее, очередь и расписание |
+| :material-open-in-new: | Открыть в слайсере (Bambu Studio или OrcaSlicer — задаётся в **Настройки → Рабочий процесс → Слайсер → Открыть в слайсере** и может отличаться от слайсера API) |
+| :material-web: | Открыть внешнюю ссылку, если она задана |
+| :material-cube-outline: | 3D-предпросмотр |
+| :material-download: | Скачать файл 3MF |
+| :material-pencil: | Изменить сведения архива |
 
-!!! note "Permission Required"
-    The Print button requires the `queue:create` permission. Users without this permission will see the button disabled.
+!!! note "Необходимое разрешение"
+    Кнопка печати требует разрешения `queue:create`. Без него она будет неактивной.
 
-### Downloading Print Videos
+### Скачивание видео печати {#downloading-print-videos}
 
-Bambuddy can find the video files that belong to a print. On a card, use :material-file-video: **Download print videos** in the [context menu](#context-menu-actions); in list view the same action is a button in the row's action bar. Bambuddy checks for:
+Bambuddy может найти видеофайлы, относящиеся к печати. На карточке выберите :material-file-video: **Скачать видео печати** в [контекстном меню](#context-menu-actions); в списке это кнопка на панели строки. Bambuddy ищет:
 
-- A timelapse already attached to the archive
-- A matching timelapse that is still on the printer
-- IP-camera recording chunks from the print's start and completion window
+- Таймлапс, уже прикреплённый к архиву
+- Подходящий таймлапс, ещё находящийся на принтере
+- Фрагменты записи IP-камеры за период начала и завершения печати
 
-Attached timelapses download through a short-lived archive-bound token, so archive permission is sufficient and camera permission is not required. Printer-side files open in a selection dialog so you can choose one or more files before downloading them as a ZIP archive. A single match is ticked for you; where there are several, nothing is preselected, because an IP-camera chunk can be hundreds of megabytes and picking is the point. Preparation reports per-file progress and partial failures, can be cancelled by closing the dialog, and is limited to 10 GiB and 30 minutes. Bambuddy checks the free space on its data volume before and during preparation. Unclaimed staging becomes eligible for cleanup after one hour; cleanup runs when Bambuddy starts, before another download is prepared, and every 15 minutes.
+Прикреплённые таймлапсы скачиваются через краткоживущий токен, связанный с архивом, поэтому достаточно разрешения на архив, а доступ к камере не требуется. Для файлов на принтере открывается окно выбора одного или нескольких файлов для скачивания ZIP. Единственное совпадение отмечается автоматически; при нескольких ничего не выбрано, поскольку фрагмент IP-камеры может занимать сотни мегабайт и выбор важен. Подготовка показывает прогресс каждого файла и частичные ошибки, отменяется закрытием окна и ограничена 10 ГиБ и 30 минутами. Bambuddy проверяет свободное место в томе данных до и во время подготовки. Невостребованные временные данные становятся доступными для очистки через час; очистка выполняется при запуске Bambuddy, перед подготовкой следующего скачивания и каждые 15 минут.
 
-!!! note "Printer Storage"
-    Printer-side videos remain on the printer and are only read when you request a download. If the printer is powered off, unreachable, in the FTPS handshake cool-off period, or the file has already been removed from its storage, Bambuddy cannot offer that file. The dialog distinguishes an unreadable printer directory from a directory that is genuinely empty.
+!!! note "Хранилище принтера"
+    Видео на принтере остаются там и читаются только по запросу скачивания. Если принтер выключен, недоступен, находится в периоде ожидания после ошибки установления FTPS или файл уже удалён, Bambuddy не сможет предложить его. Окно различает недоступный каталог и действительно пустой.
 
-!!! note "Permission Required"
-    Opening this action requires archive read permission. An attached timelapse remains available without printer access. Finding files still on the printer additionally requires the **Printer Files** permission (`printers:files`), because that search lists filenames and metadata from printer storage; without it, Bambuddy returns the attached file with a permission warning and skips printer discovery.
+!!! note "Необходимое разрешение"
+    Для открытия действия нужен доступ на чтение архива. Прикреплённый таймлапс доступен и без доступа к принтеру. Для поиска файлов на принтере дополнительно требуется разрешение **Файлы принтера** (`printers:files`), поскольку поиск читает имена и метаданные из хранилища. Без него Bambuddy вернёт прикреплённый файл с предупреждением о разрешении и пропустит поиск на принтере.
 
-### Context Menu Button
+### Кнопка контекстного меню {#context-menu-button}
 
-Each card has a three-dot menu button (⋮) that appears on hover:
+На каждой карточке есть кнопка с тремя точками (⋮), появляющаяся при наведении:
 
-- Provides quick access to all context menu actions
-- Always visible on mobile devices
-- Located on the left side of the card
+- Даёт быстрый доступ ко всем действиям контекстного меню
+- На мобильных устройствах видна всегда
+- Находится слева на карточке
 
-### Multi-Plate Browsing
+### Просмотр нескольких пластин {#multi-plate-browsing}
 
-For archives created from multi-plate 3MF files, you can browse through each plate's thumbnail directly on the card:
+В архивах из 3MF с несколькими пластинами их миниатюры можно просматривать прямо на карточке:
 
-1. **Hover** over the archive card to reveal navigation controls
-2. **Arrow buttons** (◀ ▶) on left/right to cycle through plates
-3. **Dot indicators** at bottom show current plate (clickable)
-4. Each plate shows its individual thumbnail preview
+1. **Наведите указатель** на карточку, чтобы появились элементы навигации
+2. **Стрелки** (◀ ▶) слева и справа переключают пластины
+3. **Точки** внизу показывают текущую пластину; по ним можно нажимать
+4. Для каждой пластины показана собственная миниатюра
 
-!!! tip "Lazy Loading"
-    Plate data is only fetched when you hover over the card, keeping the archives page fast even with many archives.
+!!! tip "Отложенная загрузка"
+    Данные пластин запрашиваются только при наведении на карточку, поэтому страница остаётся быстрой даже при большом числе архивов.
 
 ---
 
-## :material-thumb-up: Post-print Outcome Confirmation
+## :material-thumb-up: Подтверждение результата после печати {#post-print-outcome-confirmation}
 
-A print the printer reports as *Completed* can still be scrap — warped, out of tolerance, wrong colour. Outcome confirmation adds the user's own verdict on top of the machine status: after an opted-in print finishes, Bambuddy asks **"How did your print come out?"** and records a **Good** / **Reject** answer.
+Печать, которую принтер сообщает как *завершённую*, всё равно может оказаться браком: деформация, несоблюдение допуска или неверный цвет. Подтверждение результата добавляет пользовательскую оценку к состоянию устройства: после завершения печати с включённым запросом Bambuddy спрашивает **«Как получилась печать?»** и записывает ответ **Годная** / **Брак**.
 
-### Opting In
+### Включение {#opting-in}
 
-- **Per print**: in the print dialog under *Print Options*, enable **Ask for Outcome**. The flag travels with the queue item and sticks to the archive, so a reprint of that archive asks again.
-- **Global default**: *Settings → Workflow → Queue & Dispatch → Default Print Options → Ask for Outcome* pre-sets the toggle for new prints. Off by default — nothing changes unless you opt in.
-- **Prints Bambuddy did not start**: a print started at the printer, in Bambu Studio or in the Handy app has no queue item to carry the flag, so it is never asked about — unless *Also ask for prints started outside Bambuddy* (in the same card) is on, which gives those archives the same prompt. Also off by default, and it never overrides a queue item that has *Ask for Outcome* switched off.
+- **Для отдельной печати:** в диалоге печати в разделе *Параметры печати* включите **Спрашивать о результате**. Флаг передаётся вместе с заданием очереди и сохраняется в архиве, поэтому при повторной печати вопрос задаётся снова.
+- **По умолчанию для всех:** *Настройки → Рабочий процесс → Очередь и отправка → Параметры печати по умолчанию → Спрашивать о результате* заранее включает переключатель для новых печатей. По умолчанию выключено: без включения ничего не меняется.
+- **Печати, запущенные не из Bambuddy:** у печати с принтера, из Bambu Studio или приложения Handy нет задания очереди с флагом, поэтому вопрос не задаётся, если не включить *Также спрашивать для печатей, запущенных вне Bambuddy* на той же карточке. Эта настройка тоже выключена по умолчанию и не переопределяет выключенный флаг *Спрашивать о результате* у задания очереди.
 
-### Answering
+### Ответ {#answering}
 
-When the print completes, a dialog with the [finish photo](#when-the-finish-photo-is-taken) and thumbs-up / thumbs-down buttons opens in the web UI. On the phone, the **Outcome Confirmation** [notification event](notifications.md#event-triggers) asks as well: on **ntfy** and **Telegram** it carries Good/Reject buttons that answer from the notification itself; on every other channel, Pushover and Bark included, it carries a link that opens the outcome dialog in Bambuddy. On Telegram you can also answer by reacting 👍 / 👎 to the message itself — no External URL or inbound access needed; see [Verdict mode](notifications.md#verdict-mode).
+После завершения печати в веб-интерфейсе открывается диалог с [фотографией завершения](#when-the-finish-photo-is-taken) и кнопками с поднятым и опущенным большим пальцем. На телефоне вопрос также задаёт событие уведомления [Подтверждение результата](notifications.md#event-triggers): в **ntfy** и **Telegram** оно содержит кнопки «Годная» / «Брак» для ответа непосредственно из уведомления; на остальных каналах, включая Pushover и Bark, оно содержит ссылку, открывающую диалог в Bambuddy. В Telegram также можно ответить реакцией 👍 / 👎 на сообщение — внешний URL и входящий доступ не нужны; см. [Режим оценки](notifications.md#verdict-mode).
 
-The printer card asks too: while an answer is pending, the plate-clear area of the expanded card shows the question — thumbs-up records *Good* right there, thumbs-down opens the dialog for an optional reason, and simply clearing the plate works exactly as before.
+Карточка принтера тоже показывает вопрос в области очистки пластины, пока ответа нет: поднятый палец записывает *Годная*, опущенный открывает диалог с необязательной причиной, а обычная очистка пластины работает как прежде.
 
-Not ready to decide? Choose *Ask me later*. The archive card then carries an amber **outcome?** badge (click it to answer), the Archives page gains an **Unconfirmed** filter, and the verdict stays editable any time via the card's **Confirm Outcome** context-menu entry or the Edit Archive modal.
+Не готовы ответить? Выберите *Спросить позже*. На карточке архива появится жёлтая метка **результат?** (нажмите для ответа), на странице архива — фильтр **Не подтверждено**. Оценку можно изменить в любое время через контекстное меню карточки **Подтвердить результат** или окно редактирования архива.
 
-With authentication on, answering needs permission to update the archive (`archives:update_all`, or `archives:update_own` for your own prints). Users without it don't get the dialog or the card buttons, and see the **outcome?** badge as a status only.
+При включённой аутентификации для ответа нужно разрешение на изменение архива (`archives:update_all` или `archives:update_own` для собственных печатей). Пользователи без него не получают диалог и кнопки карточки, а метку **результат?** видят только как статус.
 
-### What a One-Tap Link Does
+### Как работает ссылка для ответа одним нажатием {#what-a-one-tap-link-does}
 
-The ntfy buttons record the verdict in the background and dismiss the notification; no page opens. Every other one-tap link (the Telegram buttons, or `{good_url}` / `{reject_url}` if you put them into your own template) carries a single-use capability for one verdict on one print, and opening it shows a small page that says one of three things:
+Кнопки ntfy записывают ответ в фоне и закрывают уведомление без открытия страницы. Любая другая ссылка для ответа одним нажатием (кнопки Telegram или `{good_url}` / `{reject_url}` в собственном шаблоне) содержит одноразовое разрешение на одну оценку одной печати. При открытии она показывает небольшую страницу с одним из трёх результатов:
 
-| Situation | What you see |
+| Ситуация | Что показывается |
 | --- | --- |
-| The prompt is still open | The page asks you to confirm the verdict, and recording it is one press. Coming from a **Telegram button**, the page submits itself, so the button is still the only tap. |
-| The print was already answered | **Already answered**, with the verdict on file, when it was recorded and how (in the app, with a link, from the printer card, or when the plate was cleared), plus a link into Bambuddy for changing it. Nothing is overwritten. |
-| The link is not a Bambuddy link | A plain *not found* page. |
+| Вопрос ещё открыт | Страница предлагает подтвердить оценку; она записывается одним нажатием. Если переход выполнен **кнопкой Telegram**, страница отправляет ответ сама, поэтому достаточно нажатия кнопки. |
+| Печать уже оценена | **Уже отвечено**, сохранённая оценка, время и способ ответа (в приложении, по ссылке, с карточки принтера или при очистке пластины), а также ссылка в Bambuddy для изменения. Данные не перезаписываются. |
+| Ссылка не принадлежит Bambuddy | Обычная страница *не найдено*. |
 
-!!! note "Why the link asks before it records"
-    Humans aren't the only ones that open links. Telegram and Slack fetch the URLs in a message to
-    build a preview card, mail gateways open links before delivering the mail, and browsers prefetch
-    them. If opening a link recorded the verdict, any of those could answer the question before you
-    had read it. So a plain open only shows the question, and recording takes a separate
-    confirmation. The Telegram buttons carry a marker that makes the page submit itself, and ntfy's
-    buttons send the answer directly, which is why answering from the notification still takes one
-    tap. The default message body carries only the link into the app, never a verdict link.
+!!! note "Почему ссылка запрашивает подтверждение"
+    Ссылки открывают не только люди. Telegram и Slack загружают URL из сообщения для карточки предпросмотра, почтовые шлюзы открывают ссылки до доставки письма, а браузеры выполняют предварительную загрузку. Если бы открытие сразу записывало оценку, любой из них мог бы ответить до того, как вы прочли вопрос. Поэтому обычное открытие только показывает вопрос, а запись требует отдельного подтверждения. Кнопки Telegram содержат маркер для автоматической отправки, а кнопки ntfy отправляют ответ напрямую, поэтому ответ из уведомления по-прежнему требует одного нажатия. Текст сообщения по умолчанию содержит только ссылку в приложение, а не ссылку оценки.
 
-A link never changes a verdict that already exists — the answer on file always wins, and the app is the place to revise it.
+Ссылка никогда не меняет уже существующую оценку: сохранённый ответ имеет приоритет, а изменить его можно в приложении.
 
-Wherever a recorded verdict is shown, Bambuddy also says where it came from: as a muted line under the verdict in the Edit Archive dialog and in the outcome dialog, and in the tooltip of the green **good** / red **rejected** badge on the archive card.
+Везде, где показан записанный результат, Bambuddy также указывает источник: приглушённой строкой под оценкой в окнах редактирования архива и результата, а также в подсказке зелёной метки **годная** или красной **брак** на карточке архива.
 
-### Answering by Clearing the Plate
+### Ответ при очистке пластины {#answering-by-clearing-the-plate}
 
-If answering every print is too much ceremony, enable *Settings → Workflow → Queue & Dispatch → Plate-Clear Confirmation → Count unanswered outcomes as good on plate release*. Releasing the plate — manually, or automatically by the next queued print — then records a still-unanswered prompt as a good part.
+Если отвечать после каждой печати неудобно, включите *Настройки → Рабочий процесс → Очередь и отправка → Подтверждение очистки пластины → Считать неподтверждённые результаты годными при освобождении пластины*. Тогда освобождение пластины вручную или автоматически следующей печатью в очереди запишет ещё не полученный ответ как годную деталь.
 
-The two interact in a way that is worth knowing before you switch it on: the plate release **is** the answer. A print counts as good the moment its plate is released, so a Telegram button or link tapped after that finds the question already settled and shows *Already answered — recorded when the plate was cleared* instead of registering your tap. On a busy farm, where the next job frees the plate within seconds of the prompt going out, this is the common case rather than the exception. Leave the setting off if the phone is where you actually answer.
+Перед включением учтите взаимодействие: освобождение пластины **само является** ответом. Печать считается годной в момент освобождения, поэтому кнопка Telegram или ссылка, нажатая позднее, покажет *Уже отвечено — записано при очистке пластины*, а не запишет новое нажатие. На занятой ферме следующее задание может освободить пластину через секунды после отправки вопроса, поэтому это скорее обычный случай, чем исключение. Оставьте настройку выключенной, если предпочитаете отвечать с телефона.
 
-### Rejecting
+### Брак {#rejecting}
 
-Rejecting offers an optional reason (the same vocabulary as failure reasons, so rejects classify alongside failures) and a **Print again** button that records the reject and opens the regular print dialog for that archive, so a replacement is queued without going back to the Archives page.
+При выборе брака можно указать необязательную причину (используются те же категории, что для причин ошибок, поэтому брак классифицируется рядом с ними). Кнопка **Напечатать снова** записывает брак и открывает обычный диалог печати этого архива, чтобы поставить замену в очередь без возврата на страницу архива.
 
-### Effect on Statistics
+### Влияние на статистику {#effect-on-statistics}
 
-- The machine's failure rate is untouched — a rejected print still *completed*.
-- The Failure Analysis widget shows rejected prints as their own line with a **yield** figure (completed *and* not rejected).
-- Project part counts include only non-rejected parts, so project progress reflects usable parts.
+- Частота ошибок принтера не меняется: забракованная печать всё равно *завершена*.
+- Виджет анализа неудач показывает брак отдельной строкой с долей выхода годных изделий (завершённых *и* не забракованных).
+- Число деталей проекта включает только незабракованные изделия, поэтому прогресс отражает пригодные детали.
 
-## :material-view-grid: View Modes
+## :material-view-grid: Режимы просмотра {#view-modes}
 
-Switch between different archive views using the toolbar buttons:
+Переключайте виды архива кнопками панели:
 
-### Grid View (Cards)
+### Сетка (карточки) {#grid-view-cards}
 
-Default view showing archive cards in a responsive grid:
+Вид по умолчанию показывает карточки в адаптивной сетке:
 
-- Large thumbnails for visual browsing
-- All metadata visible at a glance
-- Best for visual identification
+- Крупные миниатюры для визуального просмотра
+- Все метаданные видны сразу
+- Удобно для поиска по изображению
 
-### List View
+### Список {#list-view}
 
-Compact table view for data-focused browsing:
+Компактная таблица для работы с данными:
 
-- One archive per row
-- Sortable columns
-- Inline edit and delete buttons
-- Three-dot menu for full context menu access
-- Best for managing large archives
+- Один архив на строку
+- Сортируемые столбцы
+- Кнопки изменения и удаления в строке
+- Меню с тремя точками для доступа ко всем действиям
+- Удобно для управления большими архивами
 
-### Calendar View
+### Календарь {#calendar-view}
 
-Browse prints by date:
+Просмотр печатей по датам:
 
-- Monthly calendar layout
-- Each print is on the day it ended, so a file printed three times this month is there three times. Archives never printed are not shown
-- Dots indicate prints on each day, colour coded for success/failure (aborted counts as failed)
-- The page's filters apply: only the prints of archives they show, and with a printer picked only the prints on it
-- Click a day to see that day's prints
-- Click a print to open its [archive window](#the-archive-window) at that print
+- Календарь за месяц
+- Каждая печать показана в день завершения, поэтому файл, напечатанный трижды за месяц, появится трижды. Никогда не напечатанные архивы не показываются
+- Точки обозначают печати дня цветом успеха или ошибки (прерванная считается ошибкой)
+- Действуют фильтры страницы: показываются только печати видимых архивов, а при выборе принтера — только на нём
+- Нажмите день, чтобы увидеть его печати
+- Нажмите печать, чтобы открыть её в [окне архива](#the-archive-window)
 
-### Cross-View Highlighting
+### Выделение при переходе между видами {#cross-view-highlighting}
 
-Click an archive in a project's archive list, or open one from the queue's :material-open-in-new: icon (the links use `/archives?highlight=<id>`):
+Нажмите архив в списке проекта или откройте его из очереди значком :material-open-in-new: (ссылки используют `/archives?highlight=<id>`):
 
-1. Switches to grid view automatically (a link from a project or the queue leaves the list view as it is)
-2. Scrolls to the selected archive
-3. Highlights with a yellow border for 5 seconds
-4. Great for finding specific prints across views
+1. Автоматически включается сетка (ссылка из проекта или очереди оставляет список без изменений)
+2. Страница прокручивается к выбранному архиву
+3. Он выделяется жёлтой рамкой на 5 секунд
+4. Это помогает находить печати при переходах между видами
 
-When the current filters hide the archive, a warning says so instead.
+Если текущие фильтры скрывают архив, вместо этого появляется предупреждение.
 
 ---
 
-## :material-mouse: Context Menu Actions
+## :material-mouse: Действия контекстного меню {#context-menu-actions}
 
-Right-click (or long-press on mobile) for quick actions:
+Щёлкните правой кнопкой мыши или удерживайте палец на мобильном устройстве для быстрых действий:
 
-| Action | Description |
+| Действие | Описание |
 |--------|-------------|
-| :material-printer-3d: **Print** | Open the print modal |
-| :material-folder-move: **Add to Project** | Assign to a project |
-| :material-tag: **Edit Tags** | Add or remove tags |
-| :material-pencil: **Edit Details** | Modify name, notes, etc. |
-| :material-download: **Download 3MF** | Get the original file |
-| :material-file-video: **Download print videos** | Find and download the print's timelapse and `/ipcam` footage (see [Downloading Print Videos](#downloading-print-videos)) |
-| :material-upload: **Upload Timelapse** | Manually attach a timelapse video |
-| :material-delete: **Remove Timelapse** | Remove attached timelapse |
-| :material-cube-outline: **Upload/Replace F3D** | Attach Fusion 360 design file |
-| :material-download: **Download F3D** | Download attached F3D file |
-| :material-delete: **Delete** | Remove from archive (see [Delete Behavior](#delete-behavior) below) |
+| :material-printer-3d: **Печать** | Открыть окно печати |
+| :material-folder-move: **Добавить в проект** | Назначить проекту |
+| :material-tag: **Изменить теги** | Добавить или удалить теги |
+| :material-pencil: **Изменить сведения** | Изменить имя, заметки и т. д. |
+| :material-download: **Скачать 3MF** | Получить исходный файл |
+| :material-file-video: **Скачать видео печати** | Найти и скачать таймлапс и запись `/ipcam` (см. [Скачивание видео печати](#downloading-print-videos)) |
+| :material-upload: **Загрузить таймлапс** | Вручную прикрепить видео таймлапса |
+| :material-delete: **Удалить таймлапс** | Удалить прикреплённый таймлапс |
+| :material-cube-outline: **Загрузить/заменить F3D** | Прикрепить проект Fusion 360 |
+| :material-download: **Скачать F3D** | Скачать прикреплённый файл F3D |
+| :material-delete: **Удалить** | Удалить из архива (см. [Поведение при удалении](#delete-behavior) ниже) |
 
 ---
 
-## :material-delete: Delete Behavior
+## :material-delete: Поведение при удалении {#delete-behavior}
 
-When you delete a print from the archive, Bambuddy by default **keeps the print's filament, time, cost, and energy contribution in [Quick Stats](statistics.md)**. The archive entry disappears from the listings and its files are removed from disk (so you reclaim the storage), but the totals on the Statistics page stay honest.
+При удалении печати из архива Bambuddy по умолчанию **сохраняет её вклад в расход филамента, время, стоимость и энергию в [краткой статистике](statistics.md)**. Запись исчезает из списков, её файлы удаляются с диска и место освобождается, но итоги страницы статистики остаются полными.
 
-This is the right default when you reprint the same model many times and want to keep the file list tidy — deleting nine of ten Benchies no longer rewinds the 300 g and 24 hours back to whatever the surviving archive contributed.
+Это удобно при многократной повторной печати одной модели: удаление девяти из десяти Benchy очищает список файлов, не возвращая 300 г и 24 часа к показателям единственного оставшегося архива.
 
-### "Also remove this print from Quick Stats" checkbox
+### Флажок «Также удалить эту печать из краткой статистики» {#also-remove-this-print-from-quick-stats-checkbox}
 
-If you actually want the print *gone* from statistics — typical for failed prints that shouldn't pollute success-rate dashboards, or one-off experiments you don't want to count — tick the **Also remove this print from Quick Stats (filament, time, cost, energy)** checkbox in the delete confirmation dialog. With the box ticked, the row is hard-deleted and its contribution disappears from totals just like before.
+Если печать нужно *полностью исключить* из статистики — например, неудачные эксперименты, которые не должны влиять на показатели успешности, — отметьте в подтверждении удаления **Также удалить эту печать из краткой статистики (филамент, время, стоимость, энергия)**. Тогда запись удаляется окончательно, а её вклад исчезает из итогов, как раньше.
 
-The checkbox is opt-in per delete — it resets to off every time the dialog closes, so a destructive choice on one print never carries over to the next one.
+Флажок нужно выбирать при каждом удалении: после закрытия окна он сбрасывается, поэтому удаление данных одного задания не переносится на следующее.
 
-| Action | Files on disk | Listings / search | Quick Stats |
+| Действие | Файлы на диске | Списки / поиск | Краткая статистика |
 |--------|---------------|-------------------|-------------|
-| **Delete** (default, soft) | Removed | Hidden | **Still counted** |
-| **Delete + checkbox** (hard) | Removed | Hidden | Dropped from totals |
+| **Удалить** (по умолчанию, мягкое удаление) | Удалены | Скрыт | **Учитывается** |
+| **Удалить с флажком** (окончательное удаление) | Удалены | Скрыт | Исключён из итогов |
 
-!!! note "Auto-purge is unaffected"
-    The [Auto-Purge](#auto-purge) sweeper continues to hard-delete old archives the way it always has — its job is reclaiming disk space and pruning rows the user hasn't used in a long time. If you want a print to disappear from stats too, use the checkbox on the manual delete instead.
+!!! note "Автоочистка не меняется"
+    [Автоочистка](#auto-purge) по-прежнему окончательно удаляет старые архивы, освобождая место на диске и убирая давно не используемые записи. Чтобы исключить печать и из статистики, используйте флажок при ручном удалении.
 
-### Linked queue items are removed with the archive
+### Связанные задания очереди удаляются вместе с архивом {#linked-queue-items-are-removed-with-the-archive}
 
-When you delete an archive that has queue items pointing at it (for example, a multi-plate Send All from a slicer enqueued **one item per plate** &mdash; see [Send All on multi-plate projects](virtual-printer.md#print-queue-mode-send-all-on-multi-plate-projects)), the delete cascades to every linked row in the print queue regardless of status. Both the default (soft) and the checkbox (hard) delete paths behave the same way &mdash; the queue rows are removed, not left behind as orphan "cancelled" entries.
+При удалении архива со связанными заданиями очереди (например, при отправке всех пластин из слайсера создаётся **по одному заданию на пластину** — см. [Отправка всех пластин](virtual-printer.md#print-queue-mode-send-all-on-multi-plate-projects)) удаление распространяется на все связанные строки очереди независимо от статуса. Это одинаково действует при обычном и окончательном удалении с флажком: строки очереди удаляются, а не остаются осиротевшими отменёнными записями.
 
-Before the dialog closes, Bambuddy queries the archive for any related queue items:
+Перед закрытием окна Bambuddy проверяет связанные задания:
 
-- **`N queue items linked to this archive will also be removed`** &mdash; amber notice, shown when one or more queue items reference the archive and none are currently printing. Confirm and they're deleted with the archive.
-- **`Cannot delete &mdash; M queue items are currently printing`** &mdash; red notice, shown when at least one of the linked queue items is in `printing` state. The Confirm button is disabled. Cancel or finish the in-flight print(s) first; deleting an archive that's actively being printed would strip the dispatcher's filament / plate / `ams_mapping` metadata out from under the running print.
+- **`N queue items linked to this archive will also be removed`** — жёлтое уведомление, если с архивом связано хотя бы одно задание и ни одно не печатается. После подтверждения они удалятся вместе с архивом.
+- **`Cannot delete &mdash; M queue items are currently printing`** — красное уведомление, если хотя бы одно связанное задание находится в состоянии `printing`. Кнопка подтверждения отключена. Сначала отмените или завершите текущие печати: удаление активно печатаемого архива лишило бы диспетчер метаданных филамента, пластины и `ams_mapping` во время работы.
 
-Print **history** (the per-run Print Log on the archive card) is unaffected by either delete path. Its rows live in a separate table with `ON DELETE SET NULL`, so Quick Stats and the per-archive accuracy bands stay consistent with the soft-vs-hard delete choice above.
+**История** печатей (журнал отдельных запусков на карточке архива) не затрагивается ни одним способом удаления. Её строки хранятся в отдельной таблице с `ON DELETE SET NULL`, поэтому краткая статистика и показатели точности архива соответствуют выбранному мягкому или окончательному удалению.
 
 ---
+## :material-printer-3d: Печать с сопоставлением AMS {#print-with-ams-mapping}
 
-## :material-printer-3d: Print with AMS Mapping
+При печати архива Bambuddy показывает сравнение филамента с автоматическим подбором и возможностью ручного выбора:
 
-When printing an archive, Bambuddy shows a filament comparison with auto-matching and manual override options:
+![Сопоставление AMS при печати](../assets/reprint_ams_mapping.png){ .screenshot }
 
-![Print AMS Mapping](../assets/reprint_ams_mapping.png){ .screenshot }
+### Что показано {#what-it-shows}
 
-### What It Shows
-
-| Required (from 3MF) | → | Loaded (in AMS) | Status |
+| Требуется (из 3MF) | → | Загружено (в AMS) | Состояние |
 |---------------------|---|-----------------|--------|
-| PLA Red (25g) | → | PLA Red (AMS-A Slot 1) | ✓ Match |
-| PETG Black (10g) | → | PETG White (AMS-B Slot 2) | ⚠ Color mismatch |
-| PLA Blue (5g) | → | TPU (AMS-A Slot 3) | ⚠ Type mismatch |
+| Красный PLA (25 г) | → | Красный PLA (AMS-A, слот 1) | ✓ Совпадение |
+| Чёрный PETG (10 г) | → | Белый PETG (AMS-B, слот 2) | ⚠ Цвет не совпадает |
+| Синий PLA (5 г) | → | TPU (AMS-A, слот 3) | ⚠ Тип не совпадает |
 
-### Status Indicators
+### Индикаторы состояния {#status-indicators}
 
-| Icon | Color | Meaning |
+| Значок | Цвет | Значение |
 |------|-------|---------|
-| ✓ | Green | Type and color both match (exact or similar) |
-| ⚠ | Yellow | Same type, different color |
-| ⚠ | Orange | Different filament type or not loaded |
+| ✓ | Зелёный | Тип и цвет совпадают точно или приблизительно |
+| ⚠ | Жёлтый | Тип совпадает, цвет отличается |
+| ⚠ | Оранжевый | Другой тип филамента или он не загружен |
 
-### Features
+### Возможности {#features}
 
-- **Auto-Matching** - Automatically finds the best AMS slot for each required filament (type + color)
-- **Manual Slot Selection** - Click the dropdown to override auto-matching and select any AMS slot
-- **Color Names** - Dropdown shows color names (decoded from Bambu filament codes like "Jade White", "Cobalt Blue", or derived from hex for third-party filaments)
-- **Blue Ring Indicator** - Shows which slots have been manually selected vs auto-matched
-- **AMS Slot Labels** - Shows which AMS unit and slot contains the filament (e.g., "AMS-B Slot 3")
-- **Fuzzy Color Matching** - Colors are matched within a tolerance, so slight hex variations still show as a match
-- **Re-read Button** - Refresh AMS status from the printer if you've swapped spools since the modal opened
+- **Автоподбор** — находит оптимальный слот AMS для каждого требуемого филамента по типу и цвету
+- **Ручной выбор слота** — откройте список, чтобы переопределить автоподбор и выбрать любой слот AMS
+- **Названия цветов** — в списке показаны названия, полученные из кодов филамента Bambu, например «Jade White», «Cobalt Blue», либо определённые по hex для стороннего филамента
+- **Синий ободок** — отличает слоты, выбранные вручную, от подобранных автоматически
+- **Метки слотов AMS** — показывают устройство и слот филамента, например «AMS-B Slot 3»
+- **Приблизительное сравнение цветов** — допускает небольшие различия hex-значений
+- **Кнопка повторного чтения** — обновляет состояние AMS с принтера, если после открытия окна вы заменили катушки
 
-### Reuse the slicer's saved mapping
+### Повторное использование сохранённого сопоставления слайсера {#reuse-the-slicers-saved-mapping}
 
-When the archive carries a saved slicer AMS pick — see the **AMS mapping saved** badge on the [archive card](#card-information) — a **Mapping** button appears next to **Re-read**:
+Если архив содержит сохранённый выбор AMS слайсера (см. метку **Сопоставление AMS сохранено** на [карточке архива](#card-information)), рядом с кнопкой повторного чтения появляется **Сопоставление**:
 
-- **Click once** to snap every filament slot straight to the AMS tray the slicer originally resolved, bypassing the type/colour auto-match
-- **Click again** to drop those picks and go back to the auto-match. Only the slots the button itself set are cleared, so a slot you had picked by hand and the button never touched keeps your choice
-- Slots the slicer left unresolved are skipped rather than cleared
+- **Нажмите один раз**, чтобы сразу назначить каждому филаменту лоток AMS, первоначально определённый слайсером, без автоматического сопоставления типа и цвета
+- **Нажмите ещё раз**, чтобы отменить этот выбор и вернуться к автоподбору. Сбрасываются только слоты, изменённые кнопкой; выбранный вручную слот, который она не затрагивала, сохранится
+- Слоты, которые слайсер не определил, пропускаются, а не очищаются
 
-**The button only appears on the printer the mapping belongs to.** A tray number means nothing on a different machine, so selecting another printer hides the button and the panel auto-matches as usual — even though the archive card still shows the badge. The badge is a property of the archive; the button depends on what you are printing to.
+**Кнопка видна только на принтере, которому принадлежит сопоставление.** Номер лотка другого устройства ничего не означает, поэтому при выборе другого принтера кнопка скрывается и выполняется обычный автоподбор, хотя метка остаётся на карточке архива. Метка относится к архиву, а кнопка зависит от целевого принтера.
 
-It also appears when you edit a still-pending queue item, since that is the same panel. Library files never have one: a saved mapping comes from a virtual printer upload, and library files are not archived that way.
+Кнопка также доступна при изменении ещё ожидающего задания очереди, поскольку используется та же панель. Для файлов библиотеки её нет: сохранённое сопоставление поступает при загрузке через виртуальный принтер, а файлы библиотеки так не архивируются.
 
-!!! note "It does not re-check the spool"
-    The saved mapping records a tray number, not a spool. If you have swapped the filament in that tray since the original print, the button will still select it. Use **Re-read** and the per-slot dropdown if you are not sure what is loaded.
+!!! note "Катушка повторно не проверяется"
+    Сохранённое сопоставление содержит номер лотка, а не катушку. Если с исходной печати филамент в лотке заменён, кнопка всё равно выберет этот лоток. Если вы не уверены в загрузке, используйте повторное чтение и список каждого слота.
 
-### Multi-Plate 3MF Files
+### Файлы 3MF с несколькими пластинами {#multi-plate-3mf-files}
 
-When printing a multi-plate 3MF file (exported from Bambu Studio with "All sliced file"), Bambuddy shows a plate selection grid:
+При печати файла 3MF с несколькими пластинами (экспортированного из Bambu Studio через «All sliced file») Bambuddy показывает сетку выбора:
 
-- **Plate Thumbnails** - Visual preview of each plate to help identify the correct one
-- **Plate Names** - Shows object names and print time estimates
-- **Filtered Filaments** - Only filaments used by the selected plate are shown for mapping
-- **Required Selection** - You must select a plate before printing
+- **Миниатюры пластин** — помогают визуально найти нужную
+- **Названия пластин** — показывают имена объектов и расчётное время
+- **Отфильтрованный филамент** — для сопоставления предлагаются только материалы выбранной пластины
+- **Обязательный выбор** — перед печатью нужно выбрать пластину
 
-This prevents the issue where all plates' filaments were shown together, causing incorrect AMS mapping.
+Это устраняет прежнюю проблему, когда филаменты всех пластин показывались вместе и сопоставление AMS могло быть неверным.
 
-!!! tip "Single-Plate Exports"
-    For 3MF files exported as a single plate ("Plate sliced file"), the plate is auto-selected and no grid is shown.
+!!! tip "Экспорт одной пластины"
+    Для 3MF, экспортированного как одна пластина («Plate sliced file»), пластина выбирается автоматически и сетка не показывается.
 
-### Print Options
+### Параметры печати {#print-options}
 
-Click **Print Options** to configure settings before starting:
+Нажмите **Параметры печати**, чтобы настроить их перед запуском:
 
-| Option | Type | Default | Description |
+| Параметр | Тип | По умолчанию | Описание |
 |--------|------|---------|-------------|
-| **Bed Leveling** | Off / Auto / On | Auto | Level the bed before print (Auto skips it if done recently) |
-| **Flow Calibration** | Off / Auto / On | Auto | Calibrate extrusion flow (Auto skips it if done recently) |
-| **Vibration Calibration** | On / Off | On | Reduce ringing artifacts |
-| **First Layer Inspection** | On / Off | Off | AI inspection of first layer |
-| **Timelapse** | On / Off | Off | Record timelapse video |
+| **Выравнивание стола** | Выкл. / Авто / Вкл. | Авто | Выравнивать стол перед печатью (Авто пропускает, если недавно выполнено) |
+| **Калибровка потока** | Выкл. / Авто / Вкл. | Авто | Калибровать поток экструзии (Авто пропускает недавнюю калибровку) |
+| **Калибровка вибраций** | Вкл. / Выкл. | Вкл. | Уменьшает артефакты ряби |
+| **Проверка первого слоя** | Вкл. / Выкл. | Выкл. | Проверка первого слоя с помощью ИИ |
+| **Таймлапс** | Вкл. / Выкл. | Выкл. | Записывать таймлапс |
 
-!!! tip "Multi-Color Prints"
-    Bambuddy sends AMS mapping in the same format as Bambu Studio, ensuring reliable filament switching on multi-color prints.
+!!! tip "Многоцветная печать"
+    Bambuddy отправляет сопоставление AMS в том же формате, что и Bambu Studio, обеспечивая надёжное переключение филамента.
 
-### How It Works
+### Как это работает {#how-it-works_1}
 
-1. Click **Print** on an archive
-2. Select target printer
-3. **For multi-plate files**: Select which plate to print from the grid
-4. Review filament comparison (click **Re-read** if you've changed spools)
-5. Choose ASAP, Queue,or Schedule
-6. Expand **Print Options** to adjust settings if needed
-7. Click **Print** to submit the job to the scheduler
+1. Нажмите **Печать** на архиве
+2. Выберите целевой принтер
+3. **Для нескольких пластин:** выберите нужную в сетке
+4. Проверьте сравнение филамента (если заменили катушки, нажмите повторное чтение)
+5. Выберите немедленную отправку, очередь или расписание
+6. При необходимости разверните **Параметры печати** и измените настройки
+7. Нажмите **Печать**, чтобы передать задание планировщику
 
-!!! tip "File Type Badge"
-    Archive cards show a **GCODE** (green) or **SOURCE** (orange) badge. Only GCODE files have AMS mapping data - SOURCE files are slicer project files without embedded print settings.
-
----
-
-## :material-image-multiple: Photo Attachments
-
-Add photos to your archives:
-
-### Camera Snapshot
-
-Automatic camera capture on print completion:
-
-1. Go to **Settings** > **General**
-2. Enable **Capture snapshot on print complete**
-3. Photos are automatically added to archives
-
-### When the Finish Photo Is Taken
-
-Getting this shot right is harder than it looks, because the printer moves twice at the end of a print and both moves spoil a photo taken at the wrong instant.
-
-Bambuddy takes the photo when the print reports itself finished. At that point the toolhead has parked, so nothing is standing over your model — but on many printers (X1, P1, A1) the printer's own end G-code has also just dropped the build plate around 100 mm, which leaves the finished print well below where the camera is pointed.
-
-So Bambuddy raises the plate back up before taking the picture, when it needs to:
-
-1. The print finishes and the printer parks the toolhead and lowers the plate.
-2. Bambuddy reads from the print's file where the end G-code left the plate. If that is no lower than 10 mm above the last printed layer, the print is already in view and nothing moves (H2-series end G-code, and tall prints on any printer, often leave it there).
-3. Otherwise it sends the plate back to 10 mm above the last printed layer and takes the photo.
-4. It then puts the plate back exactly where the end G-code had left it, so the print is as easy to lift out as the printer left it.
-
-Where the plate moves, you will see it rise and drop once, a few seconds after a print ends. This adds roughly 15 seconds to the print-complete notification.
-
-Bambuddy only ever sends the plate to heights the print itself used, never one it works out: the printer does not stop G-code sent over the network at its travel limits.
-
-!!! note "Prints that record a timelapse"
-    When a timelapse is recording, the photo normally comes from the video's last frame instead — the printer stops recording while the toolhead is parked and before the plate drops, which is already the shot you want, so no plate move happens.
-
-    If the video has not finished transferring by the time the notification goes out — the usual case on P1-series printers — Bambuddy takes a live photo instead, and that one does get the plate restore. When the video arrives, its last frame replaces the live photo in the archive, under the same name, so the archive keeps one finish photo. With authentication off, the link in a notification already sent shows the better one too; with it on, that link opens a copy of the live photo made when the notification was sent.
-
-!!! info "Turning it off"
-    **Settings** > **General** > **Restore plate for finish photo**. On by default. With it off, the photo is taken wherever the plate happens to be — which is what earlier Bambuddy versions did.
-
-Bambuddy also skips the plate move on its own in three cases, so it never guesses at a height:
-
-- **It cannot confirm the print's height or where the plate ended up.** Both come from the sliced file of the print that just finished, and Bambuddy checks that file really is this print — matching it by name, and cross-checking the layer count in the file against the layer count the printer reported. If anything disagrees, or the end G-code's last plate position can't be told (for example, it's inside a block the printer may skip), no move is made.
-- **Another job is queued for that printer.** A plate move and a print start are not worth interleaving.
-- **The printer has already started something else.**
-
-!!! warning "Plate-swap and auto-eject setups"
-    If you use Bambuddy's **G-code Injection** to add plate-swap End G-code (SwapMod and similar), your model is gone from the bed before the print reports finished — no photo taken afterwards could show it.
-
-    Bambuddy detects this by itself, because it is the thing that injected the snippet. For those prints it uses the most recent camera frame from during the print instead, and makes no plate move. That frame is taken while printing is still going, so the toolhead may appear in the shot — an unavoidable trade for capturing a model that is about to be ejected.
-
-    This detection only covers snippets added through Bambuddy's G-code Injection setting. Plate-swap G-code added in your slicer instead is invisible to Bambuddy, and those prints will get an empty-plate photo.
-
-### Manual Photos
-
-Upload photos of your finished prints:
-
-1. Open an archive
-2. Click **Add Photo**
-3. Upload from your device
-4. Photos are stored with the archive
-
-!!! tip "Failure Documentation"
-    Add photos of failed prints to help analyze what went wrong.
+!!! tip "Метка типа файла"
+    Карточки архивов показывают **GCODE** (зелёная) или **SOURCE** (оранжевая). Данные сопоставления AMS есть только у GCODE; SOURCE — проекты слайсера без встроенных параметров печати.
 
 ---
 
-## :material-movie-edit: Timelapse Editor
+## :material-image-multiple: Прикрепление фотографий {#photo-attachments}
 
-Edit your timelapse videos directly in Bambuddy:
+Добавляйте фотографии к архивам:
 
-![Timelapse Editor](../assets/edit-timelapse.png){ .screenshot }
+### Снимок камеры {#camera-snapshot}
 
-### Supported Formats
+Автоматический снимок камеры по завершении печати:
 
-| Format | Printers | Handling |
+1. Откройте **Настройки** > **Общие**
+2. Включите **Делать снимок по завершении печати**
+3. Фотографии будут автоматически добавляться в архивы
+
+### Когда делается фотография завершения {#when-the-finish-photo-is-taken}
+
+Получить удачный снимок сложнее, чем кажется: в конце печати принтер делает два движения, и оба могут испортить фотографию при неверном выборе момента.
+
+Bambuddy делает фото, когда принтер сообщает о завершении. К этому моменту головка припаркована и не закрывает модель, но на многих принтерах (X1, P1, A1) завершающий G-code только что опустил стол примерно на 100 мм, оставив изделие ниже поля зрения камеры.
+
+Поэтому Bambuddy при необходимости поднимает пластину перед снимком:
+
+1. Печать завершается, принтер паркует головку и опускает пластину.
+2. Bambuddy читает из файла печати положение пластины после завершающего G-code. Если оно не ниже чем на 10 мм выше последнего напечатанного слоя, изделие уже видно и движения не будет (так часто бывает с завершающим G-code серии H2 и высокими печатями на любых принтерах).
+3. Иначе пластина возвращается на 10 мм выше последнего слоя и делается снимок.
+4. Затем пластина точно возвращается в положение после завершающего G-code, чтобы изделие было так же удобно снять, как задумал принтер.
+
+Если пластина перемещается, через несколько секунд после завершения вы увидите один подъём и опускание. Это добавляет около 15 секунд к уведомлению о завершении.
+
+Bambuddy отправляет пластину только на высоты, фактически использованные печатью, и никогда не вычисляет новую: принтер не останавливает сетевой G-code на пределах перемещения.
+
+!!! note "Печати с таймлапсом"
+    Когда записывается таймлапс, снимок обычно берётся из его последнего кадра: принтер останавливает запись при припаркованной головке до опускания стола, поэтому нужный кадр уже есть и перемещение не требуется.
+
+    Если видео ещё не передалось к моменту уведомления, что обычно для серии P1, Bambuddy делает снимок в реальном времени с восстановлением положения пластины. Когда видео поступает, его последний кадр заменяет снимок в архиве под тем же именем, поэтому сохраняется одно фото. При выключенной аутентификации ссылка в уже отправленном уведомлении тоже показывает улучшенное фото; при включённой она открывает копию первоначального снимка, сделанную при отправке.
+
+!!! info "Отключение"
+    **Настройки** > **Общие** > **Восстанавливать положение пластины для фото завершения**. По умолчанию включено. Если выключить, фото делается при текущем положении пластины, как в ранних версиях Bambuddy.
+
+Bambuddy самостоятельно пропускает перемещение ещё в трёх случаях, чтобы никогда не угадывать высоту:
+
+- **Не удалось подтвердить высоту печати или конечное положение пластины.** Оба значения читаются из нарезанного файла только что завершённой печати; Bambuddy проверяет совпадение имени и числа слоёв файла с числом, сообщённым принтером. При любом несоответствии или невозможности определить последнее положение в завершающем G-code (например, внутри пропускаемого блока) движения нет.
+- **Для принтера уже есть следующее задание в очереди.** Перемещение пластины не следует совмещать с запуском печати.
+- **Принтер уже начал другую операцию.**
+
+!!! warning "Системы смены пластин и автоматического извлечения"
+    Если вы используете **вставку G-code** Bambuddy для добавления завершающего кода смены пластины (SwapMod и аналоги), к моменту сообщения о завершении модели уже нет на столе и последующий снимок её не покажет.
+
+    Bambuddy определяет это сам, поскольку именно он добавил фрагмент. Для такой печати используется последний кадр камеры во время печати без перемещения пластины. На кадре может быть головка: это неизбежная плата за снимок модели перед извлечением.
+
+    Обнаруживаются только фрагменты, добавленные настройкой вставки G-code Bambuddy. Код смены пластины, добавленный в слайсере, Bambuddy не видит, поэтому получится фото пустой пластины.
+
+### Фотографии вручную {#manual-photos}
+
+Загружайте фотографии готовых изделий:
+
+1. Откройте архив
+2. Нажмите **Добавить фото**
+3. Загрузите изображение с устройства
+4. Оно сохранится вместе с архивом
+
+!!! tip "Документирование неудач"
+    Добавляйте фото неудачных печатей, чтобы понять причину.
+
+---
+
+## :material-movie-edit: Редактор таймлапсов {#timelapse-editor}
+
+Редактируйте таймлапсы прямо в Bambuddy:
+
+![Редактор таймлапсов](../assets/edit-timelapse.png){ .screenshot }
+
+### Поддерживаемые форматы {#supported-formats}
+
+| Формат | Принтеры | Обработка |
 |--------|----------|----------|
-| **MP4** | X1, X1C, X1E, A1, A1 Mini, H2D | Attached directly |
-| **AVI** | P1S, P1P | Saved immediately, converted to MP4 in the background |
+| **MP4** | X1, X1C, X1E, A1, A1 Mini, H2D | Прикрепляется напрямую |
+| **AVI** | P1S, P1P | Сразу сохраняется, затем конвертируется в MP4 в фоне |
 
-!!! info "Background Conversion"
-    AVI files from P1-series printers are converted to MP4 automatically using FFmpeg. The conversion runs at low CPU priority (`-threads 1`, `nice -n 19`) to avoid impacting performance on Raspberry Pi. The timelapse is available immediately after the print — the conversion happens silently in the background.
+!!! info "Фоновая конвертация"
+    AVI от принтеров серии P1 автоматически конвертируется в MP4 с помощью FFmpeg. Конвертация работает с низким приоритетом процессора (`-threads 1`, `nice -n 19`), чтобы не снижать производительность Raspberry Pi. Таймлапс доступен сразу после печати; конвертация происходит незаметно в фоне.
 
-### How Bambuddy Finds Your Timelapse
+### Как Bambuddy находит таймлапс {#how-bambuddy-finds-your-timelapse}
 
-Your printer names its videos after its own clock, and a printer in LAN Only mode cannot reach Bambu's time server — so those timestamps drift, sometimes by days. Bambuddy therefore never matches a video by its name or its date. Instead it lists the printer's `/timelapse` folder when the print starts, and after the print looks for a file that was not there before. That comparison does not depend on the clock being right.
+Принтер называет видео по собственным часам, а в режиме только локальной сети не может обращаться к серверу времени Bambu, поэтому время может расходиться на несколько дней. Bambuddy никогда не сопоставляет видео по имени или дате. Вместо этого при запуске печати он получает список каталога `/timelapse`, а после завершения ищет новый файл. Такое сравнение не зависит от точности часов.
 
-The printer only writes the video once the print has finished, and a long print makes a large file, so Bambuddy keeps checking for several minutes rather than giving up after the first look.
+Принтер записывает видео только после завершения печати, а длинная печать создаёт большой файл, поэтому Bambuddy продолжает проверку несколько минут, а не прекращает её после первой попытки.
 
-If the printer's card cannot be read when the print starts (for example while its file service is in the FTPS handshake cool-off), Bambuddy reads it again every two minutes while the print runs. Until the card has been read, Bambuddy does not know which videos were there before. If the print ends first and several unclaimed videos are on the printer, none is attached automatically: they stay on the printer, and you can pick the right one with [Scan for Timelapse](#scan-for-timelapse). A single video is still attached as usual.
+Если при запуске печати карту принтера прочитать нельзя (например, во время паузы файловой службы после ошибки установления FTPS), Bambuddy повторяет попытку каждые две минуты во время печати. Пока карту не удалось прочитать, неизвестно, какие видео были на ней раньше. Если печать закончится первой, а на принтере несколько невостребованных видео, ни одно не прикрепляется автоматически: они остаются на принтере, а нужное можно выбрать через [Поиск таймлапса](#scan-for-timelapse). Единственное видео по-прежнему прикрепляется автоматически.
 
-!!! info "The video is removed from the printer"
-    Once a timelapse has been downloaded in full and attached to its archive, Bambuddy deletes it from the printer's storage. Your copy lives in the archive, where you can watch, edit, download or delete it. This keeps the printer's card from filling up with old videos — a real problem on P1-series printers, where each print writes a large AVI — and it keeps the folder down to videos Bambuddy has not claimed yet, so the next print's video is unambiguous.
+!!! info "Видео удаляется с принтера"
+    После полной загрузки и прикрепления таймлапса к архиву Bambuddy удаляет его из хранилища принтера. Копия остаётся в архиве, где её можно смотреть, редактировать, скачивать или удалять. Это не даёт карте заполниться старыми видео — особенно на серии P1, где каждая печать создаёт большой AVI, — и оставляет в папке только ещё не забранные видео, поэтому файл следующей печати определяется однозначно.
 
-    The delete only happens after the transfer has been verified: the download is checked against the file size the printer reported, and the file is checked again afterwards to confirm the printer has finished writing it. If a download comes up short, or the video is still growing, the printer keeps its copy and Bambuddy tries again.
+    Удаление выполняется только после проверки передачи: размер загрузки сравнивается с сообщённым принтером размером, а затем файл проверяется ещё раз, чтобы убедиться, что принтер закончил запись. Если загрузка неполная или видео продолжает расти, копия остаётся на принтере и Bambuddy повторяет попытку.
 
-    If you would rather keep videos on the printer as well, download them from the printer's card directly before or after the print — Bambuddy does not have a setting for this.
+    Если вы хотите сохранить видео и на принтере, скачайте его непосредственно с карты принтера до или после печати: в Bambuddy такой настройки нет.
 
-!!! tip "Your archive may gain a second photo"
-    When a print records a timelapse, the best finish photo is the video's last frame — the printer stops recording while the toolhead is parked and before the end G-code lowers the bed, so it shows the finished print head-on. A photo taken live at that moment catches an already-lowered plate instead.
+!!! tip "В архиве может появиться вторая фотография"
+    Когда записывается таймлапс, лучший снимок завершения — его последний кадр: принтер прекращает запись при припаркованной головке до опускания стола завершающим G-code, поэтому изделие видно прямо перед камерой. Живой снимок в этот момент застаёт уже опущенную пластину.
 
-    Bambuddy waits about a minute for the video so the print-complete notification is not held up, and sends the notification with a live photo if the video has not arrived. It then keeps waiting quietly, and adds the better frame to the archive when the video lands — first in the photo list, so it is the one you see when you open the gallery. The photo in the notification stays as it was sent. On P1-series printers, where videos take longest to transfer, this is the usual outcome.
+    Чтобы не задерживать уведомление о завершении, Bambuddy ждёт видео около минуты и, если оно не пришло, отправляет уведомление с живым снимком. Затем ожидание продолжается в фоне; после получения видео лучший кадр добавляется первым в список фотографий архива, чтобы его было видно при открытии галереи. Фото в уже отправленном уведомлении не меняется. Для серии P1, где видео передаётся дольше всего, это обычная ситуация.
 
-### Opening the Editor
+### Открытие редактора {#opening-the-editor}
 
-1. Open an archive with a timelapse
-2. Click the timelapse to view it
-3. Click **Edit** in the viewer header
+1. Откройте архив с таймлапсом
+2. Нажмите таймлапс для просмотра
+3. Нажмите **Изменить** в заголовке просмотрщика
 
-### Editor Features
+### Возможности редактора {#editor-features}
 
-| Feature | Description |
+| Функция | Описание |
 |---------|-------------|
-| **Trim** | Set start and end points with visual timeline |
-| **Speed** | Adjust playback from 0.25x to 4x |
-| **Music** | Add audio overlay with volume control |
-| **Preview** | Preview changes before saving |
+| **Обрезка** | Выбор начала и конца на визуальной шкале времени |
+| **Скорость** | Скорость воспроизведения от 0,25× до 4× |
+| **Музыка** | Добавление аудио с регулировкой громкости |
+| **Предпросмотр** | Просмотр изменений перед сохранением |
 
-### Timeline Controls
+### Управление шкалой времени {#timeline-controls}
 
-- **Thumbnail strip** - Visual preview of video frames
-- **Trim handles** - Drag to set start/end points
-- **Playhead** - Shows current position
-- **Play/Pause** - Preview trimmed section
+- **Лента миниатюр** — предпросмотр кадров
+- **Маркеры обрезки** — перетащите, чтобы задать начало и конец
+- **Указатель воспроизведения** — текущее положение
+- **Воспроизведение / пауза** — просмотр обрезанного фрагмента
 
-### Adding Music
+### Добавление музыки {#adding-music}
 
-1. Click the **Music** section
-2. Upload an audio file (MP3, WAV, M4A, AAC, OGG)
-3. Adjust volume with the slider
-4. Preview synced with video playback
+1. Откройте раздел **Музыка**
+2. Загрузите аудиофайл (MP3, WAV, M4A, AAC, OGG)
+3. Настройте громкость ползунком
+4. Проверьте синхронизацию при воспроизведении
 
-### Saving Changes
+### Сохранение изменений {#saving-changes}
 
-Click **Save** to process the video. The original timelapse will be replaced with the edited version. The music is mixed in at the volume set with the slider; muted, the music track is silent.
+Нажмите **Сохранить** для обработки видео. Исходный таймлапс заменяется изменённым. Музыка смешивается с установленной ползунком громкостью; при выключенной громкости дорожка беззвучна.
 
-Processing runs on the server with FFmpeg and can take a few minutes for a long timelapse. While it runs, the **Save** button shows how far it has got, and **Cancel** next to it stops it and keeps the original. You can close the editor meanwhile: processing carries on, and when you open the editor again it shows the progress. Only one edit of a timelapse runs at a time, so **Save** is unavailable until the running one has ended. If the timelapse is removed or replaced while an edit runs, the edit is dropped rather than saved over it.
+Обработка выполняется на сервере с FFmpeg и для длинного таймлапса может занять несколько минут. Кнопка **Сохранить** показывает прогресс, а соседняя **Отмена** останавливает обработку, сохраняя оригинал. Редактор можно закрыть: обработка продолжится, а при повторном открытии будет показан прогресс. Одновременно выполняется только одно редактирование таймлапса, поэтому до его завершения **Сохранить** недоступна. Если во время обработки таймлапс удалён или заменён, результат редактирования отбрасывается, а не перезаписывает его.
 
-### Scan for Timelapse
+### Поиск таймлапса {#scan-for-timelapse}
 
-If an archive has no timelapse, the context menu offers **Scan for Timelapse**, which looks on the printer again. For prints that recorded a baseline at start (see [How Bambuddy Finds Your Timelapse](#how-bambuddy-finds-your-timelapse)), the scan uses that same clock-independent comparison. If more than one video could be the right one, Bambuddy asks you to choose rather than guessing.
+Если у архива нет таймлапса, контекстное меню предлагает **Поиск таймлапса**, повторно проверяющий принтер. Для печатей, у которых при запуске записан исходный список (см. [Как Bambuddy находит таймлапс](#how-bambuddy-finds-your-timelapse)), используется то же сравнение без зависимости от часов. Если подходит несколько видео, Bambuddy предлагает выбор вместо догадки.
 
-For archives created before Bambuddy started recording baselines, the scan falls back to matching by name and timestamp — which can come up empty on a printer whose clock has drifted. In that case use **Upload Timelapse** below, or pull the file off the printer's card yourself.
+Для архивов до появления исходных списков поиск опирается на имя и время, поэтому при сбившихся часах может ничего не найти. Тогда используйте **Загрузить таймлапс** ниже или самостоятельно скопируйте файл с карты принтера.
 
-Either way, a video another archive of the same printer already has is never picked by the scan itself. When the scan asks you to choose, such a video is still listed, in case it went to the wrong archive.
+В любом случае поиск сам не выберет видео, уже прикреплённое к другому архиву того же принтера. В окне ручного выбора такое видео всё же отображается на случай, если оно попало не в тот архив.
 
-### Manual Timelapse Upload & Remove
+### Загрузка и удаление таймлапса вручную {#manual-timelapse-upload-remove}
 
-If the auto-scan attaches the wrong timelapse or your printer is in LAN-only mode:
+Если автопоиск прикрепил неверное видео или принтер работает в режиме только локальной сети:
 
-1. **Remove** the incorrect timelapse via the context menu → **Remove Timelapse**
-2. **Upload** the correct file via the context menu → **Upload Timelapse**
+1. **Удалите** неверный таймлапс через контекстное меню → **Удалить таймлапс**
+2. **Загрузите** правильный файл через контекстное меню → **Загрузить таймлапс**
 
-| Action | When Visible | Description |
+| Действие | Когда доступно | Описание |
 |--------|--------------|-------------|
-| **Upload Timelapse** | No timelapse attached | Upload `.mp4`, `.avi`, or `.mkv` from your device |
-| **Remove Timelapse** | Timelapse attached | Delete the timelapse and clear the reference |
+| **Загрузить таймлапс** | Таймлапс не прикреплён | Загрузить `.mp4`, `.avi` или `.mkv` с устройства |
+| **Удалить таймлапс** | Таймлапс прикреплён | Удалить видео и ссылку на него |
 
-!!! tip "AVI Auto-Conversion"
-    Uploaded AVI and MKV files are automatically converted to MP4 in the background, just like auto-scanned timelapses.
-
----
-
-## :material-download: Source 3MF Upload
-
-Upload the original 3MF file for prints started outside Bambuddy:
-
-1. Open an archive
-2. Click **Upload 3MF**
-3. Select the source file
-4. 3MF is stored with the archive
-
-This enables 3D preview and printing even for imported archives.
+!!! tip "Автоконвертация AVI"
+    Загруженные AVI и MKV автоматически конвертируются в MP4 в фоне, как и видео, найденные автоматически.
 
 ---
 
-## :material-cube-outline: Fusion 360 Design Files
+## :material-download: Загрузка исходного 3MF {#source-3mf-upload}
 
-Attach F3D design files to archives for complete design tracking:
+Загрузите исходный 3MF для печатей, запущенных вне Bambuddy:
 
-### Uploading F3D Files
+1. Откройте архив
+2. Нажмите **Загрузить 3MF**
+3. Выберите исходный файл
+4. 3MF сохранится вместе с архивом
 
-1. Right-click an archive (or use the context menu button)
-2. Select **Upload F3D**
-3. Choose your `.f3d` file
-4. File is stored with the archive
+Это делает 3D-предпросмотр и печать доступными даже для импортированных архивов.
 
-### F3D Badge
+---
 
-Archives with attached F3D files show a cyan badge on the card (next to the source 3MF badge if present). Click the badge to download the file.
+## :material-cube-outline: Файлы проектов Fusion 360 {#fusion-360-design-files}
 
-### Context Menu Options
+Прикрепляйте к архивам файлы F3D для полного учёта проектирования:
 
-| Action | When Visible | Description |
+### Загрузка F3D {#uploading-f3d-files}
+
+1. Щёлкните архив правой кнопкой или откройте контекстное меню кнопкой
+2. Выберите **Загрузить F3D**
+3. Выберите файл `.f3d`
+4. Файл сохранится вместе с архивом
+
+### Метка F3D {#f3d-badge}
+
+На карточках архивов с F3D видна бирюзовая метка рядом с меткой исходного 3MF, если он есть. Нажмите её, чтобы скачать файл.
+
+### Действия контекстного меню {#context-menu-options}
+
+| Действие | Когда доступно | Описание |
 |--------|--------------|-------------|
-| **Upload F3D** | No F3D attached | Attach a new design file |
-| **Replace F3D** | F3D exists | Replace with a different file |
-| **Download F3D** | F3D exists | Download the attached file |
-| **Remove F3D** | F3D exists | Delete the attachment |
+| **Загрузить F3D** | F3D не прикреплён | Прикрепить новый файл проекта |
+| **Заменить F3D** | F3D есть | Заменить другим файлом |
+| **Скачать F3D** | F3D есть | Скачать прикреплённый файл |
+| **Удалить F3D** | F3D есть | Удалить вложение |
 
-!!! tip "Design Tracking"
-    Keep your Fusion 360 source files alongside your prints for complete project documentation.
+!!! tip "Учёт проектирования"
+    Храните исходные файлы Fusion 360 вместе с печатями для полной документации проекта.
 
 ---
 
-## :material-tag: Tags
+## :material-tag: Теги {#tags}
 
-Organize archives with custom tags:
+Упорядочивайте архивы собственными тегами:
 
-### Creating Tags
+### Создание тегов {#creating-tags}
 
-1. Open any archive
-2. Click **Edit Tags**
-3. Type a new tag name
-4. Press Enter to create
+1. Откройте любой архив
+2. Нажмите **Изменить теги**
+3. Введите название нового тега
+4. Нажмите Enter, чтобы создать его
 
-### Using Tags
+### Использование тегов {#using-tags}
 
-- Filter archives by tag
-- Combine multiple tags
-- Color-coded in the interface
+- Фильтрация архивов по тегу
+- Сочетание нескольких тегов
+- Цветовое различение в интерфейсе
 
-### Tag Examples
+### Примеры тегов {#tag-examples}
 
-- `functional` - Useful prints
-- `decoration` - Decorative items
-- `gift` - Prints for others
-- `prototype` - Test iterations
-- `failed` - Print failures
+- `functional` — полезные изделия
+- `decoration` — декоративные изделия
+- `gift` — печати для других людей
+- `prototype` — пробные версии
+- `failed` — неудачные печати
 
-### Tag Management
+### Управление тегами {#tag-management}
 
-Manage all tags from a centralized location:
+Для централизованного управления всеми тегами:
 
-1. Navigate to **Archives** page
-2. Click the **gear icon** next to the tag filter dropdown
-3. View all tags with usage counts
+1. Откройте страницу **Архив**
+2. Нажмите **шестерёнку** рядом с фильтром тегов
+3. Просмотрите теги и количество их использований
 
-**Available actions:**
+**Доступные действия:**
 
-| Action | Description |
+| Действие | Описание |
 |--------|-------------|
-| :material-magnify: **Search** | Filter tags by name |
-| :material-sort: **Sort** | Order by usage count or alphabetically |
-| :material-pencil: **Rename** | Change tag name across all archives |
-| :material-delete: **Delete** | Remove tag from all archives |
+| :material-magnify: **Поиск** | Фильтровать теги по названию |
+| :material-sort: **Сортировка** | По количеству использований или алфавиту |
+| :material-pencil: **Переименовать** | Изменить название во всех архивах |
+| :material-delete: **Удалить** | Удалить тег из всех архивов |
 
-!!! tip "Bulk Rename"
-    Renaming a tag updates all archives that use it in one action. Great for fixing typos or consolidating similar tags.
-
----
-
-## :material-note-text: Notes
-
-Add notes to archives:
-
-- Design changes
-- Print settings tweaks
-- Quality observations
-- Reference links
-
-Notes are searchable via full-text search.
+!!! tip "Массовое переименование"
+    Переименование одним действием обновляет все архивы с этим тегом. Это удобно для исправления опечаток и объединения похожих тегов.
 
 ---
 
-## :material-account: Designer Attribution
+## :material-note-text: Заметки {#notes}
 
-Credit the model designer:
+Добавляйте к архивам заметки:
 
-1. Open an archive
-2. Click **Edit Details**
-3. Add **Designer** name
-4. Optionally add **Designer URL**
+- Изменения конструкции
+- Корректировки настроек печати
+- Наблюдения о качестве
+- Ссылки на источники
 
-Great for tracking models from Printables, Thingiverse, etc.
+Заметки доступны в полнотекстовом поиске.
 
 ---
 
-## :material-link: External Links
+## :material-account: Указание автора модели {#designer-attribution}
 
-Link archives to their source on Printables, Thingiverse, or other sites:
+Укажите автора модели:
 
-### Adding an External Link
+1. Откройте архив
+2. Нажмите **Изменить сведения**
+3. Добавьте имя **Автора**
+4. При желании добавьте **URL автора**
 
-1. Open an archive
-2. Click **Edit** (pencil icon)
-3. Enter the URL in the **External Link** field
-4. Click **Save**
+Это удобно для учёта моделей с Printables, Thingiverse и других сайтов.
 
-### How It Works
+---
 
-| Source | Behavior |
+## :material-link: Внешние ссылки {#external-links}
+
+Связывайте архивы с источниками на Printables, Thingiverse и других сайтах:
+
+### Добавление внешней ссылки {#adding-an-external-link}
+
+1. Откройте архив
+2. Нажмите **Изменить** (значок карандаша)
+3. Введите URL в поле **Внешняя ссылка**
+4. Нажмите **Сохранить**
+
+### Как это работает {#how-it-works_2}
+
+| Источник | Действие |
 |--------|----------|
-| **External Link set** | Globe button opens your custom URL |
-| **MakerWorld detected** | Globe button opens auto-detected MakerWorld URL |
-| **Neither** | Globe button disabled |
+| **Внешняя ссылка задана** | Кнопка с глобусом открывает заданный URL |
+| **MakerWorld обнаружен** | Кнопка с глобусом открывает автоматически определённый URL MakerWorld |
+| **Ни того ни другого** | Кнопка с глобусом отключена |
 
-!!! tip "MakerWorld Auto-Detection"
-    Files downloaded from MakerWorld include metadata that Bambuddy extracts automatically. The external link field lets you manually add links for files from other sources.
+!!! tip "Автоопределение MakerWorld"
+    Файлы, скачанные с MakerWorld, содержат метаданные, которые Bambuddy извлекает автоматически. Поле внешней ссылки позволяет вручную добавить адрес для файлов из других источников.
 
 ---
 
-## :material-filter: Filtering Archives
+## :material-filter: Фильтрация архивов {#filtering-archives}
 
-Find archives quickly:
+Быстрый поиск нужного архива:
 
-### Filter Options
+### Параметры фильтрации {#filter-options}
 
-| Filter | Description |
+| Фильтр | Описание |
 |--------|-------------|
-| **Printer** | Archives with any print on that printer, not only the latest; their **N prints** counts are of the prints on it. A user limited to some printers finds nothing under a printer outside them |
-| **Tags** | Has specific tags |
-| **Material** | Filament type used |
-| **Color** | Filter by filament color (AND/OR modes) |
-| **File type** | GCODE, SOURCE, or ALL |
-| **Favorites** | Show only favorited archives |
+| **Принтер** | Архивы с любой печатью на этом принтере, не только последней; метки **N печатей** считают печати на нём. Пользователь с ограничением доступа не найдёт печатей на недоступном принтере |
+| **Теги** | Наличие указанных тегов |
+| **Материал** | Тип использованного филамента |
+| **Цвет** | Фильтр по цвету филамента (режимы И/ИЛИ) |
+| **Тип файла** | GCODE, SOURCE или ВСЕ |
+| **Избранное** | Только избранные архивы |
 
-The **Failed Prints** collection shows archives any print of which failed or was aborted, not only those whose latest print did (with a printer picked, a print on that printer). **Hide failed** still goes by the latest print.
+Коллекция **Неудачные печати** показывает архивы с любой неудачной или прерванной печатью, а не только с последней такой печатью (при выборе принтера — с печатью на нём). Фильтр **Скрыть неудачные** по-прежнему ориентируется на последнюю печать.
 
-### Combining Filters
+### Сочетание фильтров {#combining-filters}
 
-Stack multiple filters to narrow results. For example: "PLA prints from Workshop X1C in the last week."
-
----
-
-## :material-sort: Sorting
-
-Sort archives by:
-
-- **Date** (newest/oldest)
-- **Name** (A-Z/Z-A)
-- **Size** (largest/smallest)
+Применяйте несколько фильтров для уточнения результатов, например: «Печати PLA на Workshop X1C за последнюю неделю».
 
 ---
 
-## :material-broom: Auto-Purge
+## :material-sort: Сортировка {#sorting}
 
-Your archive can grow forever. For admins who don't want to babysit disk usage, Bambuddy can automatically delete old archives on a daily cadence.
+Архивы можно сортировать по:
 
-### Enabling Auto-Purge
+- **Дате** (новые / старые)
+- **Названию** (А–Я / Я–А)
+- **Размеру** (крупные / мелкие)
 
-Navigate to **Settings → General → Archive Settings**. Below the familiar toggles (auto-archive, capture finish photo) there's an **Auto-purge old archives** section.
+---
 
-1. Flip the toggle on.
-2. Set the age threshold (minimum 7 days, maximum 10 years, default 365).
-3. Changes save immediately with a confirmation toast — no separate Save button.
+## :material-broom: Автоочистка {#auto-purge}
 
-A background sweeper runs every 15 minutes but throttles actual purge runs to once per 24 hours, so flipping the toggle does not trigger an immediate deletion — the next daily tick picks it up.
+Архив может расти без ограничений. Для администраторов, которые не хотят постоянно следить за диском, Bambuddy может ежедневно автоматически удалять старые архивы.
 
-### Manual Purge
+### Включение автоочистки {#enabling-auto-purge}
 
-Need to clean up right now? The Archives page header has a **Purge old** button right next to Upload 3MF. It opens a modal with a live preview: "*N* archives · *size* would be deleted" plus up to five sample filenames. Adjust the age input to see the count update, then confirm.
+Откройте **Настройки → Общие → Настройки архива**. Под обычными переключателями автоархивации и снимка завершения находится раздел **Автоматически удалять старые архивы**.
 
-#### What happens when you click Purge
+1. Включите переключатель.
+2. Задайте порог возраста (от 7 дней до 10 лет, по умолчанию 365 дней).
+3. Изменения сохраняются сразу с уведомлением — отдельная кнопка сохранения не нужна.
 
-- Each matching archive is permanently removed from the database.
-- The 3MF, thumbnail, timelapse, source 3MF, F3D design file, and photo folder are all deleted from disk.
-- **There is no trash bin for archives** — deletion is immediate and cannot be undone.
-- Printing an archive refreshes its age clock, so archives you still use are safe.
+Фоновая проверка запускается каждые 15 минут, но фактическая очистка выполняется не чаще раза в 24 часа. Поэтому включение не вызывает немедленного удаления: очистка произойдёт при следующем ежедневном запуске.
 
-### How "old" Is Measured
+### Очистка вручную {#manual-purge}
 
-The threshold is based on **the most recent time each archive was printed**, not its original creation date. When you reprint an archive Bambuddy reuses the same row and refreshes its completed-at timestamp, so reprinting a two-year-old archive yesterday moves its age clock back to yesterday. In practice: only archives you haven't actually used in a while get purged.
+Чтобы очистить архив сразу, нажмите **Удалить старые** в заголовке страницы рядом с загрузкой 3MF. Откроется окно с текущим предпросмотром: сколько архивов и какой объём будет удалён, а также до пяти примеров имён файлов. Измените порог возраста, чтобы увидеть новое количество, затем подтвердите.
 
-### What Gets Deleted
+#### Что происходит при очистке {#what-happens-when-you-click-purge}
 
-Unlike the File Manager trash bin, **archives are hard-deleted**. There is no restore. For every archive past the threshold the sweeper removes:
+- Каждый подходящий архив окончательно удаляется из базы данных.
+- С диска удаляются 3MF, миниатюра, таймлапс, исходный 3MF, проект F3D и папка фотографий.
+- **Корзины для архивов нет**: удаление немедленно и необратимо.
+- Печать архива обновляет отсчёт его возраста, поэтому используемые архивы сохраняются.
 
-- The database row
-- The 3MF file
-- The thumbnail
-- The timelapse (if any)
-- The source 3MF (if uploaded separately)
-- The F3D design file (if uploaded)
-- The photo folder
+### Как определяется возраст {#how-old-is-measured}
 
-Everything goes through the same safety-checked path as the single-archive delete button, so the existing "refuse to delete outside the archive directory" guards still apply.
+Порог отсчитывается от **последней печати каждого архива**, а не даты его создания. При повторной печати Bambuddy использует прежнюю запись и обновляет время завершения, поэтому возраст двухлетнего архива, напечатанного вчера, отсчитывается со вчерашнего дня. На практике удаляются только архивы, которыми давно не пользовались.
 
-### Keeping Archives Safe
+### Что удаляется {#what-gets-deleted}
 
-If you want to make sure certain prints survive the purge:
+В отличие от корзины файлового менеджера, **архивы удаляются окончательно**. Восстановление невозможно. Для каждого архива старше порога очистка удаляет:
 
-- **Download them first** — the 3MF and thumbnail are easy to grab individually.
-- **Favourite them** *(planned)* — a future release may exclude favourited archives from auto-purge.
+- Строку базы данных
+- Файл 3MF
+- Миниатюру
+- Таймлапс, если есть
+- Исходный 3MF, если загружен отдельно
+- Файл проекта F3D, если загружен
+- Папку фотографий
 
-Auto-purge is off by default on new installs, so nothing disappears until you opt in.
+Используется тот же проверенный механизм, что и при удалении одного архива, включая существующую защиту от удаления за пределами каталога архивов.
 
-### Permissions
+### Как сохранить архивы {#keeping-archives-safe}
 
-Both the toggle and the manual purge require the `archives:purge` permission (Administrators group by default). Regular users don't see either UI.
+Чтобы определённые печати пережили очистку:
 
-## :material-lightbulb: Tips
+- **Сначала скачайте их** — 3MF и миниатюру легко получить отдельно.
+- **Добавьте в избранное** *(планируется)* — будущая версия может исключать избранные архивы из автоочистки.
 
-!!! tip "Batch Operations"
-    Enter selection mode and click archives to select them for batch actions (tagging, project assignment, comparison).
+В новых установках автоочистка выключена по умолчанию, поэтому до её включения ничего не исчезнет.
 
-!!! tip "Quick Search"
-    Press ++slash++ to jump to the search box from anywhere.
+### Разрешения {#permissions}
 
-!!! tip "Project Organization"
-    Use projects to group related prints (like "Voron Build" or "Gift Set").
+Для переключателя и ручной очистки требуется `archives:purge` (по умолчанию у группы администраторов). Обычные пользователи не видят эти элементы.
 
-!!! tip "Tag Consistently"
-    Develop a consistent tagging system for easy filtering later.
+## :material-lightbulb: Советы {#tips}
+
+!!! tip "Пакетные операции"
+    Включите режим выбора и отметьте архивы для массовых действий: тегирования, назначения проекту или сравнения.
+
+!!! tip "Быстрый поиск"
+    Нажмите ++slash++, чтобы из любого места перейти в поле поиска.
+
+!!! tip "Организация проектов"
+    Используйте проекты для группировки связанных печатей, например «Сборка Voron» или «Подарочный набор».
+
+!!! tip "Последовательные теги"
+    Придумайте единую систему тегов для удобной фильтрации.
