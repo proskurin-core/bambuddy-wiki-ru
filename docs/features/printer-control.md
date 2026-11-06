@@ -1,748 +1,744 @@
 ---
-title: Printer Control
-description: Print from printer cards, view printer info, control print speed, chamber, fans, and AI detection settings
+title: Управление принтером
+description: Печать с карточек принтеров, сведения о принтере и управление скоростью печати, камерой, вентиляторами и обнаружением ошибок с помощью ИИ
 ---
 
-# Printer Control
+# Управление принтером {#printer-control}
 
-Bambuddy provides control over various printer settings and features directly from the web interface.
+Bambuddy позволяет управлять различными настройками и функциями принтера прямо из веб-интерфейса.
 
-!!! info "Refreshed printer card in 0.2.4.8"
-    The printer card was redesigned in 0.2.4.8 with a tighter layout, popovers for all controls (temperature setpoints, fan speeds, jog), and a bottom-aligned power row. Quick-select values in the popovers are user-customizable under **Settings → Workflow → Temperature & Fan Presets**.
+!!! info "Обновлённая карточка принтера в 0.2.4.8"
+    В версии 0.2.4.8 карточку принтера переработали: расположение стало компактнее, для всех элементов управления (целевых температур, скоростей вентиляторов и перемещения) используются всплывающие панели, а строка питания расположена внизу. Значения быстрого выбора можно настроить в разделе **Настройки → Рабочий процесс → Пресеты температуры и вентилятора**.
 
 ---
 
-## :material-printer: Print from Printer Card
+## :material-printer: Печать с карточки принтера {#print-from-printer-card}
 
-Start prints from any printer card — no need to navigate to File Manager first.
+Запускайте печать с любой карточки принтера, не переходя предварительно в файловый менеджер.
 
-### Print Button
+### Кнопка печати {#print-button}
 
-A green **Print** button appears on each printer card:
+На каждой карточке принтера есть зелёная кнопка **Печать**:
 
-1. Click the **Print** button at the bottom of the printer card
-2. A file upload modal opens — select a `.gcode` or `.gcode.3mf` file
-3. The file is automatically uploaded to your library
-4. The **Print Modal** opens with the printer pre-selected
-5. Configure filament mapping, print options, and dispatch option, then click **Print**
+1. Нажмите кнопку **Печать** внизу карточки
+2. В открывшемся окне загрузки выберите файл `.gcode` или `.gcode.3mf`
+3. Файл автоматически загрузится в вашу библиотеку
+4. Откроется **окно печати** с уже выбранным принтером
+5. Настройте сопоставление филамента, параметры печати и способ отправки, затем нажмите **Печать**
 
-The printer selector is hidden since the target printer is already known.
+Выбор принтера скрыт, поскольку целевой принтер уже известен.
 
-Dispatch options control where the new queue item is placed:
+Способ отправки определяет положение нового задания в очереди:
 
-| Option | Behavior |
+| Вариант | Действие |
 |--------|----------|
-| **ASAP** | Adds the item at the top of the printer's queue |
-| **Queue** | Adds the item at the end of the printer's queue |
-| **Schedule** | Adds the item to the queue, gated until the scheduled time |
+| **Как можно скорее** | Добавляет задание в начало очереди принтера |
+| **В очередь** | Добавляет задание в конец очереди принтера |
+| **По расписанию** | Добавляет задание в очередь с ожиданием указанного времени |
 
-### Drag & Drop
+### Перетаскивание {#drag-drop}
 
-Drag a sliced file directly onto any printer card to start printing:
+Чтобы начать печать, перетащите нарезанный файл прямо на карточку принтера:
 
-1. Drag a `.gcode` or `.gcode.3mf` file from your computer onto a printer card
-2. A green overlay appears — **"Drop to print"** when the printer would start it straight away, **"Drop to queue"** when it would wait
-3. Drop the file — it uploads to your library automatically
-4. The **Print Modal** opens with the printer pre-selected
-5. Configure filament mapping, print options, and dispatch option, then print
+1. Перетащите файл `.gcode` или `.gcode.3mf` с компьютера на карточку принтера
+2. Появится зелёная подсказка: **«Отпустите для печати»**, если принтер начнёт сразу, или **«Отпустите для добавления в очередь»**, если задание будет ждать
+3. Отпустите файл — он автоматически загрузится в библиотеку
+4. Откроется **окно печати** с уже выбранным принтером
+5. Настройте сопоставление филамента, параметры печати и способ отправки, затем запустите печать
 
-!!! tip "Accepted File Types"
-    Only sliced files (`.gcode` and `.gcode.3mf`) are accepted for drag-and-drop printing. Other file types will show an error. Use the File Manager to upload non-printable files.
+!!! tip "Поддерживаемые типы файлов"
+    Для печати перетаскиванием принимаются только нарезанные файлы (`.gcode` и `.gcode.3mf`). Другие типы вызовут ошибку. Для загрузки файлов, не готовых к печати, используйте файловый менеджер.
 
-### Busy and Offline Printers
+### Занятые и отключённые принтеры {#busy-and-offline-printers}
 
-Both routes work whatever the printer is doing. Since 1.2.6 ([#2849](https://github.com/maziggy/bambuddy/issues/2849)) a printer that is mid-print, paused, drying or offline still takes a dropped file and still shows its **Print** button — it simply queues the job instead of starting it.
+Оба способа работают независимо от состояния принтера. Начиная с версии 1.2.6 ([#2849](https://github.com/maziggy/bambuddy/issues/2849)) принтер во время печати, паузы, сушки или в отключённом состоянии по-прежнему принимает перетащенный файл и показывает кнопку **Печать**: задание просто попадает в очередь, а не запускается сразу.
 
-This was always what happened underneath: every print Bambuddy sends becomes a queue item, and dropping onto an idle printer just means the scheduler dispatches it immediately. Refusing the drop only sent you to the File Manager to do the same thing by hand.
+Так происходило и раньше: каждая отправленная Bambuddy печать становится заданием очереди, а при перетаскивании на свободный принтер планировщик отправляет её немедленно. Отказ в перетаскивании лишь заставлял пользователя выполнять то же действие вручную через файловый менеджер.
 
-The overlay says which one you are getting. **"Drop to queue"** appears whenever the job would wait — a print in progress, a paused job, an AMS partway through a drying cycle, a plate still waiting to be cleared, or a printer that is offline. An offline printer's job dispatches when it reconnects, so you can queue work for a machine that is powered down.
+Подсказка показывает, что произойдёт. **«Отпустите для добавления в очередь»** появляется, когда заданию придётся ждать: во время другой печати, паузы, сушки AMS, ожидания очистки пластины или при отключённом принтере. Задание отключённого принтера будет отправлено после его повторного подключения, поэтому можно ставить в очередь работу для выключенного устройства.
 
-### Printer Compatibility Check
+### Проверка совместимости принтера {#printer-compatibility-check}
 
-Both flows automatically check if the file was sliced for a compatible printer model. If the file's `sliced_for_model` metadata doesn't match the target printer, you'll see an error and the file is removed from the library.
+Оба способа автоматически проверяют, нарезан ли файл для совместимой модели. Если метаданные `sliced_for_model` не соответствуют целевому принтеру, появится ошибка, а файл будет удалён из библиотеки.
 
-!!! note "Permissions Required"
-    Both routes upload a file and then queue it, so both need **Library Upload** (`library:upload`) and **Queue Create** (`queue:create`). Printer Control (`printers:control`) is not involved. Before 1.2.6 the drop zone checked `printers:control` instead, so a user holding that but neither of the other two had the file uploaded and then rejected, leaving it stranded in the library.
+!!! note "Необходимые разрешения"
+    Оба способа сначала загружают файл, а затем добавляют его в очередь, поэтому нужны разрешения **Загрузка в библиотеку** (`library:upload`) и **Создание заданий очереди** (`queue:create`). Разрешение управления принтером (`printers:control`) не требуется. До версии 1.2.6 область перетаскивания проверяла вместо этого `printers:control`, поэтому у пользователя с ним, но без двух других разрешений файл загружался, а затем отклонялся и оставался в библиотеке.
 
 ---
 
-## :material-information: Printer Information
+## :material-information: Сведения о принтере {#printer-information}
 
-View detailed printer information from the three-dot menu on any printer card.
+Подробные сведения доступны в меню с тремя точками на любой карточке принтера.
 
-Click **Printer Information** to see:
+Нажмите **Информация о принтере**, чтобы увидеть:
 
-| Field | Description |
+| Поле | Описание |
 |-------|-------------|
-| Model | Printer model name |
-| Status | Connection status (online/offline) |
-| State | Current state (idle, printing, paused, etc.) |
-| IP Address | Network address (copyable) |
-| Serial Number | Hardware serial (copyable) |
-| WiFi Signal | Signal strength with quality indicator |
-| Firmware | Current firmware version |
-| Developer Mode | Whether LAN developer mode is enabled |
-| Nozzle Count | Number of nozzles |
-| SD Card | Whether an SD card is inserted |
-| Auto-Archive | Whether auto-archiving is enabled |
-| Print Hours | Total accumulated print hours |
-| Location | Configured printer location |
-| Added | Date the printer was added |
+| Модель | Название модели принтера |
+| Состояние подключения | Подключён или отключён |
+| Состояние | Текущее состояние: ожидание, печать, пауза и т. д. |
+| IP-адрес | Сетевой адрес, который можно скопировать |
+| Серийный номер | Серийный номер устройства, который можно скопировать |
+| Сигнал Wi-Fi | Уровень сигнала с индикатором качества |
+| Прошивка | Текущая версия прошивки |
+| Режим разработчика | Включён ли режим разработчика локальной сети |
+| Количество сопел | Число сопел |
+| SD-карта | Вставлена ли SD-карта |
+| Автоархивация | Включена ли автоматическая архивация |
+| Часы печати | Общее накопленное время печати |
+| Расположение | Заданное расположение принтера |
+| Добавлен | Дата добавления принтера |
 
 ---
 
-## :material-harddisk: Browse Printer Storage
+## :material-harddisk: Просмотр хранилища принтера {#browse-printer-storage}
 
-Click :material-harddisk: **Browse printer files** in an expanded printer card's action bar to browse the printer's SD-card storage over FTP. FTP file access is independent of the live MQTT status, so an offline status badge does not by itself disable this button.
+Нажмите :material-harddisk: **Просмотр файлов принтера** на панели действий развёрнутой карточки, чтобы просмотреть содержимое SD-карты по FTP. Доступ по FTP не зависит от текущего состояния MQTT, поэтому индикатор отключения сам по себе не блокирует эту кнопку.
 
-The file browser supports downloading individual files or combining multiple selected files into one ZIP archive. Preparation runs as a cancellable background job under Bambuddy's persistent data directory, shows completed-file progress, and hands the result to the browser as a normal download instead of holding it in memory. Video entries are stored without recompression; G-code, 3MF, and other entries are deflated. Selections are limited to 10 GiB and 30 minutes, Bambuddy checks free data-volume space before and during transfer, and a warning reports if only part of a selection could be retrieved. Closing the browser dialog cancels preparation and removes partial staging.
+В файловом браузере можно скачивать отдельные файлы или объединять несколько выбранных файлов в ZIP. Подготовка выполняется как отменяемое фоновое задание в постоянном каталоге данных Bambuddy, показывает число обработанных файлов и передаёт результат браузеру как обычную загрузку, не удерживая его в памяти. Видео сохраняется без повторного сжатия; G-code, 3MF и остальные файлы сжимаются методом deflate. Выбор ограничен 10 ГиБ и 30 минутами; Bambuddy проверяет свободное место в томе данных до и во время передачи и предупреждает, если получена только часть выбранного. Закрытие окна браузера отменяет подготовку и удаляет временные данные.
 
-### Selecting Multiple Files
+### Выбор нескольких файлов {#selecting-multiple-files}
 
-- Click a file row or its checkbox to select or deselect it.
-- Click **Select All** to select every visible file.
-- Click one file, then hold **Shift** and click another to select the visible range between them.
-- Search filters and the current sort order determine which files are inside a Shift-selected range. Folders are not included.
-- Navigating or changing the search filter discards selections that are no longer visible, so a hidden file cannot be downloaded or deleted accidentally.
+- Нажмите строку файла или его флажок, чтобы выбрать файл или снять выбор.
+- Нажмите **Выбрать все**, чтобы выбрать все видимые файлы.
+- Нажмите один файл, затем, удерживая **Shift**, нажмите другой, чтобы выбрать видимый диапазон между ними.
+- Фильтр поиска и текущий порядок сортировки определяют состав диапазона Shift. Папки не включаются.
+- При переходе или изменении фильтра поиска выбор невидимых файлов сбрасывается, чтобы их нельзя было случайно скачать или удалить.
 
-!!! note "Permission Required"
-    Requires the **Printer Files** permission (`printers:files`).
+!!! note "Необходимое разрешение"
+    Требуется разрешение **Файлы принтера** (`printers:files`).
 
 ---
 
-## :material-stop: Print Job Controls
+## :material-stop: Управление заданиями печати {#print-job-controls}
 
-Control active print jobs directly from the printer card:
+Управляйте активными заданиями прямо с карточки принтера:
 
-### Stop Print
+### Остановка печати {#stop-print}
 
-Cancel the current print job:
+Чтобы отменить текущее задание:
 
-1. Locate the **Stop** button (:material-stop:) on the printer card during printing
-2. Click to stop the print
-3. Confirm in the modal dialog
-4. Print is cancelled and printer returns to idle
+1. Во время печати найдите на карточке кнопку **Остановить** (:material-stop:)
+2. Нажмите её
+3. Подтвердите действие в диалоговом окне
+4. Печать отменится, а принтер вернётся в режим ожидания
 
-!!! warning "Permanent Action"
-    Stopping a print cannot be undone. The print must be restarted from the beginning.
+!!! warning "Необратимое действие"
+    Остановку печати нельзя отменить. Печать придётся запустить с начала.
 
-### Pause / Resume
+### Пауза и возобновление {#pause-resume}
 
-Temporarily pause and resume printing:
+Можно временно приостановить и продолжить печать:
 
-| Button | State | Action |
+| Кнопка | Состояние | Действие |
 |--------|-------|--------|
-| :material-pause: Pause | Printing | Pauses the print, filament retracts |
-| :material-play: Resume | Paused | Resumes printing from where it stopped |
+| :material-pause: Пауза | Печать | Приостанавливает печать, филамент втягивается |
+| :material-play: Продолжить | Пауза | Продолжает печать с места остановки |
 
-**To pause/resume:**
+**Чтобы приостановить или продолжить:**
 
-1. Click the **Pause** button during an active print
-2. Confirm in the modal dialog
-3. Printer pauses and displays "Paused" status
-4. Click **Resume** to continue printing
+1. Во время печати нажмите **Пауза**
+2. Подтвердите действие в окне
+3. Принтер приостановится и покажет состояние «Пауза»
+4. Нажмите **Продолжить**, чтобы возобновить печать
 
-!!! tip "When to Pause"
-    Use pause to inspect the print, remove debris, or insert objects for encapsulation.
+!!! tip "Когда ставить на паузу"
+    Приостановите печать, чтобы осмотреть изделие, убрать мусор или вставить объект внутрь модели.
 
-### HMS Error Actions (Resume / Stop / Continue / Check Assistant / …)
+### Действия с ошибками HMS (продолжить, остановить, проверить помощник и др.) {#hms-error-actions-resume-stop-continue-check-assistant}
 
-Each error in the HMS modal shows the same action buttons BambuStudio and Bambu Handy display — Resume Printing, Stop Printing, Continue, Retry, Filament Extruded, Check Assistant, Don't Remind Me, and so on. Click any button and Bambuddy sends the matching MQTT command back to the printer, so you can clear a paused-print dialog from your phone instead of walking to the device.
+У каждой ошибки в окне HMS отображаются те же кнопки, что в BambuStudio и Bambu Handy: возобновить или остановить печать, продолжить, повторить, филамент выдавлен, проверить помощник, больше не напоминать и другие. При нажатии Bambuddy отправляет принтеру соответствующую команду MQTT, поэтому диалог приостановленной печати можно закрыть с телефона, не подходя к устройству.
 
-1. Click the **HMS indicator** on the printer card to open the error modal
-2. Review the listed errors and their action buttons
-3. Click the action you want — Bambuddy sends the matching command and the modal closes
+1. Нажмите **индикатор HMS** на карточке принтера, чтобы открыть окно ошибок
+2. Просмотрите ошибки и доступные действия
+3. Выберите нужное действие — Bambuddy отправит команду и закроет окно
 
-Which buttons appear depends on your printer model and the specific error code, mapped against Bambu's published HMS catalog. Action labels are translated in all 13 supported locales.
+Набор кнопок зависит от модели принтера и конкретного кода ошибки согласно опубликованному каталогу HMS Bambu. Названия действий переведены на все 13 поддерживаемых языков.
 
-For the full details on which commands each action sends (resume / idle_ignore type=0 vs type=1 / ams_control / etc.), see [HMS Error Monitoring → Error Actions](monitoring.md#error-actions-resume-stop-check-assistant).
+Подробнее о командах каждого действия (resume / idle_ignore type=0 и type=1 / ams_control и т. д.) см. [Мониторинг ошибок HMS → Действия с ошибками](monitoring.md#error-actions-resume-stop-check-assistant).
 
-### Clear HMS Errors
+### Очистка ошибок HMS {#clear-hms-errors}
 
-The HMS modal also includes a **Clear Errors** button at the bottom for codes that don't have specific actions or for dismissing stale errors after a print cancellation:
+Внизу окна HMS есть кнопка **Очистить ошибки** для кодов без отдельных действий или устаревших ошибок после отмены печати:
 
-1. Click the **HMS indicator** on the printer card to open the error modal
-2. Review the listed errors
-3. Click **Clear Errors** to dismiss them
+1. Откройте окно ошибок через **индикатор HMS** на карточке
+2. Просмотрите ошибки
+3. Нажмите **Очистить ошибки**, чтобы закрыть их
 
-The clear command sends `clean_print_error` via MQTT and immediately removes errors from the UI. This is useful after print cancellation or transient events that leave `print_error` values behind.
+Команда отправляет `clean_print_error` через MQTT и сразу удаляет ошибки из интерфейса. Это полезно после отмены печати или временных событий, после которых остались значения `print_error`.
 
-!!! note "Permission Required"
-    Both per-error actions and Clear Errors require the **Printer Control** permission (`printers:control`).
+!!! note "Необходимое разрешение"
+    Для действий с отдельными ошибками и очистки всех ошибок требуется разрешение **Управление принтером** (`printers:control`).
 
-### Clear Plate
+### Очистка пластины {#clear-plate}
 
-When a print finishes or fails and there are queued prints waiting, a "Clear Plate & Start Next" button appears on the printer card. Clicking it confirms that the build plate has been cleared, allowing the queue scheduler to start the next print.
+Если печать завершилась или завершилась ошибкой, а в очереди ждут другие задания, на карточке принтера появляется кнопка «Очистить пластину и начать следующее». Она подтверждает, что пластина очищена, и позволяет планировщику запустить следующую печать.
 
-The button also appears while the printer is powered down — with [Auto Power Off](smart-plugs.md) that is where most plates are cleared. The gate is Bambuddy's own state, so confirming it never touches the printer; the queue can then wake the machine for the next job instead of holding it back.
+Кнопка доступна и при выключенном принтере: при использовании [автоматического выключения](smart-plugs.md) пластины чаще всего очищают именно тогда. Это состояние хранится в Bambuddy, поэтому подтверждение не обращается к принтеру; очередь сможет включить устройство для следующего задания.
 
-!!! note "Permission Required"
-    Requires the **Clear Plate** permission (`printers:clear_plate`). This is a separate, more granular permission than `printers:control`, allowing admins to grant plate-clearing ability without full printer control access.
+!!! note "Необходимое разрешение"
+    Требуется разрешение **Очистка пластины** (`printers:clear_plate`). Это отдельное, более точное разрешение, чем `printers:control`: администратор может разрешить подтверждение очистки без полного управления принтером.
 
-### Confirmation Modals
+### Окна подтверждения {#confirmation-modals}
 
-All print control actions require confirmation to prevent accidental clicks:
+Все действия управления печатью требуют подтверждения для защиты от случайного нажатия:
 
-- **Stop**: "Are you sure you want to stop this print?"
-- **Pause**: "Are you sure you want to pause this print?"
-- **Resume**: "Are you sure you want to resume this print?"
+- **Остановить**: «Остановить эту печать?»
+- **Пауза**: «Приостановить эту печать?»
+- **Продолжить**: «Продолжить эту печать?»
 
-Toast notifications provide feedback after each action.
+После каждого действия появляется всплывающее уведомление с результатом.
 
 ---
 
-## :material-checkbox-multiple-marked: Bulk Actions
+## :material-checkbox-multiple-marked: Массовые действия {#bulk-actions}
 
-Select multiple printer cards and apply actions to all of them at once — ideal for print farms and multi-printer setups.
+Выбирайте несколько карточек принтеров и применяйте действия ко всем сразу — удобно для ферм и установок с несколькими принтерами.
 
-### Entering Selection Mode
+### Включение режима выбора {#entering-selection-mode}
 
-1. Click the **Select** button (:material-checkbox-marked:) in the printer page header toolbar
-2. Printer cards now show checkboxes — click cards to select/deselect
-3. A floating toolbar appears at the bottom of the screen
+1. Нажмите **Выбрать** (:material-checkbox-marked:) на панели в заголовке страницы принтеров
+2. На карточках появятся флажки — нажимайте карточки для выбора или отмены выбора
+3. Внизу экрана появится плавающая панель
 
-### Selection Shortcuts
+### Быстрый выбор {#selection-shortcuts}
 
-The floating toolbar provides quick ways to select printers:
+Плавающая панель предлагает быстрые способы выбора:
 
-| Button | Description |
+| Кнопка | Описание |
 |--------|-------------|
-| **Select All** | Select all visible printers |
-| **Select by State** | Dropdown to select all printers in a specific state (Printing, Paused, Finished, Idle, Error, Offline) |
-| **Select by Location** | Dropdown to select all printers at a specific location (only visible when printers have locations assigned) |
+| **Выбрать все** | Выбрать все видимые принтеры |
+| **Выбрать по состоянию** | Выбрать все принтеры с заданным состоянием: печать, пауза, завершено, ожидание, ошибка или отключён |
+| **Выбрать по расположению** | Выбрать все принтеры в определённом месте; доступно, только если расположения заданы |
 
-When viewing printers grouped by location, each location header also shows a "Select All" link to select that group.
+При группировке принтеров по расположению в заголовке каждой группы также есть ссылка «Выбрать все».
 
-### Available Bulk Actions
+### Доступные массовые действия {#available-bulk-actions}
 
-| Action | Description | Confirmation |
+| Действие | Описание | Подтверждение |
 |--------|-------------|:------------:|
-| **Stop** | Cancel active prints on selected printers | :material-check: |
-| **Pause** | Pause active prints on selected printers | :material-check: |
-| **Resume** | Resume paused prints on selected printers | — |
-| **Clear Notifications** | Clear HMS errors on selected printers | — |
-| **Clear Bed** | Clear print bed on selected printers (may trigger queued jobs) | :material-check: |
+| **Остановить** | Отменить активные печати на выбранных принтерах | :material-check: |
+| **Пауза** | Приостановить активные печати | :material-check: |
+| **Продолжить** | Продолжить приостановленные печати | — |
+| **Очистить уведомления** | Очистить ошибки HMS | — |
+| **Очистить стол** | Подтвердить очистку стола на выбранных принтерах; может запустить задания очереди | :material-check: |
 
-Each action button is **smart-enabled** — it only activates when at least one selected printer is in the appropriate state. For example, "Stop" is only clickable when a selected printer is printing or paused.
+Каждая кнопка включается только тогда, когда хотя бы один выбранный принтер находится в подходящем состоянии. Например, **Остановить** доступна только при наличии печатающего или приостановленного принтера.
 
-### Permissions
+### Разрешения {#permissions}
 
-- Stop, Pause, Resume, Clear Notifications require the **Printer Control** permission (`printers:control`)
-- Clear Bed requires the **Clear Plate** permission (`printers:clear_plate`)
+- Для остановки, паузы, продолжения и очистки уведомлений требуется **Управление принтером** (`printers:control`)
+- Для очистки стола требуется **Очистка пластины** (`printers:clear_plate`)
 
-### Exiting Selection Mode
+### Выход из режима выбора {#exiting-selection-mode}
 
-- Press **Escape** on your keyboard
-- Click the **X** button on the floating toolbar
+- Нажмите **Escape** на клавиатуре
+- Нажмите кнопку **X** на плавающей панели
 
 ---
 
-## :material-map-marker-multiple: Printer Locations
+## :material-map-marker-multiple: Расположения принтеров {#printer-locations}
 
-A location groups printers by where they stand: a room, a rack, a shelf. Queue jobs can target "any printer of this model in this location", and the Printers page can select every printer at a location at once.
+Расположение группирует принтеры по месту: комната, стойка или полка. Задания очереди могут назначаться «любому принтеру этой модели в этом месте», а на странице принтеров можно выбрать сразу все устройства в одном месте.
 
-Open the **Printer Locations** page with the button next to the sort control at the top of the Printers page. It lists every location with how many printers it holds; click one to see its printers and whether each is idle, printing, paused or offline. Printers without a location are listed at the bottom.
+Откройте страницу **Расположения принтеров** кнопкой рядом с сортировкой вверху страницы принтеров. На ней перечислены все расположения с числом принтеров; нажмите на одно из них, чтобы увидеть принтеры и их состояние: ожидание, печать, пауза или отключён. Принтеры без расположения находятся внизу.
 
-| Action | How |
+| Действие | Как выполнить |
 |--------|-----|
-| **Create a location** | **New Location**. A location can be empty, so you can set up a rack or room before its printers move in. |
-| **Icon and colour** | Pick them when creating or editing a location. The colour shows as a stripe next to the icon. |
-| **Rename** | The pencil button. Every printer in the location and every queued job that targets it move to the new name together. |
-| **Move one printer** | The move button on the printer's row, then pick a location or **No location**. |
-| **Move several printers** | Tick them (or **Select all** for printers without a location), then **Move** in the bar at the bottom. |
-| **Remove a printer from a location** | The remove button on its row. The printer stays, without a location. |
-| **Delete locations** | The bin button on one location, or **Select** to tick several and **Delete selected**. Their printers are kept, without a location. |
+| **Создать расположение** | Нажмите **Новое расположение**. Оно может быть пустым, поэтому стойку или комнату можно создать до перемещения принтеров. |
+| **Значок и цвет** | Выберите их при создании или изменении расположения. Цвет отображается полосой рядом со значком. |
+| **Переименовать** | Кнопка с карандашом. У всех принтеров и ожидающих заданий этого расположения одновременно обновится название. |
+| **Переместить один принтер** | Нажмите кнопку перемещения в его строке и выберите расположение или **Без расположения**. |
+| **Переместить несколько принтеров** | Отметьте их (или нажмите **Выбрать все** для принтеров без расположения), затем **Переместить** на нижней панели. |
+| **Убрать принтер из расположения** | Нажмите кнопку удаления в его строке. Принтер сохранится без расположения. |
+| **Удалить расположения** | Нажмите корзину у одного расположения либо **Выбрать**, отметьте несколько и нажмите **Удалить выбранные**. Принтеры сохранятся без расположения. |
 
-Search, sorting (by name or by number of printers) and **Hide empty** help find a location on a large farm; Bambuddy remembers the sorting and the hide setting in your browser.
+Поиск, сортировка по названию или числу принтеров и параметр **Скрыть пустые** помогают найти расположение в большой ферме. Bambuddy запоминает сортировку и скрытие в браузере.
 
-!!! info "Shared by every user"
-    Locations, their icons and colours are stored by Bambuddy, not in the browser, so every user and device sees the same ones. Each change is saved in one step: a failure never leaves a location half renamed.
+!!! info "Общие для всех пользователей"
+    Расположения, их значки и цвета хранятся в Bambuddy, а не в браузере, поэтому одинаковы для всех пользователей и устройств. Каждое изменение сохраняется одной операцией: ошибка не оставит расположение переименованным наполовину.
 
-!!! note "Names"
-    A location name can be up to 100 characters. Two locations that differ only in upper and lower case ("Workshop" and "workshop") are not allowed, because jobs match a location by its exact name.
+!!! note "Названия"
+    Название может содержать до 100 символов. Два названия, различающихся только регистром («Workshop» и «workshop»), недопустимы, поскольку задания сопоставляются с расположением по точному названию.
 
-!!! tip "Queued jobs"
-    Renaming a location updates the queued jobs that target it, and the batches that will queue more runs for it. Deleting one does not: a job aimed at that location keeps waiting rather than starting on a printer somewhere else, so edit or cancel such jobs yourself.
+!!! tip "Задания в очереди"
+    При переименовании обновляются назначенные этому расположению задания и пакеты, которые будут добавлять в него новые запуски. При удалении этого не происходит: задание продолжит ждать указанное место вместо запуска на другом принтере, поэтому измените или отмените его самостоятельно.
 
-Viewing the page needs permission to see printers; changing locations needs permission to edit printers. You can still type a location into a printer's settings; it shows up on the page like any other.
+Для просмотра страницы нужно разрешение на просмотр принтеров, для изменения расположений — разрешение на их редактирование. Расположение по-прежнему можно ввести в настройках принтера; оно появится на этой странице как любое другое.
 
-## :material-skip-forward: Skip Objects
+## :material-skip-forward: Пропуск объектов {#skip-objects}
 
-Skip individual objects during a print without stopping the entire job.
+Пропускайте отдельные объекты во время печати, не останавливая всё задание.
 
-### How It Works
+### Как это работает {#how-it-works}
 
-When a print starts, Bambuddy extracts object information from the 3MF file. You can then skip any object that's failing or that you no longer need.
+При запуске печати Bambuddy извлекает сведения об объектах из файла 3MF. Затем можно пропустить любой объект, который печатается с ошибкой или больше не нужен.
 
-The list is held in memory, so a Bambuddy restart in the middle of a print drops
-it. Bambuddy rebuilds it from the print's archive when it comes back up, and the
-Skip modal rebuilds it on demand as well — from the archived 3MF where there is
-one, and from the printer only when there is not. Opening the modal is enough;
-there is nothing to reload by hand.
+Список хранится в памяти, поэтому перезапуск Bambuddy во время печати удаляет его. После запуска Bambuddy восстанавливает список из архива печати; окно пропуска также восстанавливает его по запросу: из архивного 3MF, если он есть, и с принтера только при его отсутствии. Достаточно открыть окно, вручную ничего перезагружать не нужно.
 
-### Using Skip Objects
+### Использование пропуска объектов {#using-skip-objects}
 
-1. Click the **Skip** button (top-right of printer card) during printing
-2. A modal appears showing:
-   - A **top-down build plate** matching the slicer's object layout
-   - A checklist of the objects on the active plate
-   - Any objects that were already skipped
-3. Click objects directly on the build plate or check them in the list
-4. Review the selected objects, then click **Skip Selected**
-5. Confirm the action. The selected objects will be marked as skipped and won't be printed
+1. Во время печати нажмите **Пропустить** в правом верхнем углу карточки принтера
+2. Откроется окно, в котором показаны:
+   - **Вид пластины сверху**, соответствующий расположению объектов в слайсере
+   - Список объектов активной пластины с флажками
+   - Объекты, уже отмеченные как пропущенные
+3. Нажмите объекты прямо на пластине или отметьте их в списке
+4. Проверьте выбор и нажмите **Пропустить выбранные**
+5. Подтвердите действие. Выбранные объекты будут помечены как пропущенные и не будут напечатаны
 
-If the printer refuses the skip, the objects are no longer shown as skipped and the log says why. If the printer has not listed them as skipped within a minute, the log records that too.
+Если принтер отклонит команду, объекты перестанут отображаться пропущенными, а причина будет записана в журнал. Если принтер не подтвердит пропуск в течение минуты, это также будет записано в журнал.
 
-### Skip Objects Modal
+### Окно пропуска объектов {#skip-objects-modal}
 
-| Element | Description |
+| Элемент | Описание |
 |---------|-------------|
-| Build plate | Clickable top-down view using the slicer's exact object-ID mask |
-| Object list | Names, object IDs, and checkboxes for the active plate |
-| Selection overlay | Highlights selected and previously skipped objects on the plate |
-| Select All | Selects or clears every object that has not already been skipped |
-| Skipped count | Shows how many objects were already skipped |
+| Пластина | Интерактивный вид сверху, использующий точную маску ID объектов слайсера |
+| Список объектов | Имена, ID и флажки объектов активной пластины |
+| Выделение | Отмечает выбранные и ранее пропущенные объекты на пластине |
+| Выбрать все | Выбирает или снимает выбор со всех ещё не пропущенных объектов |
+| Счётчик пропущенных | Показывает, сколько объектов уже пропущено |
 
-### Object Display
+### Отображение объектов {#object-display}
 
-| Status | Appearance |
+| Состояние | Вид |
 |--------|------------|
-| Active | Available in both the plate view and checklist |
-| Selected | Green highlighted overlay and checked list item |
-| Skipped | Muted red overlay and strikethrough list item |
+| Активен | Доступен на пластине и в списке |
+| Выбран | Выделен зелёным на пластине, в списке отмечен флажком |
+| Пропущен | Выделен приглушённым красным, в списке зачёркнут |
 
-### Layer Requirement
+### Требование к слою {#layer-requirement}
 
-!!! warning "Wait for Layer 2"
-    Skip is only available after the first layer is printed. This is a printer limitation - the printer needs to establish object positions before allowing skips.
+!!! warning "Дождитесь второго слоя"
+    Пропуск доступен только после печати первого слоя. Это ограничение принтера: ему нужно сначала определить положение объектов.
 
-    A warning message appears in the modal when on layer 0 or 1.
+    На слое 0 или 1 в окне появляется предупреждение.
 
-### Requirements
+### Требования {#requirements}
 
-For skip objects to work properly:
+Для корректной работы пропуска объектов:
 
-1. Enable **Exclude Objects** in your slicer (Bambu Studio / OrcaSlicer)
-   - Go to **Other** → **Exclude objects**
-   - This ensures each object gets a unique ID
-2. Objects must be properly separated in the slicer
-3. Clone/array objects may share IDs unless exclude is enabled
-4. Print must have 2 or more objects
+1. Включите **Исключение объектов** в слайсере (Bambu Studio / OrcaSlicer)
+   - Перейдите в **Другое** → **Исключить объекты**
+   - Это гарантирует уникальный ID каждого объекта
+2. Объекты должны быть корректно разделены в слайсере
+3. Клоны и массивы объектов могут иметь общие ID, если исключение не включено
+4. В задании должно быть не менее двух объектов
 
-!!! tip "Select from the plate"
-    The clickable plate uses the slicer's `pick_N.png` object-ID mask, so a click selects the same object ID that the printer firmware understands. If the mask is unavailable, use the object checklist instead.
+!!! tip "Выбор на пластине"
+    Интерактивная пластина использует маску ID объектов `pick_N.png` слайсера, поэтому нажатие выбирает тот же ID, который понимает прошивка принтера. Если маска недоступна, используйте список объектов.
 
-!!! tip "When to Skip"
-    Use skip objects when:
+!!! tip "Когда пропускать объекты"
+    Используйте пропуск, если:
 
-    - An object is failing but others are printing fine
-    - You want to cancel part of a multi-object print
-    - A support structure or test piece is no longer needed
+    - Один объект печатается с ошибкой, а остальные — нормально
+    - Нужно отменить часть печати с несколькими объектами
+    - Поддержка или тестовая деталь больше не нужна
 
-!!! warning "Cannot Undo"
-    Skipping an object is permanent for the current print. The object cannot be un-skipped once marked.
+!!! warning "Отмена невозможна"
+    Пропуск объекта необратим для текущей печати. После отметки вернуть его нельзя.
 
-    Selecting every remaining object will stop the print job. Bambuddy shows an additional warning before sending that command.
+    Выбор всех оставшихся объектов остановит задание печати. Перед отправкой команды Bambuddy покажет дополнительное предупреждение.
 
 ---
 
-## :material-thermometer: Chamber Control
+## :material-thermometer: Управление камерой {#chamber-control}
 
-For enclosed printers (X1 series, H2 series), control the chamber environment:
+Для закрытых принтеров серий X1 и H2 можно управлять условиями в камере:
 
-### Chamber Temperature
+### Температура камеры {#chamber-temperature}
 
-- View current chamber temperature
-- Set target temperature on models with an active chamber heater (H2C, H2D, H2D Pro, H2S, X1E, X2D) — see [Temperature Setpoints](#temperature-setpoints) below
-- Monitor heating/cooling status
+- Просмотр текущей температуры камеры
+- Установка целевой температуры на моделях с активным нагревателем камеры (H2C, H2D, H2D Pro, H2S, X1E, X2D) — см. [Целевые температуры](#temperature-setpoints) ниже
+- Контроль нагрева и охлаждения
 
-### Chamber Light
+### Освещение камеры {#chamber-light}
 
-Toggle the internal chamber LED directly from the printer card.
+Включайте и выключайте внутреннюю подсветку прямо с карточки принтера.
 
-**Location:** Light button next to the camera button at the bottom of the printer card.
+**Расположение:** кнопка освещения рядом с кнопкой камеры внизу карточки.
 
-| State | Appearance |
+| Состояние | Вид |
 |:-----:|------------|
-| On | Yellow background, filled bulb icon with rays |
-| Off | Gray background, outline bulb icon |
+| Включено | Жёлтый фон, закрашенный значок лампы с лучами |
+| Выключено | Серый фон, контур лампы |
 
-**To toggle:**
+**Для переключения:**
 
-1. Click the light button at the bottom of the printer card
-2. Light state changes immediately (optimistic update)
-3. Toast notification confirms the change
+1. Нажмите кнопку освещения внизу карточки
+2. Состояние сразу изменится (оптимистическое обновление)
+3. Всплывающее уведомление подтвердит изменение
 
-!!! info "H2D Dual Lights"
-    On H2D printers with dual chamber lights, both lights are controlled together.
+!!! info "Двойная подсветка H2D"
+    На принтерах H2D с двумя лампами камеры они управляются одновременно.
 
 ---
 
-## :material-thermometer-plus: Temperature Setpoints
+## :material-thermometer-plus: Целевые температуры {#temperature-setpoints}
 
-Click any temperature card on the printer card (Nozzle / Bed / Chamber) to open a popover with quick-select buttons plus a custom-value input. Sending the setpoint is optimistic — the popover closes immediately and the toast confirms the printer accepted the command.
+Нажмите любую карточку температуры на карточке принтера (сопло / стол / камера), чтобы открыть панель с кнопками быстрого выбора и полем своего значения. При отправке целевой температуры панель сразу закрывается, а уведомление подтверждает принятие команды принтером.
 
-### Nozzle Temperature
+### Температура сопла {#nozzle-temperature}
 
-| Item | Value |
+| Параметр | Значение |
 |------|-------|
-| Bounds | `0–320 °C` (0 turns the heater off) |
-| Default presets | Off, 120 °C, 220 °C, 260 °C |
-| Endpoint | `POST /printers/{id}/temperature/nozzle?target=N&nozzle=I` |
+| Диапазон | `0–320 °C` (0 выключает нагреватель) |
+| Пресеты по умолчанию | Выкл., 120 °C, 220 °C, 260 °C |
+| Конечная точка | `POST /printers/{id}/temperature/nozzle?target=N&nozzle=I` |
 | G-code | `M104 T{nozzle} S{target}` |
 
-On dual-nozzle printers (H2D), the temperature card opens a wider popover with separate **Left Temp** and **Right Temp** panels — set each nozzle independently. The L/R selector for switching the **active** extruder remains on the nozzle card next to it (`POST /printers/{id}/select-extruder`).
+На принтерах с двумя соплами (H2D) открывается более широкая панель с отдельными областями **Температура левого** и **Температура правого**: температура каждого сопла задаётся независимо. Переключатель L/R для выбора **активного** экструдера остаётся на соседней карточке сопла (`POST /printers/{id}/select-extruder`).
 
-### Bed Temperature
+### Температура стола {#bed-temperature}
 
-| Item | Value |
+| Параметр | Значение |
 |------|-------|
-| Bounds | `0–140 °C` (0 turns the heater off) |
-| Default presets | Off, 55 °C, 75 °C, 90 °C |
-| Endpoint | `POST /printers/{id}/temperature/bed?target=N` |
+| Диапазон | `0–140 °C` (0 выключает нагреватель) |
+| Пресеты по умолчанию | Выкл., 55 °C, 75 °C, 90 °C |
+| Конечная точка | `POST /printers/{id}/temperature/bed?target=N` |
 | G-code | `M140 S{target}` |
 
-### Chamber Temperature (heated-chamber models only)
+### Температура камеры (только модели с нагревом камеры) {#chamber-temperature-heated-chamber-models-only}
 
-Setting a chamber target via `M141` is only supported on printers with an **active chamber heater**: H2C, H2D, H2D Pro, H2S, X1E (up to 60 °C), X2D. Sensor-only models (X1C, P2S) still show the chamber reading but the temperature card is read-only there — the route 400s before sending the G-code to avoid a silent no-op at the firmware level.
+Установка целевой температуры камеры через `M141` поддерживается только принтерами с **активным нагревателем камеры**: H2C, H2D, H2D Pro, H2S, X1E (до 60 °C), X2D. Модели только с датчиком (X1C, P2S) показывают температуру, но карточка доступна лишь для чтения: конечная точка возвращает 400 до отправки G-code, чтобы избежать незаметного отсутствия действия на уровне прошивки.
 
-| Item | Value |
+| Параметр | Значение |
 |------|-------|
-| Bounds | `0–65 °C` (0 turns the heater off) |
-| Default presets | Off, 35 °C, 45 °C, 60 °C |
-| Endpoint | `POST /printers/{id}/temperature/chamber?target=N` |
+| Диапазон | `0–65 °C` (0 выключает нагреватель) |
+| Пресеты по умолчанию | Выкл., 35 °C, 45 °C, 60 °C |
+| Конечная точка | `POST /printers/{id}/temperature/chamber?target=N` |
 | G-code | `M141 S{target}` |
-| Capability flag | `supports_chamber_heater` in `GET /printers/{id}/status` |
+| Признак возможности | `supports_chamber_heater` в `GET /printers/{id}/status` |
 
-### Customizable Presets
+### Настраиваемые пресеты {#customizable-presets}
 
-The three quick-select values per temperature category (and per fan category — see [Fan Speed Control](#fan-speed-control) below) are user-configurable under **Settings → Workflow → Temperature & Fan Presets**. The fixed "Off" button is always shown and is not part of the configurable triple. Empty stored value falls back to the built-in defaults shown above.
+Три значения быстрого выбора для каждой категории температуры и вентилятора (см. [Управление скоростью вентиляторов](#fan-speed-control) ниже) можно изменить в разделе **Настройки → Рабочий процесс → Пресеты температуры и вентилятора**. Постоянная кнопка **Выкл.** отображается всегда и не входит в эту тройку. При пустом сохранённом значении используются приведённые выше встроенные значения.
 
-!!! note "Permission Required"
-    Requires the **Printer Control** permission (`printers:control`).
+!!! note "Необходимое разрешение"
+    Требуется разрешение **Управление принтером** (`printers:control`).
 
 ---
 
-## :material-speedometer: Print Speed Control
+## :material-speedometer: Управление скоростью печати {#print-speed-control}
 
-Change print speed presets on-the-fly during active prints without leaving the printer card.
+Меняйте пресеты скорости во время активной печати прямо на карточке принтера.
 
-### Speed Badge
+### Индикатор скорости {#speed-badge}
 
-A compact badge with a :material-gauge: gauge icon appears in the controls row, next to the fan status badges. It displays the current speed percentage at a glance.
+В строке управления рядом с индикаторами вентиляторов находится компактный значок :material-gauge:. Он показывает текущую скорость в процентах.
 
-| State | Appearance |
+| Состояние | Вид |
 |:-----:|------------|
-| **Active print** | Colored badge showing current speed % — click to open speed menu |
-| **No active print** | Dimmed/disabled badge — visible but not interactive |
+| **Печать выполняется** | Цветной индикатор с текущей скоростью в %; нажмите, чтобы открыть меню |
+| **Печать не выполняется** | Приглушённый неактивный индикатор виден, но не реагирует на нажатия |
 
-### Speed Presets
+### Пресеты скорости {#speed-presets}
 
-Click the speed badge to open a dropdown menu with four presets:
+Нажмите индикатор, чтобы открыть список из четырёх пресетов:
 
-| Preset | Speed | Mode | Description |
+| Пресет | Скорость | Режим | Описание |
 |--------|:-----:|:----:|-------------|
-| :material-tortoise: **Silent** | 50% | 1 | Quieter operation, reduced vibration |
-| :material-printer-3d: **Standard** | 100% | 2 | Default slicer speed |
-| :material-run-fast: **Sport** | 124% | 3 | Faster printing with good quality |
-| :material-lightning-bolt: **Ludicrous** | 166% | 4 | Maximum speed |
+| :material-tortoise: **Тихий** | 50% | 1 | Более тихая работа и меньшая вибрация |
+| :material-printer-3d: **Стандартный** | 100% | 2 | Скорость слайсера по умолчанию |
+| :material-run-fast: **Спорт** | 124% | 3 | Быстрая печать с хорошим качеством |
+| :material-lightning-bolt: **Безумный** | 166% | 4 | Максимальная скорость |
 
-### How to Change Speed
+### Изменение скорости {#how-to-change-speed}
 
-1. Locate the **speed badge** (:material-gauge: with percentage) in the controls row during an active print
-2. Click the badge to open the speed dropdown
-3. Select a preset — the command is sent immediately via MQTT
-4. The badge updates to reflect the new speed
+1. Во время печати найдите **индикатор скорости** (:material-gauge: с процентами) в строке управления
+2. Нажмите его, чтобы открыть список скоростей
+3. Выберите пресет — команда сразу отправится через MQTT
+4. Индикатор обновится и покажет новую скорость
 
-!!! tip "When to Adjust Speed"
-    - Use **Silent** for night prints or noise-sensitive environments
-    - Use **Sport** or **Ludicrous** for simple geometry where quality impact is minimal
-    - Drop to **Standard** for detailed sections or overhangs
+!!! tip "Когда менять скорость"
+    - Используйте **Тихий** для ночной печати или там, где важен низкий уровень шума
+    - Используйте **Спорт** или **Безумный** для простой геометрии с минимальным влиянием на качество
+    - Переключайтесь на **Стандартный** для детализированных участков и нависаний
 
-!!! note "Permission Required"
-    Requires the **Printer Control** permission (`printers:control`).
+!!! note "Необходимое разрешение"
+    Требуется разрешение **Управление принтером** (`printers:control`).
 
 ---
 
-## :material-snowflake: Airduct Mode (P2S / X2D / H2*)
+## :material-snowflake: Режим воздуховода (P2S / X2D / H2*) {#airduct-mode-p2s-x2d-h2}
 
-Switch the chamber airduct between **Cooling** and **Heating** modes from the printer card. Available only on P2S, X2D, H2D, H2C, and H2S — printers without an active airduct don't show the badge.
+Переключайте воздуховод камеры между режимами **Охлаждение** и **Нагрев** с карточки принтера. Доступно только на P2S, X2D, H2D, H2C и H2S; на принтерах без активного воздуховода индикатор не показывается.
 
-### Airduct Badge
+### Индикатор воздуховода {#airduct-badge}
 
-A compact badge appears in the controls row, immediately to the left of the print speed badge.
+Компактный индикатор находится в строке управления непосредственно слева от скорости печати.
 
-| Mode | Icon | Color | When to Use |
+| Режим | Значок | Цвет | Когда использовать |
 |------|:----:|:-----:|-------------|
-| **Cooling** | :material-snowflake: | sky blue | PLA / PETG / TPU — filters and cools chamber air |
-| **Heating** | :material-fire: | orange | ABS / ASA / PC / PA — circulates and heats chamber air, closes top exhaust flap |
+| **Охлаждение** | :material-snowflake: | голубой | PLA / PETG / TPU — фильтрует и охлаждает воздух камеры |
+| **Нагрев** | :material-fire: | оранжевый | ABS / ASA / PC / PA — циркулирует и нагревает воздух камеры, закрывает верхнюю вытяжную заслонку |
 
-Click the badge to open a dropdown and pick the mode. The command is sent via MQTT (`set_airduct`) and the badge updates immediately on confirmation.
+Нажмите индикатор и выберите режим из списка. Команда отправляется через MQTT (`set_airduct`), а после подтверждения индикатор сразу обновляется.
 
 ---
 
-## :material-arrow-all: Jog Controls
+## :material-arrow-all: Ручное перемещение {#jog-controls}
 
-Move the build plate, toolhead, or extruder directly from the printer card — useful for inspecting the plate through the camera after a print finishes, manually positioning the toolhead before loading filament, or purging the nozzle.
+Перемещайте стол, печатающую головку или экструдер прямо с карточки принтера. Это удобно для осмотра пластины через камеру после печати, ручного позиционирования головки перед загрузкой филамента или очистки сопла.
 
-The jog popover groups all three axes: **Z** (the build plate on most models, the toolhead on a bed-slinger), **XY** (toolhead), and **E** (extruder). The popover is disabled entirely while a print is running.
+Панель объединяет три оси: **Z** (стол на большинстве моделей и головка на принтере с подвижным столом), **XY** (головка) и **E** (экструдер). Во время печати панель полностью отключена.
 
-### Z-Jog
+### Перемещение по Z {#z-jog}
 
-A compact **move** badge (crossed arrows) appears in the controls row, between the print-speed badge and the Stop / Pause buttons. Click it to open a small popover containing:
+В строке управления между скоростью печати и кнопками остановки и паузы находится компактная кнопка **перемещения** со скрещёнными стрелками. Нажмите её, чтобы открыть панель с элементами:
 
-- **↑ / ↓** buttons that move the Z axis by the selected step
-- A **step selector** — `1 / 10 / 50 mm`
+- Кнопки **↑ / ↓** перемещают ось Z на выбранный шаг
+- **Выбор шага** — `1 / 10 / 50 mm`
 
-The badge is automatically disabled while a print is running.
+Во время печати кнопка автоматически отключается.
 
-#### Which way is up
+#### Где верх {#which-way-is-up}
 
-The arrows describe what you will see move, so what they do depends on the printer:
+Стрелки показывают видимое направление движения, поэтому их действие зависит от принтера:
 
-| Printer | What the Z axis carries | ↑ does | ↓ does |
+| Принтер | Что перемещается по Z | Действие ↑ | Действие ↓ |
 |---------|------------------------|---------|---------|
-| X1 / P1 / H2 / P2S / X2D | the build plate | plate rises toward the nozzle | plate drops away |
-| A1 / A1 Mini / A2L | the toolhead — the plate only moves in Y | toolhead lifts off the plate | toolhead descends toward it |
+| X1 / P1 / H2 / P2S / X2D | Стол | Стол поднимается к соплу | Стол опускается от сопла |
+| A1 / A1 Mini / A2L | Головка; стол перемещается только по Y | Головка поднимается от стола | Головка опускается к столу |
 
-On a bed-slinger the buttons are labelled *toolhead* rather than *plate*, because its plate cannot move in Z at all.
+На принтере с подвижным столом кнопки подписаны как управление головкой, а не столом, поскольку стол вообще не движется по Z.
 
-The **API is the other way round: it does not care which printer it is talking to.** `distance` is a signed nozzle-bed gap in millimetres — positive opens the gap, negative closes it — and it goes onto the wire as the G-code Z value unchanged. `Z` is the nozzle-to-bed distance on every Bambu model, whether the bed drops away from a fixed nozzle or the nozzle rises off a fixed bed, so one call means one physical outcome everywhere.
+**API действует наоборот: ему не важна модель принтера.** `distance` — расстояние между соплом и столом в миллиметрах со знаком: положительное увеличивает зазор, отрицательное уменьшает. Значение без изменений передаётся как Z в G-code. На всех моделях Bambu `Z` означает расстояние от сопла до стола, независимо от того, опускается ли стол относительно неподвижного сопла или поднимается сопло относительно неподвижного стола. Поэтому один вызов везде даёт одинаковый физический результат.
 
-!!! tip "Scripting the jog"
-    **Positive `distance` is always the safe direction, on every model.** If you are moving the nozzle out of the way before doing something else, send a positive number and you cannot be surprised by a printer you did not test against.
+!!! tip "Перемещение из скрипта"
+    **Положительное `distance` всегда означает безопасное направление на любой модели.** Если нужно отвести сопло перед другим действием, отправьте положительное число — это избавит от неожиданностей на непроверенной модели.
 
-!!! warning "Travel limits are not enforced on any manual move"
-    Bambu's firmware does not apply its soft endstops to G-code it receives over MQTT, which is how every remote control sends a jog. This was measured for #2579 by logging the exact bytes: an H2D already at its Z limit was sent a clean `G91 / G1 Z-1.00 F600 / G90` with no `M211`, and ran straight past it — while the printer's own touchscreen refuses the identical move, because the touchscreen goes through the motion planner and injected G-code does not. Push-status reports no axis position either, so Bambuddy cannot clamp the move on its side from where the axis actually is.
+!!! warning "Ограничения перемещения не применяются ни к одному ручному движению"
+    Прошивка Bambu не применяет программные концевые ограничения к G-code, полученному по MQTT, а именно так команды перемещения отправляются при удалённом управлении. Это измерили для #2579, записав точные байты: находящемуся у предела оси Z принтеру H2D отправили `G91 / G1 Z-1.00 F600 / G90` без `M211`, и он прошёл дальше предела. Сенсорный экран принтера отказывает в том же движении, поскольку работает через планировщик движения, в отличие от внедрённого G-code. Push-статус также не сообщает положения осей, поэтому Bambuddy не может ограничить движение по фактическому положению.
 
-    Nothing Bambuddy sends can be stopped by the firmware, so **a jog is on you.** Keep the step small as you approach the plate, and use auto-home first if the printer has not been homed since its last print. The jog popover carries the same warning.
+    Прошивка не может остановить отправленную Bambuddy команду, поэтому **ответственность за перемещение лежит на вас**. При приближении к столу используйте небольшой шаг и сначала выполните автоматическую парковку осей, если принтер не делал этого после последней печати. Такое же предупреждение есть и на панели перемещения.
 
-### XY-Jog (Toolhead)
+### Перемещение XY (головка) {#xy-jog-toolhead}
 
-Move the toolhead by a signed relative X/Y distance per click. No direction table needed here: X and Y describe where the nozzle goes relative to the print on every model. The firmware enforces the print volume, and Bambuddy clamps the request server-side as a first guard.
+Перемещайте головку на относительное расстояние X/Y со знаком при каждом нажатии. Таблица направлений здесь не нужна: X и Y на всех моделях описывают движение сопла относительно печати. Прошивка соблюдает границы области печати, а Bambuddy дополнительно ограничивает запрос на сервере.
 
-| Item | Value |
+| Параметр | Значение |
 |------|-------|
-| Bounds | `±200 mm per axis` (non-zero on at least one axis) |
-| Endpoint | `POST /printers/{id}/xy-jog?x=N&y=N` |
+| Диапазон | `±200 mm per axis` (хотя бы одна ось должна иметь ненулевое значение) |
+| Конечная точка | `POST /printers/{id}/xy-jog?x=N&y=N` |
 | G-code | `G91 / G1 XN YN F6000 / G90` |
 
-Omitted axes are dropped from the G-code — passing only `x` jogs X-only, etc.
+Пропущенные оси исключаются из G-code: передача только `x` переместит только X и т. д.
 
-### Extruder Jog
+### Перемещение экструдера {#extruder-jog}
 
-Manually extrude or retract filament. Positive distance extrudes, negative retracts. Use this to purge before a colour change or test that filament is loaded into the hotend.
+Подавайте или втягивайте филамент вручную. Положительное расстояние подаёт его, отрицательное — втягивает. Это удобно для очистки перед сменой цвета или проверки загрузки филамента в хотэнд.
 
-| Item | Value |
+| Параметр | Значение |
 |------|-------|
-| Bounds | `±100 mm` (non-zero) |
-| Endpoint | `POST /printers/{id}/extruder-jog?distance=N` |
+| Диапазон | `±100 mm` (ненулевое значение) |
+| Конечная точка | `POST /printers/{id}/extruder-jog?distance=N` |
 | G-code | `M83 / G1 EN F300 / M82` |
 
-!!! info "Cold extrusion is firmware-blocked"
-    Bambuddy doesn't enforce a minimum nozzle temperature client-side — Bambu's firmware refuses extrusion below its configured min-extrude temperature and the route returns a 500 on rejection. Setting a nozzle target via the [Temperature Setpoints](#temperature-setpoints) popover first is the recommended flow.
+!!! info "Холодная экструзия блокируется прошивкой"
+    Bambuddy не проверяет минимальную температуру сопла на стороне клиента: прошивка Bambu отказывает в экструзии ниже настроенного минимума, а конечная точка возвращает 500. Рекомендуется сначала задать температуру сопла через панель [Целевые температуры](#temperature-setpoints).
 
-### Permissions
+### Разрешения {#permissions_1}
 
-All jog and home actions require `printers:control`. With authentication enabled, anonymous and read-only users see the buttons greyed out.
+Для всех перемещений и парковки осей требуется `printers:control`. При включённой аутентификации анонимные пользователи и пользователи с доступом только для чтения видят неактивные кнопки.
 
-### Under the Hood
+### Внутреннее устройство {#under-the-hood}
 
-| Endpoint | G-code Sent |
+| Конечная точка | Отправляемый G-code |
 |----------|-------------|
 | `POST /printers/{id}/bed-jog?distance=N` | `G91 / G1 ZN F600 / G90` |
 | `POST /printers/{id}/xy-jog?x=N&y=N` | `G91 / G1 XN YN F6000 / G90` |
 | `POST /printers/{id}/extruder-jog?distance=N` | `M83 / G1 EN F300 / M82` |
 | `POST /printers/{id}/home-axes?axes=z ❘ xy ❘ all` | `G28` |
 
-The `distance` parameter is validated server-side: Z and XY are bounded to ±200 mm, extruder to ±100 mm. All three reject `0`.
+Параметр `distance` проверяется на сервере: для Z и XY предел составляет ±200 мм, для экструдера — ±100 мм. Все три команды отклоняют `0`.
 
-Two parameters that older versions of this page documented are gone, both because the clever behaviour they selected ended with the nozzle and the plate touching:
+Два параметра, описанных в старых версиях страницы, удалены, поскольку выбранное ими поведение приводило к соприкосновению сопла и стола:
 
-- **`&force=true` on the jog** wrapped the move in `M211 S0` / `M211 S1`. `M211 S0` turns the soft travel limits off *globally* — including on the printer's own touchscreen, until the next power cycle — and the UI sent it on every single jog. Bambuddy no longer touches `M211` at all. If a printer still runs past its limits from its own screen, an older build left them disabled at the firmware level: power-cycle it once to restore them.
-- **`axes=z` and `axes=xy`** used to home only that axis. Homing Z alone can drive the bed into a toolhead that was never parked, so the endpoint always runs the printer's full auto-home sequence. The parameter is still accepted and still ignored.
+- **`&force=true` при перемещении** оборачивал движение командами `M211 S0` / `M211 S1`. `M211 S0` отключает программные пределы *глобально*, в том числе для сенсорного экрана принтера, до следующего выключения питания; интерфейс отправлял команду при каждом перемещении. Bambuddy больше вообще не использует `M211`. Если принтер всё ещё проходит за пределы при управлении с экрана, старая версия оставила их отключёнными в прошивке: выключите и включите питание один раз, чтобы восстановить их.
+- **`axes=z` и `axes=xy`** ранее выполняли парковку только выбранной оси. Парковка одного Z может привести стол к головке, которая не была отведена, поэтому конечная точка всегда выполняет полную последовательность автоматической парковки принтера. Параметр всё ещё принимается, но игнорируется.
 
 ---
 
-## :material-door: SD Card &amp; Door Status Badges
+## :material-door: Индикаторы SD-карты и дверцы {#sd-card-door-status-badges}
 
-The top status row of every printer card now shows two compact icon-only badges so you can see drive and enclosure state at a glance.
+В верхней строке состояния каждой карточки принтера находятся два компактных значка для быстрой проверки накопителя и корпуса.
 
-| Badge | Green | Red / Yellow | Notes |
+| Индикатор | Зелёный | Красный / жёлтый | Примечания |
 |-------|:-----:|:------------:|-------|
-| :material-sd: **SD Card** | inserted | red when missing | All printers |
-| :material-door-closed: **Door** | closed | yellow when open | X1 / P1S / P2S / X2D / H2 series only |
+| :material-sd: **SD-карта** | Вставлена | Красный при отсутствии | Все принтеры |
+| :material-door-closed: **Дверца** | Закрыта | Жёлтый при открытии | Только серии X1 / P1S / P2S / X2D / H2 |
 
-Door state is detected from the right MQTT field per printer family (X1: `home_flag` bit 23, others: `stat` bit 23) and pushed live via WebSocket — no waiting for the next status poll.
-
----
-
-## :material-refresh: Force Refresh
-
-The printer card kebab menu has a **Force Refresh** entry that triggers an MQTT `pushall` request, asking the printer to re-broadcast its full status. Useful when a value looks stale and you don't want to fully reconnect (which would tear down the existing MQTT/FTP session).
+Состояние дверцы определяется по соответствующему полю MQTT для семейства принтера (X1: бит 23 `home_flag`, остальные: бит 23 `stat`) и передаётся в реальном времени через WebSocket, без ожидания следующего опроса.
 
 ---
 
-## :material-wrench: Maintenance Mode
+## :material-refresh: Принудительное обновление {#force-refresh}
 
-Take a printer out of service without removing it. Toggling Maintenance Mode tells Bambuddy to disconnect MQTT for that printer and stop including it in queue dispatch, the scheduler, model-based filament lookups, metrics, scheduled backups, and notification events. The printer card stays visible on the dashboard with an amber wrench banner and an **Exit** button, so the printer never disappears from your mental map — and you can flip it back in one click when the work is done.
+В меню с тремя точками карточки есть пункт **Принудительно обновить**, который отправляет запрос MQTT `pushall` и просит принтер повторно передать полное состояние. Это полезно, если значение выглядит устаревшим, а полностью переподключаться и разрывать текущую сессию MQTT/FTP не хочется.
 
-### When to use it
+---
 
-- **Parallel Bambuddy installs sharing the same hardware.** A Bambu printer only accepts one MQTT client at a time; if you run a dev install and a prod install pointing at the same printer, the second connection flickers online/offline burning CPU and bandwidth. Put the printer in Maintenance Mode on the install that isn't actively driving it.
-- **Under repair or awaiting parts.** Keep the card on the dashboard so the printer isn't forgotten, but make sure it can't pick up queued jobs while it's mid-disassembly.
-- **Temporary suspension** while you do hardware work, network changes, or anything else that would make scheduled prints fail.
+## :material-wrench: Режим обслуживания {#maintenance-mode}
 
-### How to toggle it
+Выведите принтер из эксплуатации, не удаляя его. Режим обслуживания сообщает Bambuddy, что нужно отключить MQTT этого принтера и исключить его из отправки очереди, планировщика, поиска филамента по модели, метрик, запланированных резервных копий и событий уведомлений. Карточка остаётся на панели с жёлтым предупреждением, значком ключа и кнопкой **Выйти**: принтер не пропадает из виду, а по окончании работ его можно вернуть одним нажатием.
 
-Three entry points, all wired to the same backend flag:
+### Когда использовать {#when-to-use-it}
 
-1. **Printer card three-dot menu → Enter / Exit maintenance mode** (wrench icon). One click, no dialog when the printer is idle.
-2. **Exit button in the in-card amber banner** — visible whenever the printer is in Maintenance Mode.
-3. **Edit Printer dialog → Maintenance mode** checkbox.
+- **Параллельные установки Bambuddy с одним оборудованием.** Принтер Bambu принимает только одного MQTT-клиента одновременно; если тестовая и рабочая установки обращаются к одному принтеру, второе соединение будет постоянно переключаться между онлайн и офлайн, расходуя процессорное время и трафик. Включите режим обслуживания в установке, которая сейчас не управляет принтером.
+- **Ремонт или ожидание деталей.** Оставьте карточку на панели, чтобы не забыть о принтере, но исключите отправку заданий, пока он разобран.
+- **Временная приостановка** для работ с оборудованием, изменения сети и других действий, из-за которых запланированная печать может завершиться ошибкой.
 
-If you try to enter Maintenance Mode while a print is in progress (`RUNNING` / `PAUSE`), Bambuddy shows a confirmation dialog before flipping the switch — disconnecting MQTT mid-print stops progress tracking and completion notifications for that job, which is almost never what you actually want. Idle / `FINISH` / `FAILED` states skip the dialog and toggle directly.
+### Включение и выключение {#how-to-toggle-it}
 
-### What happens behind the scenes
+Все три способа управляют одним серверным флагом:
 
-| Surface | Behaviour while in Maintenance Mode |
+1. **Меню с тремя точками карточки → Включить / выключить режим обслуживания** (значок ключа). Если принтер свободен, достаточно одного нажатия без диалога.
+2. **Кнопка выхода в жёлтом предупреждении карточки** видна, пока принтер находится в режиме обслуживания.
+3. Флажок **Режим обслуживания** в окне редактирования принтера.
+
+Если включить режим во время печати (`RUNNING` / `PAUSE`), Bambuddy сначала покажет подтверждение: отключение MQTT посреди печати прекращает отслеживание прогресса и уведомления о завершении этого задания, что обычно нежелательно. В состояниях ожидания / `FINISH` / `FAILED` переключение выполняется без диалога.
+
+### Что происходит внутри {#what-happens-behind-the-scenes}
+
+| Компонент | Поведение в режиме обслуживания |
 |---------|--------------------------------------|
-| MQTT client | Disconnected immediately on toggle, reconnected on exit |
-| Print queue dispatch | Printer is excluded from queue eligibility |
-| Scheduler / shortest-job-first | Printer is skipped |
-| Model-based filament lookup | Printer's filaments are not offered as overrides |
-| Maintenance dashboard (scheduled tasks) | Printer is excluded from due/warning counts |
-| Metrics + scheduled GitHub backup | Excluded |
-| Print picker (Print Modal / Add to Queue / Reprint) | Hidden by default; "Show inactive" toggle reveals greyed-out cards with an "(inactive)" label |
-| PrinterSelector + Edit Printer dialog | Both honour the flag, so an explicit pick is still possible from the modal |
-| HMS / queue / firmware status pills on the card | Hidden — the printer isn't connected to report them |
-| "Run Diagnostic" CTA | Suppressed — this is a deliberate state, not a connectivity bug |
+| Клиент MQTT | Сразу отключается при включении режима, подключается при выходе |
+| Отправка очереди печати | Принтер исключён из выбора |
+| Планировщик / кратчайшее задание первым | Принтер пропускается |
+| Поиск филамента по модели | Филамент принтера не предлагается для замены |
+| Панель обслуживания (запланированные задачи) | Принтер исключён из числа предстоящих и просроченных задач |
+| Метрики и запланированная резервная копия GitHub | Исключён |
+| Выбор принтера для печати (окно печати / добавление в очередь / повторная печать) | По умолчанию скрыт; переключатель «Показывать неактивные» показывает серые карточки с меткой «неактивен» |
+| PrinterSelector и окно редактирования принтера | Оба учитывают флаг, поэтому явный выбор в окне по-прежнему возможен |
+| Индикаторы HMS / очереди / прошивки на карточке | Скрыты, поскольку принтер не подключён для передачи этих данных |
+| Кнопка «Запустить диагностику» | Скрыта: это намеренное состояние, а не ошибка подключения |
 
-### Maintenance Mode vs. the Maintenance dashboard
+### Режим обслуживания и панель обслуживания {#maintenance-mode-vs-the-maintenance-dashboard}
 
-These two share a name but solve different problems:
+Названия похожи, но назначение различается:
 
-- **Maintenance Mode** (this section) — a per-printer **on/off state** for "is this printer currently in service?" Flip when you start a repair, flip back when it's done.
-- **Maintenance** dashboard (`/maintenance`) — interval-tracked **scheduled tasks** like *clean carbon rods every 50 hours*, *lubricate linear rails monthly*, *replace nozzle every 1000 hours*. See [Maintenance Tracking](maintenance.md) for the dashboard.
+- **Режим обслуживания** (этот раздел) — **состояние включено/выключено** для каждого принтера, показывающее, находится ли он в эксплуатации. Включайте при начале ремонта и выключайте по завершении.
+- Панель **Обслуживание** (`/maintenance`) — **задачи по расписанию** с интервалами, например очистка карбоновых стержней каждые 50 часов, ежемесячная смазка направляющих или замена сопла каждые 1000 часов. См. [Учёт обслуживания](maintenance.md).
 
-In practice they pair well: when you start a real maintenance task from the dashboard, flipping Maintenance Mode on the same printer keeps the queue from sending it work while you have the cover open.
+Эти функции хорошо дополняют друг друга: запуская реальное обслуживание на панели, включите режим обслуживания того же принтера, чтобы очередь не отправила задание, пока корпус открыт.
 
 ---
 
-## :material-fan: Fan Speed Control
+## :material-fan: Управление скоростью вентиляторов {#fan-speed-control}
 
-Monitor **and control** cooling fan speeds in real time directly from the printer card.
+Отслеживайте **и регулируйте** скорость вентиляторов в реальном времени прямо с карточки принтера.
 
-### Real-Time Fan Status
+### Текущее состояние вентиляторов {#real-time-fan-status}
 
-The Controls section displays compact fan badges showing real-time speeds:
+В разделе управления находятся компактные индикаторы текущих скоростей:
 
-| Fan | Icon | Color | Description |
+| Вентилятор | Значок | Цвет | Описание |
 |-----|:----:|:-----:|-------------|
-| **Part Cooling** | :material-fan: | Cyan | Cools printed layers (0-100%) |
-| **Auxiliary** | :material-weather-windy: | Blue | Chamber airflow (0-100%). **Left Auxiliary** on the X2D |
-| **Left Auxiliary** | :material-weather-windy: | Indigo | Second part cooling fan on the P2S (0-100%). **Right Auxiliary** on the X2D |
-| **Chamber** / **Exhaust** | :material-air-filter: | Green | Exhausts hot air from enclosure (0-100%) |
+| **Обдув детали** | :material-fan: | Бирюзовый | Охлаждает печатаемые слои (0–100%) |
+| **Дополнительный** | :material-weather-windy: | Синий | Поток воздуха в камере (0–100%). **Левый дополнительный** на X2D |
+| **Левый дополнительный** | :material-weather-windy: | Индиго | Второй вентилятор обдува детали на P2S (0–100%). **Правый дополнительный** на X2D |
+| **Камера** / **Вытяжка** | :material-air-filter: | Зелёный | Удаляет горячий воздух из корпуса (0–100%) |
 
-!!! info "P2S / X2D accessory fans"
-    The second auxiliary fan and the **Exhaust** fan are separate hardware on these models — optional add-on kits on the P2S, fitted from the factory on the X2D. Their badges appear **only when the printer reports the fan**, so a base P2S without the kits simply doesn't show them.
+!!! info "Дополнительные вентиляторы P2S / X2D"
+    Второй дополнительный вентилятор и **вытяжка** на этих моделях — отдельные устройства: на P2S это дополнительные комплекты, а на X2D они устанавливаются с завода. Их индикаторы появляются **только тогда, когда принтер сообщает о вентиляторе**, поэтому на базовом P2S без комплектов они отсутствуют.
 
-    The two models number their auxiliary fans the other way round. On the P2S the second fan is the left one, so the card shows **Left Auxiliary** then **Auxiliary**. On the X2D it is the right one, so the card shows **Left Auxiliary** then **Right Auxiliary**. Either way the badges read left to right.
+    Нумерация дополнительных вентиляторов у моделей противоположная. На P2S второй вентилятор левый, поэтому карточка показывает **Левый дополнительный**, затем **Дополнительный**. На X2D второй вентилятор правый, поэтому показаны **Левый дополнительный**, затем **Правый дополнительный**. В обоих случаях индикаторы читаются слева направо.
 
-    On P2S/X2D the enclosure fan badge is labelled **Exhaust** rather than **Chamber**, matching the naming used by the printer's own screen and by Bambu Studio. Other enclosed models (X1 / P1S / H2 series) keep the **Chamber** label and always show the badge.
+    На P2S/X2D вентилятор корпуса называется **Вытяжка**, а не **Камера**, как на экране самого принтера и в Bambu Studio. Для остальных закрытых моделей (серии X1 / P1S / H2) сохраняется название **Камера**, а индикатор отображается всегда.
 
-Badges are always visible with dynamic coloring:
+Индикаторы видны постоянно и меняют цвет:
 
-- **Active** (colored icon + text): Fan is running, shows current speed %
-- **Inactive** (gray icon + text): Fan is off, shows 0%
+- **Активен** (цветной значок и текст): вентилятор работает, показана текущая скорость в %
+- **Неактивен** (серый значок и текст): вентилятор выключен, показано 0%
 
-### Setting Fan Speeds
+### Установка скорости вентиляторов {#setting-fan-speeds}
 
-Click any fan badge to open a popover with quick-select buttons (Off + three user-configurable presets) plus a custom value input.
+Нажмите любой индикатор вентилятора, чтобы открыть панель с быстрым выбором (Выкл. и три настраиваемых пресета) и полем произвольного значения.
 
-| Item | Value |
+| Параметр | Значение |
 |------|-------|
-| Bounds | `0–100 %` (0 turns the fan off) |
-| Default presets | Off, 50 %, 75 %, 100 % |
-| Endpoint | `POST /printers/{id}/fan-speed?fan=part\|aux\|aux2\|chamber&speed=N` (`aux2` = the second auxiliary fan: left on the P2S, right on the X2D) |
-| Encoding | Percentage is converted server-side to a 0–255 PWM value before being sent to the printer |
+| Диапазон | `0–100 %` (0 выключает вентилятор) |
+| Пресеты по умолчанию | Выкл., 50 %, 75 %, 100 % |
+| Конечная точка | `POST /printers/{id}/fan-speed?fan=part\|aux\|aux2\|chamber&speed=N` (`aux2` — второй дополнительный вентилятор: левый на P2S, правый на X2D) |
+| Кодирование | Перед отправкой принтеру проценты преобразуются на сервере в значение ШИМ от 0 до 255 |
 
-The optimistic UI update applies the new speed to the badge immediately; an error toast plus revert fires if the printer rejects the command.
+При оптимистическом обновлении интерфейса новая скорость сразу появляется в индикаторе; если принтер отклонит команду, появится ошибка, а значение вернётся к прежнему.
 
-Customizable presets per fan category live under **Settings → Workflow → Temperature & Fan Presets**.
+Пресеты для каждой категории вентилятора настраиваются в разделе **Настройки → Рабочий процесс → Пресеты температуры и вентилятора**.
 
-!!! note "Permission Required"
-    Requires the **Printer Control** permission (`printers:control`).
-
----
-
-## :material-nozzle: Dual Nozzle Support
-
-For dual-nozzle printers (H2D, etc.):
-
-### Nozzle Status
-
-View both nozzles:
-
-- Current temperature
-- Target temperature
-- Heating status
-
-### Nozzle Selection
-
-See which nozzle is active during printing.
+!!! note "Необходимое разрешение"
+    Требуется разрешение **Управление принтером** (`printers:control`).
 
 ---
 
-## :material-power: Power Controls
+## :material-nozzle: Поддержка двух сопел {#material-nozzle-dual-nozzle-support}
 
-Control printer power state:
+Для принтеров с двумя соплами (H2D и др.):
 
-### Power Switch
+### Состояние сопел {#nozzle-status}
 
-If a smart plug is configured:
+Для обоих сопел отображаются:
 
-- **Power On** - Turn printer on
-- **Power Off** - Turn printer off
-- **Status** - View current power state
+- Текущая температура
+- Целевая температура
+- Состояние нагрева
 
-[:material-arrow-right: Smart plug setup](smart-plugs.md)
+### Выбор сопла {#nozzle-selection}
 
-### Auto Power Off
-
-Configure automatic shutdown:
-
-1. Enable **Auto Power Off** in settings
-2. Set **Cooldown Temperature** threshold
-3. Set **Cooldown Time** delay
-4. Printer powers off after print completes and cools
+Показывает активное во время печати сопло.
 
 ---
 
-## :material-printer-settings: Print Settings Override
+## :material-power: Управление питанием {#power-controls}
 
-During an active print, you can adjust:
+Управляйте питанием принтера:
 
-| Setting | Adjustable? |
+### Переключатель питания {#power-switch}
+
+Если настроена умная розетка:
+
+- **Включить** — включить принтер
+- **Выключить** — выключить принтер
+- **Состояние** — посмотреть текущее состояние питания
+
+[:material-arrow-right: Настройка умной розетки](smart-plugs.md)
+
+### Автоматическое выключение {#auto-power-off}
+
+Настройте автоматическое выключение:
+
+1. Включите **Автоматическое выключение** в настройках
+2. Задайте порог **Температура охлаждения**
+3. Задайте задержку **Время охлаждения**
+4. После завершения печати и охлаждения принтер выключится
+
+---
+
+## :material-printer-settings: Изменение настроек печати {#print-settings-override}
+
+Во время активной печати можно изменить:
+
+| Настройка | Можно изменить? |
 |---------|:-----------:|
-| Print speed preset | :material-check: |
-| Part cooling fan | :material-check: |
-| Chamber light | :material-check: |
-| Pause/Resume | :material-check: |
-| Cancel | :material-check: |
+| Пресет скорости печати | :material-check: |
+| Вентилятор обдува детали | :material-check: |
+| Освещение камеры | :material-check: |
+| Пауза / продолжение | :material-check: |
+| Отмена | :material-check: |
 
-!!! warning "Limited Changes"
-    Not all settings can be changed mid-print. Temperature and layer settings are locked.
+!!! warning "Ограниченные изменения"
+    Во время печати можно изменить не все параметры. Температурные настройки и параметры слоёв заблокированы.
 
 ---
 
-## :material-lightbulb: Tips
+## :material-lightbulb: Советы {#tips}
 
-!!! tip "Chamber Management"
-    For ABS/ASA, keep the chamber warm. Open doors for PLA to prevent heat creep.
+!!! tip "Управление камерой"
+    Для ABS/ASA поддерживайте тепло в камере. Для PLA откройте дверцы, чтобы избежать перегрева филамента в тракте подачи.
 
-!!! tip "AI Detection Value"
-    AI detection has saved countless prints. The small time cost is worth the protection.
+!!! tip "Польза обнаружения с помощью ИИ"
+    Обнаружение ошибок с помощью ИИ спасло множество печатей. Небольшие затраты времени оправданы дополнительной защитой.
 
-!!! tip "Regular Calibration"
-    Run bed leveling from the printer's touchscreen after major moves or every few weeks for best first layers.
+!!! tip "Регулярная калибровка"
+    Для получения качественного первого слоя запускайте выравнивание стола с сенсорного экрана принтера после крупных перемещений или раз в несколько недель.
