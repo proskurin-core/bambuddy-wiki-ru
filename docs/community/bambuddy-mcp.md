@@ -1,33 +1,33 @@
 ---
-title: Bambuddy MCP Server
-description: Model Context Protocol server that exposes Bambuddy's REST API as tools for AI assistants
+title: Сервер Bambuddy MCP
+description: Сервер Model Context Protocol, предоставляющий REST API Bambuddy в виде инструментов для ИИ-ассистентов
 ---
 
-# Bambuddy MCP Server
+# Сервер Bambuddy MCP {#bambuddy-mcp-server}
 
-An [MCP](https://modelcontextprotocol.io) server that exposes the full Bambuddy REST API as tools for AI assistants like Claude Desktop, Claude Code, and other MCP-compatible clients. Once configured, you can talk to your printers in plain language &mdash; "what's printing right now?", "add the benchy to the queue", "show me a camera snapshot of printer 3", "list my recent archives".
+[MCP](https://modelcontextprotocol.io)-сервер предоставляет полный REST API Bambuddy в виде инструментов для ИИ-ассистентов, таких как Claude Desktop, Claude Code и другие совместимые с MCP клиенты. После настройки вы можете обращаться к принтерам обычным языком: «Что сейчас печатается?», «Добавь benchy в очередь», «Покажи снимок с камеры принтера 3», «Покажи недавние архивы».
 
-The server fetches Bambuddy's OpenAPI spec at startup and dynamically generates tools for **430+ endpoints** &mdash; without flooding the assistant's context window. By default it exposes a small set of meta-tools (`list_categories`, `search_tools`, `execute_tool`) so the AI can discover and call endpoints on demand. Binary responses like camera snapshots come back as native MCP `ImageContent` so the assistant can actually see and process them.
+При запуске сервер получает спецификацию OpenAPI Bambuddy и динамически создаёт инструменты для **более 430 конечных точек**, не заполняя контекстное окно ассистента. По умолчанию он предоставляет небольшой набор метаинструментов (`list_categories`, `search_tools`, `execute_tool`), с помощью которых ИИ может находить и вызывать конечные точки по мере необходимости. Двоичные ответы, например снимки с камеры, возвращаются как нативный `ImageContent` MCP, чтобы ассистент мог их видеть и обрабатывать.
 
-**Author:** [MrMebelMan](https://github.com/MrMebelMan)
-**Repository:** [github.com/MrMebelMan/bambuddy-mcp](https://github.com/MrMebelMan/bambuddy-mcp)
-**License:** GPL-3.0
-**Status:** Independent community project
-
----
-
-## What you need
-
-- Python 3.10+ and [`uv`](https://docs.astral.sh/uv/)
-- A running Bambuddy instance reachable from wherever you run the MCP server.
-- A Bambuddy [API key](../features/api-keys.md) for authentication.
-- An MCP-compatible client &mdash; Claude Desktop, Claude Code, or any other host that supports the Model Context Protocol.
+**Автор:** [MrMebelMan](https://github.com/MrMebelMan)  
+**Репозиторий:** [github.com/MrMebelMan/bambuddy-mcp](https://github.com/MrMebelMan/bambuddy-mcp)  
+**Лицензия:** GPL-3.0  
+**Статус:** независимый проект сообщества
 
 ---
 
-## Quick example
+## Что понадобится {#what-you-need}
 
-Add the server to your Claude Desktop or Claude Code config:
+- Python 3.10+ и [`uv`](https://docs.astral.sh/uv/)
+- Работающий экземпляр Bambuddy, доступный из места запуска MCP-сервера.
+- [Ключ API](../features/api-keys.md) Bambuddy для аутентификации.
+- Совместимый с MCP клиент: Claude Desktop, Claude Code или другой хост с поддержкой Model Context Protocol.
+
+---
+
+## Простой пример {#quick-example}
+
+Добавьте сервер в конфигурацию Claude Desktop или Claude Code:
 
 ```json
 {
@@ -44,32 +44,32 @@ Add the server to your Claude Desktop or Claude Code config:
 }
 ```
 
-Then ask your assistant questions like:
+Затем задавайте ассистенту вопросы, например:
 
-- *"What printers are connected?"*
-- *"Show me the status of my A1 Mini."*
-- *"Add the benchy to the print queue."*
-- *"Turn on the chamber light on printer 2."*
-- *"Show me a camera snapshot from printer X."*
+- *«Какие принтеры подключены?»*
+- *«Покажи состояние моего A1 Mini.»*
+- *«Добавь benchy в очередь печати.»*
+- *«Включи освещение камеры на принтере 2.»*
+- *«Покажи снимок с камеры принтера X.»*
 
-Full installation, NixOS notes, and the complete environment-variable reference are in the [project README](https://github.com/MrMebelMan/bambuddy-mcp#readme).
-
----
-
-## Privacy controls
-
-Because AI assistants surface tool responses back into the conversation, the MCP server includes opt-in censoring for sensitive fields. By default it masks `access_code` and partially masks `serial_number` in API responses. Filename masking is also available via `BAMBUDDY_CENSOR_MODEL_FILENAME` if you'd rather not have model names ending up in chat logs. See the README for the full list of toggles.
+Полные инструкции по установке, замечания для NixOS и справочник по переменным окружения находятся в [README проекта](https://github.com/MrMebelMan/bambuddy-mcp#readme).
 
 ---
 
-## How it talks to Bambuddy
+## Настройки конфиденциальности {#privacy-controls}
 
-Bambuddy MCP authenticates via a standard Bambuddy [API key](../features/api-keys.md) and uses only the public REST API documented at `/openapi.json`. No internal endpoints are touched, so the integration stays stable across Bambuddy releases &mdash; new endpoints added in Bambuddy automatically become available as tools the next time the MCP server starts.
+Поскольку ответы инструментов ИИ-ассистенты показывают в беседе, MCP-сервер поддерживает дополнительное скрытие чувствительных полей. По умолчанию он скрывает `access_code` и частично скрывает `serial_number` в ответах API. Через `BAMBUDDY_CENSOR_MODEL_FILENAME` также можно включить скрытие имён файлов, если вы не хотите, чтобы названия моделей попадали в журналы чата. Полный список переключателей приведён в README.
 
 ---
 
-## Support
+## Взаимодействие с Bambuddy {#how-it-talks-to-bambuddy}
 
-Issues and feature requests for the MCP server itself belong on the [project's GitHub repository](https://github.com/MrMebelMan/bambuddy-mcp/issues). The Bambuddy team doesn't maintain bambuddy-mcp.
+Bambuddy MCP проходит аутентификацию с обычным [ключом API](../features/api-keys.md) Bambuddy и использует только публичный REST API, описанный в `/openapi.json`. Внутренние конечные точки не используются, поэтому интеграция остаётся стабильной при обновлениях Bambuddy: новые конечные точки автоматически станут доступны как инструменты при следующем запуске MCP-сервера.
 
-For Bambuddy-side questions (API key setup, finding printer IDs, etc.), use the [Discord](https://discord.gg/aFS3ZfScHM).
+---
+
+## Поддержка {#support}
+
+Сообщения об ошибках и запросы функций для MCP-сервера следует направлять в [репозиторий проекта на GitHub](https://github.com/MrMebelMan/bambuddy-mcp/issues). Команда Bambuddy не сопровождает bambuddy-mcp.
+
+Вопросы о Bambuddy (настройка ключа API, поиск идентификаторов принтеров и т. д.) можно задать в [Discord](https://discord.gg/aFS3ZfScHM).

@@ -1,70 +1,70 @@
 ---
-title: Announcements
-description: Messages from the Bambuddy maintainers, and exactly what Bambuddy fetches to show them
+title: Объявления
+description: Сообщения сопровождающих Bambuddy и сведения о том, что приложение загружает для их показа
 ---
 
-# Announcements
+# Объявления {#announcements}
 
-Short messages from the Bambuddy maintainers, shown inside Bambuddy: security fixes, breaking changes, new releases and calls for testers.
-
----
-
-## :material-bullhorn: Where they show up
-
-- **Sidebar:** a megaphone icon appears at the bottom of the sidebar, next to the System icon (directly above it when the sidebar is collapsed), for everyone who may see announcements, also when there are none. A green badge shows how many you haven't read.
-- **List:** click it to open the list. Each message is one line (level, date, title) and opens when you click it. Unread messages have a green dot and a **New** label; opening a message marks it read.
-- **Banner:** **important** and **critical** messages also show a banner above the page until you click **Got it** or open the message (**Read more** opens it straight away). **Info** messages never show a banner.
-
-Read state is stored per user on the server, so a message you dismissed stays dismissed in every browser you sign in with.
-
-**Earlier:** messages past their expiry move to a collapsed **Earlier** section at the bottom of the list, so you can still open them. History covers the last 12 months, up to 50 messages; it never counts as unread or shows a banner. Messages the maintainers **withdraw** (because they were wrong) are removed everywhere and don't appear in the history.
-
-Messages are plain text. A message can carry one link, and only to `github.com` or `bambuddy.cool` (including `wiki.bambuddy.cool`); Bambuddy refuses any other link.
+Короткие сообщения сопровождающих Bambuddy отображаются внутри приложения: исправления безопасности, несовместимые изменения, новые выпуски и приглашения к тестированию.
 
 ---
 
-## :material-shield-check: What Bambuddy fetches
+## :material-bullhorn: Где они отображаются {#where-they-show-up}
 
-Bambuddy downloads one file, a minute after startup and then every 6 hours:
+- **Боковая панель:** значок мегафона появляется внизу панели рядом со значком системы (непосредственно над ним, когда панель свёрнута) у всех, кому разрешено видеть объявления, даже если их нет. Зелёный значок показывает количество непрочитанных сообщений.
+- **Список:** нажмите на значок, чтобы открыть список. Каждое сообщение занимает одну строку (уровень, дата, заголовок) и открывается нажатием. Непрочитанные сообщения отмечены зелёной точкой и меткой **Новое**; после открытия сообщение считается прочитанным.
+- **Баннер:** **важные** и **критические** сообщения также показываются в баннере над страницей, пока вы не нажмёте **Понятно** или не откроете сообщение (кнопка **Подробнее** сразу открывает его). Для информационных сообщений баннер не показывается.
+
+Состояние прочтения хранится на сервере отдельно для каждого пользователя, поэтому скрытое сообщение останется скрытым во всех браузерах, в которых вы войдёте в систему.
+
+**Ранее:** сообщения с истёкшим сроком действия перемещаются в свёрнутый раздел **Ранее** внизу списка, и их по-прежнему можно открыть. История охватывает последние 12 месяцев и содержит до 50 сообщений; они не считаются непрочитанными и не показываются в баннере. Сообщения, которые сопровождающие **отозвали** из-за ошибки, удаляются везде и в истории не появляются.
+
+Сообщения состоят из обычного текста. Сообщение может содержать одну ссылку и только на `github.com` или `bambuddy.cool` (включая `wiki.bambuddy.cool`); любую другую ссылку Bambuddy отклонит.
+
+---
+
+## :material-shield-check: Что загружает Bambuddy {#what-bambuddy-fetches}
+
+Bambuddy загружает один файл через минуту после запуска и затем каждые 6 часов:
 
 ```
 https://raw.githubusercontent.com/maziggy/bambuddy-notifications/main/feed.json
 ```
 
-- It is a plain request to GitHub, the same host the update check uses. **No Bambuddy server is contacted.**
-- **Nothing about your install is sent:** no ID, no version, no settings.
-- Whether a message applies to you (Bambuddy version, beta channel, install type) is decided by your install, from what is in the file.
+- Это обычный запрос к GitHub — тому же хосту, который используется для проверки обновлений. **К серверу Bambuddy обращений нет.**
+- **Сведения о вашей установке не отправляются:** ни идентификатор, ни версия, ни настройки.
+- Применимость сообщения к вашей установке (версия Bambuddy, бета-канал, тип установки) определяется самой установкой на основании содержимого файла.
 
-A new message therefore reaches a running install within about 6 hours (GitHub can also cache the file for up to 5 minutes). Once it arrives, it appears on any open Bambuddy page without a reload.
+Таким образом, новое сообщение поступает в работающую установку примерно за 6 часов (GitHub также может кэшировать файл до 5 минут). После получения оно появляется на любой открытой странице Bambuddy без перезагрузки.
 
-The file is public, and its [history](https://github.com/maziggy/bambuddy-notifications/commits/main) is the full record of every message ever sent, edited or withdrawn.
+Файл общедоступен, а его [история](https://github.com/maziggy/bambuddy-notifications/commits/main) содержит полную запись всех отправленных, изменённых и отозванных сообщений.
 
-### Why a file on GitHub can't be faked
+### Почему файл на GitHub нельзя подделать {#why-a-file-on-github-cant-be-faked}
 
-The file is signed with an Ed25519 key held by the maintainers; the matching public key is built into Bambuddy. A file that doesn't verify is ignored, so neither a copy of the repository nor anyone between you and GitHub can make Bambuddy show a message.
+Файл подписан ключом Ed25519, которым владеют сопровождающие; соответствующий открытый ключ встроен в Bambuddy. Файл, не прошедший проверку, игнорируется, поэтому ни копия репозитория, ни посредник между вами и GitHub не смогут заставить Bambuddy показать сообщение.
 
-Each file also carries a number that only goes up. Bambuddy remembers the highest one it has seen and ignores anything older, so an old file can't be served again to bring back a withdrawn message.
+Каждый файл также содержит номер, который может только увеличиваться. Bambuddy запоминает наибольший увиденный номер и игнорирует более старые файлы, поэтому повторно подать старый файл, чтобы вернуть отозванное сообщение, нельзя.
 
-If the download fails or the file is rejected, Bambuddy keeps showing the last good list. Offline and air-gapped installs simply never get any.
+Если загрузка не удалась или файл отклонён, Bambuddy продолжает показывать последний корректный список. Автономные и изолированные от сети установки просто не получают сообщений.
 
 ---
 
-## :material-cog: Settings
+## :material-cog: Настройки {#settings}
 
-**Settings → General → Updates**, section **Announcements**
+**Настройки → Общие → Обновления**, раздел **Объявления**
 
-| Setting | Default | |
+| Настройка | По умолчанию | |
 |---|---|---|
-| Receive announcements | On | Off: Bambuddy fetches nothing and shows nothing. |
-| Show to all users | Off | Off: only administrators see them. Has no effect while authentication is off, where whoever runs Bambuddy sees them. |
+| Получать объявления | Включено | Если выключено, Bambuddy ничего не загружает и не показывает. |
+| Показывать всем пользователям | Выключено | Если выключено, объявления видят только администраторы. При отключённой аутентификации настройка не влияет на показ: объявления видит тот, кто работает с Bambuddy. |
 
 ---
 
-## :material-file-document: What may be sent
+## :material-file-document: Какие сообщения могут отправляться {#what-may-be-sent}
 
-- Security notices and urgent bug fixes
-- Breaking changes and migration notes
-- New releases
-- Calls for testers
+- Уведомления о безопасности и срочные исправления ошибок
+- Несовместимые изменения и инструкции по миграции
+- Новые выпуски
+- Приглашения к тестированию
 
-Never advertising, and never anything that asks you to enter data.
+Реклама и сообщения с просьбой ввести данные никогда не отправляются.

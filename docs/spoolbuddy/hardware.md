@@ -1,55 +1,53 @@
 ---
-title: Hardware Requirements
-description: What you need to build a SpoolBuddy
+title: Требования к оборудованию
+description: Что нужно для сборки SpoolBuddy
 ---
 
-# Hardware Requirements
+# Требования к оборудованию {#hardware-requirements}
 
 ---
 
-## :material-check-all: Required Components
+## :material-check-all: Необходимые компоненты {#required-components}
 
-| Component | Recommendation | Notes |
+| Компонент | Рекомендация | Примечания |
 |----------|----------------|-------|
-| **Raspberry Pi** | Pi 4/Pi 5 recommended | Must run Raspberry Pi OS (Debian-based). Other models may work but are less validated. |
-| **Display** | LAFVIN 7\" HDMI Touch 1024x600 | Kiosk is optimized for touch interaction. This kit includes Raspberry Pi adapters (angled HDMI/micro USB style adapters). |
-| **NFC reader** | PN5180 module (SPI) | Current daemon driver targets PN5180 (`SPI`, manual CS). |
-| **Scale ADC** | NAU7802 module (I2C) | Uses I2C bus 1 (`/dev/i2c-1`, address `0x2A`). |
-| **Load cell** | Compatible load cell for your platform | Required for live spool weight readings. |
-| **Power supply** | Stable Pi PSU for your model | Undervoltage causes unstable kiosk/device behavior. |
-| **Angled USB-C connector** | 90° angled USB-C connector | Plugs into the Pi's USB-C power port. The cable exits through the cutout on the back of the case. |
+| **Raspberry Pi** | Рекомендуется Pi 4/Pi 5 | Должна работать Raspberry Pi OS (на базе Debian). Другие модели могут работать, но проверены меньше. |
+| **Дисплей** | LAFVIN 7" HDMI Touch 1024x600 | Киоск оптимизирован для сенсорного управления. В комплект входят адаптеры для Raspberry Pi (угловые адаптеры HDMI/micro USB). |
+| **NFC-считыватель** | Модуль PN5180 (SPI) | Текущий драйвер демона рассчитан на PN5180 (`SPI`, ручной CS). |
+| **АЦП весов** | Модуль NAU7802 (I2C) | Использует шину I2C 1 (`/dev/i2c-1`, адрес `0x2A`). |
+| **Весовой датчик** | Датчик, совместимый с вашей платформой | Необходим для получения текущего веса катушки. |
+| **Блок питания** | Стабильный блок питания для вашей модели Pi | Пониженное напряжение приводит к нестабильной работе киоска и устройства. |
+| **Угловой разъём USB-C** | Угловой разъём USB-C на 90° | Подключается к порту питания USB-C на Pi. Кабель выходит через вырез на задней стороне корпуса. |
 
 ---
 
-## :material-memory: NFC Tags
+## :material-memory: NFC-метки {#nfc-tags}
 
-SpoolBuddy can interact with:
+SpoolBuddy поддерживает:
 
-- **Bambu Lab RFID spools** (MIFARE Classic)
-- **NTAG213/215/216** stickers/cards for writable custom tags
-
----
-
-## :material-connection: Wiring Reference
-
-Full pin-by-pin wiring tables and ASCII diagrams are documented on:
-
-- [Wiring Diagrams](wiring-diagrams.md)
-
-!!! warning "Dual voltage requirement"
-    The PN5180 board requires **both** `5V` and `3.3V` connections. Do **not** feed 5V into the 3V3 pin — this will damage the module.
-
-!!! info "Manual CS"
-    SpoolBuddy uses **manual chip-select on GPIO23** (`dtoverlay=spi0-0cs`) to satisfy PN5180 timing requirements.
+- **Катушки Bambu Lab с RFID** (MIFARE Classic)
+- Наклейки и карты **NTAG213/215/216** для записи собственных меток
 
 ---
 
-## :material-wrench: Practical Build Notes
+## :material-connection: Схемы подключения {#wiring-reference}
 
-- **Module side (PN5180, NAU7802):** Solder wires directly to the pads — easy and reliable.
-- **Pi GPIO side:** Use crimped 2.54 mm connectors (HARWIN M20 or similar). Dupont connectors work but can cause intermittent errors — verify contact with a multimeter. Soldering to GPIO pins is possible but risky; a solder bridge can permanently damage the board.
-- Keep NFC wiring short and clean to reduce signal issues.
-- Ensure Pi user/service has access to `gpio`, `spi`, `i2c`, and `video` groups.
-- If you use DSI backlight control, `video` group access is required for brightness writes.
+Полные таблицы распиновки и текстовые схемы приведены на странице:
 
+- [Схемы подключения](wiring-diagrams.md)
 
+!!! warning "Необходимы два напряжения"
+    Плате PN5180 необходимы **оба** подключения: `5V` и `3.3V`. **Не подавайте** 5 В на вывод 3V3 — это повредит модуль.
+
+!!! info "Ручной CS"
+    Для соблюдения требований PN5180 к временным параметрам SpoolBuddy использует **ручной выбор микросхемы на GPIO23** (`dtoverlay=spi0-0cs`).
+
+---
+
+## :material-wrench: Практические советы по сборке {#practical-build-notes}
+
+- **Со стороны модулей (PN5180, NAU7802):** припаяйте провода непосредственно к контактным площадкам — это просто и надёжно.
+- **Со стороны GPIO Pi:** используйте обжимные разъёмы с шагом 2,54 мм (HARWIN M20 или аналогичные). Разъёмы Dupont подходят, но могут вызывать периодические ошибки — проверьте контакт мультиметром. Припаять провода к выводам GPIO возможно, но рискованно: перемычка из припоя может необратимо повредить плату.
+- Делайте провода NFC короткими и аккуратно укладывайте их, чтобы уменьшить проблемы с сигналом.
+- Убедитесь, что пользователь или служба Pi имеет доступ к группам `gpio`, `spi`, `i2c` и `video`.
+- При управлении подсветкой через DSI доступ к группе `video` необходим для изменения яркости.
