@@ -1,153 +1,153 @@
 ---
-title: Backup & Restore
-description: Database backup and restore
+title: Резервное копирование и восстановление
+description: Резервное копирование и восстановление базы данных
 ---
 
-# Backup & Restore
+# Резервное копирование и восстановление {#backup-restore}
 
-Protect your print history with database backups and restore when needed.
-
----
-
-## :material-backup-restore: Overview
-
-Bambuddy's backup system:
-
-- **Full database backup** - All your data in one file
-- **User settings included** - Preferences preserved
-- **Archives included** - Print history saved
-- **ZIP format** - Includes 3MF files and thumbnails when selected
-- **Git backup** - Automatic cloud backup of profiles and settings to a Git provider
-- **Selective Git restore** - Pull individual categories back from any backup commit
+Защитите историю печати с помощью резервных копий базы данных и восстанавливайте её при необходимости.
 
 ---
 
-## :material-source-repository-multiple: Git Profile Backup
+## :material-backup-restore: Обзор {#overview}
 
-Automatically back up your K-profiles, cloud profiles, app settings, spool inventory, and print archive history to a Git repository.
+Система резервного копирования Bambuddy:
 
-Bambuddy supports multiple Git providers. Choose one below and follow the setup steps.
+- **Полная копия базы данных** — все данные в одном файле
+- **Пользовательские настройки** — предпочтения сохраняются
+- **Архивы** — история печати сохраняется
+- **Формат ZIP** — при выборе включает файлы 3MF и миниатюры
+- **Резервная копия в Git** — автоматическое облачное копирование профилей и настроек в Git
+- **Выборочное восстановление из Git** — возврат отдельных категорий из любого коммита резервной копии
 
-!!! danger "Private repositories only"
-    Bambuddy refuses to back up to a public (or GitLab "internal") repository — the saved data includes your settings, print history, spool inventory and your printers' serial numbers. The save endpoint runs a privacy check on every config change and returns HTTP 400 if the target isn't confirmed private. Scheduled backup runs re-check before each push, so flipping a previously-private repo to public in your provider's UI also aborts the next run with a clear failure log entry. There is no opt-out. If you have an existing public bambuddy-backup repository on GitHub or elsewhere, **delete it now** and create a fresh private one.
+---
 
-### Setup
+## :material-source-repository-multiple: Резервное копирование профилей в Git {#git-profile-backup}
 
-#### :material-github: GitHub
+Автоматически сохраняйте K-профили, облачные профили, настройки приложения, учёт катушек и историю архива печати в репозиторий Git.
 
-1. **Create a GitHub repository** (**must be private** — see warning above)
-2. **Generate a Personal Access Token (PAT)**:
-    - Go to [GitHub Personal Access Tokens](https://github.com/settings/tokens){ target="_blank" rel="noopener" } (`https://github.com/settings/tokens`)
-    - Click **Generate new token**, then **Generate new token (classic)**
-	- Choose your expiration timeframe (`No expiration` is recommended)
-	- Under **Select scopes**, check `repo` (required for repository access and commits)
-3. **Configure in Bambuddy**:
-    - Go to **Settings** → **Backup & Restore**
-    - Enter your repository URL (e.g., `https://github.com/username/bambuddy-backup`)
-    - Enter your PAT (from Step 2)
-    - Click **Test Connection** to verify
+Bambuddy поддерживает несколько Git-провайдеров. Выберите подходящий и выполните шаги настройки.
 
-!!! note "GitHub Authentication"
-    Instead of *Classic Tokens*, you can use the *Fine-grained tokens*. Be sure to choose read access for `Metadata`. It will automatically include `Read and Write access to code` upon creation.
+!!! danger "Только приватные репозитории"
+    Bambuddy не выполняет резервное копирование в публичный репозиторий (или репозиторий GitLab с видимостью internal): сохраняемые данные включают настройки, историю печати, учёт катушек и серийные номера принтеров. При каждом изменении конфигурации выполняется проверка приватности; если приватный статус не подтверждён, возвращается HTTP 400. Перед каждой отправкой по расписанию проверка повторяется. Поэтому изменение приватного репозитория на публичный в интерфейсе провайдера прервёт следующий запуск с понятной записью об ошибке в журнале. Отключить эту проверку нельзя. Если у вас уже есть публичный репозиторий bambuddy-backup на GitHub или другом сервисе, **удалите его сейчас** и создайте новый приватный.
 
-#### :material-gitlab: GitLab
+### Настройка {#setup}
 
-1. **Create a GitLab repository** (**must be private** — see warning above)
-2. **Generate a Personal Access Token (PAT)**:
-    - Go to [GitLab Personal Access Tokens](https://gitlab.com/-/user_settings/personal_access_tokens){ target="_blank" rel="noopener" } (`https://gitlab.com/-/user_settings/personal_access_tokens`)
-	- Under **Personal access tokens**,  click **Generate token**, then **Legacy token**
-    - Under scopes, check the `api` scope (required for repository access and commits)
-3. **Configure in Bambuddy**:
-    - Go to **Settings** → **Backup & Restore**
-    - Select **GitLab** from the provider dropdown
-    - Enter your repository URL (e.g., `https://gitlab.com/username/bambuddy-backup`)
-	- If you are hosting locally without HTTPS, be sure to check the `Allow insecure HTTP` checkbox
-    - Enter your PAT (from Step 2)
-    - Click **Test Connection** to verify
+#### :material-github: GitHub {#github}
 
-!!! note "GitLab Authentication"
-    Project Access Tokens may also be used. Be sure to give your token the `api` and `write_repository` scopes, otherwise you'll run into access failures.
+1. **Создайте репозиторий GitHub** (**обязательно приватный** — см. предупреждение выше)
+2. **Создайте персональный токен доступа (PAT)**:
+    - Откройте [GitHub Personal Access Tokens](https://github.com/settings/tokens){ target="_blank" rel="noopener" } (`https://github.com/settings/tokens`)
+    - Нажмите **Generate new token**, затем **Generate new token (classic)**
+	- Выберите срок действия (рекомендуется `No expiration`)
+	- В разделе **Select scopes** отметьте `repo` (необходимо для доступа к репозиторию и коммитов)
+3. **Настройте Bambuddy**:
+    - Откройте **Настройки** → **Резервное копирование и восстановление**
+    - Введите URL репозитория (например, `https://github.com/username/bambuddy-backup`)
+    - Введите PAT из шага 2
+    - Нажмите **Проверить подключение**
 
-#### :material-git: Gitea
+!!! note "Аутентификация GitHub"
+    Вместо *Classic Tokens* можно использовать *Fine-grained tokens*. Обязательно выберите доступ на чтение к `Metadata`. При создании автоматически будет включён `Read and Write access to code`.
 
-1. **Create a new repository** (**must be private** — see warning above)
-2. **Generate a Personal Access Token (PAT)**:
-    - Go to **Settings** → **Applications**
-    - Under **Manage Access Tokens**, expand **Generate New Token**
-    - Enter a name for the token
-    - Under **Repository and organization access**, choose `All (public, private, and limited)`
-    - Under **Repository permissions**, set **repository** to `Read and write`
-    - Click **Generate token**
-3. **Configure in Bambuddy**:
-    - Go to **Settings** → **Backup & Restore**
-    - Select **Gitea** from the provider dropdown
-    - Enter your repository URL (e.g., `https://example.com/username/bambuddy-backup`)
-	- If your instance is served under a URL path (a `ROOT_URL` subpath such as `https://example.com/gitea`), include that prefix in the URL — e.g. `https://example.com/gitea/username/bambuddy-backup`
-	- If you are hosting locally without HTTPS, be sure to check the `Allow insecure HTTP` checkbox
-    - Enter your PAT (from Step 2)
-	- Be sure to specify the right **Branch** (main/master/etc)
-    - Click **Test Connection** to verify
+#### :material-gitlab: GitLab {#gitlab}
 
-!!! info "Tested Versions"
-    Bambuddy has been tested and verified against **Gitea 1.24.x, 1.25.x, and 1.26.x**. Other versions may work but are not officially supported.
+1. **Создайте репозиторий GitLab** (**обязательно приватный** — см. предупреждение выше)
+2. **Создайте персональный токен доступа (PAT)**:
+    - Откройте [GitLab Personal Access Tokens](https://gitlab.com/-/user_settings/personal_access_tokens){ target="_blank" rel="noopener" } (`https://gitlab.com/-/user_settings/personal_access_tokens`)
+	- В разделе **Personal access tokens** нажмите **Generate token**, затем **Legacy token**
+    - В списке областей отметьте `api` (необходима для доступа к репозиторию и коммитов)
+3. **Настройте Bambuddy**:
+    - Откройте **Настройки** → **Резервное копирование и восстановление**
+    - Выберите **GitLab** в списке провайдеров
+    - Введите URL репозитория (например, `https://gitlab.com/username/bambuddy-backup`)
+	- Если сервис размещён локально без HTTPS, обязательно отметьте `Allow insecure HTTP`
+    - Введите PAT из шага 2
+    - Нажмите **Проверить подключение**
 
-#### :material-git: Forgejo
+!!! note "Аутентификация GitLab"
+    Можно также использовать токены доступа проекта. Обязательно предоставьте токену области `api` и `write_repository`, иначе возникнут ошибки доступа.
 
-1. **Create a new repository** (**must be private** — see warning above)
-2. **Generate a Personal Access Token (PAT)**:
-    - Go to **Settings** → **Applications**
-    - Click **New access token**
-    - Enter a name for the token
-    - Under **Repository and organization access**, choose either:
-        - `All` to allow access to all repositories
-        - `Specific` and select your Bambuddy backup repository
-    - Under **Repository permissions**, set **repository** to `Read and write` (the `write:repository` scope)
-    - Click **Generate Token**
-3. **Configure in Bambuddy**:
-    - Go to **Settings** → **Backup & Restore**
-    - Select **Forgejo** from the provider dropdown
-    - Enter your repository URL (e.g., `https://example.com/username/bambuddy-backup`)
-	- If your instance is served under a URL path (a `ROOT_URL` subpath such as `https://example.com/forgejo`), include that prefix in the URL — e.g. `https://example.com/forgejo/username/bambuddy-backup`
-	- If you are hosting locally without HTTPS, be sure to check the `Allow insecure HTTP` checkbox
-    - Enter your PAT (from Step 2)
-    - Click **Test Connection** to verify
+#### :material-git: Gitea {#gitea}
 
-!!! tip "Scoping the token to one repository"
-    Choosing `Specific` in step 2 is the safest option and works from Bambuddy 1.2.6 onwards. Forgejo v15 only allows `read:issue`, `write:issue`, `read:repository` and `write:repository` on a repository-scoped token — `write:repository` is all a backup needs, and a token that reaches nothing else limits what a leak could cost you.
+1. **Создайте новый репозиторий** (**обязательно приватный** — см. предупреждение выше)
+2. **Создайте персональный токен доступа (PAT)**:
+    - Откройте **Settings** → **Applications**
+    - В разделе **Manage Access Tokens** раскройте **Generate New Token**
+    - Введите название токена
+    - В разделе **Repository and organization access** выберите `All (public, private, and limited)`
+    - В разделе **Repository permissions** установите для **repository** значение `Read and write`
+    - Нажмите **Generate token**
+3. **Настройте Bambuddy**:
+    - Откройте **Настройки** → **Резервное копирование и восстановление**
+    - Выберите **Gitea** в списке провайдеров
+    - Введите URL репозитория (например, `https://example.com/username/bambuddy-backup`)
+	- Если экземпляр доступен по подпути `ROOT_URL`, например `https://example.com/gitea`, включите этот префикс в URL: `https://example.com/gitea/username/bambuddy-backup`
+	- Если сервис размещён локально без HTTPS, обязательно отметьте `Allow insecure HTTP`
+    - Введите PAT из шага 2
+	- Укажите правильную **ветку** (main/master и т. д.)
+    - Нажмите **Проверить подключение**
 
-    On earlier versions **Test connection** rejected such a token with a message about a missing `read:user` scope. That check no longer blocks the connection; if you hit it, update Bambuddy rather than widening the token.
+!!! info "Проверенные версии"
+    Bambuddy проверен с **Gitea 1.24.x, 1.25.x и 1.26.x**. Другие версии могут работать, но официально не поддерживаются.
 
-!!! info "Tested Versions"
-    Bambuddy has been tested and verified against **Forgejo 11.x LTS and 15.x LTS**. Other versions may work but are not officially supported.
+#### :material-git: Forgejo {#forgejo}
 
-### What's Backed Up
+1. **Создайте новый репозиторий** (**обязательно приватный** — см. предупреждение выше)
+2. **Создайте персональный токен доступа (PAT)**:
+    - Откройте **Settings** → **Applications**
+    - Нажмите **New access token**
+    - Введите название токена
+    - В разделе **Repository and organization access** выберите:
+        - `All`, чтобы разрешить доступ ко всем репозиториям
+        - `Specific` и укажите репозиторий резервных копий Bambuddy
+    - В разделе **Repository permissions** установите для **repository** значение `Read and write` (область `write:repository`)
+    - Нажмите **Generate Token**
+3. **Настройте Bambuddy**:
+    - Откройте **Настройки** → **Резервное копирование и восстановление**
+    - Выберите **Forgejo** в списке провайдеров
+    - Введите URL репозитория (например, `https://example.com/username/bambuddy-backup`)
+	- Если экземпляр доступен по подпути `ROOT_URL`, например `https://example.com/forgejo`, включите этот префикс в URL: `https://example.com/forgejo/username/bambuddy-backup`
+	- Если сервис размещён локально без HTTPS, обязательно отметьте `Allow insecure HTTP`
+    - Введите PAT из шага 2
+    - Нажмите **Проверить подключение**
 
-| Data | Description | Default |
+!!! tip "Ограничение токена одним репозиторием"
+    Выбор `Specific` на шаге 2 наиболее безопасен и поддерживается начиная с Bambuddy 1.2.6. Forgejo v15 допускает для токена отдельного репозитория только `read:issue`, `write:issue`, `read:repository` и `write:repository`. Для резервного копирования достаточно `write:repository`, а ограниченный одним репозиторием токен уменьшает последствия возможной утечки.
+
+    В более ранних версиях **Проверить подключение** отклоняла такой токен с сообщением об отсутствии области `read:user`. Эта проверка больше не блокирует подключение; если вы столкнулись с ней, обновите Bambuddy вместо расширения прав токена.
+
+!!! info "Проверенные версии"
+    Bambuddy проверен с **Forgejo 11.x LTS и 15.x LTS**. Другие версии могут работать, но официально не поддерживаются.
+
+### Что включено в резервную копию {#whats-backed-up}
+
+| Данные | Описание | По умолчанию |
 |------|-------------|---------|
-| K-profiles | Per-printer pressure advance profiles (organized by serial number) | On |
-| Cloud profiles | Filament, printer, and process presets from Bambu Cloud **and Orca Cloud**, for every connected account | On |
-| App settings | Application configuration | Off |
-| Spool inventory | Filament spools, usage history, and cost tracking | Off |
-| Print archives | Print history metadata — each archive and each of its prints: filament, temperatures, times, costs, energy, outcome (no gcode/3MF files) | Off |
+| K-профили | Профили опережения давления для каждого принтера (по серийному номеру) | Вкл. |
+| Облачные профили | Пресеты филамента, принтера и процесса из Bambu Cloud **и Orca Cloud** для всех подключённых аккаунтов | Вкл. |
+| Настройки приложения | Конфигурация приложения | Выкл. |
+| Учёт катушек | Катушки филамента, история расхода и учёт затрат | Выкл. |
+| Архивы печати | Метаданные истории: каждый архив и каждая его печать, включая филамент, температуры, время, стоимость, энергию и результат (без файлов gcode/3MF) | Выкл. |
 
-!!! warning "A cloud login is required"
-    *K-profiles* need a Bambu Cloud login. *Cloud profiles* need at least one connected cloud account — Bambu Cloud, Orca Cloud, or both. Sign in via **Profiles** → **Cloud Profiles** or **Orca Cloud Profiles**. The Cloud profiles checkbox stays disabled until something is connected, and shows how many accounts are in scope.
+!!! warning "Требуется вход в облако"
+    Для *K-профилей* необходим вход в Bambu Cloud. Для *облачных профилей* нужен хотя бы один подключённый аккаунт Bambu Cloud или Orca Cloud; можно подключить оба. Войдите через **Профили** → **Облачные профили** или **Облачные профили Orca**. Флажок облачных профилей недоступен до подключения и показывает количество учитываемых аккаунтов.
 
-    With [authentication](authentication.md) enabled each user has their own cloud logins, and the backup collects from **all** of them — not just yours. Accounts appear in the repository as `user-{id}` directories; no email address is ever written, so the backup does not expose who signed in to what.
+    При включённой [аутентификации](authentication.md) каждый пользователь входит в облако отдельно, а резервная копия собирает данные **всех** пользователей. Аккаунты представлены в репозитории каталогами `user-{id}`; адреса электронной почты не записываются, поэтому копия не раскрывает, кто и куда вошёл.
 
-### Schedule Options
+### Варианты расписания {#schedule-options}
 
-| Schedule | Description |
+| Расписание | Описание |
 |----------|-------------|
-| Hourly | Backup runs every hour |
-| Daily | Backup runs once per day (midnight) |
-| Weekly | Backup runs once per week (Sunday midnight) |
+| Ежечасно | Копирование запускается каждый час |
+| Ежедневно | Копирование запускается раз в день (в полночь) |
+| Еженедельно | Копирование запускается раз в неделю (в полночь в воскресенье) |
 
-### Manual Backup
+### Резервное копирование вручную {#manual-backup}
 
-Click **Backup Now** to trigger an immediate backup.
+Нажмите **Создать резервную копию сейчас**, чтобы запустить копирование немедленно.
 
-### Repository Structure
+### Структура репозитория {#repository-structure}
 
 ```
 repo/
@@ -179,184 +179,184 @@ repo/
     └── aliases.json         # Which archive was merged into which
 ```
 
-#### What cloud profiles contain
+#### Содержимое облачных профилей {#what-cloud-profiles-contain}
 
-Only your **custom** presets. Bambu Cloud's bundled catalogue is skipped: it is the same hundreds of entries for every user, always re-downloadable, and cannot be recreated under your account anyway — including it would rewrite the repository on every run for nothing.
+Только ваши **пользовательские** пресеты. Встроенный каталог Bambu Cloud пропускается: сотни его записей одинаковы для всех пользователей, всегда доступны для повторной загрузки и всё равно не могут быть воссозданы в вашем аккаунте. Их включение каждый раз без необходимости перезаписывало бы репозиторий.
 
-Each Bambu preset is stored with the payload needed to recreate it, not just its name. Orca profiles keep their full `content`, which the Orca sync API returns inline.
+Каждый пресет Bambu сохраняется вместе с данными, необходимыми для его воссоздания, а не только с названием. Профили Orca сохраняют полное содержимое `content`, которое API синхронизации Orca возвращает непосредственно в ответе.
 
-If an account's cloud session has expired, that account is skipped and the run says so in the log — the backup never signs anyone out on its own. For Orca Cloud the stored credentials are cleared the next time you open **Orca Cloud Profiles**, where you can pair again.
+Если облачный сеанс аккаунта истёк, он пропускается, а в журнал добавляется соответствующая запись. Само резервное копирование никогда не завершает чужой сеанс. Сохранённые данные входа Orca Cloud очищаются при следующем открытии **Облачных профилей Orca**, где можно повторно выполнить сопряжение.
 
-`backup_metadata.json` reports what was actually collected, per cloud and per account. If the category is enabled but nothing came back, it records `false` and the reason appears in the application log as a warning.
+В `backup_metadata.json` указывается, что действительно собрано для каждого облака и аккаунта. Если категория включена, но данных нет, записывается `false`, а причина появляется в журнале приложения как предупреждение.
 
-### Backup History
+### История резервного копирования {#backup-history}
 
-View backup history in the **Backup History** section:
+История доступна в разделе **История резервного копирования**:
 
-- Status (success, failed, skipped)
-- Trigger (manual or scheduled)
-- Files changed
-- Commit SHA (linked to GitHub)
+- Статус (успешно, ошибка, пропущено)
+- Причина запуска (вручную или по расписанию)
+- Изменённые файлы
+- SHA коммита (ссылка на GitHub)
 
-**Clear** removes every entry from the history after a confirmation. The backups in the repository are not touched.
+Кнопка **Очистить** после подтверждения удаляет все записи истории. Резервные копии в репозитории не затрагиваются.
 
-!!! tip "Skip Unchanged"
-    Bambuddy only creates a commit when data has actually changed, avoiding unnecessary commits.
+!!! tip "Пропуск без изменений"
+    Bambuddy создаёт коммит только при фактическом изменении данных, избегая лишних коммитов.
 
-### Restoring from a Git Backup
+### Восстановление из резервной копии Git {#restoring-from-a-git-backup}
 
-Every backup commit is a restore point. The **Restore from Git** button on the Git Backup card lets you pick one of those commits and pull selected categories back into Bambuddy — without touching anything you didn't select.
+Каждый коммит резервной копии — точка восстановления. Кнопка **Восстановить из Git** на карточке резервного копирования Git позволяет выбрать коммит и вернуть выбранные категории в Bambuddy, не затрагивая остальные данные.
 
-![Restore from Git Backup](../assets/settings_backup_git_restore.png){ .screenshot }
+![Восстановление из резервной копии Git](../assets/settings_backup_git_restore.png){ .screenshot }
 
-#### How to Restore
+#### Порядок восстановления {#how-to-restore}
 
-1. Go to **Settings** > **Backup & Restore**
-2. On the **Git Backup** card, click **Restore from Git**
-3. Pick a **Backup commit** from the dropdown (the 20 most recent, newest first)
-4. Tick the categories you want under **What to restore**
-5. Choose whether to **Overwrite existing entries** (see below)
-6. Click **Restore**
+1. Откройте **Настройки** > **Резервное копирование и восстановление**
+2. На карточке **Резервная копия Git** нажмите **Восстановить из Git**
+3. Выберите **Коммит резервной копии** из списка (20 последних, новые сверху)
+4. Отметьте нужные категории в разделе **Что восстановить**
+5. Выберите, нужно ли **Перезаписывать существующие записи** (см. ниже)
+6. Нажмите **Восстановить**
 
-The modal shows how many items each category holds in the commit you picked, and greys out any category that commit doesn't contain — a category you only enabled recently simply isn't in older commits. That number is what the result summary adds up to afterwards: restored plus skipped plus failed always equals it. Spool inventory counts the usage records alongside the spools, since both are restored under that category.
+Окно показывает количество элементов каждой категории в выбранном коммите и делает недоступными отсутствующие категории: например, недавно включённая категория не попадёт в старые коммиты. В итоговой сводке сумма восстановленных, пропущенных и завершившихся ошибкой элементов всегда равна показанному количеству. В учёте катушек вместе с катушками подсчитываются записи расхода, поскольку они восстанавливаются в одной категории.
 
-!!! note "Restoring needs its own permission"
-    With authentication enabled, the button only appears for users holding the `github:restore` permission. Configuring backups is a separate permission, so a user can be allowed to set up and run backups without being allowed to restore from them.
+!!! note "Для восстановления требуется отдельное разрешение"
+    При включённой аутентификации кнопку видят только пользователи с разрешением `github:restore`. Настройка резервного копирования регулируется отдельно: пользователь может настраивать и запускать копирование, не имея права восстанавливать данные.
 
-    Each category additionally requires the permission that owns the rows it writes: `settings:update` for App settings, `inventory:update` for Spool inventory, `archives:update_all` for Print archives, and `kprofiles:update` for K-profiles. Backup is its own permission group, so without this a user holding only the Backup group could write through a restore what they cannot write through the page that owns it. Archives take `archives:update_all` rather than `archives:create` because a restore writes rows belonging to other users, and `update_all` is the permission that means "may write an archive that is not yours".
+    Для каждой категории дополнительно требуется разрешение на изменение соответствующих записей: `settings:update` для настроек приложения, `inventory:update` для учёта катушек, `archives:update_all` для архивов печати и `kprofiles:update` для K-профилей. Резервное копирование — отдельная группа разрешений; без этой проверки пользователь только с правами на резервное копирование мог бы через восстановление изменить данные, недоступные ему на соответствующей странице. Для архивов требуется `archives:update_all`, а не `archives:create`, поскольку восстановление записывает данные других пользователей; `update_all` разрешает изменять чужие архивы.
 
-    A restore you are not allowed to run fails with `Missing required permissions:` followed by every permission you are missing across the categories you ticked, so one attempt tells you everything to fix rather than one thing at a time. The check is on the server only — the modal does not grey out categories you cannot restore, so you find out when you click **Restore**, not before.
+    Если восстановление недоступно, возвращается ошибка `Missing required permissions:` со всеми недостающими разрешениями для выбранных категорий. Одна попытка показывает весь список, а не по одному пункту. Проверка выполняется только на сервере: окно не отключает недоступные категории заранее, поэтому об ограничении вы узнаете после нажатия **Восстановить**.
 
-    !!! tip "Granting restore to a custom role"
-        `github:restore` on its own is enough to open the dialog and preview a commit, but not to write anything. A role that should be able to restore everything needs all four permissions above alongside it; one that should only put spools back needs `inventory:update` and nothing else. Administrators already hold every one of them.
+    !!! tip "Выдача разрешения пользовательской роли"
+        Одного `github:restore` достаточно, чтобы открыть окно и просмотреть коммит, но не для записи. Роли с правом полного восстановления дополнительно нужны все четыре разрешения выше; для восстановления только катушек достаточно `inventory:update`. У администраторов уже есть все эти разрешения.
 
-#### What Can Be Restored
+#### Что можно восстановить {#what-can-be-restored}
 
-| Category | Restores | Notes |
+| Категория | Восстанавливаемые данные | Примечания |
 |----------|----------|-------|
-| K-profiles | Pressure advance profiles, back onto the printer | Needs `kprofiles:update`; printer must be online |
-| App settings | Application configuration | Needs `settings:update`; credential, authentication and credential-dependent keys are skipped, and so are the sign-in and mail server settings unless an administrator restores |
-| Spool inventory | Spools plus their usage history | Needs `inventory:update`; matched on tag UID |
-| Print archives | Archives and their prints, **metadata only** | Needs `archives:update_all`; no gcode, 3MF, or thumbnails |
+| K-профили | Профили опережения давления на принтере | Нужно `kprofiles:update`; принтер должен быть подключён |
+| Настройки приложения | Конфигурация приложения | Нужно `settings:update`; учётные данные, настройки аутентификации и зависящие от учётных данных ключи пропускаются, как и настройки входа и почтового сервера, если восстановление выполняет не администратор |
+| Учёт катушек | Катушки и история расхода | Нужно `inventory:update`; сопоставление по UID метки |
+| Архивы печати | Архивы и их печати, **только метаданные** | Нужно `archives:update_all`; без gcode, 3MF и миниатюр |
 
-!!! warning "Cloud profiles cannot be restored"
-    Cloud profiles are listed under *What's Backed Up* but are **not** offered as a restore category. Re-sync them from **Profiles** → **Cloud Profiles** instead.
+!!! warning "Облачные профили нельзя восстановить"
+    Облачные профили перечислены в разделе о содержимом копии, но **недоступны** как категория восстановления. Вместо этого синхронизируйте их заново через **Профили** → **Облачные профили**.
 
-!!! info "Archives come back as metadata"
-    A Git backup stores print history as JSON — filament, temperatures, times, costs, energy. Restoring gives you the history rows back, but the 3MF files and thumbnails are not in the repository and cannot be recovered from it. Use a [local ZIP backup](#creating-a-local-backup) if you need the files.
+!!! info "Архивы восстанавливаются в виде метаданных"
+    Резервная копия Git хранит историю печати в JSON: филамент, температуры, время, стоимость и энергию. Восстанавливаются записи истории, но файлов 3MF и миниатюр в репозитории нет, поэтому вернуть их из него нельзя. Если нужны файлы, используйте [локальную копию ZIP](#creating-a-local-backup).
 
-!!! info "Each print comes back with its archive"
-    The backup holds each print of an archive: its printer, plate, start and end, duration, filament, cost, energy, failure reason and outcome. Statistics and the print log count prints, so a restore brings them back too. Each print is attached to its restored archive, and the archive then shows its latest print's outcome, as it does after a print.
+!!! info "Каждая печать восстанавливается вместе со своим архивом"
+    Копия содержит каждую печать архива: принтер, пластину, время начала и окончания, длительность, филамент, стоимость, энергию, причину неудачи и результат. Статистика и журнал учитывают отдельные печати, поэтому после восстановления они также возвращаются. Каждая печать прикрепляется к восстановленному архиву, который, как и после печати, показывает результат последней печати.
 
-    A print already here is the same archive's, started at the same time on the same plate. It is skipped, or made to match the backup with **Overwrite existing entries** on. A print running on this instance now is never changed by a restore, nor is one that was still running when the backup was made: the one here has the figures from its end. An archive printed again since the backup is still recognised, by when it was archived and by its prints' start times, so the restore does not add a second copy of it.
+    Уже существующей считается печать того же архива, начатая в то же время на той же пластине. Она пропускается или приводится в соответствие с копией при включённой опции **Перезаписывать существующие записи**. Восстановление не изменяет ни печать, которая сейчас выполняется на этом экземпляре, ни печать, которая ещё выполнялась во время создания копии: существующая запись содержит итоговые данные. Архив, который после создания копии печатали снова, всё равно распознаётся по времени архивации и времени начала печатей, поэтому его дубликат не создаётся.
 
-    Left out of the backup: the one-tap confirm link (it is a credential), photos and timelapses (their files are not in a Git backup), and wallet, cost-centre and queue links. A printer is linked again only if this instance has a printer with the same id; otherwise the print keeps the printer's name.
+    В копию не входят ссылка подтверждения одним нажатием (это учётные данные), фотографии и таймлапсы (их файлов нет в копии Git), а также связи с кошельком, центром затрат и очередью. Принтер связывается заново только при наличии на этом экземпляре принтера с тем же ID; иначе в печати сохраняется его название.
 
-    An archive merged into another is not restored as an archive of its own, whether the backup was made after the merge or before it. Anything that pointed at it, such as spool usage, goes to the archive it was merged into, and that archive keeps what the merge joined (notes, tags) even with overwrite on.
+    Архив, объединённый с другим, не восстанавливается как отдельный — независимо от того, была копия создана до или после объединения. Все ссылки на него, например записи расхода катушки, перенаправляются в архив, с которым он объединён. Этот архив сохраняет объединённые заметки и теги даже при включённой перезаписи.
 
-    A print's owner comes back by username, like an archive's. A print whose user was deleted before the backup comes back with no owner, keeping the name of who started it.
+    Владелец печати, как и владелец архива, восстанавливается по имени пользователя. Если пользователь был удалён до создания копии, печать восстанавливается без владельца, но имя запустившего её сохраняется.
 
-    Backups written before prints were included restore their archives as before, without prints.
+    Копии, созданные до добавления печатей, восстанавливают архивы как прежде — без печатей.
 
-!!! info "Restored archives keep their owner"
-    With authentication enabled, each print archive belongs to the user who made it, and users only see their own unless they have the `archives:read_all` permission. A restore carries that ownership across by **username**, so an archive lands with the same person it belonged to when the backup was taken.
+!!! info "Восстановленные архивы сохраняют владельца"
+    При включённой аутентификации каждый архив печати принадлежит создавшему его пользователю; остальные видят только свои архивы, если у них нет разрешения `archives:read_all`. При восстановлении владелец сопоставляется по **имени пользователя**, поэтому архив возвращается тому же человеку, которому принадлежал при создании копии.
 
-    The username is what makes this safe across instances. User ids are assigned in order as accounts are created, so they mean nothing on a rebuilt instance — restoring there by id would hand one person's print history to whoever happens to hold that number now, with nothing to indicate it had gone wrong. Matching on the name instead means a match is the same person, and anything else is treated as unknown rather than guessed at.
+    Имя пользователя обеспечивает безопасность между экземплярами. Числовые ID назначаются по порядку создания аккаунтов и ничего не значат на заново созданном экземпляре: сопоставление по ID могло бы передать историю печати другому человеку без видимых признаков ошибки. Сопоставление по имени возвращает данные тому же пользователю; если совпадения нет, владелец считается неизвестным.
 
-    Three situations produce a *newly added* archive with no owner. The backup predates Bambuddy recording an owner at all; the archive genuinely had no owner on the source instance; or the name it carries does not belong to anyone here — which includes a user who still exists but has since been **renamed**. All three are visible only to users with `archives:read_all`, and the result summary says which of them happened so an administrator can reassign them.
+    Новый архив восстанавливается без владельца в трёх случаях: копия создана до появления учёта владельцев; архив действительно не имел владельца в исходном экземпляре; либо сохранённому имени никто здесь не соответствует, в том числе если пользователь по-прежнему существует, но был **переименован**. Все такие архивы видны только пользователям с `archives:read_all`; в итоговой сводке указана причина, чтобы администратор мог назначить владельца.
 
-    Backups written before this change carry only the id, and those still restore: the id is used as a fallback and checked against the user table, so a stale one is dropped rather than pointing at the wrong person.
+    Более старые копии содержат только ID и всё равно восстанавливаются: ID используется как запасной вариант и проверяется по таблице пользователей, поэтому устаревший ID отбрасывается, а не связывается с неверным человеком.
 
-    An owner the backup cannot name is never *removed*. If overwrite is on and the backup either predates this or names someone this instance does not have, the existing owner is left as it is — a backup that cannot tell you who owns an archive has nothing to say about it. The same applies to archives you have deleted: an older backup will not bring them back.
+    Владелец никогда не *удаляется* только потому, что копия не может его определить. Если включена перезапись, а копия создана до появления имён владельцев или содержит отсутствующего здесь пользователя, существующий владелец сохраняется. То же относится к удалённым архивам: старая копия не вернёт их.
 
-!!! note "A print that was running when the backup was made"
-    Its archive and that print come back as **cancelled** with the reason *No status update received*, the way Bambuddy closes a print it lost track of. It is not reported as a failed print, and no notification goes out. If this instance still has that print's archive and **Overwrite existing entries** is on, the archive keeps the status it has here: the print may still be running, or have ended since.
+!!! note "Печать выполнялась во время создания копии"
+    Её архив и запись печати восстанавливаются со статусом **отменено** и причиной *Не получено обновление статуса* — так Bambuddy завершает печать, связь с которой потеряна. Она не считается неудачной, уведомление не отправляется. Если архив этой печати всё ещё существует на экземпляре и включена опция **Перезаписывать существующие записи**, он сохраняет свой текущий статус: печать могла продолжаться или завершиться с момента создания копии.
 
-#### Overwrite vs. Skip
+#### Перезапись или пропуск {#overwrite-vs-skip}
 
-The **Overwrite existing entries** toggle decides what happens when something in the backup already exists locally:
+Переключатель **Перезаписывать существующие записи** определяет, что делать с данными из копии, которые уже есть на этом экземпляре:
 
-| Toggle | Behaviour |
+| Переключатель | Действие |
 |--------|-----------|
-| Off (default) | Only missing entries are added. Anything already present is left exactly as it is. |
-| On | Existing entries are updated to the backed-up values as well. |
+| Выключен (по умолчанию) | Добавляются только отсутствующие записи. Существующие остаются без изменений. |
+| Включён | Существующие записи также обновляются значениями из копии. |
 
-Leave it **off** to recover something you deleted by accident. Turn it **on** to roll your current data back to how it looked at that commit. K-profiles are the one category the toggle doesn't reach — see the note below.
+Оставьте его **выключенным**, чтобы вернуть случайно удалённые данные. Включите его, чтобы откатить текущие данные к состоянию выбранного коммита. На K-профили переключатель не влияет — см. примечание ниже.
 
-!!! tip "Restores never reuse the backup's IDs"
-    Entries are matched on natural keys — a spool by its tag UID, an archive by its content hash — and re-inserted with a fresh ID if missing. A spool that was `#3` when the backup was taken may come back as `#5`. This is deliberate: the old ID very likely belongs to an unrelated row by now. Links between restored entries (a spool and its usage history, for example) are remapped so they still line up.
+!!! tip "Восстановление не использует ID из копии повторно"
+    Записи сопоставляются по естественным ключам — катушка по UID метки, архив по хешу содержимого — и при отсутствии создаются с новым ID. Катушка с номером `#3` в копии может вернуться как `#5`. Это сделано намеренно: старый ID к этому моменту, скорее всего, принадлежит другой записи. Связи восстановленных записей, например катушки и её истории расхода, переназначаются и сохраняются.
 
-!!! tip "Restore spools and archives together"
-    Spool usage history records which print each entry belongs to. Restoring **Spool inventory** without **Print archives** leaves those links unresolved, so the usage entries come back without them — filament totals are still right, but the entries no longer point at a print. Restoring **Print archives** afterwards doesn't repair it, because the usage entries already exist by then. Tick both in the same run if you want the links kept; the result summary tells you when links were dropped.
+!!! tip "Восстанавливайте катушки и архивы вместе"
+    История расхода катушек содержит связь каждой записи с печатью. Если восстановить **Учёт катушек** без **Архивов печати**, связи останутся неразрешёнными, и записи расхода вернутся без них: итоговый расход филамента останется верным, но записи больше не будут указывать на печать. Последующее восстановление **Архивов печати** этого не исправит, поскольку записи расхода уже существуют. Чтобы сохранить связи, выберите обе категории одновременно; сводка сообщит об отброшенных связях.
 
-!!! warning "K-profiles need the printer online"
-    K-profiles don't live in Bambuddy's database — they live on the printer, and restoring them means writing to it over MQTT. Any printer that isn't connected is skipped, and the result says which. Reconnect it and restore again. Bambuddy resolves each profile's current slot on the printer before writing, so profiles you have edited since the backup are still updated correctly. If the printer rejects a batch, those profiles are counted as failed and the result gives the printer's own reason. A printer that doesn't answer at all still counts as restored — older firmware never answers — so verify the values on the printer or in **Profiles** → **K-Profiles** afterwards.
+!!! warning "Для K-профилей принтер должен быть подключён"
+    K-профили хранятся не в базе Bambuddy, а на принтере; восстановление записывает их через MQTT. Отключённые принтеры пропускаются и перечисляются в результате. Подключите их и повторите восстановление. Перед записью Bambuddy определяет текущий слот каждого профиля, поэтому профили, изменённые после создания копии, обновляются правильно. Если принтер отклонит пакет, профили считаются неудачными, а результат содержит причину от принтера. Принтер, который не ответил вообще, всё равно считается восстановленным — старые прошивки не отвечают, — поэтому проверьте значения на принтере или в **Профили** → **K-профили**.
 
-    **Overwrite existing entries doesn't apply to K-profiles.** Writing a slot on the printer is always a replacement — there is no "add only if missing" for a value the printer already holds — so a K-profile restore updates the matching slot whichever way you set the toggle, replacing the calibration currently on the printer. The restore screen says so beside the category as soon as you tick it, and the result summary repeats it.
+    **Опция перезаписи существующих записей не применяется к K-профилям.** Запись слота на принтер всегда заменяет его значение: варианта «добавить только отсутствующее» для уже существующего значения нет. Поэтому восстановление K-профиля обновляет соответствующий слот и заменяет текущую калибровку независимо от переключателя. Это поясняется рядом с категорией при её выборе и повторяется в итоговой сводке.
 
-!!! note "Credentials are never backed up or restored"
-    Tokens, secrets, passwords, access codes, API keys, and passphrases are written to the backup as `********` (or left empty if they were never set), never as the value, and are skipped on restore. A URL setting with a login in it, such as `http://user:password@host`, is left out of the backup. In cloud profiles, a printer preset's connection credentials (the printer's access code or the print host's API key, user and password) are written as `********` too, and a login in any URL in the preset is masked. Re-enter them by hand if you're rebuilding an instance. Settings Bambuddy no longer uses, left in the database by earlier versions, are not backed up at all.
+!!! note "Учётные данные никогда не копируются и не восстанавливаются"
+    Токены, секреты, пароли, коды доступа, ключи API и парольные фразы сохраняются в копии как `********` (или пустыми, если не были заданы), а при восстановлении пропускаются. Настройка URL с логином, например `http://user:password@host`, не включается в копию. Учётные данные подключения в пресете принтера облачного профиля (код доступа принтера или ключ API, пользователь и пароль хоста печати) тоже записываются как `********`; логины в URL пресета маскируются. При восстановлении экземпляра введите их вручную. Настройки, которые Bambuddy больше не использует и которые остались в базе от предыдущих версий, вообще не копируются.
 
-    A credential stored on this instance is never sent somewhere the backup names: if the backup would change where it goes (the MQTT broker, port or TLS setting, the SMTP server, port or security mode, the Home Assistant URL, the Obico ML URL or the Manyfold URL), those settings are left as they are and the restore says so. Change them in **Settings** and enter the credential again. A Home Assistant token set through the `HA_TOKEN` environment variable is the exception and follows the URL.
+    Учётные данные этого экземпляра никогда не отправляются по адресу, указанному в копии: если восстановление изменило бы место их отправки (брокер MQTT, порт или TLS; сервер SMTP, порт или режим безопасности; URL Home Assistant, Obico ML или Manyfold), такие настройки остаются прежними, а результат сообщает об этом. Измените их в **Настройках** и введите учётные данные заново. Исключение — токен Home Assistant, заданный через переменную окружения `HA_TOKEN`: он следует за URL.
 
-    Backups made by earlier versions did contain these values, and they stay in your backup repository's history. If you used Git backup before, change those passwords and tokens.
+    Копии, созданные прежними версиями, содержали эти значения, и они остаются в истории репозитория. Если вы раньше использовали резервное копирование Git, смените эти пароли и токены.
 
-!!! note "Each restored value is checked like an edit in Settings"
-    A restore writes a setting only if **Settings** would accept the same value when you edit it: a Home Assistant, Obico, slicer, Manyfold or Spoolman URL must pass the same address checks, the Docker Compose directory may hold only path characters, and JSON and numeric settings must be well-formed and in range. A value that fails is skipped and named in the result. So is anything that is not a setting you edit here: account sessions for Bambu Cloud and Orca Cloud, the automatic purge schedules for archives and the library trash (set them again under their own pages; they need the purge permission), runtime state, and keys this version does not know. Bambuddy's own internal flags are skipped without a mention. Each user's email sign-in codes are never changed by a restore.
+!!! note "Каждое значение проверяется как при изменении в настройках"
+    Восстановление записывает настройку только в том случае, если **Настройки** приняли бы то же значение: URL Home Assistant, Obico, слайсера, Manyfold или Spoolman проходит те же проверки адреса, каталог Docker Compose может содержать только допустимые для пути символы, а значения JSON и числовые настройки должны быть корректными и находиться в допустимом диапазоне. Непрошедшее проверку значение пропускается и указывается в результате. Также пропускается всё, что не является редактируемой здесь настройкой: сеансы Bambu Cloud и Orca Cloud, расписания автоматической очистки архивов и корзины библиотеки (задайте их повторно на соответствующих страницах; требуется разрешение на очистку), рабочее состояние и неизвестные этой версии ключи. Внутренние флаги Bambuddy пропускаются без упоминания. Коды входа пользователей по электронной почте при восстановлении никогда не меняются.
 
-    A restore also never changes where Bambuddy sends things: the **External URL** (password reset and welcome links are built from it), the mail server, the local backup folder, the MQTT broker, and the Home Assistant, Obico, slicer, Spoolman and Manyfold addresses. A value in the backup that differs from this instance's is left as it is here and named in the result, even if nothing is set here yet. On a fresh instance, enter these addresses again in **Settings**.
+    Восстановление также никогда не меняет адреса, по которым Bambuddy отправляет данные: **Внешний URL** (из него формируются ссылки сброса пароля и приветствия), почтовый сервер, локальную папку резервных копий, брокер MQTT и адреса Home Assistant, Obico, слайсера, Spoolman и Manyfold. Если значение в копии отличается от текущего, оно не применяется и указывается в результате, даже если здесь значение ещё не задано. На новом экземпляре введите эти адреса заново в **Настройках**.
 
-!!! note "Authentication settings are never restored either"
-    Four settings are refused even with **Overwrite existing entries** on: whether authentication is enabled, **Advanced Authentication**, local login, and whether first-time setup has completed. Restoring those would change *who can reach Bambuddy* rather than how it behaves — a backup taken before you turned authentication on would switch it back off, and the checks that stop you disabling local login without a working OIDC provider don't run on a restore.
+!!! note "Настройки аутентификации также не восстанавливаются"
+    Четыре настройки отклоняются даже при включённой опции **Перезаписывать существующие записи**: включение аутентификации, **Расширенная аутентификация**, локальный вход и завершение первоначальной настройки. Их восстановление изменило бы *круг лиц, имеющих доступ к Bambuddy*, а не поведение приложения: копия до включения аутентификации снова отключила бы её, а проверки, запрещающие отключить локальный вход без работающего провайдера OIDC, при восстановлении не выполняются.
 
-    **The whole LDAP configuration is refused with them**, not just the bind password: the server URL, search base, user filter, security mode, group mapping, auto-provision and default group. Together those name *which directory server decides who you are*, and Bambuddy reads them on every login — so restoring them from a file would let the file choose the directory that authenticates your users.
+    Вместе с ними отклоняется **вся конфигурация LDAP**, а не только пароль подключения: URL сервера, база поиска, фильтр пользователей, режим безопасности, сопоставление групп, автоматическое создание пользователей и группа по умолчанию. Вместе эти параметры определяют, *какой сервер каталога устанавливает личность пользователя*, и Bambuddy читает их при каждом входе. Восстановление из файла позволило бы этому файлу выбрать каталог аутентификации.
 
-    Change all of these in **Settings** → **Authentication** instead. Rebuilding an instance means setting LDAP up again by hand; that is deliberate.
+    Изменяйте все эти настройки в **Настройки** → **Аутентификация**. При создании экземпляра заново LDAP намеренно нужно настроить вручную.
 
-!!! note "A switch is left off when its credential can't come with it"
-    Because credentials are never restored, turning a switch on without one would leave the integration in a worse state than either the backup or your current instance. Four pairs are treated as travelling together:
+!!! note "Переключатель остаётся выключенным, если его учётные данные не восстановлены"
+    Поскольку учётные данные не восстанавливаются, включение интеграции без них ухудшило бы её состояние по сравнению и с копией, и с текущим экземпляром. Четыре пары рассматриваются совместно:
 
-    | Switch | Credential it needs |
+    | Переключатель | Необходимые учётные данные |
     |--------|---------------------|
-    | Prometheus metrics | Prometheus token |
-    | MQTT relay | MQTT password |
-    | Home Assistant | Home Assistant token |
-    | Virtual printer | Virtual printer access code |
+    | Метрики Prometheus | Токен Prometheus |
+    | MQTT relay | Пароль MQTT |
+    | Home Assistant | Токен Home Assistant |
+    | Виртуальный принтер | Код доступа виртуального принтера |
 
-    A switch is left off when the backup has it on and this instance has no usable credential of its own. For the MQTT relay, Home Assistant and the virtual printer there is one further condition: the backup must have carried a non-empty credential too. An anonymous MQTT broker is a perfectly valid setup, so a backup describing one restores as normal — the restore isn't leaving you with anything weaker than what was backed up. Nor is anything already switched on locally affected, for the same reason.
+    Переключатель остаётся выключенным, если в копии он включён, а у текущего экземпляра нет собственных действительных учётных данных. Для MQTT relay, Home Assistant и виртуального принтера есть дополнительное условие: копия также должна содержать непустые учётные данные. Анонимный брокер MQTT допустим, поэтому описывающая его копия восстанавливается обычным образом: результат не будет менее защищённым, чем исходная конфигурация. По той же причине уже включённые локальные интеграции не затрагиваются.
 
-    LDAP is not in this table. It used to be, paired with its bind password, but an anonymous bind is a valid setup too — which meant a backup that simply left the password out had its LDAP switch restored. That is fine for an integration and wrong for a login source, so LDAP is refused outright instead (see above) rather than judged on whether it would still work.
+    LDAP в таблицу не входит. Ранее он учитывался вместе с паролем подключения, но анонимное подключение тоже допустимо, поэтому при отсутствии пароля в копии LDAP включался. Для интеграции это приемлемо, а для источника входа — нет; поэтому LDAP полностью отклоняется (см. выше), а не оценивается по способности продолжать работу.
 
-    **Prometheus is the exception, deliberately.** `/api/v1/metrics` is unauthenticated whenever no token is set, so restoring that switch onto an instance with no token publishes your metrics to anyone who can reach the port. The token is optional, which means the likeliest backup to do that is one taken on an instance that had metrics switched on and never set a token — so for Prometheus the switch is left off whenever *this* instance has no token, whether or not the backup carried one.
+    **Prometheus намеренно является исключением.** `/api/v1/metrics` доступен без аутентификации, когда токен не задан; восстановление переключателя на экземпляре без токена открыло бы метрики всем, кто может подключиться к порту. Токен необязателен, поэтому наиболее вероятна именно такая копия с включёнными метриками и без токена. Для Prometheus переключатель остаётся выключенным, когда у *текущего* экземпляра нет токена, независимо от содержимого копии.
 
-    Fill the credential in under the relevant settings section, then turn the switch on yourself.
+    Введите учётные данные в соответствующем разделе настроек и включите переключатель самостоятельно.
 
-    The result summary reports all three groups in its notes.
+    В примечаниях итоговой сводки перечислены все три группы.
 
-#### After Restoring
+#### После восстановления {#after-restoring}
 
-The result summary lists **restored / skipped / failed** counts per category, plus any notes explaining a skip. Those three add up to the item count the preview showed for that category.
+Итоговая сводка показывает количество **восстановленных / пропущенных / завершившихся ошибкой** элементов для каждой категории и пояснения к пропускам. Сумма этих трёх чисел равна количеству элементов, показанному в предпросмотре категории.
 
-!!! note "A failed restore can still have applied part of itself"
-    Categories are written one at a time and each is committed as it finishes, so a restore that fails part-way through leaves the categories that already completed in place rather than undoing them. The summary reports those rather than claiming nothing was restored, so what it lists is what is actually on disk. Re-running the restore is safe — with overwrite off, anything already restored is recognised and skipped.
+!!! note "При ошибке часть данных могла восстановиться"
+    Категории записываются по очереди и фиксируются по завершении каждой. Поэтому при ошибке в середине уже завершённые категории остаются на месте и не откатываются. Сводка сообщает о них, а не утверждает, что ничего не восстановлено: перечисленное действительно находится на диске. Повторное восстановление безопасно — при выключенной перезаписи ранее восстановленные записи распознаются и пропускаются.
 
-If **App settings** was one of the restored categories, Bambuddy reloads the page when you close the modal. Most restored settings appear immediately, but the ones the interface applies at startup — the display language and whether authentication is on — won't until it reloads.
+Если среди восстановленных категорий были **Настройки приложения**, Bambuddy перезагружает страницу при закрытии окна. Большинство настроек применяется сразу, но настройки, применяемые интерфейсом при запуске, — язык и включение аутентификации — появятся только после перезагрузки.
 
-If any **MQTT** settings were restored, Bambuddy reconnects the MQTT relay to the restored broker immediately, so you don't need to restart for those to take effect. The MQTT password isn't in the backup, so a broker that needs a different one won't connect until you re-enter it — the result summary says when the relay couldn't reconnect.
+Если восстановлены настройки **MQTT**, Bambuddy сразу переподключает MQTT relay к восстановленному брокеру, и перезапуск не требуется. Пароля MQTT в копии нет, поэтому брокер с другим паролем не подключится до его повторного ввода; сводка сообщит о неудачном переподключении.
 
-Restores are recorded in **Backup History** with a `restore` trigger, alongside your backup runs.
+Восстановления записываются в **Историю резервного копирования** с причиной запуска `restore` наряду с обычными копиями.
 
-An older backup can bring back archives that hold the same file more than once (merged since, or from before Bambuddy kept one archive per file). After a restore that included archives, the result says how many groups of such duplicates there are and offers **Merge duplicates…**. Nothing is merged unless you do it; see [Merging duplicates](archiving.md#merging-duplicates).
+Старая копия может вернуть несколько архивов с одним файлом (впоследствии объединённых или созданных до того, как Bambuddy стал хранить один архив на файл). После восстановления архивов результат показывает количество таких групп и предлагает **Объединить дубликаты…**. Ничего не объединяется без вашего действия; см. [Объединение дубликатов](archiving.md#merging-duplicates).
 
-#### Restore API Endpoints
+#### Конечные точки API восстановления {#restore-api-endpoints}
 
-| Method | Endpoint | Description |
+| Метод | Конечная точка | Описание |
 |--------|----------|-------------|
-| `GET` | `/github-backup/commits` | List recent backup commits (`limit`, 1--100, default 20) |
-| `GET` | `/github-backup/restore/preview` | Report which categories a commit contains (`ref`, default `HEAD`) |
-| `POST` | `/github-backup/restore` | Restore selected categories from one commit |
+| `GET` | `/github-backup/commits` | Список недавних коммитов резервных копий (`limit`, 1–100, по умолчанию 20) |
+| `GET` | `/github-backup/restore/preview` | Категории выбранного коммита (`ref`, по умолчанию `HEAD`) |
+| `POST` | `/github-backup/restore` | Восстановить выбранные категории из одного коммита |
 
-`POST /github-backup/restore` takes `ref` (a commit SHA, or `HEAD` for the branch tip), `categories` (one or more of `kprofiles`, `settings`, `spools`, `archives`), and `overwrite_existing`:
+`POST /github-backup/restore` принимает `ref` (SHA коммита или `HEAD` для последнего коммита ветки), `categories` (одну или несколько категорий `kprofiles`, `settings`, `spools`, `archives`) и `overwrite_existing`:
 
 ```json
 {
@@ -368,45 +368,45 @@ An older backup can bring back archives that hold the same file more than once (
 
 ---
 
-## :material-clock-outline: Scheduled Local Backups
+## :material-clock-outline: Локальное резервное копирование по расписанию {#scheduled-local-backups}
 
-Automate local backups on a recurring schedule so you never forget to protect your data.
+Настройте регулярное локальное резервное копирование, чтобы не забывать защищать данные.
 
-### Overview
+### Обзор {#overview_1}
 
-The **Scheduled Backups** card in **Settings** > **Backup** lets you configure automatic local backups that run in the background. Each backup produces the same complete ZIP file as a manual backup (database + all data directories), stored on disk where you can easily copy them to a NAS or external drive.
+Карточка **Резервное копирование по расписанию** в разделе **Настройки** > **Резервное копирование** позволяет настроить автоматическое фоновое копирование. Каждая копия создаёт такой же полный ZIP-файл, как ручное копирование (база данных и все каталоги данных); файл сохраняется на диске, откуда его легко скопировать на NAS или внешний накопитель.
 
-Works with both SQLite and PostgreSQL installations.
+Функция работает как с SQLite, так и с PostgreSQL.
 
-### Configuration
+### Настройка {#configuration}
 
-| Setting | Options | Default |
+| Настройка | Варианты | По умолчанию |
 |---------|---------|---------|
-| Enable | On / Off | Off |
-| Frequency | Hourly, Daily, Weekly | Daily |
-| Time of day | Time picker (for Daily and Weekly) | 00:00 |
-| Retention count | 1--100 | 5 |
-| Output path | Any local or network path | `DATA_DIR/backups/` |
+| Включить | Вкл. / Выкл. | Выкл. |
+| Периодичность | Ежечасно, ежедневно, еженедельно | Ежедневно |
+| Время суток | Выбор времени (для ежедневного и еженедельного запуска) | 00:00 |
+| Количество хранимых копий | 1--100 | 5 |
+| Путь сохранения | Любой локальный или сетевой путь | `DATA_DIR/backups/` |
 
-!!! info "Retention"
-    When a new backup completes, Bambuddy automatically deletes the oldest backups beyond the retention count. For example, with retention set to 5, only the 5 most recent backups are kept.
+!!! info "Хранение"
+    После создания копии Bambuddy автоматически удаляет самые старые копии сверх заданного количества. Например, при значении 5 сохраняются только пять последних копий.
 
-!!! info "Timezone"
-    The time-of-day picker is interpreted in the container's local timezone, read from the `TZ` environment variable. The resolved zone name (e.g. `Europe/Berlin`) is shown next to the picker. If `TZ` is not set, times are interpreted as UTC. Set `TZ` in `docker-compose.yml` (e.g. `TZ=Europe/Berlin`) to match your local time.
+!!! info "Часовой пояс"
+    Выбранное время интерпретируется в локальном часовом поясе контейнера, заданном переменной окружения `TZ`. Определённое название зоны (например, `Europe/Berlin`) отображается рядом с полем. Если `TZ` не задана, используется UTC. Укажите `TZ` в `docker-compose.yml` (например, `TZ=Europe/Berlin`), чтобы использовать местное время.
 
-### Managing Backups
+### Управление копиями {#managing-backups}
 
-Each backup in the list supports three actions:
+Для каждой копии в списке доступны три действия:
 
-- **Download** -- download the ZIP file to your browser
-- **Restore** -- restore directly from the backup (same as manual restore)
-- **Delete** -- remove the backup file from disk
+- **Скачать** — скачать ZIP-файл через браузер
+- **Восстановить** — восстановить данные непосредственно из копии (как при ручном восстановлении)
+- **Удалить** — удалить файл копии с диска
 
-Click **Run Now** to trigger an immediate backup outside the schedule.
+Нажмите **Запустить сейчас**, чтобы создать копию немедленно, вне расписания.
 
-### Docker Setup
+### Настройка Docker {#docker-setup}
 
-Docker users should mount the backup output directory as a volume so backups are persisted outside the container. Add a bind mount to your `docker-compose.yml`:
+В Docker каталог сохранения копий следует смонтировать как том, чтобы копии сохранялись вне контейнера. Добавьте bind-монтирование в `docker-compose.yml`:
 
 ```yaml
 services:
@@ -427,7 +427,7 @@ volumes:
   bambuddy_logs:
 ```
 
-Or with `docker run`:
+Или используйте `docker run`:
 
 ```bash
 docker run -d \
@@ -441,20 +441,20 @@ docker run -d \
   ghcr.io/maziggy/bambuddy:latest
 ```
 
-!!! tip "NAS or Network Share"
-    Point the bind mount at a NAS share, Samba mount, or NFS path for automatic off-site backups without any extra scripts.
+!!! tip "NAS или сетевой ресурс"
+    Укажите для bind-монтирования ресурс NAS, подключённый ресурс Samba или путь NFS, чтобы автоматически хранить копии вне системы без дополнительных скриптов.
 
-!!! warning "An output path that isn't mounted is worse than one that fails"
-    If the **Output path** points somewhere that is not bind-mounted from the host, the backups still succeed -- they land in the container's own writable layer and are **lost the next time the container is recreated** (`compose up` after an image update, for example). Bambuddy detects this and warns on the backup card, but the rule is simple: whatever you set as the output path must appear in `volumes:`.
+!!! warning "Несмонтированный путь сохранения хуже ошибки"
+    Если **Путь сохранения** указывает на каталог без bind-монтирования с хоста, копирование всё равно завершается успешно, но файлы попадают в записываемый слой контейнера и **теряются при следующем пересоздании контейнера** (например, после `compose up` при обновлении образа). Bambuddy обнаруживает это и предупреждает на карточке копирования. Правило простое: выбранный путь должен присутствовать в `volumes:`.
 
-### Non-Docker Setup
+### Установка без Docker {#non-docker-setup}
 
-For bare-metal or virtual machine installs, set the **Output path** in the UI to any directory your Bambuddy process can write to -- a local folder, a mounted network drive, or an external USB drive.
+При установке непосредственно на систему или в виртуальной машине задайте в интерфейсе **Путь сохранения** к любому каталогу, куда процесс Bambuddy может записывать данные: локальной папке, подключённому сетевому или внешнему USB-накопителю.
 
-!!! warning "systemd: a NAS share needs to be allowed explicitly"
-    Bambuddy's systemd unit runs with `ProtectSystem=strict`. That makes **every** directory outside the install, data and log directories read-only *for the service* -- including a NAS share you mounted yourself and can write to from your own shell. Backups there fail with `[Errno 30] Read-only file system`, which looks like a permission problem but is not one (errno 30 is EROFS; a permission problem is errno 13).
+!!! warning "systemd: доступ к ресурсу NAS нужно разрешить явно"
+    Служба systemd Bambuddy запускается с `ProtectSystem=strict`. Поэтому **все** каталоги за пределами каталогов установки, данных и журналов доступны *службе* только для чтения, включая подключённый вами ресурс NAS, в который можно записывать из собственной оболочки. Сохранение копий туда завершается ошибкой `[Errno 30] Read-only file system`. Она похожа на ошибку прав доступа, но это не она: errno 30 означает EROFS, а ошибке прав соответствует errno 13.
 
-    Add the path to the unit's writable list with a drop-in, which survives reinstalls and upgrades:
+    Добавьте путь в список доступных для записи через дополнительный файл конфигурации службы, сохраняющийся при переустановках и обновлениях:
 
     ```bash
     sudo systemctl edit bambuddy
@@ -469,71 +469,71 @@ For bare-metal or virtual machine installs, set the **Output path** in the UI to
     sudo systemctl restart bambuddy
     ```
 
-    Confirm it took with `systemctl show bambuddy -p ReadWritePaths`.
+    Проверьте применение командой `systemctl show bambuddy -p ReadWritePaths`.
 
-    Bambuddy checks the output directory when you save it and tells you if it cannot write there, so you should not have to work this out from a failed backup at 03:00. Installing over an existing setup keeps any paths you added -- the installer backs the old unit up and carries them forward.
+    При сохранении пути Bambuddy проверяет каталог и сообщает, если не может туда записывать, поэтому не придётся выяснять причину по ошибке резервного копирования в 03:00. Установка поверх существующей сохраняет добавленные пути: установщик создаёт копию прежней службы и переносит их.
 
-### API Endpoints
+### Конечные точки API {#api-endpoints}
 
-For automation or monitoring, the scheduled backup system exposes a REST API:
+Для автоматизации и мониторинга система копирования по расписанию предоставляет REST API:
 
-| Method | Endpoint | Description |
+| Метод | Конечная точка | Описание |
 |--------|----------|-------------|
-| `GET` | `/local-backup/status` | Current schedule config and next run time |
-| `GET` | `/local-backup/path-check` | Check the output directory is writable (writes and removes a probe file) |
-| `POST` | `/local-backup/run` | Trigger an immediate backup |
-| `GET` | `/local-backup/backups` | List all backup files |
-| `GET` | `/local-backup/backups/{filename}/download` | Download a backup file |
-| `POST` | `/local-backup/backups/{filename}/restore` | Restore from a backup file |
-| `DELETE` | `/local-backup/backups/{filename}` | Delete a backup file |
+| `GET` | `/local-backup/status` | Текущее расписание и время следующего запуска |
+| `GET` | `/local-backup/path-check` | Проверить доступность каталога для записи (создаёт и удаляет проверочный файл) |
+| `POST` | `/local-backup/run` | Запустить копирование немедленно |
+| `GET` | `/local-backup/backups` | Список файлов резервных копий |
+| `GET` | `/local-backup/backups/{filename}/download` | Скачать файл копии |
+| `POST` | `/local-backup/backups/{filename}/restore` | Восстановить данные из файла копии |
+| `DELETE` | `/local-backup/backups/{filename}` | Удалить файл копии |
 
 ---
 
-## :material-cloud-download: Creating a Local Backup
+## :material-cloud-download: Создание локальной резервной копии {#creating-a-local-backup}
 
-### Manual Backup
+### Резервное копирование вручную {#manual-backup_1}
 
-1. Go to **Settings** > **Backup & Restore**
-2. Click **Download Backup**
-3. Wait for backup to complete (progress indicator shown)
-4. ZIP file downloads automatically
+1. Откройте **Настройки** > **Резервное копирование и восстановление**
+2. Нажмите **Скачать резервную копию**
+3. Дождитесь завершения копирования (отображается индикатор прогресса)
+4. ZIP-файл скачается автоматически
 
-!!! warning "Don't Navigate Away"
-    During backup/restore, stay on the page. The UI blocks navigation to prevent data corruption.
+!!! warning "Не покидайте страницу"
+    Во время копирования или восстановления оставайтесь на странице. Интерфейс блокирует навигацию, чтобы предотвратить повреждение данных.
 
-### Backup Contents
+### Содержимое копии {#backup-contents}
 
-The backup is a complete ZIP file containing:
+Резервная копия — полный ZIP-файл, который содержит:
 
-| Data | Included |
+| Данные | Включены |
 |------|:--------:|
-| Database (all tables) | :material-check: |
-| Print archives (3MF files) | :material-check: |
-| Archive thumbnails | :material-check: |
-| Timelapse videos | :material-check: |
-| Library files | :material-check: |
-| Library thumbnails | :material-check: |
-| Project files | :material-check: |
-| Printer icons | :material-check: |
-| Plate calibration data | :material-check: |
-| Virtual printer uploads | :material-check: |
+| База данных (все таблицы) | :material-check: |
+| Архивы печати (файлы 3MF) | :material-check: |
+| Миниатюры архивов | :material-check: |
+| Видео таймлапсов | :material-check: |
+| Файлы библиотеки | :material-check: |
+| Миниатюры библиотеки | :material-check: |
+| Файлы проектов | :material-check: |
+| Значки принтеров | :material-check: |
+| Данные калибровки пластины | :material-check: |
+| Загрузки виртуального принтера | :material-check: |
 
-!!! success "Complete by Definition"
-    The new backup system copies the entire database file and all data directories. No data can be missed because everything is included automatically.
+!!! success "Полная копия"
+    Новая система копирует весь файл базы данных и все каталоги данных. Всё включается автоматически, поэтому данные не будут пропущены.
 
 ---
 
-## :material-folder-zip: Backup File
+## :material-folder-zip: Файл резервной копии {#backup-file}
 
-### Format
+### Формат {#format}
 
-Backup files are ZIP archives:
+Резервные копии представляют собой ZIP-архивы:
 
 ```
 bambuddy-backup-20260201-143022.zip
 ```
 
-### ZIP Structure
+### Структура ZIP {#zip-structure}
 
 ```
 bambuddy-backup-YYYYMMDD-HHMMSS.zip
@@ -552,214 +552,218 @@ bambuddy-backup-YYYYMMDD-HHMMSS.zip
 │       ├── thumbnails/      # Generated thumbnails
 │       └── photos/<id>/     # Photos attached to library files
 ├── virtual_printer/         # Pending uploads
-├── projects/                # Project files
+├── projects/                # Файлы проектов
 ├── icons/                   # Custom printer icons
 └── plate_calibration/       # Plate detection references
 ```
 
-### File Size
+### Размер файла {#file-size}
 
-Typical sizes depend on your archive content:
+Типичный размер зависит от содержимого архива:
 
-- Small archive (100 prints, no timelapses): ~100-500 MB
-- Medium archive (500 prints, some timelapses): ~1-5 GB
-- Large archive (1000+ prints, full timelapses): ~10+ GB
+- Небольшой архив (100 печатей, без таймлапсов): ~100–500 МБ
+- Средний архив (500 печатей, несколько таймлапсов): ~1–5 ГБ
+- Большой архив (1000+ печатей, таймлапсы всех печатей): от ~10 ГБ
 
-!!! tip "Large Backups"
-    If you have many timelapse videos, backups can be large. Consider periodic cleanup of old timelapses.
-
----
-
-## :material-cloud-upload: Restoring from Backup
-
-### Full Restore
-
-Restore everything from a backup ZIP:
-
-1. Go to **Settings** > **Backup & Restore**
-2. Click **Restore Backup**
-3. Select your backup ZIP file
-4. Wait for restore to complete (progress indicator shown)
-5. **Restart Bambuddy** when prompted
-
-!!! warning "Full Restore Overwrites"
-    A full restore replaces all current data including the database and all files. Create a backup first!
-
-!!! info "Restart Required"
-    After restore, you must restart Bambuddy for changes to take effect. The database connection is replaced during restore.
-
-If the restored database holds archives of the same file more than once, the Archives page offers to merge them (see [Merging duplicates](archiving.md#merging-duplicates)). Nothing is merged unless you do it.
-
-### Portable Backups
-
-Backups are fully portable between installations:
-
-- **Different servers**: Move from one machine to another
-- **Different paths**: Works even if data directory changed
-- **Different Docker volumes**: Migrate between container setups
-- **Different database backends**: Restore a SQLite backup into a PostgreSQL install (and vice versa)
-
-The backup system always exports data in portable SQLite format, regardless of which database backend you use. When restoring into PostgreSQL, Bambuddy automatically converts data types (booleans, datetimes) and handles foreign key constraints.
-
-#### Backups and versions
-
-A backup carries the database of the version that made it, and `manifest.json` records which version that was. Restoring into a different version is normal and supported in both directions: a newer Bambuddy migrates an older backup forward after the restore, and a column a newer backup has but an older version does not know about is ignored.
-
-The one case that cannot work is a column the version you are restoring **into** requires and the backup has no value for. On a PostgreSQL install that is checked before the restore starts, and an incompatible backup is refused with a message naming the columns and both version numbers — nothing is changed, so your current data is still there. If you see it, restore the backup on the version that made it, or upgrade this install to that version first.
-
-!!! tip "Keep the versions together"
-    The simplest way to never meet this is to upgrade before restoring: restore a backup into the same version or a newer one, never into an older one. Downgrading an install and restoring yesterday's backup into it is the combination that gets caught.
+!!! tip "Большие резервные копии"
+    Если таймлапсов много, копии могут быть большими. Рассмотрите периодическое удаление старых таймлапсов.
 
 ---
 
-## :material-database-export: Manual Database Access
+## :material-cloud-upload: Восстановление из резервной копии {#restoring-from-backup}
 
-=== ":material-database: SQLite (Default)"
+### Полное восстановление {#full-restore}
 
-    ### Location
+Восстановите все данные из ZIP-копии:
 
-    The database is stored at:
+1. Откройте **Настройки** > **Резервное копирование и восстановление**
+2. Нажмите **Восстановить резервную копию**
+3. Выберите ZIP-файл копии
+4. Дождитесь завершения восстановления (отображается индикатор прогресса)
+5. При появлении запроса **перезапустите Bambuddy**
+
+!!! warning "Полное восстановление перезаписывает данные"
+    Полное восстановление заменяет все текущие данные, включая базу и все файлы. Сначала создайте резервную копию!
+
+!!! info "Необходим перезапуск"
+    После восстановления необходимо перезапустить Bambuddy, чтобы изменения вступили в силу. Во время восстановления соединение с базой данных заменяется.
+
+Если восстановленная база содержит несколько архивов одного файла, страница архива предложит их объединить (см. [Объединение дубликатов](archiving.md#merging-duplicates)). Без вашего действия ничего не объединяется.
+
+### Переносимые копии {#portable-backups}
+
+Резервные копии полностью переносимы между установками:
+
+- **Разные серверы**: перенос с одного компьютера на другой
+- **Разные пути**: работает даже при изменении каталога данных
+- **Разные тома Docker**: переход между конфигурациями контейнеров
+- **Разные СУБД**: восстановление копии SQLite в установке PostgreSQL и наоборот
+
+Система всегда экспортирует данные в переносимом формате SQLite независимо от используемой СУБД. При восстановлении в PostgreSQL Bambuddy автоматически преобразует типы данных (логические значения, даты и время) и обрабатывает ограничения внешних ключей.
+
+#### Копии и версии {#backups-and-versions}
+
+Копия содержит базу данных версии, которая её создала; версия записана в `manifest.json`. Восстановление в другую версию обычно поддерживается в обоих направлениях: более новая Bambuddy мигрирует старую копию после восстановления, а столбец новой копии, неизвестный старой версии, игнорируется.
+
+Невозможно восстановление, если версия, **в которую** выполняется восстановление, требует столбец, значения которого нет в копии. В PostgreSQL это проверяется до начала: несовместимая копия отклоняется с указанием столбцов и обеих версий, данные не меняются. В этом случае восстановите копию в версии, которая её создала, или сначала обновите эту установку до неё.
+
+!!! tip "Следите за версиями"
+    Проще всего избежать этой проблемы, обновившись перед восстановлением: используйте ту же или более новую версию, но не старую. Проверка обнаруживает, например, установку более старой версии с последующим восстановлением вчерашней копии.
+
+---
+
+## :material-database-export: Ручной доступ к базе данных {#manual-database-access}
+
+=== ":material-database: SQLite (по умолчанию)"
+
+    ### Расположение {#location}
+
+    База данных находится по пути:
 
     ```
     /path/to/bambuddy/bambuddy.db
     ```
 
-    ### Direct Backup
+    ### Прямое копирование {#direct-backup}
 
-    Copy the database file directly:
+    Скопируйте файл базы данных напрямую:
 
     ```bash
     cp bambuddy.db bambuddy_backup_$(date +%Y%m%d).db
     ```
 
-    !!! warning "Stop Bambuddy First"
-        Stop Bambuddy before copying to ensure consistency.
+    !!! warning "Сначала остановите Bambuddy"
+        Для согласованности остановите Bambuddy перед копированием.
 
-    ### SQLite Tools
+    ### Инструменты SQLite {#sqlite-tools}
 
-    Use SQLite tools for advanced operations:
+    <a id="dump-to-sql"></a>
+    <a id="restore-from-sql"></a>
+
+    Для расширенных операций используйте инструменты SQLite:
 
     ```bash
     # Dump to SQL
     sqlite3 bambuddy.db .dump > backup.sql
 
+    # Restore from SQL
+    sqlite3 new.db < backup.sql
+    ```
+
 === ":material-elephant: PostgreSQL"
 
-    ### Connection
+    ### Подключение {#connection}
 
-    Connect to your PostgreSQL database using the same `DATABASE_URL` from your configuration:
+    Подключитесь к базе PostgreSQL, используя тот же `DATABASE_URL`, что и в конфигурации:
 
     ```bash
     psql "postgresql://user:pass@host:5432/bambuddy"
     ```
 
-    ### Direct Backup
+    ### Прямое копирование {#direct-backup_1}
 
     ```bash
     pg_dump -Fc "postgresql://user:pass@host:5432/bambuddy" > bambuddy_backup_$(date +%Y%m%d).dump
     ```
 
-    ### Restore
+    ### Восстановление {#restore}
 
     ```bash
     pg_restore --clean --if-exists -d "postgresql://user:pass@host:5432/bambuddy" bambuddy_backup.dump
     ```
 
-    !!! tip "Bambuddy's Built-in Backup is Easier"
-        The Settings > Backup page creates portable backups that work across both SQLite and PostgreSQL. Use manual `pg_dump` only if you need PostgreSQL-specific features like point-in-time recovery.
+    !!! tip "Встроенное копирование Bambuddy проще"
+        На странице «Настройки > Резервное копирование» создаются переносимые копии для SQLite и PostgreSQL. Используйте `pg_dump` вручную, только если нужны специфичные возможности PostgreSQL, например восстановление на определённый момент времени.
 
-# Restore from SQL
-sqlite3 new.db < backup.sql
-```
 
 ---
 
-## :material-folder-download: Downloading Archives
+## :material-folder-download: Скачивание архивов {#downloading-archives}
 
-3MF files aren't in database backups. Download separately:
+Файлы 3MF не входят в копии базы данных. Скачайте их отдельно:
 
-### Individual Download
+### Скачивание по одному {#individual-download}
 
-1. Open an archive
-2. Click **Download 3MF**
+1. Откройте архив
+2. Нажмите **Скачать 3MF**
 
-### Bulk Export
+### Массовый экспорт {#bulk-export}
 
-1. Go to **Archives**
-2. Click **Export**
-3. Select **Include 3MF files**
-4. Download the archive
-
----
-
-## :material-restore: Recovery Scenarios
-
-### Lost Database
-
-If database is corrupted or deleted:
-
-1. Stop Bambuddy
-2. Remove corrupted `bambuddy.db`
-3. Start Bambuddy (creates fresh database)
-4. Go to Settings > Backup
-5. Restore from your backup
-
-### New Installation
-
-Moving to a new server:
-
-1. Install Bambuddy on new server
-2. Copy backup file to new server
-3. Go to Settings > Backup
-4. Full restore from backup
-
-### Data Migration
-
-Moving between versions:
-
-1. Create backup on old version
-2. Upgrade Bambuddy
-3. If needed, restore from backup
+1. Перейдите в **Архив**
+2. Нажмите **Экспорт**
+3. Выберите **Включить файлы 3MF**
+4. Скачайте архив
 
 ---
 
-## :material-shield-check: Best Practices
+## :material-restore: Сценарии восстановления {#recovery-scenarios}
 
-### Recommended Backup Frequency
+### Потеря базы данных {#lost-database}
 
-| Frequency | Good For |
+Если база данных повреждена или удалена:
+
+1. Остановите Bambuddy
+2. Удалите повреждённый `bambuddy.db`
+3. Запустите Bambuddy (будет создана новая база)
+4. Откройте «Настройки > Резервное копирование»
+5. Восстановите данные из копии
+
+### Новая установка {#new-installation}
+
+При переходе на новый сервер:
+
+1. Установите Bambuddy на новом сервере
+2. Скопируйте файл резервной копии на новый сервер
+3. Откройте «Настройки > Резервное копирование»
+4. Выполните полное восстановление из копии
+
+### Перенос данных {#data-migration}
+
+При переходе между версиями:
+
+1. Создайте копию в старой версии
+2. Обновите Bambuddy
+3. При необходимости восстановите данные из копии
+
+---
+
+## :material-shield-check: Рекомендации {#best-practices}
+
+### Рекомендуемая периодичность копирования {#recommended-backup-frequency}
+
+| Периодичность | Подходит для |
 |-----------|----------|
-| Daily | Active printing (use [Scheduled Local Backups](#scheduled-local-backups)) |
-| Weekly | Regular use |
-| Monthly | Light use |
+| Ежедневно | Активная печать (используйте [локальные копии по расписанию](#scheduled-local-backups)) |
+| Еженедельно | Регулярное использование |
+| Ежемесячно | Редкое использование |
 
-### Storage
+### Хранение {#storage}
 
-- Keep backups off the Bambuddy server
-- Use cloud storage (Dropbox, Google Drive, etc.)
-- Keep multiple versions
+- Храните копии вне сервера Bambuddy
+- Используйте облачное хранилище (Dropbox, Google Drive и т. д.)
+- Храните несколько версий
 
-### Testing
+### Проверка {#testing}
 
-- Periodically test restoring
-- Verify backup integrity
-- Document your backup process
+- Периодически проверяйте восстановление
+- Проверяйте целостность копий
+- Документируйте процесс резервного копирования
 
 ---
 
-## :material-lightbulb: Tips
+## :material-lightbulb: Советы {#tips}
 
-!!! tip "Before Major Changes"
-    Always backup before upgrading or making big configuration changes.
+!!! tip "Перед крупными изменениями"
+    Всегда создавайте копию перед обновлением или значительными изменениями конфигурации.
 
-!!! tip "Off-Site Storage"
-    Store at least one backup off-site (cloud or another location).
+!!! tip "Хранение вне системы"
+    Храните хотя бы одну копию вне системы — в облаке или другом месте.
 
-!!! tip "Regular Testing"
-    Test your restore process periodically to ensure backups work.
+!!! tip "Регулярная проверка"
+    Периодически проверяйте восстановление, чтобы убедиться, что копии работают.
 
-!!! tip "Version in Filename"
-    Include date and version in backup filenames for easy identification.
+!!! tip "Версия в имени файла"
+    Указывайте дату и версию в именах копий, чтобы их было легко различать.
 
-!!! tip "3MF Backup"
-    For complete backup, also download your 3MF files separately.
+!!! tip "Резервное копирование 3MF"
+    Для полной копии дополнительно скачайте файлы 3MF отдельно.
