@@ -1,366 +1,345 @@
 ---
-title: Cloud Profiles
-description: Manage Bambu Cloud slicer presets
+title: Облачные профили
+description: Управление пресетами слайсера Bambu Cloud
 ---
 
-# Cloud Profiles
+# Облачные профили {#cloud-profiles}
 
-Manage and compare your Bambu Cloud slicer presets directly from Bambuddy.
+Управляйте пресетами слайсера Bambu Cloud и сравнивайте их прямо в Bambuddy.
 
-!!! info "Looking for Orca Cloud?"
-    Bambuddy also supports syncing profiles from your OrcaSlicer Cloud account — see [Orca Cloud Profiles](orca-cloud-profiles.md). Both clouds work side by side; you can connect to either, both, or neither.
+!!! info "Ищете Orca Cloud?"
+    Bambuddy также поддерживает синхронизацию профилей из учётной записи OrcaSlicer Cloud — см. [Облачные профили Orca](orca-cloud-profiles.md). Оба облака работают параллельно: можно подключить любое из них, оба или не подключать ни одно.
 
-![Cloud Profiles](../assets/cloud_profiles-1.png){ .screenshot }
-
----
-
-## :material-cloud: Overview
-
-Bambu Cloud Profiles lets you:
-
-- **View** your cloud slicer presets
-- **Compare** template differences
-- **Manage** visibility and organization
-- **Track** preset versions
+![Облачные профили](../assets/cloud_profiles-1.png){ .screenshot }
 
 ---
 
-## :material-key: Authentication
+## :material-cloud: Обзор {#overview}
 
-### Connecting to Bambu Cloud
+Облачные профили Bambu позволяют:
 
-1. Go to **Cloud Profiles** page
-2. Click **Connect to Bambu Cloud**
-3. Enter your Bambu Cloud credentials
-4. Click **Login**
-5. Complete 2FA verification (see below)
+- **Просматривать** облачные пресеты слайсера
+- **Сравнивать** отличия от шаблонов
+- **Управлять** видимостью и организацией
+- **Отслеживать** версии пресетов
 
-!!! info "Multi-User Instances"
-    When [authentication](authentication.md) is enabled, each user has their own independent Bambu Cloud login. Your cloud credentials are stored on your user account — logging in or out does not affect other users. The `cloud:auth` permission is required to use Cloud Profiles.
+---
 
-!!! tip "Headless / API access"
-    Want to read your cloud presets and filament catalogue from a script or
-    CI pipeline? Create an API key with **Allow cloud access** enabled — see
-    [API Keys → Cloud Access Scope](api-keys.md#cloud-access-scope). The key
-    will read on its owner's behalf using your stored Bambu Cloud login;
-    no second sign-in needed.
+## :material-key: Аутентификация {#authentication}
 
-### Two-Factor Authentication (2FA)
+### Подключение к Bambu Cloud {#connecting-to-bambu-cloud}
 
-Bambuddy supports both types of Bambu Cloud 2FA:
+1. Откройте страницу **Облачные профили**
+2. Нажмите **Подключиться к Bambu Cloud**
+3. Введите учётные данные Bambu Cloud
+4. Нажмите **Войти**
+5. Пройдите двухфакторную проверку (см. ниже)
 
-| Method | Description |
+!!! info "Многопользовательские установки"
+    При включённой [аутентификации](authentication.md) каждый пользователь входит в Bambu Cloud отдельно. Облачные учётные данные хранятся в вашей учётной записи; вход и выход не влияют на других пользователей. Для работы с облачными профилями необходимо разрешение `cloud:auth`.
+
+!!! tip "Доступ без интерфейса / через API"
+    Чтобы читать облачные пресеты и каталог филамента из скрипта или конвейера CI, создайте ключ API с включённым параметром **Разрешить доступ к облаку** — см. [Ключи API → Область доступа к облаку](api-keys.md#cloud-access-scope). Ключ выполняет чтение от имени владельца с помощью сохранённого входа в Bambu Cloud; входить повторно не нужно.
+
+### Двухфакторная аутентификация (2FA) {#two-factor-authentication-2fa}
+
+Bambuddy поддерживает оба способа 2FA Bambu Cloud:
+
+| Способ | Описание |
 |--------|-------------|
-| **Email Verification** | A 6-digit code is sent to your email |
-| **TOTP (Authenticator App)** | Use your authenticator app (Google Authenticator, Authy, etc.) |
+| **Проверка по электронной почте** | На почту отправляется шестизначный код |
+| **TOTP (приложение-аутентификатор)** | Используется приложение-аутентификатор (Google Authenticator, Authy и т. д.) |
 
-The login flow automatically detects which method your account uses:
+При входе способ определяется автоматически:
 
-- **Email**: You'll see "Verification code sent to your email"
-- **TOTP**: You'll see "Enter code from your authenticator app"
+- **Электронная почта**: появится сообщение об отправке кода на вашу почту
+- **TOTP**: появится запрос кода из приложения-аутентификатора
 
-!!! tip "TOTP Recommended"
-    If you have an authenticator app set up on your Bambu account, the login will be faster since you don't need to wait for an email.
+!!! tip "Рекомендуется TOTP"
+    Если в учётной записи Bambu настроено приложение-аутентификатор, вход будет быстрее: не придётся ждать письмо.
 
-### Access Token Login
+### Вход с токеном доступа {#access-token-login}
 
-If email/password login doesn't work for you, you can log in using a Bambu Cloud access token instead:
+Если вход по адресу электронной почты и паролю не работает, можно использовать токен доступа Bambu Cloud:
 
-1. Click **Use access token instead** on the login page
-2. Pick your **Region** (Global or China) — must match where you registered your Bambu account
-3. Obtain your access token using one of the methods below
-4. Paste it into Bambuddy and click **Set Token**
+1. На странице входа нажмите **Использовать токен доступа**
+2. Выберите **Регион** (глобальный или Китай) в соответствии с регионом регистрации учётной записи Bambu
+3. Получите токен одним из описанных ниже способов
+4. Вставьте его в Bambuddy и нажмите **Установить токен**
 
-!!! note "China-region accounts must use token login"
-    Bambu Lab China accounts (`bambulab.cn`) are tied to phone numbers, not email addresses. The email / password flow in Bambuddy's login form is unusable for these accounts — token login is the only path. Select **Region: China** before pasting the token so Bambuddy validates it against `api.bambulab.cn` instead of the global endpoint.
+!!! note "Для учётных записей региона Китай обязателен вход по токену"
+    Учётные записи Bambu Lab China (`bambulab.cn`) привязаны к номерам телефонов, а не к электронной почте. Форма входа Bambuddy по почте и паролю для них не подходит; необходимо использовать токен. Перед вставкой выберите **Регион: Китай**, чтобы Bambuddy проверил токен через `api.bambulab.cn`, а не глобальную конечную точку.
 
-#### How to Obtain an Access Token
+#### Как получить токен доступа {#how-to-obtain-an-access-token}
 
-The access token is **not** available in the Bambu Studio UI and Bambu Lab no longer exposes it on their profile page either. The two reliable methods today:
+Токен доступа **не** показывается в интерфейсе Bambu Studio, и Bambu Lab больше не выводит его на странице профиля. Сейчас надёжны два способа:
 
-##### Method 1: MakerWorld cookie (works for both regions)
+##### Способ 1: cookie MakerWorld (для обоих регионов) {#method-1-makerworld-cookie-works-for-both-regions}
 
-The same `token` cookie MakerWorld stores in your browser session is the Cloud Access Token. Easiest path:
+Тот же файл cookie `token`, который MakerWorld сохраняет в сеансе браузера, является токеном доступа к облаку. Самый простой способ:
 
-1. Open [MakerWorld](https://makerworld.com/en) (global) or [MakerWorld 中国](https://makerworld.com.cn/zh) (China) in your browser and log in.
-2. Press `F12` to open Developer Tools.
-3. Go to **Application** (Chrome / Edge) or **Storage** (Firefox) → **Cookies** → the MakerWorld domain.
-4. Select the row whose name is `token`.
-5. Copy the **Cookie Value** from the panel at the bottom.
-6. Paste it into Bambuddy's Access Token field (with the matching **Region** selected) and click **Set Token**.
+1. Откройте [MakerWorld](https://makerworld.com/en) (глобальный) или [MakerWorld 中国](https://makerworld.com.cn/zh) (Китай) в браузере и войдите.
+2. Нажмите `F12`, чтобы открыть инструменты разработчика.
+3. Перейдите в **Application** (Chrome / Edge) или **Storage** (Firefox) → **Cookies** → домен MakerWorld.
+4. Выберите строку с именем `token`.
+5. Скопируйте **Cookie Value** из нижней панели.
+6. Вставьте значение в поле токена доступа Bambuddy, выберите соответствующий **регион** и нажмите **Установить токен**.
 
-!!! warning "Treat the token like a password"
-    It grants access to your Bambu Cloud account, including print history and MakerWorld actions. Don't paste it into GitHub issues, screenshots, or chat threads. Bambuddy stores it locally on your server only.
+!!! warning "Обращайтесь с токеном как с паролем"
+    Он даёт доступ к учётной записи Bambu Cloud, включая историю печати и действия в MakerWorld. Не вставляйте его в обращения GitHub, снимки экрана или переписку. Bambuddy хранит его только локально на вашем сервере.
 
-##### Method 2: Python script (Global region only)
+##### Способ 2: скрипт Python (только глобальный регион) {#method-2-python-script-global-region-only}
 
-Use a library like [`bambu-lab-cloud-api`](https://pypi.org/project/bambu-lab-cloud-api/) to handle the login flow — it sends your credentials, prompts for the email verification code, and returns the token. Targets the global `api.bambulab.com` endpoint only; doesn't work for China-region accounts because those don't accept email login.
+Используйте библиотеку, например [`bambu-lab-cloud-api`](https://pypi.org/project/bambu-lab-cloud-api/), для входа: она отправит учётные данные, запросит код из письма и вернёт токен. Она обращается только к глобальной конечной точке `api.bambulab.com` и не работает с учётными записями региона Китай, поскольку они не поддерживают вход по электронной почте.
 
-!!! info "Token details"
-    - The token is typically valid for **3 months**, then needs re-issuing the same way.
-    - Scripts often save it to a local file (e.g., `~/.bambu_token`) for reuse.
-    - This is the **Cloud Access Token** (for the cloud API / MQTT) — do not confuse it with the **Printer Access Code** (found on the printer screen under Network settings; used for local LAN connections only).
+!!! info "О токене"
+    - Токен обычно действителен **3 месяца**, после чего его нужно получить заново тем же способом.
+    - Скрипты часто сохраняют его в локальный файл, например `~/.bambu_token`, для повторного использования.
+    - Это **токен доступа к облаку** (для облачного API / MQTT). Не путайте его с **кодом доступа принтера** на экране сетевых настроек, который используется только для локального подключения.
 
-!!! tip "When to use token login"
-    - You're on a China-region account (required — see note above).
-    - Email / 2FA login fails on the global region.
-    - Your account uses a third-party SSO provider that Bambuddy can't authenticate against directly.
+!!! tip "Когда использовать токен"
+    - У вас учётная запись региона Китай (обязательно, см. примечание выше).
+    - В глобальном регионе не работает вход по почте или 2FA.
+    - Ваша учётная запись использует стороннего поставщика SSO, с которым Bambuddy не может пройти аутентификацию напрямую.
 
-!!! note "Credentials Storage"
-    Credentials are stored locally and only used to access your presets.
+!!! note "Хранение учётных данных"
+    Учётные данные хранятся локально и используются только для доступа к вашим пресетам.
 
-### Connection Status
+### Состояние подключения {#connection-status}
 
-| Status | Description |
+| Состояние | Описание |
 |:------:|-------------|
-| :material-check-circle:{ style="color: #4caf50" } Connected | Authenticated and synced |
-| :material-close-circle:{ style="color: #f44336" } Disconnected | Not authenticated |
-| :material-alert:{ style="color: #ff9800" } Sign-in expired | A token is stored, but Bambu Lab no longer accepts it |
-| :material-sync: Syncing | Fetching latest presets |
+| :material-check-circle:{ style="color: #4caf50" } Подключено | Аутентификация и синхронизация выполнены |
+| :material-close-circle:{ style="color: #f44336" } Отключено | Аутентификация не выполнена |
+| :material-alert:{ style="color: #ff9800" } Срок входа истёк | Токен сохранён, но Bambu Lab больше его не принимает |
+| :material-sync: Синхронизация | Получение актуальных пресетов |
 
-Bambuddy checks the stored token against Bambu Lab rather than assuming it still
-works, so **Connected** means Bambu accepted it, not merely that one is saved.
-The answer is cached for a few minutes, and if Bambu Lab is unreachable the last
-known status is kept — an outage on their side will not sign you out.
+Bambuddy проверяет сохранённый токен у Bambu Lab, поэтому **Подключено** означает, что Bambu принял токен, а не просто что он сохранён. Ответ кэшируется на несколько минут; если Bambu Lab недоступен, сохраняется последнее известное состояние — сбой на их стороне не приведёт к выходу.
 
-### When the sign-in expires
+### Когда срок входа истекает {#when-the-sign-in-expires}
 
-Bambu Lab's access token is not permanent, and Bambu provides no way to renew it
-without signing in again. When it lapses, **every** Bambu Cloud feature stops at
-once — cloud profiles, MakerWorld imports, slicer presets and printer firmware
-checks — because they all use the same token.
+Токен Bambu Lab не бессрочный, а способа продлить его без повторного входа нет. После истечения сразу перестают работать **все** функции Bambu Cloud: облачные профили, импорт MakerWorld, пресеты слайсера и проверка прошивки принтера, поскольку они используют один токен.
 
-Bambuddy will tell you: the Profiles page shows the login form again with a
-"Bambu Cloud sign-in expired" notice, and MakerWorld disables its import buttons
-rather than letting a download fail. **Sign in again on the Profiles page** and
-everything resumes. Nothing else needs to be reconfigured.
+Bambuddy сообщит об этом: страница профилей снова покажет форму входа с уведомлением об истечении срока, а MakerWorld отключит кнопки импорта, не дожидаясь ошибки загрузки. **Войдите снова на странице профилей**, и всё заработает. Дополнительная настройка не требуется.
 
-### When Bambu asks for a CAPTCHA
+### Когда Bambu запрашивает CAPTCHA {#when-bambu-asks-for-a-captcha}
 
-Sometimes the login form answers with a panel saying Bambu Cloud is asking for a
-CAPTCHA. Bambu's anti-abuse layer has flagged your network, and no sign-in will
-be accepted until it clears — nothing you type will help, and the challenge
-cannot be answered from Bambuddy because a CAPTCHA needs a real browser.
+Иногда форма входа сообщает, что Bambu Cloud требует CAPTCHA. Система защиты Bambu отметила вашу сеть, и вход не будет принят, пока ограничение не снимется. Ввести ответ в Bambuddy нельзя: для CAPTCHA нужен настоящий браузер.
 
-It is tied to your public IP address rather than to your account, and normally
-clears by itself within a few hours. Retrying repeatedly extends it, so Bambuddy
-holds sign-in requests back for five minutes after seeing a challenge. Use
-[Access Token Login](#access-token-login) to connect in the meantime — that path
-does not go through the challenged endpoint. See
-[Bambu Cloud is asking for a CAPTCHA](../reference/troubleshooting.md#bambu-cloud-captcha).
+Ограничение привязано к публичному IP-адресу, а не к учётной записи, и обычно снимается само в течение нескольких часов. Частые повторные попытки продлевают его, поэтому Bambuddy задерживает запросы входа на пять минут после получения CAPTCHA. Пока ограничение действует, используйте [вход с токеном доступа](#access-token-login): он не обращается к заблокированной конечной точке. См. [Bambu Cloud запрашивает CAPTCHA](../reference/troubleshooting.md#bambu-cloud-captcha).
 
 ---
 
-## :material-view-list: Viewing Profiles
+## :material-view-list: Просмотр профилей {#viewing-profiles}
 
-### Profile Types
+### Типы профилей {#profile-types}
 
-| Type | Description |
+| Тип | Описание |
 |------|-------------|
-| **Filament** | Material settings |
-| **Process** | Print settings |
-| **Printer** | Machine settings |
+| **Филамент** | Настройки материала |
+| **Процесс** | Настройки печати |
+| **Принтер** | Настройки устройства |
 
-### Profile Information
+### Сведения о профиле {#profile-information}
 
-Each profile displays:
+Для каждого профиля отображаются:
 
-- Name
-- Type (filament/process/printer)
-- Modified date
-- Visibility status
-- Sync status
+- Название
+- Тип (филамент, процесс, принтер)
+- Дата изменения
+- Видимость
+- Состояние синхронизации
 
 ---
 
-## :material-compare: Comparing Profiles
+## :material-compare: Сравнение профилей {#comparing-profiles}
 
-Compare profiles to understand differences:
+Сравнивайте профили, чтобы понять различия:
 
-### Comparing Templates
+### Сравнение с шаблоном {#comparing-templates}
 
-1. Select a profile
-2. Click **Compare with Template**
-3. View differences highlighted
+1. Выберите профиль
+2. Нажмите **Сравнить с шаблоном**
+3. Посмотрите выделенные различия
 
-![Cloud Profiles Comparison](../assets/cloud_profiles-2.png){ .screenshot }
+![Сравнение облачных профилей](../assets/cloud_profiles-2.png){ .screenshot }
 
-### Diff View
+### Представление различий {#diff-view}
 
-| Color | Meaning |
+| Цвет | Значение |
 |:-----:|---------|
-| :material-square:{ style="color: #4caf50" } Green | Added/New value |
-| :material-square:{ style="color: #f44336" } Red | Removed/Old value |
-| :material-square:{ style="color: #ff9800" } Orange | Changed value |
+| :material-square:{ style="color: #4caf50" } Зелёный | Добавленное / новое значение |
+| :material-square:{ style="color: #f44336" } Красный | Удалённое / старое значение |
+| :material-square:{ style="color: #ff9800" } Оранжевый | Изменённое значение |
 
-### What's Compared
+### Что сравнивается {#whats-compared}
 
-- Temperature settings
-- Speed settings
-- Retraction settings
-- Cooling settings
-- Support settings
-- And more...
+- Настройки температуры
+- Настройки скорости
+- Настройки ретракта
+- Настройки охлаждения
+- Настройки поддержек
+- И многое другое
 
 ---
 
-## :material-eye: Visibility Control
+## :material-eye: Управление видимостью {#visibility-control}
 
-### Template Visibility
+### Видимость шаблона {#template-visibility}
 
-Control which presets appear in Bambu Studio:
+Управляйте тем, какие пресеты отображаются в Bambu Studio:
 
-| Status | In Bambu Studio |
+| Состояние | В Bambu Studio |
 |:------:|-----------------|
-| :material-eye: Visible | Shows in preset list |
-| :material-eye-off: Hidden | Hidden from list |
+| :material-eye: Видимый | Показан в списке пресетов |
+| :material-eye-off: Скрытый | Скрыт из списка |
 
-### Changing Visibility
+### Изменение видимости {#changing-visibility}
 
-1. Find the profile
-2. Click the visibility toggle
-3. Changes sync to cloud
+1. Найдите профиль
+2. Нажмите переключатель видимости
+3. Изменения синхронизируются с облаком
 
-!!! tip "Declutter"
-    Hide presets you don't use to keep Bambu Studio organized.
-
----
-
-## :material-sync: Syncing
-
-### Manual Sync
-
-Click **Sync** to fetch latest presets from cloud.
-
-### What Syncs
-
-- Profile names and settings
-- Visibility status
-- Modified timestamps
-
-### Sync Direction
-
-Currently **read-only** from Bambu Cloud:
-
-- :material-check: View presets
-- :material-check: Compare with templates
-- :material-close: Edit preset values (use Bambu Studio)
+!!! tip "Наведите порядок"
+    Скройте неиспользуемые пресеты, чтобы упорядочить список в Bambu Studio.
 
 ---
 
-## :material-filter: Filtering Profiles
+## :material-sync: Синхронизация {#syncing}
 
-### Filter Options
+### Синхронизация вручную {#manual-sync}
 
-| Filter | Description |
+Нажмите **Синхронизировать**, чтобы получить актуальные пресеты из облака.
+
+### Что синхронизируется {#what-syncs}
+
+- Названия и настройки профилей
+- Видимость
+- Время изменения
+
+### Направление синхронизации {#sync-direction}
+
+В настоящее время данные Bambu Cloud доступны **только для чтения**:
+
+- :material-check: Просмотр пресетов
+- :material-check: Сравнение с шаблонами
+- :material-close: Изменение значений пресета (используйте Bambu Studio)
+
+---
+
+## :material-filter: Фильтрация профилей {#filtering-profiles}
+
+### Параметры фильтра {#filter-options}
+
+| Фильтр | Описание |
 |--------|-------------|
-| **Type** | Filament, Process, Printer |
-| **Visibility** | Visible, Hidden, All |
-| **Search** | Text search in names |
+| **Тип** | Филамент, процесс, принтер |
+| **Видимость** | Видимые, скрытые, все |
+| **Поиск** | Поиск текста в названиях |
 
-### Sorting
+### Сортировка {#sorting}
 
-Sort profiles by:
+Профили можно сортировать по:
 
-- Name (A-Z, Z-A)
-- Modified date
-- Type
-
----
-
-## :material-content-copy: Using Profiles
-
-### In Bambu Studio
-
-1. Open Bambu Studio
-2. Sign in to Bambu Cloud
-3. Access synced profiles
-4. Apply to prints
-
-### From Bambuddy
-
-View profiles but don't edit:
-
-- Reference settings
-- Compare versions
-- Track what you have
+- Названию (А–Я, Я–А)
+- Дате изменения
+- Типу
 
 ---
 
-## :material-history: Version Tracking
+## :material-content-copy: Использование профилей {#using-profiles}
 
-### Modified Dates
+### В Bambu Studio {#in-bambu-studio}
 
-Each profile shows when it was last modified:
+1. Откройте Bambu Studio
+2. Войдите в Bambu Cloud
+3. Откройте синхронизированные профили
+4. Примените их к печати
 
-- Helps track changes
-- Identify recent updates
+### Из Bambuddy {#from-bambuddy}
 
-### Template Comparison
+Просматривайте профили без изменения:
 
-Compare your profile to the original template:
-
-- See what you've customized
-- Identify drift from defaults
-- Reset to template if needed
-
----
-
-## :material-help-circle: Troubleshooting
-
-### Authentication Failed
-
-1. Verify credentials are correct
-2. Check internet connection
-3. Ensure Bambu Cloud is accessible
-4. Try logging out and back in
-5. For TOTP: Ensure your device time is synchronized (TOTP codes are time-based)
-6. If all else fails, try the **access token** method instead (see [Access Token Login](#access-token-login))
-
-### TOTP Code Not Working
-
-1. Check your device time is accurate (enable automatic time sync)
-2. Make sure you're using the correct account in your authenticator app
-3. Try waiting for a new code (codes expire every 30 seconds)
-4. If persistent, try disabling and re-enabling TOTP on your Bambu account
-
-!!! warning "Every TOTP code rejected on 1.2.5.1 and earlier"
-    If **every** code is refused no matter what you do, and none of the steps above change anything, you are hitting a known incompatibility fixed after 1.2.5.1 — not a problem with your code, your clock or your authenticator.
-
-    Bambu Lab added CSRF protection to the sign-in endpoint Bambuddy posts the two-factor code to. Older versions were rejected before the code was ever evaluated, and reported it as "Invalid code". **Update Bambuddy** to fix it.
-
-    Existing sign-ins were unaffected, so this only bites when you sign in fresh. On an affected version you can work around it with the [Access Token Login](#access-token-login) method, which does not use the two-factor endpoint at all.
-
-### Profiles Not Showing
-
-1. Click **Sync** to refresh
-2. Check filters aren't hiding profiles
-3. Verify cloud account has profiles
-4. Check connection status
-
-### Sync Issues
-
-1. Check network connectivity
-2. Try manual sync
-3. Re-authenticate if needed
-4. Check Bambu Cloud status
-
-### A Custom Preset Reaches the Printer as Generic
-
-Your preset syncs and shows up here, you assign it to an AMS slot, and the printer's screen and Bambu Studio both name a generic filament instead. That is a limit of how a filament choice travels to the printer, not a sync failure &mdash; see [Why the printer may still show a generic filament](ams.md#custom-preset-display).
+- Сверяйте настройки
+- Сравнивайте версии
+- Отслеживайте имеющиеся профили
 
 ---
 
-## :material-lightbulb: Tips
+## :material-history: Отслеживание версий {#version-tracking}
 
-!!! tip "Regular Sync"
-    Sync after making changes in Bambu Studio to keep Bambuddy current.
+### Даты изменения {#modified-dates}
 
-!!! tip "Compare Before Printing"
-    Compare profiles to understand differences before choosing one.
+Каждый профиль показывает дату последнего изменения:
 
-!!! tip "Organize with Visibility"
-    Hide unused presets to keep your active presets easy to find.
+- Помогает отслеживать изменения
+- Позволяет найти недавние обновления
 
-!!! tip "Document Changes"
-    When you modify a profile significantly, note what you changed.
+### Сравнение с шаблоном {#template-comparison}
+
+Сравните профиль с исходным шаблоном:
+
+- Посмотрите свои изменения
+- Определите отклонения от настроек по умолчанию
+- При необходимости восстановите шаблон
+
+---
+
+## :material-help-circle: Устранение неполадок {#troubleshooting}
+
+### Ошибка аутентификации {#authentication-failed}
+
+1. Проверьте правильность учётных данных
+2. Проверьте подключение к интернету
+3. Убедитесь, что Bambu Cloud доступен
+4. Попробуйте выйти и снова войти
+5. Для TOTP убедитесь, что время устройства синхронизировано: коды зависят от времени
+6. Если ничего не помогло, попробуйте [вход с токеном доступа](#access-token-login)
+
+### Код TOTP не работает {#totp-code-not-working}
+
+1. Проверьте точность времени устройства (включите автоматическую синхронизацию)
+2. Убедитесь, что выбрана правильная учётная запись в приложении-аутентификаторе
+3. Дождитесь нового кода (срок действия — 30 секунд)
+4. Если проблема сохраняется, попробуйте отключить и снова включить TOTP в учётной записи Bambu
+
+!!! warning "Отклоняются все коды TOTP в версии 1.2.5.1 и ранее"
+    Если отклоняется **каждый** код и перечисленные шаги не помогают, причина — известная несовместимость, исправленная после версии 1.2.5.1, а не код, часы или приложение-аутентификатор.
+
+    Bambu Lab добавила защиту CSRF к конечной точке, куда Bambuddy отправляет код двухфакторной аутентификации. Старые версии отклонялись ещё до проверки кода и сообщали «Неверный код». **Обновите Bambuddy**, чтобы исправить проблему.
+
+    Существующие сеансы не затрагивались; проблема возникает только при новом входе. В затронутой версии можно воспользоваться [входом по токену](#access-token-login), который не использует конечную точку двухфакторной аутентификации.
+
+### Профили не отображаются {#profiles-not-showing}
+
+1. Нажмите **Синхронизировать**
+2. Проверьте, не скрыты ли профили фильтрами
+3. Убедитесь, что в облачной учётной записи есть профили
+4. Проверьте состояние подключения
+
+### Проблемы синхронизации {#sync-issues}
+
+1. Проверьте соединение с сетью
+2. Попробуйте синхронизацию вручную
+3. При необходимости войдите заново
+4. Проверьте состояние Bambu Cloud
+
+### Пользовательский пресет отображается на принтере как Generic {#a-custom-preset-reaches-the-printer-as-generic}
+
+Пресет синхронизируется и отображается здесь, вы назначаете его слоту AMS, но экран принтера и Bambu Studio показывают общее название филамента. Это ограничение способа передачи выбора филамента на принтер, а не ошибка синхронизации — см. [Почему принтер может показывать общий филамент](ams.md#custom-preset-display).
+
+---
+
+## :material-lightbulb: Советы {#tips}
+
+!!! tip "Регулярная синхронизация"
+    После изменений в Bambu Studio синхронизируйте данные, чтобы Bambuddy оставался актуальным.
+
+!!! tip "Сравнение перед печатью"
+    Сравните профили перед выбором, чтобы понять различия.
+
+!!! tip "Управление видимостью"
+    Скройте неиспользуемые пресеты, чтобы нужные было легче найти.
+
+!!! tip "Записывайте изменения"
+    При существенном изменении профиля запишите, что именно изменилось.
