@@ -1,183 +1,183 @@
 ---
-title: Export
-description: Export archives and statistics to CSV or Excel
+title: Экспорт
+description: Экспорт архивов и статистики в CSV или Excel
 ---
 
-# Export
+# Экспорт {#export}
 
-Export your print data for analysis, reporting, or backup purposes.
+Экспортируйте данные о печати для анализа, отчётности или резервного копирования.
 
 ---
 
-## :material-file-export: Export Options
+## :material-file-export: Варианты экспорта {#export-options}
 
-### Export Formats
+### Форматы экспорта {#export-formats}
 
-| Format | Extension | Best For |
+| Формат | Расширение | Для чего подходит |
 |--------|-----------|----------|
-| **CSV** | .csv | Spreadsheets, data analysis, importing |
-| **Excel** | .xlsx | Reports, formatting, charts |
+| **CSV** | .csv | Электронные таблицы, анализ и импорт данных |
+| **Excel** | .xlsx | Отчёты, форматирование, диаграммы |
 
 ---
 
-## :material-archive: Archive Export
+## :material-archive: Экспорт архива {#archive-export}
 
-Export your print archive data:
+Экспортируйте данные архива печати:
 
-### How to Export
+### Как экспортировать {#how-to-export}
 
-1. Go to **Archives** page
-2. Apply any desired filters
-3. Click **Export** button
-4. Choose format (CSV or Excel)
-5. Download begins
+1. Откройте страницу **Архив**
+2. Примените нужные фильтры
+3. Нажмите кнопку **Экспорт**
+4. Выберите формат (CSV или Excel)
+5. Начнётся загрузка
 
-### One Row per Print
+### Одна строка на печать {#one-row-per-print}
 
-An archive is a file, and each print of it is a run. The export has one row per print: the file's columns repeated on each, then that print's own. An archive printed before prints were logged keeps one row of its own fields; an archive never printed is one row with empty print columns.
+Архив представляет собой файл, а каждая его печать — отдельный запуск. В экспорте каждой печати соответствует одна строка: столбцы файла повторяются в каждой строке, за ними следуют данные конкретной печати. Архив, напечатанный до появления журнала запусков, сохраняет одну строку со своими полями; архив, который никогда не печатался, занимает одну строку с пустыми столбцами печати.
 
-| Column | From | Description |
+| Столбец | Источник | Описание |
 |--------|------|-------------|
-| ID | File | The archive's ID |
-| Print ID | Print | The run's ID (empty for a print logged before runs) |
-| Print Name, Filename | File | Name and original 3MF file |
-| Status | Print | `completed`, `failed`, `aborted`, `cancelled`, or `printing` for a print running now |
-| Items Printed | Print | Items the print produced |
-| Printer ID, Printer | Print | The printer it ran on |
-| Plate | Print | The plate it printed |
-| Project | File | Assigned project |
-| Filament Type, Filament (g) | Print | Material and grams used |
-| Print Time (s) | File | The slicer's estimate for the whole file |
-| Layer Height, Nozzle, Bed Temp, Nozzle Temp, Total Layers | File | Slicer settings |
-| Cost, Energy Cost, Wear Cost | Print | What the print cost |
-| Designer, Tags, Notes | File | The file's description |
-| Failure Reason, Outcome | Print | Why it failed, and the good/reject verdict |
-| Duration (s) | Print | How long it ran |
-| Started At, Completed At | Print | When it ran (UTC, without an offset) |
-| Created At | File | When the archive was created |
+| ID | Файл | ID архива |
+| Print ID | Печать | ID запуска (пустой для печати, записанной до появления запусков) |
+| Print Name, Filename | Файл | Название и исходный файл 3MF |
+| Status | Печать | `completed`, `failed`, `aborted`, `cancelled` или `printing` для текущей печати |
+| Items Printed | Печать | Полученные изделия |
+| Printer ID, Printer | Печать | Принтер, на котором выполнялась печать |
+| Plate | Печать | Напечатанная пластина |
+| Project | Файл | Назначенный проект |
+| Filament Type, Filament (g) | Печать | Материал и расход в граммах |
+| Print Time (s) | Файл | Оценка слайсера для всего файла |
+| Layer Height, Nozzle, Bed Temp, Nozzle Temp, Total Layers | Файл | Настройки слайсера |
+| Cost, Energy Cost, Wear Cost | Печать | Стоимость печати |
+| Designer, Tags, Notes | Файл | Описание файла |
+| Failure Reason, Outcome | Печать | Причина неудачи и оценка годности или брака |
+| Duration (s) | Печать | Длительность |
+| Started At, Completed At | Печать | Время выполнения (UTC без смещения) |
+| Created At | Файл | Время создания архива |
 
-### Filter-Aware Export
+### Учёт фильтров при экспорте {#filter-aware-export}
 
-Export respects your current filters:
+При экспорте учитываются текущие фильтры:
 
-- **Printer filter**, **status filter** and **date range** pick prints: those on that printer, with that outcome, started in that range. The **Failed** collection exports failed and aborted prints.
-- **Project filter** and **search query** pick archives, with all their prints.
-- A user limited to some printers gets only the prints that ran on theirs.
+- **Фильтр принтера**, **фильтр состояния** и **диапазон дат** выбирают печати по принтеру, результату и времени начала. Коллекция **Неудачные** экспортирует неудачные и прерванные печати.
+- **Фильтр проекта** и **поисковый запрос** выбирают архивы со всеми их печатями.
+- Пользователь с доступом только к определённым принтерам получает лишь печати, выполненные на них.
 
 ---
 
-## :material-chart-bar: Statistics Export
+## :material-chart-bar: Экспорт статистики {#statistics-export}
 
-Export statistics data:
+Экспортируйте статистические данные:
 
-### How to Export
+### Как экспортировать {#how-to-export_1}
 
-1. Go to **Statistics** page
-2. Set your time range and filters
-3. Click **Export** button
-4. Choose format
-5. Download begins
+1. Откройте страницу **Статистика**
+2. Задайте диапазон времени и фильтры
+3. Нажмите **Экспорт**
+4. Выберите формат
+5. Начнётся загрузка
 
-### Exported Data
+### Экспортируемые данные {#exported-data}
 
-| Data | Description |
+| Данные | Описание |
 |------|-------------|
-| Summary stats | Total prints, success rate, etc. |
-| Per-printer stats | Breakdown by printer |
-| Material usage | Filament consumption |
-| Cost breakdown | By printer, material |
-| Time analysis | Duration statistics |
-| Daily/weekly counts | Activity over time |
+| Сводная статистика | Общее число печатей, доля успешных и т. д. |
+| Статистика по принтерам | Разбивка по принтерам |
+| Использование материалов | Расход филамента |
+| Разбивка затрат | По принтеру и материалу |
+| Анализ времени | Статистика длительности |
+| Количество за день/неделю | Активность во времени |
 
 ---
 
-## :material-cog: Export Settings
+## :material-cog: Настройки экспорта {#export-settings}
 
-### Date Format
+### Формат даты {#date-format}
 
-Dates are exported in ISO 8601 format:
+Даты экспортируются в формате ISO 8601:
 
 ```
 2024-01-15T14:30:00Z
 ```
 
-### Number Format
+### Формат чисел {#number-format}
 
-- Decimals use period (.)
-- No thousands separator
-- Suitable for most spreadsheets
+- Для десятичной части используется точка (.)
+- Разделитель тысяч отсутствует
+- Формат подходит для большинства электронных таблиц
 
-### Text Encoding
+### Кодировка текста {#text-encoding}
 
-- UTF-8 encoding
-- Handles international characters
-- Compatible with all modern software
-
----
-
-## :material-microsoft-excel: Working with Excel
-
-### Opening CSV in Excel
-
-1. Open Excel
-2. Go to **Data** > **From Text/CSV**
-3. Select the downloaded file
-4. Choose **UTF-8** encoding
-5. Click **Load**
-
-!!! warning "Direct Open May Fail"
-    Double-clicking CSV files may cause encoding issues. Use the import method above.
-
-### Creating Charts
-
-1. Select your data
-2. Go to **Insert** > **Charts**
-3. Choose chart type
-4. Customize as needed
+- Кодировка UTF-8
+- Поддерживает символы разных языков
+- Совместима со всем современным ПО
 
 ---
 
-## :material-google: Working with Google Sheets
+## :material-microsoft-excel: Работа с Excel {#working-with-excel}
 
-### Importing CSV
+### Открытие CSV в Excel {#opening-csv-in-excel}
 
-1. Open Google Sheets
-2. Go to **File** > **Import**
-3. Upload the CSV file
-4. Choose **Replace spreadsheet** or **Insert new sheet**
-5. Click **Import data**
+1. Откройте Excel
+2. Перейдите в **Данные** > **Из текста/CSV**
+3. Выберите загруженный файл
+4. Выберите кодировку **UTF-8**
+5. Нажмите **Загрузить**
 
-### Direct Link (Advanced)
+!!! warning "Прямое открытие может не сработать"
+    При открытии CSV двойным щелчком могут возникнуть проблемы с кодировкой. Используйте описанный выше импорт.
 
-If you host Bambuddy publicly, you can link directly to export URLs.
+### Создание диаграмм {#creating-charts}
+
+1. Выделите данные
+2. Перейдите в **Вставка** > **Диаграммы**
+3. Выберите тип диаграммы
+4. Настройте её при необходимости
 
 ---
 
-## :material-code-json: API Export
+## :material-google: Работа с Google Таблицами {#working-with-google-sheets}
 
-Export via the REST API:
+### Импорт CSV {#importing-csv}
 
-### Archive Export
+1. Откройте Google Таблицы
+2. Перейдите в **Файл** > **Импорт**
+3. Загрузите файл CSV
+4. Выберите **Заменить таблицу** или **Вставить новый лист**
+5. Нажмите **Импортировать данные**
+
+### Прямая ссылка (для опытных пользователей) {#direct-link-advanced}
+
+Если Bambuddy доступен публично, можно напрямую ссылаться на URL экспорта.
+
+---
+
+## :material-code-json: Экспорт через API {#api-export}
+
+Экспорт через REST API:
+
+### Экспорт архива {#archive-export_1}
 
 ```bash
 GET /api/v1/archives/export?format=csv
 ```
 
-### Parameters
+### Параметры {#parameters}
 
-| Parameter | Description |
+| Параметр | Описание |
 |-----------|-------------|
-| `format` | csv or xlsx |
-| `printer_id` | Filter by printer |
-| `project_id` | Filter by project |
-| `status` | Filter by status (`completed`, `failed`, `aborted`, `cancelled`, `printing`) |
-| `date_from` | From this date (YYYY-MM-DD) or date and time (ISO) |
-| `date_to` | To this date, inclusive (YYYY-MM-DD), or date and time (ISO) |
-| `tz` | IANA time zone a plain date is a calendar day in; Bambuddy's own `TZ` when omitted or not a zone. A date and time without an offset is UTC |
-| `search` | Search query |
-| `fields` | Comma-separated columns to include |
+| `format` | csv или xlsx |
+| `printer_id` | Фильтр по принтеру |
+| `project_id` | Фильтр по проекту |
+| `status` | Фильтр по состоянию (`completed`, `failed`, `aborted`, `cancelled`, `printing`) |
+| `date_from` | Начиная с этой даты (YYYY-MM-DD) либо даты и времени (ISO) |
+| `date_to` | До этой даты включительно (YYYY-MM-DD) либо даты и времени (ISO) |
+| `tz` | Часовой пояс IANA, в котором указанная без времени дата является календарным днём; если не задан или не является поясом, используется `TZ` Bambuddy. Дата и время без смещения считаются UTC |
+| `search` | Поисковый запрос |
+| `fields` | Включаемые столбцы через запятую |
 
-### Example
+### Пример {#example}
 
 ```bash
 curl -H "X-API-Key: your-key" \
@@ -187,9 +187,9 @@ curl -H "X-API-Key: your-key" \
 
 ---
 
-## :material-calendar-export: Scheduled Exports
+## :material-calendar-export: Экспорт по расписанию {#scheduled-exports}
 
-For regular exports, set up a cron job:
+Для регулярного экспорта настройте задание cron:
 
 ```bash
 # Weekly export every Sunday at midnight
@@ -200,40 +200,40 @@ For regular exports, set up a cron job:
 
 ---
 
-## :material-backup-restore: Backup Use
+## :material-backup-restore: Использование для резервного копирования {#backup-use}
 
-Export can serve as a partial backup:
+Экспорт может служить частичной резервной копией:
 
-### What Export Captures
+### Что сохраняется при экспорте {#what-export-captures}
 
-- :material-check: Print metadata
-- :material-check: Statistics
-- :material-check: Tags and notes
+- :material-check: Метаданные печати
+- :material-check: Статистика
+- :material-check: Теги и заметки
 
-### What Export Doesn't Capture
+### Что не сохраняется при экспорте {#what-export-doesnt-capture}
 
-- :material-close: 3MF files
-- :material-close: Thumbnails
-- :material-close: Settings
-- :material-close: Notification configs
+- :material-close: Файлы 3MF
+- :material-close: Миниатюры
+- :material-close: Настройки
+- :material-close: Конфигурации уведомлений
 
-For full backups, use the [Backup & Restore](backup.md) feature.
+Для полной резервной копии используйте функцию [Резервное копирование и восстановление](backup.md).
 
 ---
 
-## :material-lightbulb: Tips
+## :material-lightbulb: Советы {#tips}
 
-!!! tip "Regular Exports"
-    Export monthly for record keeping, even if you have database backups.
+!!! tip "Регулярный экспорт"
+    Экспортируйте данные ежемесячно для учёта, даже если у вас есть резервные копии базы данных.
 
-!!! tip "Filter First"
-    Apply filters before exporting to get exactly the data you need.
+!!! tip "Сначала фильтры"
+    Перед экспортом примените фильтры, чтобы получить именно нужные данные.
 
-!!! tip "Version Control"
-    Include dates in export filenames to track versions.
+!!! tip "Управление версиями"
+    Добавляйте даты в имена файлов экспорта, чтобы различать версии.
 
-!!! tip "External Analysis"
-    Export to CSV for analysis in Python, R, or other tools.
+!!! tip "Внешний анализ"
+    Экспортируйте CSV для анализа в Python, R или других инструментах.
 
-!!! tip "Reporting"
-    Use Excel format for formatted reports with charts and branding.
+!!! tip "Отчётность"
+    Используйте формат Excel для оформленных отчётов с диаграммами и фирменным стилем.

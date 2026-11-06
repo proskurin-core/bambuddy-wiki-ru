@@ -1,139 +1,139 @@
 ---
 title: Bambuddy Appliance
-description: The Bambuddy Appliance - a Raspberry Pi 5 image with Bambuddy preinstalled, a guided setup wizard, and its own admin panel
+description: Образ Bambuddy Appliance для Raspberry Pi 5 с предустановленным Bambuddy, мастером настройки и панелью администратора
 ---
 
-# Bambuddy Appliance
+# Bambuddy Appliance {#bambuddy-appliance}
 
-The Bambuddy Appliance is a Raspberry Pi 5 image with Bambuddy already installed and configured. You write it to a memory card, walk through a setup wizard in your browser, and start adding printers. There is no Docker to install, no compose file to edit, and no cloud account to create.
+Bambuddy Appliance — образ для Raspberry Pi 5 с уже установленным и настроенным Bambuddy. Запишите его на карту памяти, пройдите мастер настройки в браузере и добавьте принтеры. Устанавливать Docker, редактировать файл Compose и создавать облачную учётную запись не нужно.
 
-You supply the hardware. The appliance is sold as an **image download you pay for once** &mdash; nothing is shipped, and the Raspberry Pi is yours rather than rented.
+Оборудование вы предоставляете сами. Appliance продаётся как **скачиваемый образ с единовременной оплатой**: ничего не доставляется, а Raspberry Pi принадлежит вам и не арендуется.
 
-It runs the same Bambuddy you would install yourself &mdash; same features, same AGPL licence, same local-only operation. What the appliance adds is everything *around* Bambuddy: first-boot bring-up, a captive-portal WiFi setup, an admin panel for the box itself, health-checked container upgrades with automatic rollback, and an A/B operating system that can fall back to the copy that worked.
+Здесь работает тот же Bambuddy, который можно установить самостоятельно: те же функции, лицензия AGPL и локальная работа. Appliance добавляет всё, что *окружает* Bambuddy: настройку первого запуска, настройку Wi-Fi через портал авторизации, панель управления устройством, обновления контейнера с проверкой работоспособности и автоматическим откатом, а также систему A/B, способную вернуться к рабочей копии ОС.
 
 ---
 
-## Who it's for
+## Кому это подходит {#who-its-for}
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### :material-package-variant-closed: You want it to just work
-Flash one card, answer five questions, and skip the self-hosting entirely. Updates are tested together and undo themselves, and support comes from the person who builds it.
+### :material-package-variant-closed: Хотите, чтобы всё просто работало {#you-want-it-to-just-work}
+Запишите одну карту, ответьте на пять вопросов и не занимайтесь самостоятельным развёртыванием. Обновления проверяются совместно и автоматически откатываются, а поддержку предоставляет создатель устройства.
 </div>
 
 <div class="feature-card" markdown>
-### :material-hammer-wrench: You already self-host
-You probably don't need this. A Docker install gives you the same Bambuddy. The appliance is about the box, not the software.
+### :material-hammer-wrench: Уже размещаете приложение самостоятельно {#you-already-self-host}
+Вероятно, устройство вам не нужно: установка Docker даёт тот же Bambuddy. Appliance упрощает работу с устройством, а не меняет программное обеспечение.
 </div>
 
 </div>
 
-!!! info "Bambuddy stays Bambuddy"
-    The application on the appliance is the ordinary AGPL-3.0 Bambuddy container from `ghcr.io/maziggy/bambuddy`. You can inspect it, replace it, or run it somewhere else. The appliance wrapper &mdash; the wizard, the admin panel, the CLI &mdash; is separately licensed, and it never restricts what the AGPL grants you.
+!!! info "Bambuddy остаётся Bambuddy"
+    На устройстве используется обычный контейнер Bambuddy AGPL-3.0 из `ghcr.io/maziggy/bambuddy`. Его можно изучать, заменять и запускать в другом месте. Оболочка Appliance — мастер, панель администратора и CLI — лицензируется отдельно и не ограничивает права, предоставленные AGPL.
 
 ---
 
-## What you need to buy
+## Что необходимо купить {#what-you-need-to-buy}
 
-Four parts, all of them stocked by every Raspberry Pi dealer &mdash; plus a case you print yourself.
+Четыре компонента доступны у продавцов Raspberry Pi; корпус можно напечатать самостоятельно.
 
 | | | |
 |---|---|---|
-| **Computer** | Raspberry Pi **5**, 4 GB | 8 GB for a large fleet &mdash; RAM only; the database does not depend on it |
-| **Power** | The official 27 W USB-C supply | Undervoltage shows up as dropped printers, not as an error |
-| **Cooling** | The official Active Cooler | The box runs continuously; a throttled Pi looks like slow software |
-| **Storage** | microSD, **64 GB minimum** | Endurance-rated if you can; the appliance refuses to start on anything smaller |
-| **Case** | Print it yourself &mdash; [download the 3MF](https://bambuddy.cool/assets/downloads/bambuddy-appliance-case.3mf) | The Pi is held in it by 4 &times; M2.5 &times; 5 screws and 4 &times; M2.5 nuts |
+| **Компьютер** | Raspberry Pi **5**, 4 ГБ | Для большой фермы — 8 ГБ; это касается только ОЗУ, база данных от него не зависит |
+| **Питание** | Официальный блок питания USB-C на 27 Вт | Пониженное напряжение проявляется отключением принтеров, а не ошибкой |
+| **Охлаждение** | Официальный Active Cooler | Устройство работает постоянно; ограничение частоты Pi выглядит как замедление программы |
+| **Накопитель** | microSD, **не менее 64 ГБ** | По возможности используйте карту повышенной выносливости; устройство откажется запускаться с меньшей картой |
+| **Корпус** | Напечатайте самостоятельно — [скачать 3MF](https://bambuddy.cool/assets/downloads/bambuddy-appliance-case.3mf) | Pi крепится 4 винтами M2.5 &times; 5 и 4 гайками M2.5 |
 
-!!! warning "A Raspberry Pi 4 will not work"
-    The appliance keeps two copies of its operating system and switches between them, so an update that fails can fall back to the one that worked. That layout needs the Pi 5's bootloader. On a Pi 4 the card may simply never start, with nothing on screen to explain why.
+!!! warning "Raspberry Pi 4 не подходит"
+    Устройство хранит две копии операционной системы и переключается между ними, чтобы при неудачном обновлении вернуться к рабочей. Для такой разметки нужен загрузчик Pi 5. На Pi 4 карта может просто не загрузиться, не показав причину на экране.
 
-!!! info "Why 64 GB is a floor, not a suggestion"
-    The two operating-system copies and their boot partitions claim about 21 GB before any of your data is stored. A 64 GB card leaves roughly 38 GB for prints, models and history; a 32 GB one is full before you print anything, and the [hardware check](admin-panel.md#the-hardware-check) refuses to start Bambuddy on it.
-
----
-
-## What the appliance adds
-
-- **Guided first boot.** No display or keyboard needed. Plug in ethernet, or join the appliance's own `Bambuddy-Setup` WiFi network and the setup page opens by itself.
-- **Its own admin panel** on port `8001`, separate from Bambuddy, so you can still fix the box when Bambuddy is down.
-- **PostgreSQL, on every unit.** No database to choose and none to migrate to later: see [below](#the-database).
-- **Health-checked upgrades.** The Bambuddy container upgrade pulls, starts, and waits for a health check &mdash; and rolls back automatically if the new version doesn't come up.
-- **Secondary IP aliases**, one per virtual printer that needs its own address on your LAN.
-- **Tailscale**, ready to sign in from the panel, so you can reach the box and its virtual printers from anywhere without opening a router port.
-- **A password of its own.** Every card generates a unique appliance password on its first boot, before SSH is allowed to accept a connection.
-- **A factory reset** from the panel or over SSH, returning you to a fresh setup wizard.
+!!! info "Почему 64 ГБ — минимальный объём"
+    Две копии ОС и их загрузочные разделы занимают около 21 ГБ ещё до сохранения пользовательских данных. На карте 64 ГБ остаётся около 38 ГБ для печатей, моделей и истории. Карта 32 ГБ заполнится ещё до начала печати, а [проверка оборудования](admin-panel.md#the-hardware-check) не позволит запустить на ней Bambuddy.
 
 ---
 
-## The database
+## Что добавляет Appliance {#what-the-appliance-adds}
 
-The appliance runs **PostgreSQL**, on every unit, whatever the size of the farm. You do not choose it, set it up or migrate to it.
-
-A self-hosted Bambuddy defaults to SQLite and [moves to PostgreSQL above roughly ten printers](../reference/farm-sizing.md#move-the-database-to-postgresql), because SQLite allows one writer at a time and a farm's dispatch-and-completion peaks turn that into `database is locked`. That failure arrives mid-print, months after setup. An appliance exists to take that decision away, so it ships the engine that scales rather than the one that is smaller.
-
-It runs as a second container beside Bambuddy, its credentials are generated per machine on first boot, and its data lives on the data partition with everything else &mdash; so an image update leaves it alone and a [factory reset](recovery.md) erases it. Both containers are shown on the [admin panel's Dashboard](admin-panel.md#the-containers), and both can be tailed from Diagnostics.
-
-!!! info "Pointing it at your own PostgreSQL"
-    Set `DATABASE_URL` in `/etc/bambuddy/bambuddy.env`. That file is read after the generated one, so your value wins. Nothing else changes.
+- **Мастер первого запуска.** Дисплей и клавиатура не нужны. Подключите Ethernet или присоединитесь к сети Wi-Fi устройства `Bambuddy-Setup` — страница настройки откроется автоматически.
+- **Собственная панель администратора** на порту `8001`, отдельно от Bambuddy: устройство можно исправить, даже если Bambuddy не работает.
+- **PostgreSQL на каждом устройстве.** Не нужно выбирать базу данных или позднее мигрировать на неё: см. [ниже](#the-database).
+- **Обновления с проверкой работоспособности.** При обновлении контейнер Bambuddy загружается и запускается, после чего выполняется проверка; если новая версия не запускается, происходит автоматический откат.
+- **Дополнительные IP-псевдонимы**, по одному для каждого виртуального принтера, которому нужен отдельный адрес в локальной сети.
+- **Tailscale**, готовый к входу через панель: доступ к устройству и виртуальным принтерам из любой точки без открытия порта маршрутизатора.
+- **Собственный пароль.** При первой загрузке каждая карта создаёт уникальный пароль устройства до того, как SSH начнёт принимать подключения.
+- **Сброс к заводским настройкам** через панель или SSH с возвратом к мастеру настройки.
 
 ---
 
-## Start here
+## База данных {#the-database}
+
+На каждом устройстве используется **PostgreSQL**, независимо от размера фермы. Выбирать, настраивать и переносить базу не требуется.
+
+Самостоятельно установленный Bambuddy по умолчанию использует SQLite и [переходит на PostgreSQL примерно после десяти принтеров](../reference/farm-sizing.md#move-the-database-to-postgresql), поскольку SQLite допускает только одну запись одновременно, а пиковая нагрузка при отправке и завершении заданий может вызвать `database is locked`. Такая ошибка может возникнуть во время печати спустя месяцы после установки. Appliance избавляет от этого выбора, сразу используя масштабируемую базу вместо более компактной.
+
+PostgreSQL работает во втором контейнере рядом с Bambuddy; его учётные данные создаются для каждого устройства при первой загрузке. Данные находятся на общем разделе данных, поэтому обновление образа их не затрагивает, а [сброс к заводским настройкам](recovery.md) удаляет. Оба контейнера видны на [Dashboard панели администратора](admin-panel.md#the-containers), а их журналы доступны в Diagnostics.
+
+!!! info "Подключение к собственному PostgreSQL"
+    Задайте `DATABASE_URL` в `/etc/bambuddy/bambuddy.env`. Этот файл читается после автоматически созданного, поэтому ваше значение имеет приоритет. Других изменений не требуется.
+
+---
+
+## Начните здесь {#start-here}
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### [:material-rocket-launch: Quick Start](quick-start.md)
-Power on, run the wizard, reach Bambuddy. Fifteen minutes.
+### [:material-rocket-launch: Быстрый старт](quick-start.md) {#quick-start}
+Включение, мастер настройки и доступ к Bambuddy за пятнадцать минут.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-view-dashboard: Admin Panel](admin-panel.md)
-The four tabs: Dashboard, Network, Updates, Diagnostics.
+### [:material-view-dashboard: Панель администратора](admin-panel.md) {#admin-panel}
+Четыре вкладки: Dashboard, Network, Updates и Diagnostics.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-console: Command Line](cli.md)
-`bambuddy-appliance` &mdash; everything the panel does, over SSH.
+### [:material-console: Командная строка](cli.md) {#command-line}
+`bambuddy-appliance` выполняет все действия панели через SSH.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-update: Updates &amp; Backups](updates.md)
-Two upgrade lanes, what a backup covers, and what it doesn't.
+### [:material-update: Обновления и резервные копии](updates.md) {#updates-backups}
+Два способа обновления и содержимое резервной копии.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-shield-check: Registration](registration.md)
-The licence key, what the appliance sends home, and what a refusal means.
+### [:material-shield-check: Регистрация](registration.md) {#registration}
+Лицензионный ключ, отправляемые устройством данные и значение отказа.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-lifebuoy: Recovery](recovery.md)
-Factory reset, lockouts, and what to try when it won't come up.
+### [:material-lifebuoy: Восстановление](recovery.md) {#recovery}
+Сброс, потеря доступа и действия при проблемах с запуском.
 </div>
 
 </div>
 
 ---
 
-## How to get one
+## Как получить Appliance {#how-to-get-one}
 
-The appliance is sold at [get.bambuddy.cool](https://get.bambuddy.cool/#pricing) as an image download, in three editions:
+Образ продаётся на [get.bambuddy.cool](https://get.bambuddy.cool/#pricing) в трёх редакциях:
 
-| Edition | Price | Updates | Support |
+| Редакция | Цена | Обновления | Поддержка |
 |---|---|---|---|
-| **Personal** | &euro;79 once | 12 months | 12 months, through GitHub issues |
-| **Lifetime** | &euro;199 once | for as long as the appliance is developed | 12 months, through GitHub issues |
-| **Business** | &euro;249/year | while subscribed | while subscribed, by email, handled first, with a stated response time |
+| **Personal** | &euro;79 единовременно | 12 месяцев | 12 месяцев через GitHub Issues |
+| **Lifetime** | &euro;199 единовременно | пока развивается Appliance | 12 месяцев через GitHub Issues |
+| **Business** | &euro;249 в год | в течение подписки | в течение подписки, по электронной почте, с приоритетом и заявленным временем ответа |
 
-Personal and Lifetime are for non-commercial use; commercial use needs Business. Support for Personal and Lifetime runs through the [public issue tracker](https://github.com/maziggy/bambuddy/issues), so never post your licence key there; questions about your key, an order or a refund go to support@bambuddy.cool for every edition. One purchase covers one appliance, whatever number of printers you point it at.
+Personal и Lifetime предназначены для некоммерческого использования; для коммерческого нужна Business. Поддержка Personal и Lifetime осуществляется через [публичный трекер обращений](https://github.com/maziggy/bambuddy/issues), поэтому никогда не публикуйте там лицензионный ключ. Вопросы о ключе, заказе или возврате для всех редакций направляйте на support@bambuddy.cool. Одна покупка покрывает одно устройство независимо от количества подключённых принтеров.
 
-Your licence key arrives by email after the purchase. The setup wizard asks for it, the appliance sends it when it registers, and that is what opens the update channel. Entering it is optional: skip the screen and the box runs exactly the same, it simply receives no appliance updates until you add the key in the panel.
+Лицензионный ключ приходит по почте после покупки. Мастер запрашивает его, устройство отправляет при регистрации, и это открывает канал обновлений. Вводить ключ необязательно: если пропустить экран, устройство будет работать так же, но не получит обновлений компонентов до добавления ключа в панели.
 
-When the updates end, **the appliance keeps working exactly as it is.** What stops is updates and support, not the software you already have. A Personal appliance can be upgraded to Lifetime later: write to support@bambuddy.cool.
+После окончания срока обновлений **устройство продолжает работать в текущем состоянии**. Прекращаются обновления и поддержка, а не работа уже имеющегося ПО. Позднее Personal можно обновить до Lifetime: напишите на support@bambuddy.cool.
 
-Before you buy, read the [printed quick start](https://bambuddy.cool/assets/downloads/bambuddy-appliance-quickstart.pdf) first &mdash; it is the full setup guide, and it costs nothing to find out whether this is something you want to do.
+Перед покупкой прочитайте [печатное руководство по быстрому старту](https://bambuddy.cool/assets/downloads/bambuddy-appliance-quickstart.pdf): это полное руководство по настройке, с которым можно бесплатно ознакомиться до принятия решения.
 
-If you would rather build your own, everything Bambuddy needs is in the [Docker installation guide](../getting-started/docker.md). The appliance carries no exclusive features and never will.
+Если вы предпочитаете самостоятельную сборку, всё необходимое для Bambuddy описано в [руководстве по установке Docker](../getting-started/docker.md). В Appliance нет эксклюзивных функций и они не планируются.

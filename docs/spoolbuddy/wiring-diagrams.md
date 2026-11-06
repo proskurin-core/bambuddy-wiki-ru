@@ -1,50 +1,50 @@
 ---
-title: Wiring Diagrams
-description: Complete wiring reference for SpoolBuddy — PN5180 NFC, NAU7802 scale ADC, and load cell connections to Raspberry Pi
+title: Схемы подключения
+description: Полное руководство по подключению SpoolBuddy: NFC-считыватель PN5180, АЦП весов NAU7802 и весовой датчик к Raspberry Pi
 ---
 
-# Wiring Diagrams
+# Схемы подключения {#wiring-diagrams}
 
-## :material-image: Visual Wiring Diagram
+## :material-image: Наглядная схема подключения {#visual-wiring-diagram}
 
-Below is the Fritzing-style wiring overview showing all SpoolBuddy components connected to a Raspberry Pi 4.
+Ниже приведена схема в стиле Fritzing со всеми компонентами SpoolBuddy, подключёнными к Raspberry Pi 4.
 
 <div style="position: relative; display: inline-block; width: 100%;">
-  <img src="../../assets/spoolbuddy-wiring-diagram.png" alt="SpoolBuddy Wiring Diagram" class="screenshot" style="width: 100%; display: block;">
+  <img src="../../assets/spoolbuddy-wiring-diagram.png" alt="Схема подключения SpoolBuddy" class="screenshot" style="width: 100%; display: block;">
   <span style="position: absolute; bottom: 10px; right: 14px; font-size: 0.6rem; color: rgba(255,255,255,0.6); text-shadow: 0 1px 3px rgba(0,0,0,0.55); letter-spacing: 0.05em; pointer-events: none; user-select: none;">by ouihq</span>
 </div>
 
-*Diagram created with [Cirkit Designer](https://app.cirkitdesigner.com). Components: Raspberry Pi 4 Model B, PN5180-NFC reader (SPI), SparkFun Qwiic Scale NAU7802 (I2C), 5 kg single-point load cell.*
+*Схема создана с помощью [Cirkit Designer](https://app.cirkitdesigner.com). Компоненты: Raspberry Pi 4 Model B, NFC-считыватель PN5180 (SPI), SparkFun Qwiic Scale NAU7802 (I2C), одноточечный весовой датчик на 5 кг.*
 
-!!! warning "Verify GPIO pins for your Pi model"
-    All diagrams on this page are based on the **Raspberry Pi 4 Model B**. GPIO pin numbers and physical header positions are consistent across most Pi models, but always cross-reference against the pinout for your specific board at [pinout.xyz](https://pinout.xyz) before wiring. Some combinations (e.g. Pi 5, Pi Zero, CM4) may require adjustments.
+!!! warning "Проверьте выводы GPIO для вашей модели Pi"
+    Все схемы на этой странице составлены для **Raspberry Pi 4 Model B**. Номера GPIO и физическое расположение выводов совпадают у большинства моделей Pi, но перед подключением обязательно сверьтесь с распиновкой вашей платы на [pinout.xyz](https://pinout.xyz). Для некоторых вариантов (например, Pi 5, Pi Zero, CM4) могут потребоваться изменения.
 
 ---
 
-## :material-chip: PN5180 NFC Reader — Pi GPIO Wiring
+## :material-chip: Подключение NFC-считывателя PN5180 к GPIO Pi {#pn5180-nfc-reader-pi-gpio-wiring}
 
-The PN5180 communicates over **SPI0** with a **manual chip-select on GPIO23**.
+PN5180 обменивается данными через **SPI0** с **ручным выбором микросхемы на GPIO23**.
 
-!!! warning "Dual voltage requirement"
-    The PN5180 requires **both** 5 V and 3.3 V connections. Do **not** connect 5 V to the 3V3 pin — this will damage the module.
+!!! warning "Необходимы два напряжения"
+    Для PN5180 необходимы **оба** подключения: 5 В и 3,3 В. **Не подавайте** 5 В на вывод 3V3 — это повредит модуль.
 
-| PN5180 Pin | Direction | Pi GPIO | Pi Physical Pin | Wire Color | Notes |
+| Вывод PN5180 | Направление | GPIO Pi | Физический вывод Pi | Цвет провода | Примечания |
 |------------|-----------|---------|-----------------|------------|-------|
-| **5V**     | ←         | —       | Pin 2           | Red        | 5 V power rail |
-| **3V3**    | ←         | —       | Pin 1           | Red        | 3.3 V power rail |
-| **RST**    | ←         | GPIO24  | Pin 18          | Brown      | Hardware reset |
-| **NSS**    | ←         | GPIO23  | Pin 16          | Orange     | Manual chip-select (`dtoverlay=spi0-0cs`) |
-| **MOSI**   | ←         | GPIO10  | Pin 19          | Green       | SPI0 MOSI |
-| **MISO**   | →         | GPIO9   | Pin 21          | Blue      | SPI0 MISO |
-| **SCK**    | ←         | GPIO11  | Pin 23          | Yellow     | SPI0 SCLK |
-| **BUSY**   | →         | GPIO25  | Pin 22          | White      | Busy/wait signal |
-| **GND**    | —         | —       | Pin 20           | Black      | Ground |
-| **GPIO**   | —         | —       | —               | —          | Not connected |
-| **IRQ**    | →         | GPIO17  | Pin 11          | Purple     | Interrupt (optional) |
-| **AUX**    | —         | —       | —               | —          | Not connected |
-| **REQ**    | —         | —       | —               | —          | Not connected |
+| **5V**     | ←         | —       | Вывод 2           | Красный        | Питание 5 В |
+| **3V3**    | ←         | —       | Вывод 1           | Красный        | Питание 3,3 В |
+| **RST**    | ←         | GPIO24  | Вывод 18          | Коричневый      | Аппаратный сброс |
+| **NSS**    | ←         | GPIO23  | Вывод 16          | Оранжевый     | Ручной выбор микросхемы (`dtoverlay=spi0-0cs`) |
+| **MOSI**   | ←         | GPIO10  | Вывод 19          | Зелёный       | SPI0 MOSI |
+| **MISO**   | →         | GPIO9   | Вывод 21          | Синий      | SPI0 MISO |
+| **SCK**    | ←         | GPIO11  | Вывод 23          | Жёлтый     | SPI0 SCLK |
+| **BUSY**   | →         | GPIO25  | Вывод 22          | Белый      | Сигнал занятости/ожидания |
+| **GND**    | —         | —       | Вывод 20           | Чёрный      | Земля |
+| **GPIO**   | —         | —       | —               | —          | Не подключён |
+| **IRQ**    | →         | GPIO17  | Вывод 11          | Фиолетовый     | Прерывание (необязательно) |
+| **AUX**    | —         | —       | —               | —          | Не подключён |
+| **REQ**    | —         | —       | —               | —          | Не подключён |
 
-### ASCII — PN5180 to Pi
+### Текстовая схема — PN5180 и Pi {#ascii-pn5180-to-pi}
 
 ```
   PN5180-NFC                            Raspberry Pi 4 GPIO Header
@@ -66,27 +66,27 @@ The PN5180 communicates over **SPI0** with a **manual chip-select on GPIO23**.
   └──────────┘                         └─────────────────────────┘
 ```
 
-!!! info "Manual chip-select"
-    SpoolBuddy uses `dtoverlay=spi0-0cs` in `/boot/firmware/config.txt` to disable the kernel's automatic CS so the daemon can manually toggle **GPIO23** to meet PN5180 timing requirements.
+!!! info "Ручной выбор микросхемы"
+    SpoolBuddy использует `dtoverlay=spi0-0cs` в `/boot/firmware/config.txt`, чтобы отключить автоматический CS ядра. Это позволяет демону вручную переключать **GPIO23** с соблюдением временных требований PN5180.
 
 ---
 
-## :material-scale: NAU7802 Scale ADC — Pi I2C Wiring
+## :material-scale: Подключение АЦП весов NAU7802 к I2C Pi {#nau7802-scale-adc-pi-i2c-wiring}
 
-The SparkFun Qwiic NAU7802 communicates over **I2C bus 1** at address **`0x2A`**.
+SparkFun Qwiic NAU7802 обменивается данными по **шине I2C 1** по адресу **`0x2A`**.
 
-!!! warning "I2C bus 1"
-    SpoolBuddy uses `/dev/i2c-1` (GPIO2/GPIO3). Make sure I2C-1 is enabled in your boot config.
+!!! warning "Шина I2C 1"
+    SpoolBuddy использует `/dev/i2c-1` (GPIO2/GPIO3). Убедитесь, что I2C-1 включена в загрузочной конфигурации.
 
-| NAU7802 Pin | Direction | Pi GPIO | Pi Physical Pin | Wire Color | Notes |
+| Вывод NAU7802 | Направление | GPIO Pi | Физический вывод Pi | Цвет провода | Примечания |
 |-------------|-----------|---------|-----------------|------------|-------|
-| **3V3**     | ←         | —       | Pin 17          | Red        | 3.3 V power |
-| **GND**     | —         | —       | Pin 6           | Black      | Ground |
-| **SDA**     | ↔         | GPIO2   | Pin 3           | Yellow      | I2C-1 data |
-| **SCL**     | ←         | GPIO3   | Pin 5           | Green     | I2C-1 clock |
-| **INT**     | →         | —       | —               | —          | Not connected |
+| **3V3**     | ←         | —       | Вывод 17          | Красный        | Питание 3,3 В |
+| **GND**     | —         | —       | Вывод 6           | Чёрный      | Земля |
+| **SDA**     | ↔         | GPIO2   | Вывод 3           | Жёлтый      | Данные I2C-1 |
+| **SCL**     | ←         | GPIO3   | Вывод 5           | Зелёный     | Тактовый сигнал I2C-1 |
+| **INT**     | →         | —       | —               | —          | Не подключён |
 
-### ASCII — NAU7802 to Pi
+### Текстовая схема — NAU7802 и Pi {#ascii-nau7802-to-pi}
 
 ```
   SparkFun Qwiic NAU7802                 Raspberry Pi 4 GPIO Header
@@ -102,18 +102,18 @@ The SparkFun Qwiic NAU7802 communicates over **I2C bus 1** at address **`0x2A`**
 
 ---
 
-## :material-weight: Load Cell — NAU7802 Wiring
+## :material-weight: Подключение весового датчика к NAU7802 {#load-cell-nau7802-wiring}
 
-A standard 4-wire load cell connects to the screw terminals on the SparkFun Qwiic NAU7802 board.
+Стандартный четырёхпроводной весовой датчик подключается к винтовым клеммам платы SparkFun Qwiic NAU7802.
 
-| Load Cell Wire | Color  | NAU7802 Terminal | Function |
+| Провод весового датчика | Цвет  | Клемма NAU7802 | Назначение |
 |----------------|--------|------------------|----------|
-| **E+**         | Red    | E+               | Excitation positive |
-| **E−**         | Black  | E−               | Excitation negative |
-| **A+** (S+)    | Green  | A+               | Signal positive |
-| **A−** (S−)    | White  | A−               | Signal negative |
+| **E+**         | Красный    | E+               | Положительное питание моста |
+| **E−**         | Чёрный  | E−               | Отрицательное питание моста |
+| **A+** (S+)    | Зелёный  | A+               | Положительный сигнал |
+| **A−** (S−)    | Белый  | A−               | Отрицательный сигнал |
 
-### ASCII — Load Cell to NAU7802
+### Текстовая схема — весовой датчик и NAU7802 {#ascii-load-cell-to-nau7802}
 
 ```
   Load Cell (5 kg)                    SparkFun Qwiic NAU7802
@@ -127,59 +127,59 @@ A standard 4-wire load cell connects to the screw terminals on the SparkFun Qwii
   └──────────────┘                     └───────────────────┘
 ```
 
-!!! info "Wire color convention"
-    Most single-point load cells follow the color convention above. If your load cell uses different colors, refer to its datasheet. The key is matching excitation (E+/E−) and signal (A+/A−) correctly.
+!!! info "Цветовая маркировка проводов"
+    Большинство одноточечных весовых датчиков используют указанную выше цветовую маркировку. Если у вашего датчика цвета отличаются, обратитесь к его документации. Главное — правильно подключить питание моста (E+/E−) и сигналы (A+/A−).
 
 ---
 
-## :material-power-plug: USB-C Power — Pi Power Wiring
+## :material-power-plug: Питание Pi через USB-C {#usb-c-power-pi-power-wiring}
 
-An angled USB-C connector plugs into the Pi's USB-C port. The cable exits through the cutout on the back of the case, where a standard USB-C power supply can be connected.
+Угловой разъём USB-C подключается к порту USB-C на Pi. Кабель выходит через вырез на задней стенке корпуса, где можно подключить стандартный блок питания USB-C.
 
 ---
 
-## :material-wrench: Assembly Hardware
+## :material-wrench: Принадлежности для сборки {#assembly-hardware}
 
-### Cable Lengths
+### Длина проводов {#cable-lengths}
 
-| Connection              | Approximate Length |
+| Соединение              | Примерная длина |
 |-------------------------|--------------------|
-| PN5180 NFC → Pi GPIO    | ~25 cm             |
-| NAU7802 Scale → Pi GPIO | ~15 cm             |
-| Load cell → NAU7802     | Measure to fit     |
+| PN5180 NFC → GPIO Pi    | ~25 см             |
+| NAU7802 Весы → GPIO Pi | ~15 см             |
+| Весовой датчик → NAU7802     | Измерить по месту     |
 
-### GPIO Crimp Connectors
+### Обжимные разъёмы GPIO {#gpio-crimp-connectors}
 
-Wires to the Pi GPIO header use **HARWIN M20 series** 2.54 mm pitch connectors.
+Для подключения проводов к разъёму GPIO Pi используются разъёмы **серии HARWIN M20** с шагом 2,54 мм.
 
-| Part | Description |
+| Деталь | Описание |
 |------|-------------|
-| **M20-1160042** | Female crimp contact |
-| **M20-1070300** | 3-way housing (other pin counts available in the M20-107 range) |
+| **M20-1160042** | Гнездовой обжимной контакт |
+| **M20-1070300** | Корпус на 3 контакта (в серии M20-107 доступны и другие размеры) |
 
-**Crimp tools:**
+**Инструменты для обжима:**
 
-- **HARWIN Z20-320** — dedicated tool, produces reliable results but is expensive
-- **Generic crimp tool with SN-2549 jaw** — a more affordable alternative that works well for M20 contacts
-- **Wire stripper** — for stripping insulation before crimping
-- **Wire cutters** — for cutting wires to length
+- **HARWIN Z20-320** — специализированный инструмент, надёжен, но дорог
+- **Универсальный обжимной инструмент с губками SN-2549** — более доступная альтернатива, подходящая для контактов M20
+- **Инструмент для снятия изоляции** — для подготовки проводов перед обжимом
+- **Кусачки** — для обрезки проводов по длине
 
-### Pi GPIO Connection Options
+### Варианты подключения к GPIO Pi {#pi-gpio-connection-options}
 
-Several connector types can be used to connect wires to the Pi's GPIO pins:
+Для подключения проводов к выводам GPIO Pi можно использовать несколько типов соединений:
 
-- **HARWIN M20 crimped connectors** *(recommended)* — reliable contact, clean fit on the 2.54 mm GPIO pins
-- **Dupont connectors** — widely available and easy to use, but can suffer from loose contact with the GPIO pins, causing signal quality issues or intermittent errors; use a multimeter in continuity mode to verify each connection before closing the case
-- **Other 2.54 mm pitch connectors** — any compatible 2.54 mm female connector housing will fit the Pi's GPIO pins
-- **Soldering directly to the Pi** — possible but very difficult; the GPIO pins are closely spaced and a bad joint or solder bridge can permanently damage the board; only attempt this if you are very confident in your soldering skills
+- **Обжимные разъёмы HARWIN M20** *(рекомендуются)* — надёжный контакт и аккуратная посадка на выводы GPIO с шагом 2,54 мм
+- **Разъёмы Dupont** — доступны и удобны, но могут неплотно прилегать к выводам GPIO, вызывая ухудшение сигнала или периодические ошибки; перед закрытием корпуса проверьте каждое соединение мультиметром в режиме прозвонки
+- **Другие разъёмы с шагом 2,54 мм** — любой совместимый гнездовой корпус с этим шагом подойдёт к выводам GPIO Pi
+- **Пайка непосредственно к Pi** — возможна, но очень сложна: выводы GPIO расположены близко, и некачественное соединение или перемычка из припоя могут необратимо повредить плату; прибегайте к этому способу, только если уверены в своих навыках
 
-### Soldering to Modules
+### Пайка к модулям {#soldering-to-modules}
 
-Soldering wires directly to the PN5180 and NAU7802 module pads is straightforward and gives a reliable, permanent connection. This is the recommended approach for the module side of each harness.
+Припаять провода непосредственно к контактным площадкам модулей PN5180 и NAU7802 несложно; такое соединение надёжно и постоянно. Этот способ рекомендуется для подключения каждого жгута со стороны модуля.
 
 ---
 
-## :material-chip: Full System ASCII Wiring Diagram
+## :material-chip: Полная текстовая схема подключения {#full-system-ascii-wiring-diagram}
 
 ```
      Raspberry Pi 4B                    PN5180 NFC (SPI0)
@@ -212,20 +212,20 @@ Soldering wires directly to the PN5180 and NAU7802 module pads is straightforwar
 
 ---
 
-## :material-cog: Required Boot Config
+## :material-cog: Необходимая загрузочная конфигурация {#required-boot-config}
 
-Add the following to `/boot/firmware/config.txt` (if you use the SpoolBuddy installer, it will handle this step automatically):
+Добавьте следующее в `/boot/firmware/config.txt` (установщик SpoolBuddy выполнит этот шаг автоматически):
 
 ```ini
 # Enable SPI with no automatic CS (manual GPIO23 chip-select)
 dtparam=spi=on
 dtoverlay=spi0-0cs
 
-# Enable I2C bus 1 for NAU7802 (GPIO2/GPIO3)
+# Enable Шина I2C 1 for NAU7802 (GPIO2/GPIO3)
 dtparam=i2c_arm=on
 ```
 
-After editing, reboot:
+После изменения перезагрузите устройство:
 
 ```bash
 sudo reboot
@@ -233,40 +233,40 @@ sudo reboot
 
 ---
 
-## :material-check-circle: Post-Wiring Verification
+## :material-check-circle: Проверка после подключения {#post-wiring-verification}
 
-After wiring all components, verify with these checks:
+После подключения всех компонентов выполните проверки:
 
 ```bash
 # Confirm SPI devices are present
 ls /dev/spidev0.*
 # Expected: /dev/spidev0.0
 
-# Confirm I2C bus 1 is present
+# Confirm Шина I2C 1 is present
 ls /dev/i2c-1
 # Expected: /dev/i2c-1
 
-# Scan I2C bus 1 for NAU7802 at address 0x2A
+# Scan Шина I2C 1 for NAU7802 at address 0x2A
 sudo i2cdetect -y 1
 # Expected: "2a" appears in the grid
 ```
 
-!!! success "Hardware detected?"
-    If SPI and I2C devices appear and the NAU7802 shows at `0x2A`, your wiring is correct. Proceed to [Assembly](assembly.md) to build the case, then [Installation](installation.md) to set up the software.
+!!! success "Оборудование обнаружено?"
+    Если устройства SPI и I2C присутствуют, а NAU7802 отображается по адресу `0x2A`, подключение выполнено правильно. Перейдите к [сборке](assembly.md) корпуса, затем к [установке](installation.md) программного обеспечения.
 
-!!! tip "Troubleshooting wiring issues"
-    If diagnostics fail, double-check these common issues:
+!!! tip "Устранение проблем подключения"
+    Если диагностика не прошла, проверьте распространённые проблемы:
 
-    - **PN5180 not detected**: Verify 5 V is connected. Check MOSI/MISO aren't swapped. Confirm `dtoverlay=spi0-0cs` is in boot config.
-    - **NAU7802 not at 0x2A**: Make sure you're on I2C bus **1** (GPIO2/GPIO3, pins 3/5). Check `dtparam=i2c_arm=on` is in boot config.
-    - **Scale reads zero**: Check load cell wiring (E+/E−/A+/A−) and confirm the NAU7802 is powered on Pin 17 (3V3) and Pin 6 (GND).
-    - **Unstable NFC reads**: Keep NFC wiring short. Long or loose jumper wires cause signal degradation.
+    - **PN5180 не обнаружен**: проверьте подключение 5 В и убедитесь, что MOSI/MISO не перепутаны. Проверьте наличие `dtoverlay=spi0-0cs` в загрузочной конфигурации.
+    - **NAU7802 не обнаружен по адресу 0x2A**: убедитесь, что используется шина I2C **1** (GPIO2/GPIO3, выводы 3/5). Проверьте наличие `dtparam=i2c_arm=on` в загрузочной конфигурации.
+    - **Весы показывают ноль**: проверьте подключение датчика (E+/E−/A+/A−) и питание NAU7802 от вывода 17 (3V3) и вывода 6 (GND).
+    - **Нестабильное чтение NFC**: используйте короткие провода. Длинные или неплотно подключённые провода ухудшают сигнал.
 
 ---
 
-## :material-link: Related Pages
+## :material-link: Связанные страницы {#related-pages}
 
-- [Hardware Requirements](hardware.md) — Component overview and build notes
-- [Materials Required](materials.md) — Full bill of materials with shop links
-- [Installation](installation.md) — Software setup after wiring
-- [Configuration](configuration.md) — Daemon and kiosk settings
+- [Требования к оборудованию](hardware.md) — Обзор компонентов и советы по сборке
+- [Необходимые материалы](materials.md) — Полный список компонентов со ссылками на магазины
+- [Установка](installation.md) — Установка программ после подключения
+- [Настройка](configuration.md) — Настройки демона и киоска
