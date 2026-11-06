@@ -1,431 +1,431 @@
 ---
-title: Real-time Monitoring
-description: Monitor your printers in real-time
+title: Мониторинг в реальном времени
+description: Следите за принтерами в реальном времени
 ---
 
-# Real-time Monitoring
+# Мониторинг в реальном времени {#real-time-monitoring}
 
-Bambuddy provides live monitoring of all your connected Bambu Lab printers through WebSocket-based real-time updates.
+Bambuddy отслеживает все подключённые принтеры Bambu Lab с обновлением данных в реальном времени через WebSocket.
 
-![Printers Page](../assets/printers.png){ .screenshot }
+![Страница принтеров](../assets/printers.png){ .screenshot }
 
 ---
 
-## :material-magnify: Search & Filters
+## :material-magnify: Поиск и фильтры {#search-filters}
 
-Large print farms are hard to navigate on a phone where Ctrl+F isn't an option. The Printers page has a live search bar and two filter dropdowns above the card grid.
+В больших фермах печати сложно ориентироваться с телефона, где нельзя воспользоваться Ctrl+F. На странице принтеров над сеткой карточек доступны строка поиска в реальном времени и два раскрывающихся фильтра.
 
-### Live Search
+### Поиск в реальном времени {#live-search}
 
-Type into the search bar to filter the card grid in real time. The search matches **any** of the following fields (case-insensitive, whitespace-trimmed):
+Введите запрос в строку поиска, чтобы фильтровать карточки по мере ввода. Поиск проверяет **любое** из следующих полей без учёта регистра и крайних пробелов:
 
-- Printer name
-- Printer model (e.g., `X1C`, `P1S`, `A1 mini`)
-- Location
-- Serial number
+- Название принтера
+- Модель принтера (например, `X1C`, `P1S`, `A1 mini`)
+- Расположение
+- Серийный номер
 
-Click the **:material-close:** button inside the search bar to clear it.
+Чтобы очистить поиск, нажмите кнопку **:material-close:** внутри строки.
 
-### Status Filter
+### Фильтр по состоянию {#status-filter}
 
-The **status** dropdown filters by current printer state:
+Раскрывающийся список **состояния** фильтрует принтеры по текущему состоянию:
 
-| Option | Shows |
+| Вариант | Что показывается |
 |--------|-------|
-| All statuses | Every printer (default) |
-| Printing | Currently running a job |
-| Paused | Print paused |
-| Idle | Connected and ready |
-| Finished | Waiting for plate clear |
-| Error | FAILED state or active HMS errors |
-| Offline | Disconnected |
+| Все состояния | Все принтеры (по умолчанию) |
+| Печатает | Выполняется задание |
+| Пауза | Печать приостановлена |
+| Ожидание | Подключён и готов к работе |
+| Завершено | Ожидает очистки стола |
+| Ошибка | Состояние FAILED или активные ошибки HMS |
+| Не в сети | Отключён |
 
-The status filter is **reactive to WebSocket updates** — when a print finishes and the printer transitions from `RUNNING` to `FINISH`, it is immediately removed from the "Printing" view without needing a manual refresh.
+Фильтр состояния **реагирует на обновления WebSocket**: когда печать завершается и принтер переходит из `RUNNING` в `FINISH`, он сразу исчезает из представления «Печатает» без обновления страницы вручную.
 
-### Location Filter
+### Фильтр по расположению {#location-filter}
 
-The **location** dropdown appears only when at least one printer has a location configured. It lets you quickly narrow the view to a single workshop, rack, or room. Location values are taken directly from each printer's configured location.
+Список **расположений** появляется, только если хотя бы у одного принтера оно задано. С его помощью можно быстро показать принтеры одной мастерской, стойки или комнаты. Значения берутся непосредственно из настроек каждого принтера.
 
-### Combining Filters
+### Совместное использование фильтров {#combining-filters}
 
-Search, status, and location filters combine — a matching printer must pass **all three** checks. An empty-state message appears if no printer matches the current combination; clear the search bar or reset the dropdowns to see everything again.
+Поиск и фильтры состояния и расположения действуют одновременно: принтер должен соответствовать **всем трём** условиям. Если подходящих принтеров нет, появится сообщение о пустом результате; очистите поиск или сбросьте фильтры, чтобы снова увидеть все принтеры.
 
-!!! tip "Mobile Tip"
-    On phones, use the search bar to quickly find a specific printer by location or serial when scrolling through many cards would be tedious.
+!!! tip "Совет для мобильных устройств"
+    На телефоне используйте строку поиска, чтобы быстро найти принтер по расположению или серийному номеру вместо прокрутки множества карточек.
 
 ---
 
-## :material-resize: Resizable Printer Cards
+## :material-resize: Изменение размера карточек принтеров {#resizable-printer-cards}
 
-Adjust the size of printer cards to fit your screen and workflow:
+Настройте размер карточек под экран и свои задачи:
 
-### Card Sizes
+### Размеры карточек {#card-sizes}
 
-| Size | Description |
+| Размер | Описание |
 |:----:|-------------|
-| **S** (Small) | Compact view, more cards per row. Shows name, status pip, progress and — while printing — remaining time, ETA and layer progress |
-| **M** (Medium) | Default balanced view |
-| **L** (Large) | More detail, fewer cards per row. Labels, values and icons inside the card are drawn 20% larger |
-| **XL** (Extra Large) | Maximum detail, single column. Labels, values and icons are drawn 40% larger |
+| **S** (маленький) | Компактный вид, больше карточек в строке. Отображает название, индикатор состояния, прогресс и во время печати оставшееся время, расчётное время завершения и прогресс слоёв |
+| **M** (средний) | Сбалансированный вид по умолчанию |
+| **L** (большой) | Больше подробностей, меньше карточек в строке. Подписи, значения и значки внутри карточки крупнее на 20% |
+| **XL** (очень большой) | Максимум подробностей, одна колонка. Подписи, значения и значки крупнее на 40% |
 
-!!! tip "Larger text without zooming the whole page"
-    L and XL scale the card's own text and icons, not just its width — so the AMS slot labels, temperatures and small buttons grow with the card instead of staying tiny in a bigger frame. S and M are unchanged, so a fleet view stays as dense as it always was.
+!!! tip "Крупный текст без увеличения всей страницы"
+    В размерах L и XL масштабируются текст и значки самой карточки, а не только её ширина: подписи слотов AMS, температуры и маленькие кнопки растут вместе с карточкой. Размеры S и M не меняются, поэтому обзор фермы остаётся таким же компактным.
 
-### Adjusting Size
+### Изменение размера {#adjusting-size}
 
-1. Look for the **+** and **-** buttons in the Printers page toolbar
-2. Click **+** to increase card size
-3. Click **-** to decrease card size
-4. Size preference is saved automatically
+1. Найдите кнопки **+** и **-** на панели страницы принтеров
+2. Нажмите **+**, чтобы увеличить карточки
+3. Нажмите **-**, чтобы уменьшить их
+4. Выбранный размер сохраняется автоматически
 
-!!! tip "Print Farm View"
-    Use Small size for monitoring many printers at once on a large screen.
+!!! tip "Обзор фермы печати"
+    Используйте маленький размер, чтобы одновременно наблюдать за множеством принтеров на большом экране.
 
 ---
 
-## :material-chart-bar: Status Summary Bar
+## :material-chart-bar: Сводная панель состояния {#status-summary-bar}
 
-The status summary bar at the top of the Printers page provides an at-a-glance overview of your fleet:
+Панель в верхней части страницы принтеров позволяет с первого взгляда оценить состояние фермы:
 
-### Availability & Counts
+### Доступность и количество {#availability-counts}
 
-| Indicator | Description |
+| Индикатор | Описание |
 |:---------:|-------------|
-| :material-circle:{ style="color: #4caf50" } **X available** | Idle printers ready to accept a print (always shown, even when 0) |
-| :material-circle:{ style="color: #4caf50" } **X printing** | Printers currently running a job (pulsing dot) |
-| :material-circle:{ style="color: #9e9e9e" } **X offline** | Disconnected printers |
-| :material-circle:{ style="color: #f44336" } **X problem** | Connected printers with active HMS errors (only shown when > 0) |
+| :material-circle:{ style="color: #4caf50" } **X доступно** | Принтеры в ожидании, готовые принять задание (показываются всегда, даже при 0) |
+| :material-circle:{ style="color: #4caf50" } **X печатает** | Принтеры, выполняющие задание (пульсирующая точка) |
+| :material-circle:{ style="color: #9e9e9e" } **X не в сети** | Отключённые принтеры |
+| :material-circle:{ style="color: #f44336" } **X с проблемами** | Подключённые принтеры с активными ошибками HMS (показываются только при значении > 0) |
 
-### Next Available Printer
+### Ближайший доступный принтер {#next-available-printer}
 
-When at least one printer is actively printing, the bar shows which printer will finish soonest:
+Когда хотя бы один принтер печатает, панель показывает, какой из них освободится раньше:
 
-- **Printer name** — the printer closest to completing its current job
-- **Progress bar** — visual completion indicator
-- **Percentage** — current print progress
-- **Time remaining** — estimated time until the printer becomes available
+- **Название принтера** — принтер, который раньше других завершит текущее задание
+- **Индикатор прогресса** — наглядное отображение выполнения
+- **Процент** — текущий прогресс печати
+- **Оставшееся время** — расчётное время до освобождения принтера
 
-!!! tip "Print Farm Monitoring"
-    The "Next available" indicator is especially useful for print farms with many printers — quickly see which printer will be free next without scanning every card.
+!!! tip "Мониторинг фермы печати"
+    Индикатор «Ближайший доступный» особенно полезен для больших ферм: он позволяет быстро узнать, какой принтер освободится следующим, не просматривая все карточки.
 
 ---
 
-## :material-tab: Print Progress in the Browser Tab
+## :material-tab: Ход печати во вкладке браузера {#print-progress-in-the-browser-tab}
 
-Keep an eye on a running print without switching back to Bambuddy. When enabled, the **browser tab title** displays the soonest-finishing print's progress, and the **favicon** shows a progress ring in your theme accent colour. Both use the existing live printer-status updates.
+Следите за печатью, не переключаясь обратно в Bambuddy. Если функция включена, **заголовок вкладки браузера** показывает прогресс печати, которая завершится раньше всего, а **значок сайта** — кольцо прогресса акцентного цвета темы. Оба используют существующие обновления состояния принтеров.
 
-Under **Settings → Appearance**, turn on **Print progress in tab** (off by default), then choose **Tab display**:
+В разделе **Настройки → Внешний вид** включите **Прогресс печати во вкладке** (по умолчанию выключено), затем выберите **Отображение вкладки**:
 
-| Tab display | Example | Description |
+| Отображение вкладки | Пример | Описание |
 |-------------|---------|-------------|
-| **Percentage** (default) | `42% · Bambuddy` | Shows the selected print's completion percentage, as before. |
-| **Time remaining** | `1h 26m · Bambuddy` or `16m · Bambuddy` | Shows the remaining time using the same duration format as the Printers page's **Next available** indicator. |
+| **Процент** (по умолчанию) | `42% · Bambuddy` | Как и прежде, показывает процент завершения выбранной печати. |
+| **Оставшееся время** | `1h 26m · Bambuddy` или `16m · Bambuddy` | Показывает оставшееся время в том же формате, что и индикатор **Ближайший доступный** на странице принтеров. |
 
-The **Tab display** choice appears when **Print progress in tab** is enabled. You can change it at any time; the favicon's progress ring continues to indicate **percentage** in either mode.
+Параметр **Отображение вкладки** появляется, когда включён **Прогресс печати во вкладке**. Его можно изменить в любой момент; кольцо значка сайта в обоих режимах продолжает показывать **процент**.
 
-| Behaviour | Detail |
+| Поведение | Подробности |
 |-----------|--------|
-| **Which print** | The soonest-finishing running print across all printers (same pick as the [Next Available](#next-available-printer) indicator), tie-broken by highest progress. |
-| **Unknown remaining time** | Falls back to the print's percentage until a valid remaining-time estimate is available. |
-| **When idle** | Restores the original browser title and favicon when no print is running. |
-| **Scope** | Both preferences are stored **per browser** (`localStorage`), not synchronized with the server or other devices. |
-| **In a background tab** | Continues receiving updates, subject to browser background-tab throttling — see the note below. |
+| **Какая печать** | Выполняющаяся печать, которая завершится раньше всех среди всех принтеров (как для индикатора [Ближайший доступный](#next-available-printer)); при равном времени выбирается больший прогресс. |
+| **Оставшееся время неизвестно** | До получения достоверной оценки показывается процент печати. |
+| **При простое** | Когда печать не выполняется, восстанавливаются исходные заголовок и значок вкладки. |
+| **Область действия** | Оба параметра сохраняются **для каждого браузера отдельно** (`localStorage`) и не синхронизируются с сервером или другими устройствами. |
+| **В фоновой вкладке** | Обновления продолжают поступать с учётом ограничения фоновых вкладок браузером — см. примечание ниже. |
 
-!!! tip "Background monitoring"
-    Pin the Bambuddy tab and enable this to check the next print's progress or remaining time while working in other tabs.
+!!! tip "Фоновый мониторинг"
+    Закрепите вкладку Bambuddy и включите эту функцию, чтобы видеть прогресс или оставшееся время ближайшей печати, работая в других вкладках.
 
-!!! note "How often it updates when you are looking at another tab"
-    Browsers deliberately slow down background tabs to save battery: timers are limited to roughly once a second, and to about once a minute once a tab has been hidden for five minutes. The percentage or remaining time therefore steps rather than ticks on a tab you have left alone for a while, and catches up as soon as you switch back to it. This is browser policy and applies to every site; Bambuddy cannot opt out of it. If you want a continuously live view, keep the tab visible — on a second monitor or in its own window.
+!!! note "Частота обновления при просмотре другой вкладки"
+    Браузеры намеренно замедляют фоновые вкладки для экономии энергии: таймеры ограничиваются примерно одним срабатыванием в секунду, а после пяти минут в скрытой вкладке — примерно одним в минуту. Поэтому процент или оставшееся время обновляются скачками и наверстают пропущенное, как только вы вернётесь на вкладку. Это правило браузера действует для всех сайтов; Bambuddy не может его отменить. Если нужен непрерывный просмотр, держите вкладку видимой — на втором мониторе или в отдельном окне.
 
 ---
 
-## :material-monitor-dashboard: Printer Status
+## :material-monitor-dashboard: Состояние принтера {#printer-status}
 
-Each printer card displays real-time information:
+На каждой карточке принтера показывается информация в реальном времени:
 
-### Connection Status
+### Состояние подключения {#connection-status}
 
-| Indicator | Status |
+| Индикатор | Состояние |
 |:---------:|--------|
-| :material-circle:{ style="color: #4caf50" } | Connected and communicating |
-| :material-circle:{ style="color: #ff9800" } | Connecting or reconnecting |
-| :material-circle:{ style="color: #f44336" } | Disconnected or error |
+| :material-circle:{ style="color: #4caf50" } | Подключён, обмен данными идёт |
+| :material-circle:{ style="color: #ff9800" } | Подключение или повторное подключение |
+| :material-circle:{ style="color: #f44336" } | Отключён или произошла ошибка |
 
-### Temperature Readouts
+### Показания температуры {#temperature-readouts}
 
-Live temperature readings update every few seconds:
+Текущие температуры обновляются каждые несколько секунд:
 
-| Sensor | Description |
+| Датчик | Описание |
 |--------|-------------|
-| :material-printer-3d-nozzle: **Nozzle** | Current hotend temperature |
-| :material-radiator: **Bed** | Heated bed temperature |
-| :material-home-thermometer: **Chamber** | Enclosure temperature (if available) |
+| :material-printer-3d-nozzle: **Сопло** | Текущая температура хотэнда |
+| :material-radiator: **Стол** | Температура подогреваемого стола |
+| :material-home-thermometer: **Камера** | Температура камеры, если доступна |
 
-### Heater History
+### История нагревателей {#heater-history}
 
-Every heater tile on the printer card carries a small chart icon (top-right corner). Click the tile body to open the existing target-temperature popover; click the chart icon to open the heater history modal for that sensor.
+На каждой плитке нагревателя в карточке принтера есть небольшой значок графика в правом верхнем углу. Нажмите на саму плитку, чтобы открыть окно целевой температуры, или на значок графика, чтобы открыть историю соответствующего датчика.
 
-Bambuddy records nozzle, bed, and chamber readings every 60 seconds (alongside the matching target value) so you can review thermal behaviour after a print:
+Bambuddy записывает показания сопла, стола и камеры каждые 60 секунд вместе с соответствующей целевой температурой, чтобы после печати можно было изучить изменение температуры:
 
-| Element | Description |
+| Элемент | Описание |
 |---------|-------------|
-| **Kind toggle** | Switch between Nozzle / Nozzle 2 (H2D dual-nozzle) / Bed / Chamber — only sensors present on this model are shown. |
-| **Time range** | 6h / 24h / 48h / 7d window selector. |
-| **Stat cards** | Current value (with trend arrow), average, min, and max across the selected window. |
-| **Chart** | Solid line for the recorded reading, dashed step-after line for the configured target. |
+| **Выбор типа** | Сопло / Сопло 2 (двойное сопло H2D) / Стол / Камера — показаны только датчики этой модели. |
+| **Диапазон времени** | Выбор периода 6 ч / 24 ч / 48 ч / 7 дней. |
+| **Карточки статистики** | Текущее значение со стрелкой тенденции, среднее, минимум и максимум за выбранный период. |
+| **График** | Сплошная линия показывает измерения, пунктирная ступенчатая — заданную целевую температуру. |
 
-!!! info "Read-only chambers"
-    On the sensor-only chambers of the X1C and P2S (no `M141` heater acceptance), the chart icon still works — Bambuddy is reading the chamber sensor either way, so the history is just as useful for spotting drift or for tuning ambient conditions.
+!!! info "Камеры только с датчиком"
+    Для камер X1C и P2S, где доступен только датчик и команда нагрева `M141` не принимается, значок графика тоже работает: Bambuddy считывает датчик камеры, поэтому история помогает заметить отклонения и настроить условия окружающей среды.
 
-#### Retention
+#### Срок хранения {#retention}
 
-Heater data is kept for 30 days by default. Adjust this under **Settings → Filament → History Retention → Keep printer temperature history (nozzle, bed, chamber) for** (1-365 days) if you need a longer or shorter window. Old rows are purged automatically once every ~24 hours by the recorder loop.
+По умолчанию данные нагревателей хранятся 30 дней. При необходимости измените срок в **Настройки → Филамент → Хранение истории → Хранить историю температур принтера (сопло, стол, камера)** (1–365 дней). Старые записи автоматически удаляются циклом записи примерно раз в 24 часа.
 
-### Nozzle Details (H2 Series)
+### Данные сопел (серия H2) {#nozzle-details-h2-series}
 
-H2 series printers show extended nozzle information on hover:
+Принтеры серии H2 показывают расширенные сведения о соплах при наведении:
 
-| Printer | Feature | Details |
+| Принтер | Возможность | Подробности |
 |---------|---------|---------|
-| **H2D / H2D Pro** | L/R Nozzle Hover Card | Shows both nozzle details side by side — diameter, type, flow, wear, max temp, serial. Active nozzle highlighted with Active/Idle status. |
-| **H2S** | Single Nozzle Hover Card | Shows extended nozzle details (wear, serial, max temp) on hover over the nozzle temperature card. |
-| **H2C** | Nozzle Rack Card | 6-position tool-changer dock showing all rack slots with diameter and filament color, numbered 1-6 by physical rack position. Empty slots shown as placeholders and keep their number. Hover for full details. |
+| **H2D / H2D Pro** | Карточка левого и правого сопла | Показывает данные обоих сопел рядом: диаметр, тип, поток, износ, максимальную температуру и серийный номер. Активное сопло выделено состоянием «Активно»/«Ожидание». |
+| **H2S** | Карточка одного сопла | При наведении на карточку температуры показывает расширенные сведения о сопле: износ, серийный номер и максимальную температуру. |
+| **H2C** | Карточка стойки сопел | Док смены инструментов на шесть позиций показывает все слоты стойки с диаметром и цветом филамента; нумерация 1–6 соответствует физическому положению. Пустые слоты сохраняют номер и отображаются как заглушки. Для подробностей наведите курсор. |
 
-!!! info "L/R Nozzle Status"
-    The L/R nozzle card shows **Active** or **Idle** based on which nozzle the printer is currently using, rather than mounted/docked status.
+!!! info "Состояние левого и правого сопла"
+    Карточка показывает **Активно** или **Ожидание** в зависимости от того, какое сопло принтер использует сейчас, а не от состояния установки или парковки.
 
-### Fan Status
+### Состояние вентиляторов {#fan-status}
 
-Real-time fan speed monitoring in the Controls section:
+В разделе управления скорость вентиляторов отслеживается в реальном времени:
 
-| Fan | Icon | Color | Description |
+| Вентилятор | Значок | Цвет | Описание |
 |-----|:----:|:-----:|-------------|
-| :material-fan: **Part Cooling** | Fan | Cyan | Cools the printed layers |
-| :material-weather-windy: **Auxiliary** | Wind | Blue | Controls airflow in chamber. **Left Auxiliary** on the X2D |
-| :material-weather-windy: **Left Auxiliary** | Wind | Indigo | Second part cooling fan (P2S, when fitted). **Right Auxiliary** on the X2D |
-| :material-air-filter: **Chamber** / **Exhaust** | AirVent | Green | Exhausts hot air from enclosure |
+| :material-fan: **Обдув детали** | Вентилятор | Голубой | Охлаждает печатаемые слои |
+| :material-weather-windy: **Дополнительный** | Ветер | Синий | Управляет потоком воздуха в камере. На X2D — **левый дополнительный** |
+| :material-weather-windy: **Левый дополнительный** | Ветер | Индиго | Второй вентилятор обдува детали (P2S, если установлен). На X2D — **правый дополнительный** |
+| :material-air-filter: **Камера** / **Вытяжка** | Вентиляция | Зелёный | Выводит горячий воздух из корпуса |
 
-!!! info "P2S / X2D accessory fans"
-    The second auxiliary fan and the **Exhaust** badge appear only when the printer reports that fan — they're add-on kits on the P2S and factory-fitted on the X2D. On these models the enclosure fan is labelled **Exhaust**; other enclosed models keep **Chamber**.
+!!! info "Дополнительные вентиляторы P2S / X2D"
+    Второй дополнительный вентилятор и значок **Вытяжка** появляются, только когда принтер сообщает об их наличии: для P2S это дополнительные комплекты, а для X2D — заводское оснащение. На этих моделях вентилятор корпуса называется **Вытяжка**, а на остальных закрытых моделях — **Камера**.
 
-Fan badges always display with dynamic coloring:
+Цвет значков вентиляторов меняется в зависимости от состояния:
 
-- **Active** (colored): Fan is running, shows current speed %
-- **Inactive** (gray): Fan is off, shows 0%
+- **Активен** (цветной): вентилятор работает, показана текущая скорость в %
+- **Неактивен** (серый): вентилятор выключен, показано 0%
 
-A **print speed badge** (:material-gauge:) also appears in this row, showing the current speed preset percentage. See [Printer Control > Print Speed](printer-control.md#print-speed-control) for details.
+В этой же строке отображается **значок скорости печати** (:material-gauge:) с процентом текущего режима скорости. Подробнее см. [Управление принтером > Скорость печати](printer-control.md#print-speed-control).
 
-Fan speeds update in real-time via WebSocket alongside temperatures.
+Скорость вентиляторов обновляется в реальном времени через WebSocket вместе с температурой.
 
-### Compact Mode Status Pip
+### Индикатор состояния в компактном режиме {#compact-mode-status-pip}
 
-In compact (Small) view, each printer card shows a small colored status pip:
+В компактном режиме (S) на каждой карточке отображается небольшая цветная точка состояния:
 
-| Color | Meaning |
+| Цвет | Значение |
 |:-----:|---------|
-| :material-circle:{ style="color: #4caf50" } Green | Connected, no issues |
-| :material-circle:{ style="color: #f44336" } Red | Offline, or an HMS fault that stops or pauses the print (level **Error** or **Warning**) |
-| :material-circle:{ style="color: #ff9800" } Amber | Only HMS faults that don't stop the print (level **Notice**, or a level the printer didn't set) |
+| :material-circle:{ style="color: #4caf50" } Зелёный | Подключён, проблем нет |
+| :material-circle:{ style="color: #f44336" } Красный | Не в сети либо есть ошибка HMS, остановившая или приостановившая печать (уровень **Error** или **Warning**) |
+| :material-circle:{ style="color: #ff9800" } Оранжевый | Есть только ошибки HMS, не останавливающие печать (уровень **Notice** или уровень не указан принтером) |
 
-Hover over the pip to see the number of active HMS errors.
+Наведите курсор на индикатор, чтобы увидеть число активных ошибок HMS.
 
-### Compact Mode Metrics
+### Показатели в компактном режиме {#compact-mode-metrics}
 
-While a print is running, the Small card also carries a single line of metrics under the progress bar:
+Во время печати маленькая карточка также показывает строку показателей под индикатором прогресса:
 
-- **Remaining time** (:material-clock-outline:) — e.g. `1h 23m`
-- **ETA** — the clock time the print is expected to finish, in your configured 12/24-hour format
-- **Layer progress** (:material-layers-triple:) — e.g. `120/267`
+- **Оставшееся время** (:material-clock-outline:) — например, `1h 23m`
+- **Расчётное время завершения** — время на часах в выбранном формате 12/24 часа
+- **Прогресс по слоям** (:material-layers-triple:) — например, `120/267`
 
-Values are omitted individually when the printer doesn't report them, and the line is empty when nothing is printing — the row keeps its height either way so cards don't shift as prints start and finish.
+Если принтер не сообщает отдельные значения, они не показываются; когда печать не идёт, строка пуста. При этом её высота сохраняется, чтобы карточки не смещались при начале и завершении печати.
 
-!!! tip "Which printer finishes first"
-    This is what makes Small usable as a wall display: the ETAs let you compare a whole fleet at a glance without opening any card. Clicking a Small card still drills down — it switches the grid to Medium and scrolls to that printer, with a **Back** button to return.
+!!! tip "Какой принтер закончит первым"
+    Благодаря расчётному времени завершения маленькие карточки можно использовать на настенном экране: всю ферму легко сравнить одним взглядом. Нажатие на маленькую карточку открывает подробности: сетка переключается на средний размер и прокручивается к принтеру; кнопка **Назад** позволяет вернуться.
 
-### Print Progress
+### Ход печати {#print-progress}
 
-When a print is active, you'll see:
+Во время печати отображаются:
 
-- **Progress bar** - Visual completion percentage (turns amber when paused)
-- **Current layer** - Layer X of Y
-- **Time remaining** - Estimated time to completion
-- **Filament used** - Grams consumed so far
-- **Next pause** (:material-pause:, blue) - For a print with a pause added in the slicer, the time until the printer gets there and the clock time, e.g. `20m to pause · 20:27`. Hover it for the layer. With several pauses it counts down to the next one, and moves on once the printer has reached it. Until the printer reports a remaining time it shows the layer only, and so it does in a speed mode other than Standard. Shown on cards of size M and up.
+- **Индикатор прогресса** — процент выполнения; при паузе становится оранжевым
+- **Текущий слой** — слой X из Y
+- **Оставшееся время** — расчётное время до завершения
+- **Израсходованный филамент** — уже израсходованное количество в граммах
+- **Следующая пауза** (:material-pause:, синий) — если в слайсере добавлена пауза, показываются время до неё и время на часах, например `20m to pause · 20:27`. Наведите курсор, чтобы увидеть слой. При нескольких паузах отсчитывается время до ближайшей, затем — до следующей. Пока принтер не сообщил оставшееся время, а также в режиме скорости, отличном от стандартного, показывается только слой. Индикатор доступен на карточках размера M и больше.
 
-!!! note "Where the pause time comes from"
-    Bambuddy reads the pauses from the print's G-code in its archived 3MF: Bambu Studio and OrcaSlicer write a pause as `M400 U1`, at the start of the layer it is set on, and record the time left at that point. The countdown is the printer's remaining time minus that. The slicer's times are for Standard speed, so in Silent, Sport or Ludicrous the card shows the pause's layer instead of a time, and no Pause Coming Up notification is sent. Prints with no archived 3MF, such as a print Bambuddy could not download, show no pause time.
+!!! note "Откуда берётся время паузы"
+    Bambuddy считывает паузы из G-кода печати в архивном 3MF: Bambu Studio и OrcaSlicer записывают паузу как `M400 U1` в начале заданного слоя и указывают оставшееся в этот момент время. Обратный отсчёт равен оставшемуся времени принтера за вычетом этого значения. Время слайсера рассчитано для стандартной скорости, поэтому в режимах Silent, Sport и Ludicrous карточка показывает слой паузы вместо времени, а уведомление о предстоящей паузе не отправляется. Для печатей без архивного 3MF, например если Bambuddy не смог его скачать, время паузы не показывается.
 
-    To be told before a pause, turn on [Pause Coming Up](notifications.md#print-events) for a notification channel.
+    Чтобы получать предупреждение перед паузой, включите [уведомление о предстоящей паузе](notifications.md#print-events) для канала уведомлений.
 
-### Status Sorting
+### Сортировка по состоянию {#status-sorting}
 
-When sorting by status, printers are ordered by priority:
+При сортировке по состоянию принтеры располагаются в порядке приоритета:
 
-1. **HMS errors** — printers with active HMS errors appear first
-2. **Printing** — printers running a job
-3. **Idle** — connected with no active job
-4. **Offline** — disconnected printers
+1. **Ошибки HMS** — принтеры с активными ошибками HMS в начале
+2. **Печатает** — принтеры, выполняющие задание
+3. **Ожидание** — подключены, активного задания нет
+4. **Не в сети** — отключённые принтеры
 
-This makes it easy to spot printers that need attention in large print farms.
+Это помогает быстро найти принтеры, требующие внимания, в больших фермах.
 
-### ETA Sorting
+### Сортировка по времени завершения {#eta-sorting}
 
-When sorting by **ETA** (estimated time of arrival / remaining print time), printers are ordered so the next finish lands at the top — useful for staging the next job's filament ahead of time:
+При сортировке по **времени завершения** принтер, который освободится следующим, отображается первым. Это удобно для предварительной подготовки филамента следующего задания:
 
-1. **Printing with a known ETA** — soonest finish first, ascending by remaining minutes
-2. **Printing without an ETA yet** — the brief window between starting a print and the slicer reporting total time
-3. **Idle / finished** — connected, no active job
-4. **Offline** — disconnected
+1. **Печатают с известным временем завершения** — сначала ближайшее завершение, по возрастанию оставшихся минут
+2. **Печатают без оценки времени** — короткий период между запуском печати и сообщением общего времени слайсером
+3. **Ожидание / завершено** — подключены, активного задания нет
+4. **Не в сети** — отключены
 
-Printers with the same ETA (or no active print) fall back to alphabetical order so the list stays stable across refreshes. The sort-direction button still flips the result — descending puts offline printers at the top for fleet-wide connectivity triage.
+Принтеры с одинаковой оценкой времени или без активной печати сортируются по алфавиту, чтобы список оставался стабильным при обновлении. Кнопка направления сортировки переворачивает результат: по убыванию отключённые принтеры оказываются вверху, что удобно для проверки связи по всей ферме.
 
-The ETA sort renders a flat list (no section headers), since every printer's ETA is unique.
+Сортировка по времени завершения показывает плоский список без заголовков разделов, поскольку время каждого принтера уникально.
 
-### Collapsible Groups
+### Сворачиваемые группы {#collapsible-groups}
 
-When sorting by **Status**, **Model**, or **Location**, printers are rendered inside collapsible section headers — click a header to expand or collapse that group. The **Name** and **ETA** sorts render a flat grid.
+При сортировке по **состоянию**, **модели** или **расположению** принтеры выводятся в сворачиваемых разделах: нажмите заголовок, чтобы развернуть или свернуть группу. Сортировка по **названию** и **времени завершения** показывает плоскую сетку.
 
-- Each group's collapsed state persists across page refreshes (stored per-browser in `localStorage`).
-- In selection mode, each section header shows a **Select All** button that selects every printer within that group.
-- Status groups appear in priority order (Error → Printing → Paused → Finished → Idle → Offline); the sort-direction toggle flips the order.
+- Состояние каждой группы сохраняется при обновлении страницы отдельно в браузере (`localStorage`).
+- В режиме выбора каждый заголовок раздела содержит кнопку **Выбрать все**, которая выбирает все принтеры группы.
+- Группы состояний идут по приоритету (ошибка → печатает → пауза → завершено → ожидание → не в сети); переключатель направления меняет порядок на обратный.
 
 ---
 
-## :material-alert-decagram: HMS Error Monitoring
+## :material-alert-decagram: Мониторинг ошибок HMS {#hms-error-monitoring}
 
-The Health Management System (HMS) monitors printer health and displays issues in real-time.
+Health Management System (HMS) следит за состоянием принтера и показывает проблемы в реальном времени.
 
-### Status Indicator
+### Индикатор состояния {#status-indicator}
 
-The HMS indicator is always visible on printer cards:
+Индикатор HMS всегда виден на карточке принтера:
 
-| Status | Meaning | Action |
+| Состояние | Значение | Действие |
 |:------:|---------|--------|
-| :material-check-circle:{ style="color: #4caf50" } **OK** | No faults that count | None needed |
-| :material-alert:{ style="color: #ff9800" } Amber, with a count | Only **Notice**-level faults that count, such as a prompt waiting for you; the print carries on | Check when convenient |
-| :material-alert-circle:{ style="color: #f44336" } Red, with a count | At least one **Error** (the print was stopped) or **Warning** (the print is paused) | Needs attention |
+| :material-check-circle:{ style="color: #4caf50" } **OK** | Учитываемых ошибок нет | Не требуется |
+| :material-alert:{ style="color: #ff9800" } Оранжевый, с числом | Только учитываемые сообщения уровня **Notice**, например запрос, ожидающий вашего действия; печать продолжается | Проверьте, когда удобно |
+| :material-alert-circle:{ style="color: #f44336" } Красный, с числом | Как минимум одна ошибка **Error** (печать остановлена) или **Warning** (печать приостановлена) | Требуется внимание |
 
-The levels are the ones the printer itself reports, the same ones Bambu Studio and Bambu Handy use.
+Используются уровни, которые сообщает сам принтер и которые также применяются в Bambu Studio и Bambu Handy.
 
-### Error Details
+### Подробности ошибки {#error-details}
 
-Click the HMS indicator to see:
+Нажмите индикатор HMS, чтобы увидеть:
 
-- The description Bambu publishes for the fault, for your printer model. The texts come from Bambu Studio's own HMS files and cover about 6,400 codes. They are in English.
-- The code as the printer screen shows it, such as `0500-0300-0002-000E`
-- Its level: **Error**, **Warning** or **Notice**
-- The action buttons Bambu offers for it, if any (below)
-- A link to Bambu Lab's HMS wiki
+- Опубликованное Bambu описание ошибки для модели принтера. Тексты берутся из файлов HMS Bambu Studio и охватывают около 6400 кодов. Они приведены на английском языке.
+- Код в том виде, в каком он показан на экране принтера, например `0500-0300-0002-000E`
+- Уровень: **Error**, **Warning** или **Notice**
+- Предлагаемые Bambu кнопки действий, если они есть (см. ниже)
+- Ссылку на Wiki HMS Bambu Lab
 
-Two kinds of fault don't count toward the indicator, the printer card's problem badge or the Camera Wall, and don't send notifications:
+Два вида сообщений не учитываются в индикаторе, значке проблем на карточке и стене камер и не вызывают уведомлений:
 
-- **Notices that don't need you.** Level-**Notice** faults from the printer's HMS list with no action buttons, such as "The top cover is open" or "The chamber temperature is high, and the system has increased the fan speed". A printer can hold these through a whole print.
-- **Codes without published text.** Bambu lists a few codes with an empty description, and some aren't listed at all.
+- **Уведомления, не требующие вашего участия.** Сообщения уровня **Notice** из списка HMS принтера без кнопок действий, например «Открыта верхняя крышка» или «Температура камеры высока, система увеличила скорость вентилятора». Принтер может сохранять их на протяжении всей печати.
+- **Коды без опубликованного текста.** Для некоторых кодов Bambu оставляет описание пустым, а некоторые вообще отсутствуют в списке.
 
-The modal still lists them, with their text where Bambu has one, collapsed under **Also reported, not counted**, so nothing the printer is holding is hidden. A fault that offers action buttons always counts, so its buttons show.
+Они всё равно перечисляются в диалоговом окне с текстом, если Bambu его предоставила, в свёрнутом разделе **Также сообщено, не учитывается**; таким образом, ни одно сообщение принтера не скрывается. Ошибка с кнопками действий всегда учитывается, поэтому её кнопки отображаются.
 
-### Error Actions (Resume / Stop / Check Assistant / …)
+### Действия при ошибках (возобновить / остановить / помощник проверки / …) {#error-actions-resume-stop-check-assistant}
 
-Each error in the modal now shows the same action buttons that BambuStudio and Bambu Handy display — **Resume Printing**, **Stop Printing**, **Continue**, **Retry**, **Filament Extruded**, **Check Assistant**, **Don't Remind Me**, **Recheck**, and so on, depending on what Bambu's catalog lists for that specific error on your printer model.
+Для каждой ошибки в окне показываются те же кнопки действий, что и в Bambu Studio и Bambu Handy: **Возобновить печать**, **Остановить печать**, **Продолжить**, **Повторить**, **Филамент выдавлен**, **Помощник проверки**, **Больше не напоминать**, **Проверить снова** и другие в зависимости от каталога Bambu для данной ошибки и модели принтера.
 
-Click any button and Bambuddy sends the matching MQTT command back to the printer. The wire shapes mirror BambuStudio's `DeviceErrorDialog` / `DeviceManager` source so the printer sees the same payload regardless of which client sent it:
+При нажатии кнопки Bambuddy отправляет принтеру соответствующую команду MQTT. Формат сообщений повторяет исходный код `DeviceErrorDialog` / `DeviceManager` Bambu Studio, поэтому принтер получает одинаковые данные независимо от клиента:
 
-- **Resume Printing / Resume (defects acceptable) / Resume (problem solved) / Problem Solved and Resume / Filament Loaded, Resume / Proceed** → `resume` command. Tells the firmware "I handled the problem, re-check normally and continue." For faults that re-trigger on resume (e.g. a genuinely wrong plate), the printer will re-detect and re-pause with the same code; use **Ignore this and Resume** instead for that semantic.
-- **Ignore this and Resume / Ignore. Don't Remind Next Time / Don't Remind Me** → `ignore` command. Distinct from Resume: tells the firmware "suppress the next re-check of this specific fault AND resume the paused print" in one operation. The `err` field carries the decimal int value of the error code (matching BambuStudio's wire format); `job_id` carries the active subtask id so the firmware knows which print's check to skip.
-- **No Reminder Next Time** → `idle_ignore` with `type=0`. Dismisses the dialog on the printer's touchscreen without resuming; the firmware suppresses one re-display of the same warning.
-- **Stop Printing** → `stop` command. Aborts the print from the paused state and the printer transitions to FAILED.
-- **Filament Extruded / Continue / Retry / Abort** (filament-load dialogs) → `ams_control` with `param=done` / `resume` / `abort`.
-- **OK / Confirm** → `clean_print_error` (the same command the explicit "Clear Errors" button uses).
-- **Check Assistant**, **View Liveview**, **Close**, **Cancel** — these are surfaced for parity with BambuStudio's modal but don't have an MQTT counterpart; the printer's own touchscreen drives them. Bambuddy renders the buttons so you have label parity, but clicking them is a no-op on the wire.
+- **Возобновить печать / Возобновить (дефекты допустимы) / Возобновить (проблема решена) / Проблема решена и возобновить / Филамент загружен, возобновить / Продолжить** → команда `resume`. Она сообщает прошивке: «Проблема решена, выполните обычную повторную проверку и продолжайте». Если при возобновлении ошибка возникает снова, например из-за действительно неверного стола, принтер обнаружит её повторно и снова приостановится с тем же кодом. Для пропуска такой проверки используйте **Игнорировать и продолжить**.
+- **Игнорировать и продолжить / Игнорировать. Не напоминать в следующий раз / Больше не напоминать** → команда `ignore`. В отличие от возобновления, она одной операцией сообщает прошивке: «Пропустите следующую повторную проверку этой ошибки и возобновите печать». Поле `err` содержит десятичное целое значение кода ошибки (как в формате Bambu Studio), а `job_id` — ID активного подзадания, чтобы прошивка знала, проверку какой печати пропустить.
+- **Не напоминать в следующий раз** → `idle_ignore` с `type=0`. Закрывает диалог на сенсорном экране принтера без возобновления; прошивка один раз подавляет повторный показ предупреждения.
+- **Остановить печать** → команда `stop`. Прерывает приостановленную печать, и принтер переходит в состояние FAILED.
+- **Филамент выдавлен / Продолжить / Повторить / Прервать** (диалоги загрузки филамента) → `ams_control` с `param=done` / `resume` / `abort`.
+- **OK / Подтвердить** → `clean_print_error` (та же команда, что используется кнопкой «Очистить ошибки»).
+- **Помощник проверки**, **Просмотр камеры**, **Закрыть**, **Отмена** — показаны для соответствия диалогу Bambu Studio, но не имеют аналога MQTT; ими управляет сенсорный экран принтера. Bambuddy показывает те же подписи, но нажатие не отправляет сетевую команду.
 
-After a button click Bambuddy waits up to 2.5 s for the printer to push at least one MQTT status update; if no push arrives the action is reported as **`Printer did not acknowledge HMS action`** rather than a silent success. This catches firmware-side silent rejection (broker ACKs the publish but the printer drops the command — e.g. an err format mismatch).
+После нажатия Bambuddy до 2,5 секунды ждёт хотя бы одного обновления состояния по MQTT от принтера. Если обновление не пришло, выводится **`Printer did not acknowledge HMS action`**, а не сообщение об успехе. Это позволяет заметить незаметный отказ прошивки: брокер подтвердил публикацию, но принтер отбросил команду, например из-за неверного формата `err`.
 
-Which buttons appear is determined by the printer model (`X1C`, `P1S`, `A1`, `H2D`, …) and the error code via Bambu's published HMS catalog. If Bambu's catalog has no actions for a code, the modal shows only the error description and the "Clear Errors" fallback.
+Набор кнопок определяется моделью принтера (`X1C`, `P1S`, `A1`, `H2D`, …) и кодом ошибки по опубликованному каталогу HMS Bambu. Если в каталоге нет действий для кода, диалог показывает только описание ошибки и резервную кнопку «Очистить ошибки».
 
-Action labels are translated in all 13 supported locales (English, German, Spanish, French, Italian, Japanese, Korean, Portuguese (Brazil), Russian, Turkish, Ukrainian, Simplified Chinese, Traditional Chinese).
+Названия действий переведены на все 13 поддерживаемых языков: английский, немецкий, испанский, французский, итальянский, японский, корейский, португальский (Бразилия), русский, турецкий, украинский, упрощённый и традиционный китайский.
 
-!!! note "Permission Required"
-    HMS actions require the **Printer Control** permission (`printers:control`). Users without this permission cannot execute actions.
+!!! note "Требуется разрешение"
+    Для действий HMS необходимо разрешение **Управление принтером** (`printers:control`). Без него пользователь не сможет выполнять действия.
 
-### Clear Errors
+### Очистка ошибок {#clear-errors}
 
-The HMS error modal also includes a **Clear Errors** button at the bottom that:
+Внизу окна ошибок HMS также есть кнопка **Очистить ошибки**, которая:
 
-1. Sends a `clean_print_error` command to the printer via MQTT
-2. Immediately removes errors from the Bambuddy UI
-3. Appears whenever the printer is holding any fault, including ones listed without a description
+1. Отправляет принтеру команду `clean_print_error` через MQTT
+2. Немедленно удаляет ошибки из интерфейса Bambuddy
+3. Появляется, когда у принтера есть любая ошибка, включая ошибки без описания
 
-This is useful for dismissing stale `print_error` values that persist after print cancellation or transient events (without needing to power-cycle the printer or start a new print). The per-error action buttons (above) handle the common cases — Clear Errors is the catch-all for older codes that have no action mapping.
+Это позволяет скрыть устаревшие значения `print_error`, сохраняющиеся после отмены печати или кратковременных событий, без выключения и повторного включения принтера или запуска новой печати. Кнопки отдельных ошибок выше обрабатывают типичные случаи, а очистка ошибок служит универсальным вариантом для старых кодов без сопоставленных действий.
 
-!!! note "Permission Required"
-    The Clear Errors button requires the **Printer Control** permission (`printers:control`). Users without this permission will see the button disabled.
+!!! note "Требуется разрешение"
+    Кнопка очистки требует разрешения **Управление принтером** (`printers:control`). Без него кнопка отображается неактивной.
 
-!!! tip "HMS Notifications"
-    Enable HMS error notifications to get alerted immediately when issues occur. See [Notifications](notifications.md).
+!!! tip "Уведомления HMS"
+    Включите уведомления об ошибках HMS, чтобы сразу узнавать о проблемах. См. [Уведомления](notifications.md).
 
 ---
 
-## :material-access-point: WiFi Signal Strength
+## :material-access-point: Уровень сигнала Wi-Fi {#wifi-signal-strength}
 
-The printer card displays WiFi signal strength:
+На карточке принтера показывается уровень сигнала Wi-Fi:
 
-| Icon | Signal |
+| Значок | Сигнал |
 |:----:|--------|
-| :material-wifi-strength-4: | Excellent |
-| :material-wifi-strength-3: | Good |
-| :material-wifi-strength-2: | Fair |
-| :material-wifi-strength-1: | Weak |
+| :material-wifi-strength-4: | Отличный |
+| :material-wifi-strength-3: | Хороший |
+| :material-wifi-strength-2: | Удовлетворительный |
+| :material-wifi-strength-1: | Слабый |
 
-Weak signal can cause connection drops and print monitoring issues.
-
----
-
-## :material-timer-sand: Total Print Hours
-
-Track cumulative print time for each printer:
-
-- Displayed on the printer card
-- Useful for maintenance scheduling
-- Helps identify heavily-used machines
+Слабый сигнал может вызывать разрывы связи и проблемы мониторинга печати.
 
 ---
 
-## :material-bug: MQTT Debug Logging
+## :material-timer-sand: Общее время печати {#total-print-hours}
 
-Built-in debugging tool for printer communication:
+Отслеживайте суммарное время печати каждого принтера:
 
-### Starting Debug Logging
+- Отображается на карточке принтера
+- Полезно для планирования обслуживания
+- Помогает определить интенсивно используемые устройства
 
-1. Click the settings icon on a printer card
-2. Click **Start MQTT Debug**
-3. Messages are captured in real-time
+---
 
-### Viewing Messages
+## :material-bug: Отладочное журналирование MQTT {#mqtt-debug-logging}
 
-| Direction | Description |
+Встроенный инструмент отладки связи с принтером:
+
+### Запуск отладочной записи {#starting-debug-logging}
+
+1. Нажмите значок настроек на карточке принтера
+2. Нажмите **Отладка MQTT**, затем **Начать запись**
+3. Сообщения записываются в реальном времени
+
+### Просмотр сообщений {#viewing-messages}
+
+| Направление | Описание |
 |-----------|-------------|
-| :material-arrow-down: **Incoming** | Messages from printer to Bambuddy |
-| :material-arrow-up: **Outgoing** | Commands sent to printer |
+| :material-arrow-down: **Входящие** | Сообщения от принтера в Bambuddy |
+| :material-arrow-up: **Исходящие** | Команды, отправленные принтеру |
 
-Features:
+Возможности:
 
-- **JSON payloads** - Expandable for detailed inspection
-- **Filter by type** - Focus on specific message types
-- **Search** - Find specific content
-- **Auto-refresh** - New messages appear automatically
+- **Данные JSON** — разворачиваются для подробного просмотра
+- **Фильтр по типу** — позволяет сосредоточиться на нужных типах сообщений
+- **Поиск** — поиск определённого содержимого
+- **Автообновление** — новые сообщения появляются автоматически
 
-### Use Cases
+### Примеры использования {#use-cases}
 
-- Troubleshooting connection issues
-- Understanding printer behavior
-- Debugging automation problems
-- Reporting issues to developers
+- Устранение проблем с подключением
+- Анализ поведения принтера
+- Отладка проблем автоматизации
+- Сообщение о проблемах разработчикам
 
 ---
 
-## :material-web: WebSocket Architecture
+## :material-web: Архитектура WebSocket {#websocket-architecture}
 
-Bambuddy uses WebSocket for real-time updates:
+Bambuddy использует WebSocket для обновлений в реальном времени:
 
 ```mermaid
 graph LR
@@ -435,113 +435,113 @@ graph LR
     B -->|WebSocket| E[Mobile]
 ```
 
-### How It Works
+### Как это работает {#how-it-works}
 
-1. **Printer** sends status updates via MQTT over TLS
-2. **Backend** processes and stores the data
-3. **WebSocket** broadcasts updates to all connected clients
-4. **Browser** updates the UI instantly
+1. **Принтер** отправляет обновления состояния через MQTT поверх TLS
+2. **Бэкенд** обрабатывает и сохраняет данные
+3. **WebSocket** рассылает обновления всем подключённым клиентам
+4. **Браузер** немедленно обновляет интерфейс
 
-### Connection Features
+### Особенности подключения {#connection-features}
 
-| Feature | Description |
+| Возможность | Описание |
 |---------|-------------|
-| **Auto-reconnect** | Automatically reconnects on disconnect |
-| **State sync** | Full state synchronized on reconnect |
-| **Delta updates** | Only changed data is sent |
-| **Multi-tab** | Multiple browser tabs supported |
+| **Автоматическое переподключение** | При разрыве соединение восстанавливается автоматически |
+| **Синхронизация состояния** | При повторном подключении синхронизируется всё состояние |
+| **Инкрементальные обновления** | Передаются только изменившиеся данные |
+| **Несколько вкладок** | Поддерживаются несколько вкладок браузера |
 
-### Performance
+### Производительность {#performance}
 
-- **Latency**: < 1 second typical
-- **Bandwidth**: Minimal (delta updates only)
-- **Scalability**: Multiple clients supported
+- **Задержка**: обычно < 1 секунды
+- **Трафик**: минимальный, передаются только изменения
+- **Масштабируемость**: поддерживается несколько клиентов
 
 ---
 
-## :material-folder: Printer File Browser
+## :material-folder: Обозреватель файлов принтера {#printer-file-browser}
 
-Browse and manage files stored on your printer's internal storage.
+Просматривайте файлы во внутреннем хранилище принтера и управляйте ими.
 
-### Opening the File Browser
+### Открытие обозревателя файлов {#opening-the-file-browser}
 
-1. Click the **folder icon** (:material-folder:) on any printer card
-2. A modal opens showing the printer's file system
+1. Нажмите значок папки (:material-folder:) на любой карточке принтера
+2. Откроется окно с файловой системой принтера
 
-### Navigation
+### Навигация {#navigation}
 
-- **Quick access buttons** - Jump to Root, Cache, Models, or Timelapse folders
-- **Breadcrumb path** - Shows current location with back navigation
-- **Click folders** - Navigate into subdirectories
+- **Кнопки быстрого доступа** — переход в корневой каталог, Cache, Models или Timelapse
+- **Путь навигации** — текущее расположение с возможностью возврата
+- **Нажатие на папку** — переход во вложенный каталог
 
-### File Selection
+### Выбор файлов {#file-selection}
 
-Select files for bulk operations:
+Выберите файлы для групповых операций:
 
-| Action | Description |
+| Действие | Описание |
 |--------|-------------|
-| **Click checkbox** | Select/deselect individual files |
-| **Select All** | Select all files in current view |
-| **Deselect All** | Clear all selections |
+| **Нажать флажок** | Выбрать отдельный файл или снять выбор |
+| **Выбрать все** | Выбрать все файлы в текущем представлении |
+| **Снять выделение** | Снять все отметки |
 
-### File Operations
+### Операции с файлами {#file-operations}
 
-| Operation | Single File | Multiple Files |
+| Операция | Один файл | Несколько файлов |
 |-----------|------------|----------------|
-| **Download** | Direct download | Downloads as ZIP archive |
-| **Delete** | Delete with confirmation | Bulk delete with confirmation |
+| **Скачать** | Прямое скачивание | Скачивание в ZIP-архиве |
+| **Удалить** | Удаление с подтверждением | Групповое удаление с подтверждением |
 
-### Sorting & Filtering
+### Сортировка и фильтрация {#sorting-filtering}
 
-| Control | Options |
+| Элемент | Варианты |
 |---------|---------|
-| **Sort** | Name (A-Z/Z-A), Size, Date |
-| **Filter** | Type filename to filter list |
+| **Сортировка** | Название (A–Z/Z–A), размер, дата |
+| **Фильтр** | Введите имя файла для фильтрации списка |
 
-### Storage Info
+### Информация о хранилище {#storage-info}
 
-View used and free space in the header when available.
-
----
-
-## :material-image-multiple: Printer Images
-
-Customize your printer cards with images:
-
-1. Click the settings icon on a printer card
-2. Upload a printer image
-3. The image displays on the card
-
-!!! tip "Recommended Size"
-    Use images around 300x200 pixels for best results.
+В заголовке показываются занятое и свободное место, если эти данные доступны.
 
 ---
 
-## :material-bell-ring: Status Change Notifications
+## :material-image-multiple: Изображения принтеров {#printer-images}
 
-Configure alerts for printer events:
+Добавьте изображения на карточки принтеров:
 
-| Event | Description |
+1. Нажмите значок настроек на карточке принтера
+2. Загрузите изображение принтера
+3. Изображение появится на карточке
+
+!!! tip "Рекомендуемый размер"
+    Для наилучшего результата используйте изображения около 300×200 пикселей.
+
+---
+
+## :material-bell-ring: Уведомления об изменении состояния {#status-change-notifications}
+
+Настройте оповещения о событиях принтера:
+
+| Событие | Описание |
 |-------|-------------|
-| **Printer Offline** | When connection is lost |
-| **Printer Error** | When HMS errors occur |
-| **Print Complete** | When a job finishes |
-| **Print Failed** | When a print fails |
+| **Принтер не в сети** | При потере соединения |
+| **Ошибка принтера** | При возникновении ошибок HMS |
+| **Печать завершена** | При завершении задания |
+| **Ошибка печати** | При неудачной печати |
 
-[:material-arrow-right: Set up notifications](notifications.md)
+[:material-arrow-right: Настроить уведомления](notifications.md)
 
 ---
 
-## :material-lightbulb: Tips
+## :material-lightbulb: Советы {#tips}
 
-!!! tip "At-a-Glance Monitoring"
-    Keep the Printers page open on a dedicated screen or tablet for constant visibility.
+!!! tip "Мониторинг с первого взгляда"
+    Держите страницу принтеров открытой на отдельном экране или планшете для постоянного наблюдения.
 
-!!! tip "Camera Confirmation"
-    Use the camera page to visually confirm print quality alongside status data.
+!!! tip "Проверка по камере"
+    Используйте страницу камеры, чтобы наряду с данными состояния визуально оценивать качество печати.
 
-!!! tip "Early Error Detection"
-    Enable HMS error notifications to catch problems before they ruin a print.
+!!! tip "Раннее обнаружение ошибок"
+    Включите уведомления об ошибках HMS, чтобы обнаруживать проблемы до того, как они испортят печать.
 
-!!! tip "Debug When Needed"
-    Check MQTT debug logs if a printer behaves unexpectedly - often reveals communication issues.
+!!! tip "Отладка при необходимости"
+    Если принтер ведёт себя неожиданно, проверьте журналы отладки MQTT: они часто помогают найти проблемы связи.
