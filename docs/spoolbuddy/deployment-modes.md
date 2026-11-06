@@ -1,66 +1,66 @@
 ---
-title: Deployment Modes
-description: Choose between full local install or SpoolBuddy-only companion mode
+title: Режимы развёртывания
+description: Выбор между полной локальной установкой и режимом только SpoolBuddy
 ---
 
-# Deployment Modes
+# Режимы развёртывания {#deployment-modes}
 
-SpoolBuddy supports two recommended deployment models.
+Для SpoolBuddy рекомендуются два варианта развёртывания.
 
 ---
 
-## :material-lan-connect: Mode A - Companion Only (Preferred for Lower-RAM Pi)
+## :material-lan-connect: Вариант A — только SpoolBuddy (предпочтителен для Pi с небольшим объёмом ОЗУ) {#mode-a-companion-only-preferred-for-lower-ram-pi}
 
-Run only SpoolBuddy on the Pi connected to the display; connect to remote Bambuddy server.
+Запустите на Pi с подключённым дисплеем только SpoolBuddy и подключите его к удалённому серверу Bambuddy.
 
-### When to choose this
+### Когда выбрать этот вариант {#when-to-choose-this}
 
-- You already run Bambuddy on a NAS/server/mini-PC.
-- You want kiosk hardware separated from core server.
-- Your Pi is 2GB class and should not run full stack.
+- Bambuddy уже работает на NAS, сервере или мини-ПК.
+- Вы хотите отделить устройство с киоском от основного сервера.
+- У вашего Pi около 2 ГБ ОЗУ и он не должен запускать весь стек.
 
-### Install command
+### Команда установки {#install-command}
 
 ```bash
 sudo ./install.sh --mode spoolbuddy --bambuddy-url http://192.168.1.100:8000 --api-key bb_xxx --yes
 ```
 
-### Notes
+### Примечания {#notes}
 
-- Pi only runs kiosk + daemon + hardware interfaces.
-- Remote Bambuddy handles API/database/web tasks.
+- На Pi работают только киоск, демон и аппаратные интерфейсы.
+- Удалённый Bambuddy обрабатывает API, базу данных и веб-интерфейс.
 
 ---
 
-## :material-server: Mode B - Full Local (Bambuddy + SpoolBuddy on the Same Pi)
+## :material-server: Вариант B — полная локальная установка (Bambuddy и SpoolBuddy на одном Pi) {#mode-b-full-local-bambuddy-spoolbuddy-on-the-same-pi}
 
-Run both services on one Raspberry Pi:
+Обе службы работают на одном Raspberry Pi:
 
-- Bambuddy backend/frontend
-- SpoolBuddy daemon
-- local kiosk display session
+- бэкенд и фронтенд Bambuddy;
+- демон SpoolBuddy;
+- локальный сеанс киоска на дисплее.
 
-### When to choose this
+### Когда выбрать этот вариант {#when-to-choose-this_1}
 
-- You want an all-in-one box.
-- Your Pi has enough resources for both workloads (4GB+ recommended).
-- You prefer simpler network topology.
+- Вам нужно устройство «всё в одном».
+- У Pi достаточно ресурсов для обеих задач (рекомендуется от 4 ГБ ОЗУ).
+- Вы предпочитаете более простую структуру сети.
 
-### Install command
+### Команда установки {#install-command_1}
 
 ```bash
 sudo ./install.sh --mode full --port 8000 --yes
 ```
 
-### Notes
+### Примечания {#notes_1}
 
-- After first boot, create an API key in **Bambuddy -> Settings -> API Keys**, then update `/opt/bambuddy/spoolbuddy/.env` with `SPOOLBUDDY_API_KEY=bb_xxx` and restart the service (`sudo systemctl restart spoolbuddy`).
-- Good for single-printer or compact setups.
+- После первой загрузки создайте ключ API в разделе **Bambuddy -> Настройки -> Ключи API**, затем добавьте `SPOOLBUDDY_API_KEY=bb_xxx` в `/opt/bambuddy/spoolbuddy/.env` и перезапустите службу (`sudo systemctl restart spoolbuddy`).
+- Этот вариант подходит для одного принтера или компактной установки.
 
 ---
 
-## :material-lightbulb: Recommendation
+## :material-lightbulb: Рекомендация {#recommendation}
 
-For a full compatibility matrix and per-model guidance, see [Supported Pis](supported-pis.md).
+Полную таблицу совместимости и рекомендации для отдельных моделей см. на странице [Поддерживаемые Raspberry Pi](supported-pis.md).
 
-In short: 2 GB Pi — Companion Only. 4 GB+ Pi — either mode depending on your preference for all-in-one vs. split architecture.
+Для Pi с 2 ГБ выбирайте режим только SpoolBuddy. Для Pi с 4 ГБ и более подходит любой из режимов — в зависимости от того, предпочитаете ли вы одно устройство или разделение компонентов.

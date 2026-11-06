@@ -1,29 +1,28 @@
 ---
-title: Supported Pis
-description: Compatibility matrix for Raspberry Pi models and SpoolBuddy features
+title: Поддерживаемые Raspberry Pi
+description: Таблица совместимости моделей Raspberry Pi и возможностей SpoolBuddy
 ---
 
-# Supported Pis
+# Поддерживаемые Raspberry Pi {#supported-pis}
 
-This page tracks the **current validation status** for SpoolBuddy kiosk and hardware workflows.
-The scope is intentionally focused on setups the community has actively tested, and the project grows through user contributions, so feel free to contribute validated results to help expand this list.
+На этой странице приведён **текущий статус проверки** работы киоска и оборудования SpoolBuddy. Здесь перечислены конфигурации, которые сообщество активно проверяло. Проект развивается благодаря участникам, поэтому вы можете поделиться проверенными результатами и помочь расширить список.
 
 ---
 
-## :material-table: Compatibility Matrix
+## :material-table: Таблица совместимости {#compatibility-matrix}
 
-| Model | Status | Notes |
+| Модель | Статус | Примечания |
 |-------|--------|-------|
-| Raspberry Pi 3 Model B+ | Supported (Companion mode) | Best used for SpoolBuddy on Pi with Bambuddy on another device |
-| Raspberry Pi 4 Model B (2GB) | Recommended (Companion mode) | Run SpoolBuddy on Pi, Bambuddy on another device |
-| Raspberry Pi 4 Model B (4GB+) | Recommended (Companion or Full local) | Supports both deployment modes |
-| Raspberry Pi 5 (4GB/8GB) | Supported | Strong headroom, typically easiest for full local mode |
+| Raspberry Pi 3 Model B+ | Поддерживается (режим только SpoolBuddy) | Лучше использовать для SpoolBuddy на Pi, запустив Bambuddy на другом устройстве |
+| Raspberry Pi 4 Model B (2GB) | Рекомендуется (режим только SpoolBuddy) | Запустите SpoolBuddy на Pi, а Bambuddy — на другом устройстве |
+| Raspberry Pi 4 Model B (4GB+) | Рекомендуется (режим только SpoolBuddy или полная локальная установка) | Поддерживает оба режима развёртывания |
+| Raspberry Pi 5 (4GB/8GB) | Поддерживается | Большой запас производительности; обычно наиболее удобен для полной локальной установки |
 
-!!! warning "Important"
-    SpoolBuddy install script is designed for Raspberry Pi hardware and Raspberry Pi OS 64-Bit with PI Desktop (Debian-based).
+!!! warning "Важно"
+    Скрипт установки SpoolBuddy предназначен для оборудования Raspberry Pi и Raspberry Pi OS 64-Bit с Pi Desktop (на базе Debian).
 
 ---
 
-## :material-target: Practical Recommendation
+## :material-target: Практическая рекомендация {#practical-recommendation}
 
-For deployment-mode guidance and full reasoning, see [Deployment Modes](deployment-modes.md).
+Рекомендации по выбору режима развёртывания и подробное обоснование см. на странице [Режимы развёртывания](deployment-modes.md).

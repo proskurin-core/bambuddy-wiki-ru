@@ -1,83 +1,83 @@
 ---
-title: Reference
-description: Technical reference documentation
+title: Справочник
+description: Техническая справочная документация
 ---
 
-# Reference
+# Справочник {#reference}
 
-Technical reference documentation for Bambuddy.
+Техническая справочная документация Bambuddy.
 
 ---
 
-## :material-book-open-variant: Documentation
+## :material-book-open-variant: Документация {#documentation}
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### [:material-api: API Reference](api.md)
-Complete REST API documentation with endpoints, parameters, and examples.
+### [:material-api: Справочник API](api.md) {#api-reference}
+Полная документация REST API с конечными точками, параметрами и примерами.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-help-circle: Troubleshooting](troubleshooting.md)
-Common issues and solutions for printer connections, archiving, and more.
+### [:material-help-circle: Устранение неполадок](troubleshooting.md) {#troubleshooting}
+Распространённые проблемы с подключением принтеров, архивацией и другими функциями и их решения.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-server-network: Running a Large Farm](farm-sizing.md)
-What actually costs CPU and database throughput past ten printers, and which knobs to turn.
+### [:material-server-network: Работа с большой фермой](farm-sizing.md) {#running-a-large-farm}
+Какие задачи нагружают процессор и базу данных при работе более десяти принтеров и какие параметры можно настроить.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-keyboard: Keyboard Shortcuts](shortcuts.md)
-Quick reference for all keyboard shortcuts in Bambuddy.
+### [:material-keyboard: Сочетания клавиш](shortcuts.md) {#keyboard-shortcuts}
+Краткий справочник по всем сочетаниям клавиш Bambuddy.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-printer-3d: Supported Printers](printers.md)
-Compatibility information for Bambu Lab printer models.
+### [:material-printer-3d: Поддерживаемые принтеры](printers.md) {#supported-printers}
+Информация о совместимости моделей принтеров Bambu Lab.
 </div>
 
 </div>
 
 ---
 
-## :material-lifebuoy: Getting Help
+## :material-lifebuoy: Получение помощи {#getting-help}
 
-### Self-Help Resources
+### Самостоятельное решение проблем {#self-help-resources}
 
-1. **Search this documentation** - Use the search bar
-2. **Check Troubleshooting** - Common issues covered
-3. **Review GitHub Issues** - Others may have solved it
+1. **Поищите в документации** с помощью строки поиска
+2. **Проверьте раздел устранения неполадок** — в нём описаны распространённые проблемы
+3. **Изучите обращения на GitHub** — возможно, кто-то уже нашёл решение
 
-### Community Support
+### Поддержка сообщества {#community-support}
 
-- [GitHub Issues](https://github.com/maziggy/bambuddy/issues) - Report bugs, request features
-- [GitHub Discussions](https://github.com/maziggy/bambuddy/discussions) - Ask questions, share tips
+- [GitHub Issues](https://github.com/maziggy/bambuddy/issues) — сообщения об ошибках и запросы новых функций
+- [GitHub Discussions](https://github.com/maziggy/bambuddy/discussions) — вопросы и обмен советами
 
-### Reporting Issues
+### Сообщение о проблеме {#reporting-issues}
 
-When reporting issues, include:
+В сообщение о проблеме включите:
 
-- Bambuddy version
-- Printer model
-- Operating system
-- Steps to reproduce
-- Error messages
-- Relevant logs
+- Версию Bambuddy
+- Модель принтера
+- Операционную систему
+- Шаги для воспроизведения
+- Сообщения об ошибках
+- Соответствующие журналы
 
 ---
 
-## :material-file-document: Additional Resources
+## :material-file-document: Дополнительные ресурсы {#additional-resources}
 
-### External Links
+### Внешние ссылки {#external-links}
 
-- [Bambu Lab Documentation](https://wiki.bambulab.com/)
-- [Bambu Lab Support](https://support.bambulab.com/)
-- [FastAPI Documentation](https://fastapi.tiangolo.com/)
+- [Документация Bambu Lab](https://wiki.bambulab.com/)
+- [Поддержка Bambu Lab](https://support.bambulab.com/)
+- [Документация FastAPI](https://fastapi.tiangolo.com/)
 
-### Related Projects
+### Связанные проекты {#related-projects}
 
-- [Spoolman](https://github.com/Donkie/Spoolman) - Filament inventory
-- [Tasmota](https://tasmota.github.io/) - Smart plug firmware
-- [ntfy](https://ntfy.sh/) - Push notifications
+- [Spoolman](https://github.com/Donkie/Spoolman) — учёт филамента
+- [Tasmota](https://tasmota.github.io/) — прошивка для умных розеток
+- [ntfy](https://ntfy.sh/) — push-уведомления

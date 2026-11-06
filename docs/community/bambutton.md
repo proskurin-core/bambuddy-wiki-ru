@@ -1,53 +1,53 @@
 ---
 title: Bambutton
-description: ESP32-C3 wireless plate-clear button for Bambuddy
+description: Беспроводная кнопка подтверждения очистки стола для Bambuddy на ESP32-C3
 ---
 
-# Bambutton
+# Bambutton {#bambutton}
 
-A physical plate-clear button for Bambuddy. Bambutton turns a small ESP32-C3 board into a dedicated wireless control for your printer: the LED ring signals when a plate needs clearing, and a single press marks the plate as clear in Bambuddy so the next queued job can be dispatched automatically.
+Bambutton — физическая кнопка подтверждения очистки стола для Bambuddy. Она превращает небольшую плату ESP32-C3 в беспроводной пульт принтера: светодиодное кольцо сигнализирует, когда стол нужно очистить, а одно нажатие отмечает стол как очищенный в Bambuddy, после чего следующее задание из очереди может быть отправлено автоматически.
 
-It gives each printer a simple shop-floor control that's quick to see and quick to press &mdash; no need to open the Bambuddy interface every time a print finishes.
+У каждого принтера появляется простая и заметная кнопка, доступная прямо на рабочем месте: после завершения печати не нужно каждый раз открывать интерфейс Bambuddy.
 
-**Author:** [Edward Chamberlain](https://github.com/EdwardChamberlain)
-**Repository:** [github.com/EdwardChamberlain/bambutton](https://github.com/EdwardChamberlain/bambutton)
-**Status:** Independent community project
-
----
-
-## What you need
-
-- An ESP32-C3 board (the README bundles a tested MicroPython firmware image for the `ESP32_GENERIC_C3` profile).
-- An LED and a momentary push button.
-- A data-capable USB cable for flashing.
-- A Bambuddy [API key](../features/api-keys.md) and the printer ID you want the button to control.
+**Автор:** [Edward Chamberlain](https://github.com/EdwardChamberlain)  
+**Репозиторий:** [github.com/EdwardChamberlain/bambutton](https://github.com/EdwardChamberlain/bambutton)  
+**Статус:** независимый проект сообщества
 
 ---
 
-## Setup
+## Что понадобится {#what-you-need}
 
-Two supported routes &mdash; pick whichever fits your comfort level.
-
-### Setup Assistant GUI (recommended)
-
-The packaged setup assistant walks you through everything: selecting the firmware `.bin`, picking the connected board, entering Bambuddy connection details, fetching printers from your Bambuddy instance, choosing one by friendly name, setting the LED and button pins plus Wi-Fi credentials, and finally flashing the firmware and pushing settings.
-
-Release builds for Windows and macOS are published on the [bambutton releases page](https://github.com/EdwardChamberlain/bambutton/releases) so end users don't need Python, `mpremote`, or `esptool` installed locally.
-
-### Manual flashing (advanced)
-
-For development or debugging, the project exposes the underlying Python scripts and a `micro/config.json` file that can be edited directly before pushing to the board with `mpremote`. See the [project README](https://github.com/EdwardChamberlain/bambutton#manual-flashing) for the full command sequence.
+- Плата ESP32-C3 (в README включён проверенный образ прошивки MicroPython для профиля `ESP32_GENERIC_C3`).
+- Светодиод и кнопка без фиксации.
+- USB-кабель с поддержкой передачи данных для прошивки.
+- [Ключ API](../features/api-keys.md) Bambuddy и идентификатор принтера, которым будет управлять кнопка.
 
 ---
 
-## How it talks to Bambuddy
+## Настройка {#setup}
 
-Bambutton uses Bambuddy's documented [REST API](../reference/api.md) authenticated via an [API key](../features/api-keys.md). The board polls the configured printer's state on a configurable interval, drives the LED to indicate when the plate needs clearing, and sends a "plate cleared" request when the button is pressed. No internal Bambuddy endpoints are used &mdash; everything goes through public API routes, so the integration stays stable across Bambuddy releases.
+Поддерживаются два способа — выберите наиболее удобный.
+
+### Графический помощник настройки (рекомендуется) {#setup-assistant-gui-recommended}
+
+Входящий в комплект помощник проведёт вас через все шаги: выбор файла прошивки `.bin` и подключённой платы, ввод данных подключения к Bambuddy, получение списка принтеров из вашего экземпляра Bambuddy и выбор принтера по имени, настройку выводов светодиода и кнопки и учётных данных Wi-Fi, а затем прошивку и передачу настроек.
+
+Готовые сборки для Windows и macOS опубликованы на [странице релизов bambutton](https://github.com/EdwardChamberlain/bambutton/releases), поэтому пользователям не нужно устанавливать Python, `mpremote` или `esptool` на свой компьютер.
+
+### Ручная прошивка (для опытных пользователей) {#manual-flashing-advanced}
+
+Для разработки и отладки в проекте доступны Python-скрипты и файл `micro/config.json`, который можно изменить перед отправкой на плату с помощью `mpremote`. Полную последовательность команд см. в [README проекта](https://github.com/EdwardChamberlain/bambutton#manual-flashing).
 
 ---
 
-## Support
+## Взаимодействие с Bambuddy {#how-it-talks-to-bambuddy}
 
-Issues, feature requests, and questions about the bambutton hardware and firmware belong on the [project's GitHub repository](https://github.com/EdwardChamberlain/bambutton/issues). The Bambuddy team doesn't maintain bambutton and can't ship fixes for it.
+Bambutton использует документированный [REST API](../reference/api.md) Bambuddy с аутентификацией по [ключу API](../features/api-keys.md). Плата опрашивает состояние настроенного принтера с заданным интервалом, включает светодиод, когда требуется очистить стол, и отправляет запрос о подтверждении очистки при нажатии кнопки. Внутренние конечные точки Bambuddy не используются: все запросы проходят через публичный API, поэтому интеграция остаётся стабильной при обновлениях Bambuddy.
 
-For Bambuddy-side questions (API key setup, finding the printer ID, etc.), the [Discord](https://discord.gg/aFS3ZfScHM) is the right place to ask.
+---
+
+## Поддержка {#support}
+
+Сообщения об ошибках, запросы функций и вопросы об оборудовании и прошивке bambutton следует направлять в [репозиторий проекта на GitHub](https://github.com/EdwardChamberlain/bambutton/issues). Команда Bambuddy не сопровождает bambutton и не может выпускать исправления для него.
+
+Вопросы о Bambuddy (настройка ключа API, поиск идентификатора принтера и т. д.) можно задать в [Discord](https://discord.gg/aFS3ZfScHM).

@@ -1,119 +1,119 @@
 ---
-title: Keyboard Shortcuts
-description: Quick reference for all keyboard shortcuts
+title: Сочетания клавиш
+description: Краткий справочник по всем сочетаниям клавиш
 ---
 
-# Keyboard Shortcuts
+# Сочетания клавиш {#keyboard-shortcuts}
 
-Bambuddy supports keyboard shortcuts for quick navigation and actions.
+Bambuddy поддерживает сочетания клавиш для быстрой навигации и выполнения действий.
 
 ---
 
-## :material-keyboard: Global Shortcuts
+## :material-keyboard: Общие сочетания {#global-shortcuts}
 
-Available from any page:
+Доступны на любой странице:
 
-| Shortcut | Action |
+| Сочетание | Действие |
 |:--------:|--------|
-| ++1++ | Go to Printers |
-| ++2++ | Go to Archives |
-| ++3++ | Go to Statistics |
-| ++4++ | Go to Cloud Profiles |
-| ++5++ | Go to Settings |
-| ++question++ | Show shortcuts help |
+| ++1++ | Перейти к принтерам |
+| ++2++ | Перейти в архив |
+| ++3++ | Перейти к статистике |
+| ++4++ | Перейти к облачным профилям |
+| ++5++ | Перейти к настройкам |
+| ++question++ | Показать справку по сочетаниям клавиш |
 
 ---
 
-## :material-archive: Archives Page
+## :material-archive: Страница архива {#archives-page}
 
-| Shortcut | Action |
+| Сочетание | Действие |
 |:--------:|--------|
-| ++slash++ | Focus search box |
-| ++escape++ | Clear search / close modal |
-| ++enter++ | Execute search |
-| ++arrow-up++ ++arrow-down++ | Navigate results |
+| ++slash++ | Перевести фокус в поле поиска |
+| ++escape++ | Очистить поиск / закрыть окно |
+| ++enter++ | Выполнить поиск |
+| ++arrow-up++ ++arrow-down++ | Перемещаться по результатам |
 
 ---
 
-## :material-printer-3d: Printers Page
+## :material-printer-3d: Страница принтеров {#printers-page}
 
-| Shortcut | Action |
+| Сочетание | Действие |
 |:--------:|--------|
-| ++r++ | Refresh printer status |
+| ++r++ | Обновить состояние принтера |
 
 ---
 
-## :material-view-column: File Manager — Column View
+## :material-view-column: Файловый менеджер — вид с колонками {#file-manager-column-view}
 
-| Shortcut | Action |
+| Сочетание | Действие |
 |:--------:|--------|
-| ++arrow-up++ ++arrow-down++ | Move within the current column, past its last folder into its files and back |
-| ++arrow-right++ / ++enter++ | Open the selected folder's first subfolder, then move into its files |
-| ++arrow-left++ | Go up one level, or leave the file list |
-| ++enter++ | Open the focused file's preview |
-| ++space++ | Select or deselect the focused file |
-| Menu key / ++shift+f10++ | Jump into the focused file's actions, or open the selected folder's menu |
+| ++arrow-up++ ++arrow-down++ | Перемещаться по текущей колонке, от последней папки к файлам и обратно |
+| ++arrow-right++ / ++enter++ | Открыть первую подпапку выбранной папки, затем перейти к её файлам |
+| ++arrow-left++ | Перейти на уровень выше или выйти из списка файлов |
+| ++enter++ | Открыть предпросмотр файла в фокусе |
+| ++space++ | Выбрать файл в фокусе или снять выбор |
+| Клавиша Menu / ++shift+f10++ | Перейти к действиям над файлом в фокусе или открыть меню выбранной папки |
 
-See [Column View](../features/file-manager.md#column-view) for the details.
+Подробнее см. [Вид с колонками](../features/file-manager.md#column-view).
 
 ---
 
-## :material-dialog: Modals & Dialogs
+## :material-dialog: Модальные и диалоговые окна {#modals-dialogs}
 
-| Shortcut | Action |
+| Сочетание | Действие |
 |:--------:|--------|
-| ++escape++ | Close modal |
-| ++enter++ | Confirm / Submit |
+| ++escape++ | Закрыть окно |
+| ++enter++ | Подтвердить / отправить |
 
 ---
 
-## :material-form-select: Form Navigation
+## :material-form-select: Навигация по формам {#form-navigation}
 
-| Shortcut | Action |
+| Сочетание | Действие |
 |:--------:|--------|
-| ++tab++ | Next field |
-| ++shift+tab++ | Previous field |
-| ++enter++ | Submit form |
-| ++escape++ | Cancel / Close |
+| ++tab++ | Следующее поле |
+| ++shift+tab++ | Предыдущее поле |
+| ++enter++ | Отправить форму |
+| ++escape++ | Отменить / закрыть |
 
 ---
 
-## :material-mouse: Mouse + Keyboard
+## :material-mouse: Мышь и клавиатура {#mouse-keyboard}
 
-| Combination | Action |
+| Сочетание | Действие |
 |:-----------:|--------|
-| ++ctrl++ + Click | Select multiple items |
-| ++shift++ + Click | Select range |
-| ++ctrl+a++ | Select all (in lists) |
+| ++ctrl++ + щелчок | Выбрать несколько элементов |
+| ++shift++ + щелчок | Выбрать диапазон |
+| ++ctrl+a++ | Выбрать всё (в списках) |
 
 ---
 
-## :material-cellphone: Mobile
+## :material-cellphone: Мобильные устройства {#mobile}
 
-On mobile devices, keyboard shortcuts aren't available, but you can:
+На мобильных устройствах сочетания клавиш недоступны, но вы можете выполнять следующие действия:
 
-| Action | Method |
+| Действие | Способ |
 |--------|--------|
-| Context menu | Long press on card |
-| Navigate | Tap hamburger menu |
-| Search | Tap search icon |
-| Refresh | Pull down (PWA) |
+| Контекстное меню | Длительное нажатие на карточку |
+| Навигация | Нажатие на кнопку меню |
+| Поиск | Нажатие на значок поиска |
+| Обновление | Потянуть вниз (PWA) |
 
 ---
 
-## :material-cog: Customization
+## :material-cog: Настройка {#customization}
 
-Currently, keyboard shortcuts cannot be customized. This may be added in a future version.
+Сейчас сочетания клавиш нельзя изменить. Возможно, эта функция появится в одной из будущих версий.
 
 ---
 
-## :material-lightbulb: Tips
+## :material-lightbulb: Советы {#tips}
 
-!!! tip "Learn the Numbers"
-    Memorize ++1++ through ++5++ for instant page navigation.
+!!! tip "Запомните цифры"
+    Запомните клавиши от ++1++ до ++5++ для мгновенного перехода между страницами.
 
-!!! tip "Quick Search"
-    ++slash++ is the fastest way to search archives.
+!!! tip "Быстрый поиск"
+    ++slash++ — самый быстрый способ поиска в архиве.
 
-!!! tip "Show Help"
-    Press ++question++ anytime to see available shortcuts.
+!!! tip "Показать справку"
+    Нажмите ++question++ в любой момент, чтобы увидеть доступные сочетания клавиш.
