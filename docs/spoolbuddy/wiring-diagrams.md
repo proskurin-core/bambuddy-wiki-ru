@@ -221,7 +221,7 @@ SparkFun Qwiic NAU7802 обменивается данными по **шине I
 dtparam=spi=on
 dtoverlay=spi0-0cs
 
-# Enable Шина I2C 1 for NAU7802 (GPIO2/GPIO3)
+# Включить шину I2C 1 для NAU7802 (GPIO2/GPIO3)
 dtparam=i2c_arm=on
 ```
 
@@ -242,11 +242,11 @@ sudo reboot
 ls /dev/spidev0.*
 # Expected: /dev/spidev0.0
 
-# Confirm Шина I2C 1 is present
+# Проверить наличие шины I2C 1
 ls /dev/i2c-1
 # Expected: /dev/i2c-1
 
-# Scan Шина I2C 1 for NAU7802 at address 0x2A
+# Найти NAU7802 по адресу 0x2A на шине I2C 1
 sudo i2cdetect -y 1
 # Expected: "2a" appears in the grid
 ```
