@@ -1,248 +1,157 @@
 ---
-title: Sensors
-description: Bind read-only Home Assistant sensors to printers or storage locations for alerts, notifications, and live readings
+title: Датчики
+description: Привязка датчиков Home Assistant только для чтения к принтерам или местам хранения: показания, предупреждения и уведомления
 ---
 
-Bambuddy can bind read-only Home Assistant sensors — a door contact, a
-thermometer, a humidity/battery sensor — to either a **printer** or a
-**storage location**. Both work the same way: pick an entity, optionally set
-an alert condition, and the reading shows up where it's relevant, with
-alerts and notifications on top.
+Bambuddy может привязать датчики Home Assistant, работающие только на чтение, — контакт двери, термометр, датчик влажности или заряда — к **принтеру** либо **месту хранения**. Принцип одинаков: выберите сущность, при необходимости задайте условие тревоги, и показание появится в нужном месте вместе с предупреждениями и уведомлениями.
 
-![Settings — Sensors overview](../assets/settings-sensors-overview.png){ .screenshot }
+![Настройки — обзор датчиков](../assets/settings-sensors-overview.png){ .screenshot }
 
 ---
 
-## :material-printer: Printer Sensors
+## :material-printer: Датчики принтера {#printer-sensors}
 
-Sensors are things you read: an enclosure door contact, a chamber
-thermometer, a smoke detector. Bind them to a printer and their state
-appears on that printer's card.
+Датчики предоставляют показания: например, контакт двери корпуса, термометр камеры или датчик дыма. Привяжите их к принтеру, и состояние появится на его карточке.
 
-Sensors use the same Home Assistant URL and token as [Smart Plugs](smart-plugs.md), so if
-plugs already work there is nothing else to set up. If Home Assistant is not
-connected yet, the sensor dialog says so and the entity list stays empty until
-it is.
+Датчики используют те же URL и токен Home Assistant, что и [умные розетки](smart-plugs.md), поэтому если розетки уже работают, дополнительная настройка не нужна. Если Home Assistant ещё не подключён, об этом сообщается в окне датчика, а список сущностей остаётся пустым до подключения.
 
-### Adding a Sensor
+### Добавление датчика {#adding-a-sensor}
 
-1. Go to **Settings** > **Sensors**
-2. Under **Home Assistant Sensors (Printers)**, click **Add Sensor**
-3. Pick the printer
-4. Pick the entity — the list offers every `binary_sensor` plus the `sensor`
-   entities that carry a reading
-5. Give it a display name (prefilled from Home Assistant's friendly name)
-6. Optionally set an alert condition
-7. Save
+1. Откройте **Настройки** > **Датчики**
+2. В разделе **Датчики Home Assistant (принтеры)** нажмите **Добавить датчик**
+3. Выберите принтер
+4. Выберите сущность: список содержит все `binary_sensor` и сущности `sensor` с показаниями
+5. Укажите отображаемое название (по умолчанию подставляется понятное имя Home Assistant)
+6. При необходимости задайте условие тревоги
+7. Сохраните настройки
 
-**Supported entities:**
+**Поддерживаемые сущности:**
 
-| Domain | Example | Shown as |
+| Домен | Пример | Отображение |
 |--------|---------|----------|
-| `binary_sensor` | `binary_sensor.enclosure_door` | Open / Closed |
-| `binary_sensor` | `binary_sensor.workshop_smoke` | Detected / Clear |
+| `binary_sensor` | `binary_sensor.enclosure_door` | Открыто / Закрыто |
+| `binary_sensor` | `binary_sensor.workshop_smoke` | Обнаружено / Чисто |
 | `sensor` | `sensor.enclosure_temp` | `41.2 °C` |
 | `sensor` | `sensor.workshop_humidity` | `48 %` |
 
-The wording follows Home Assistant's own device class, so a door reads
-"Open" rather than "On". Entities with no device class fall back to On / Off.
+Формулировка зависит от класса устройства Home Assistant: например, дверь отображается как «Открыто», а не «Вкл.». Для сущностей без класса используется «Вкл.» / «Выкл.».
 
-### Alert Conditions
+### Условия тревоги {#alert-conditions}
 
-An alert condition is what "needs attention" means for that sensor:
+Условие тревоги определяет, какое состояние датчика требует внимания:
 
-- **Binary sensors** — alert when the sensor is on, or when it is off. A door
-  contact alerts when open; a "fan running" contact alerts when it stops.
-- **Numeric sensors** — alert above a value, below a value, or both.
+- **Бинарные датчики** — тревога при включении или выключении. Контакт двери предупреждает об открытии, а контакт работающего вентилятора — о его остановке.
+- **Числовые датчики** — тревога выше или ниже заданного значения либо в обоих случаях.
 
-A sensor with no alert condition is display-only, which is the default.
+Без условия тревоги датчик только показывает состояние; это поведение по умолчанию.
 
-When a sensor is alerting, its pill on the printer card turns red, and two
-further options become available.
+При тревоге индикатор датчика на карточке принтера краснеет и становятся доступны ещё две настройки.
 
-### Notify on Alert
+### Уведомлять при тревоге {#notify-on-alert}
 
-Sends a notification the moment the sensor enters its alert state. Enable
-**Printer Sensor Alert** on the notification provider in **Settings** >
-**Notifications** as well — the per-sensor switch decides *which* sensors
-speak, the provider decides *where*.
+Отправляет уведомление в момент перехода датчика в состояние тревоги. Также включите событие **Тревога датчика принтера** у поставщика уведомлений в **Настройки** > **Уведомления**. Переключатель датчика определяет, *какие* датчики отправляют уведомления, а поставщик — *куда*.
 
-The notification fires on the transition into the alert state, not repeatedly
-while it lasts, and a sensor that drops off the network and comes back while
-still alerting does not re-announce itself.
+Уведомление отправляется при переходе в состояние тревоги, а не повторяется в течение всего времени. Если датчик пропал из сети и вернулся всё ещё в состоянии тревоги, новое уведомление не отправляется.
 
-### Hold Prints While Alerting
+### Приостанавливать печать при тревоге {#hold-prints-while-alerting}
 
-Holds queued jobs for that printer while the sensor is alerting — the reason
-this feature exists, for the enclosure door you meant to shut before starting
-a print from your phone.
+Задерживает задания в очереди для этого принтера, пока датчик сигнализирует тревогу. Это полезно, например, если перед запуском печати с телефона вы хотели закрыть дверцу корпуса.
 
-!!! info "A hold, never a failure"
-    Held jobs stay in the queue with a reason you can read on the Queue page
-    ("Waiting on Enclosure Door") and start by themselves as soon as the sensor
-    clears. Nothing is cancelled.
+!!! info "Задержка, а не ошибка"
+    Задания остаются в очереди с причиной, видимой на странице очереди (например, «Ожидание закрытия двери корпуса»), и запускаются автоматически, как только тревога исчезнет. Ничего не отменяется.
 
-For a job queued as "Any \<model\>", a held printer is simply passed over: the
-job runs on a sibling printer whose sensors are clear rather than waiting.
+Для задания «Любой <model>» принтер с задержкой пропускается: задание выполняется на другом принтере той же модели, датчики которого не сигнализируют тревогу.
 
-!!! warning "Home Assistant must be reachable"
-    A sensor Bambuddy cannot read holds nothing and alerts on nothing. If Home
-    Assistant is down, the queue keeps running as though the interlock were not
-    configured — a printer farm that stops because an unrelated service went
-    offline would be worse than the problem being guarded against.
+!!! warning "Home Assistant должен быть доступен"
+    Датчик, показания которого Bambuddy не может прочитать, не задерживает задания и не подаёт тревогу. Если Home Assistant недоступен, очередь продолжает работать так, словно блокировка не настроена: остановка фермы из-за недоступности сторонней службы была бы хуже проблемы, от которой защищает блокировка.
 
-### Polling
+### Опрос {#polling}
 
-Sensors are read every 15 seconds, and the printer cards serve that cached
-reading, so the cost to Home Assistant does not grow with the number of
-browser tabs you have open.
+Датчики опрашиваются каждые 15 секунд, а карточки принтеров используют сохранённые показания, поэтому нагрузка на Home Assistant не растёт с числом открытых вкладок браузера.
 
 ---
 
-## :material-map-marker: Storage Location Sensors
+## :material-map-marker: Датчики мест хранения {#storage-location-sensors}
 
-Bind a Home Assistant temperature, humidity, or battery sensor to a storage
-location — a drybox, a bin, a shelf — and its reading shows up on the
-filament card and in the inventory table for every spool stored there. This
-works much like [Printer Sensors](#printer-sensors) above — bind an entity,
-set an alert condition, get a notification when it trips — with two
-deliberate differences. The entity list is narrower: only temperature,
-humidity and battery entities are offered, where a printer will take any
-sensor. And there is no **Hold Prints While Alerting**: a location is not a
-machine, so there is no queue to hold, and a humid drybox is something to be
-told about rather than something that should stop a printer which may not even
-be using it.
+Привяжите датчик температуры, влажности или заряда Home Assistant к месту хранения — сухому боксу, контейнеру или полке. Его показания появятся на карточке филамента и в таблице учёта для каждой катушки в этом месте. Принцип похож на [датчики принтера](#printer-sensors): привяжите сущность, задайте условие и получайте уведомления при срабатывании. Есть два отличия. Список сущностей уже: предлагаются только датчики температуры, влажности и заряда, тогда как к принтеру можно привязать любой датчик. Кроме того, настройка **Приостанавливать печать при тревоге** отсутствует: место хранения — не принтер, и у него нет очереди. О высокой влажности в боксе следует сообщить, но она не должна останавливать принтер, который может даже не использовать этот бокс.
 
-![Filament card with a location sensor footer](../assets/inventory-location-sensors-card.png){ .screenshot }
+![Карточка филамента с показаниями датчика места хранения](../assets/inventory-location-sensors-card.png){ .screenshot }
 
-The inventory table gains sortable Temperature, Humidity, and Battery
-columns, colorized the same way as the filament card:
+В таблицу учёта добавляются сортируемые столбцы температуры, влажности и заряда с той же цветовой индикацией, что и на карточке:
 
-![Inventory table with Temperature, Humidity, and Battery columns](../assets/inventory-location-sensors-table.png){ .screenshot }
+![Таблица филамента со столбцами температуры, влажности и заряда](../assets/inventory-location-sensors-table.png){ .screenshot }
 
-### Adding a Sensor
+### Добавление датчика {#adding-a-sensor_1}
 
-1. Go to **Settings** > **Sensors**
-2. Under **Home Assistant Sensors (Storage Locations)**, click **Add Sensor**
-3. Pick the storage location
-4. Pick the entity — the list offers `sensor` entities carrying a
-   temperature, humidity, or battery reading
-5. Optionally set an alert threshold and enable **Notify on alert**
-6. Leave **Show on filament card** on to surface the reading on spool cards
-   at that location; turn it off to keep the binding for alerts only
-7. Save
+1. Откройте **Настройки** > **Датчики**
+2. В разделе **Датчики Home Assistant (места хранения)** нажмите **Добавить датчик**
+3. Выберите место хранения
+4. Выберите сущность `sensor` с показанием температуры, влажности или заряда
+5. При необходимости задайте порог тревоги и включите **Уведомлять при тревоге**
+6. Оставьте **Показывать на карточке филамента** включённым, чтобы видеть показание на карточках катушек в этом месте; выключите для использования только в уведомлениях
+7. Сохраните настройки
 
-**Supported entities:**
+**Поддерживаемые сущности:**
 
-| Domain | Example | Shown as |
+| Домен | Пример | Отображение |
 |--------|---------|----------|
 | `sensor` | `sensor.drybox_1_temperature` | `24.70 °C` |
 | `sensor` | `sensor.drybox_1_humidity` | `43.60 %` |
 | `sensor` | `sensor.drybox_1_battery` | `78.10 %` |
 
-The entity's device class determines which category it's treated as
-(temperature, humidity, or battery) and which unit is shown.
+Класс устройства сущности определяет категорию (температура, влажность или заряд) и отображаемую единицу измерения.
 
-!!! info "Why isn't my leak sensor in the list?"
-    Home Assistant reports water/leak detectors as device class `moisture`,
-    which sounds like humidity but is not: it is a binary wet/dry state, not a
-    percentage. It is deliberately left out of the location picker, because
-    treating it as humidity put "wet" in a column formatted for percentages and
-    let a leak detector occupy the one humidity slot that a real hygrometer
-    needed. Bind a leak detector to a **printer** instead, where binary sensors
-    are at home and it can even hold prints.
+!!! info "Почему в списке нет датчика протечки?"
+    Home Assistant сообщает о датчиках воды и протечки как о классе `moisture`. Это не влажность в процентах, а бинарное состояние «мокро/сухо». Такие датчики намеренно исключены из выбора для мест хранения: иначе в столбце процентов появлялось бы «мокро», а датчик протечки занимал бы единственный слот влажности, необходимый гигрометру. Вместо этого привяжите датчик протечки к **принтеру**: там поддерживаются бинарные датчики и он может даже задерживать печать.
 
-!!! info "One sensor per category per location"
-    Each storage location can hold at most one temperature, one humidity,
-    and one battery sensor. Binding a second sensor of the same category
-    prompts to replace the existing one.
+!!! info "Один датчик каждой категории на место"
+    К каждому месту можно привязать не более одного датчика температуры, одного влажности и одного заряда. При привязке второго датчика той же категории предлагается заменить существующий.
 
-### Auto-Adding Related Sensors
+### Автоматическое добавление связанных датчиков {#auto-adding-related-sensors}
 
-Many drybox sensors report temperature, humidity, and battery as three
-separate entities named alike — `sensor.drybox_1_temperature`,
-`sensor.drybox_1_humidity`, `sensor.drybox_1_battery`. Binding all three by
-hand is three trips through the dialog, so when you bind the **first** sensor
-for a location Bambuddy offers the other two, each with its own checkbox,
-ticked by default.
+Многие датчики сухого бокса передают температуру, влажность и заряд как три отдельные сущности с похожими именами: `sensor.drybox_1_temperature`, `sensor.drybox_1_humidity`, `sensor.drybox_1_battery`. Чтобы не открывать окно трижды, при привязке **первого** датчика места Bambuddy предлагает два остальных, каждый с собственным флажком, установленным по умолчанию.
 
-The match is built from the name rather than searched for. Bambuddy takes the
-entity you picked, strips the trailing `temperature`, `humidity` or `battery`
-off it, and looks for the exact ids that the two remaining words would make:
+Совпадение строится по имени, а не поиском по шаблону. Bambuddy удаляет с конца выбранного ID `temperature`, `humidity` или `battery` и ищет точные идентификаторы с двумя оставшимися словами:
 
-| You pick | It looks for |
+| Вы выбрали | Что ищется |
 |---|---|
 | `sensor.drybox_1_temperature` | `sensor.drybox_1_humidity`, `sensor.drybox_1_battery` |
 
-Because those ids are constructed rather than pattern-matched, an unrelated
-entity that merely starts the same way — `sensor.drybox_1_pressure` — is never
-offered.
+Поскольку идентификаторы составляются точно, не связанная сущность с таким же началом, например `sensor.drybox_1_pressure`, не предлагается.
 
-!!! note "Your naming has to end in one of the three words"
-    This is the flip side of the exactness above, and the usual reason nothing
-    is offered: if the entity you pick does not *end* in `temperature`,
-    `humidity` or `battery`, there is no prefix to build from and Bambuddy
-    says so ("No matching temperature, humidity, or battery sensors found for
-    this location") rather than guessing. `sensor.drybox_1_temp` and
-    `sensor.temperature_drybox_1` both fall outside it. Bind the rest by hand,
-    or rename the entities in Home Assistant.
+!!! note "Имя должно оканчиваться одним из трёх слов"
+    Это следствие точного сопоставления и обычная причина отсутствия предложений: если выбранный ID не *оканчивается* на `temperature`, `humidity` или `battery`, префикс построить нельзя. Bambuddy сообщает, что подходящие датчики температуры, влажности или заряда для этого места не найдены, и не пытается угадывать. Ни `sensor.drybox_1_temp`, ни `sensor.temperature_drybox_1` не подходят. Привяжите остальные вручную или переименуйте сущности в Home Assistant.
 
-    Matching on the name is not a shortcut — Home Assistant's state API does
-    not say which physical device an entity belongs to, so the name is the
-    only link between the three.
+    Поиск по имени необходим: API состояния Home Assistant не сообщает, какому физическому устройству принадлежит сущность, поэтому имя — единственная связь между тремя датчиками.
 
-Choosing **Only this one** binds the sensor you actually picked and skips the
-siblings; it does not abandon the dialog.
+Выбор **Только этот** привязывает выбранный датчик, пропуская связанные; окно не отменяется.
 
-### Sensor Options
+### Настройки датчиков {#sensor-options}
 
-![Location Sensor Options dialog](../assets/inventory-location-sensors-options.png){ .screenshot .centered style="max-width: 420px" }
+![Окно настроек датчиков мест хранения](../assets/inventory-location-sensors-options.png){ .screenshot .centered style="max-width: 420px" }
 
-Click the gear icon next to **Add Sensor** to open **Location Sensor
-Options**:
+Нажмите значок шестерёнки рядом с **Добавить датчик**, чтобы открыть **Настройки датчиков мест хранения**:
 
-| Setting | Description | Default |
+| Настройка | Описание | По умолчанию |
 |---|---|---|
-| Temperature above / below | Default alert thresholds prefilled for every newly bound temperature sensor, whether you picked it yourself or accepted it as an auto-added sibling | 30 °C / 20 °C |
-| Humidity above / below | Default alert thresholds for humidity | 30% / 10% |
-| Battery below | Default low-battery threshold (batteries have no "above" threshold) | 10% |
-| Colorize sensor values | Color a reading against its threshold — one color above, one below, one within range | On |
-| Update interval | How often Bambuddy polls Home Assistant and refreshes values on screen | 120s (minimum 60s) |
+| Температура выше / ниже | Пороги тревоги, подставляемые для каждого нового датчика температуры, выбранного вручную или добавленного автоматически | 30 °C / 20 °C |
+| Влажность выше / ниже | Пороги тревоги влажности по умолчанию | 30% / 10% |
+| Заряд ниже | Порог низкого заряда (порога «выше» для батареи нет) | 10% |
+| Окрашивать значения датчиков | Окрашивать показание относительно порога: один цвет выше, другой ниже, третий внутри диапазона | Включено |
+| Интервал обновления | Частота опроса Home Assistant и обновления показаний на экране | 120 с (минимум 60 с) |
 
-!!! warning "Reset rewrites every existing location sensor"
-    The **Reset** button in this dialog is not just a way to save the values
-    above — it applies them to every storage-location sensor already bound,
-    each one taking its own category's values. That overwrites their alert
-    thresholds, their **Notify on alert** setting and their **Show on filament
-    card** setting, and **restores each sensor's name to its Home Assistant
-    friendly name**, so a binding you renamed by hand loses that name. Printer
-    sensors are not touched, and it cannot be undone. It is the right button
-    after tightening a threshold across a rack of dryboxes at once; it is the
-    wrong one if you only meant to change the defaults for sensors you add
-    next — use **Save** for that. With many sensors bound it takes a moment.
+!!! warning "Сброс перезаписывает все существующие датчики мест хранения"
+    Кнопка **Сброс** в этом окне не просто сохраняет приведённые значения: она применяет настройки каждой категории ко всем уже привязанным датчикам мест хранения. При этом перезаписываются пороги тревоги, параметры **Уведомлять при тревоге** и **Показывать на карточке филамента**, а **имя каждого датчика восстанавливается из понятного имени Home Assistant**. Переименованная вручную привязка потеряет своё название. Датчики принтеров не затрагиваются; отменить операцию нельзя. Используйте кнопку, чтобы одновременно изменить пороги всех боксов на стеллаже. Если нужно изменить только значения по умолчанию для будущих датчиков, нажмите **Сохранить**. При большом числе датчиков операция занимает некоторое время.
 
-### Notifications
+### Уведомления {#notifications}
 
-Alerts use the same notification providers as other Bambuddy alerts
-(**Settings** > **Notifications**) with the **Storage Location Sensor Alert**
-event enabled. A notification fires on the transition into the alert state
-only, not repeatedly while it lasts, and not immediately on restart for a
-sensor that was already alerting before Bambuddy started up.
+Предупреждения используют тех же поставщиков, что и другие уведомления Bambuddy (**Настройки** > **Уведомления**), с включённым событием **Тревога датчика места хранения**. Уведомление отправляется только при переходе в состояние тревоги, не повторяется во время неё и не отправляется сразу после перезапуска для датчика, уже находившегося в тревоге до запуска Bambuddy.
 
-!!! note "A separate switch from the printer one"
-    **Printer Sensor Alert** and **Storage Location Sensor Alert** are two
-    independent toggles, both off by default. Turning on the printer one does
-    not deliver drybox alerts, and vice versa — a provider narrowed to a single
-    printer would otherwise receive every location alert as well, with no way
-    to have one without the other.
+!!! note "Отдельный переключатель от датчиков принтера"
+    **Тревога датчика принтера** и **Тревога датчика места хранения** — независимые переключатели, оба по умолчанию выключены. Включение первого не отправляет предупреждения о боксах, и наоборот. Иначе поставщик, ограниченный одним принтером, получал бы также все предупреждения мест хранения без возможности разделить их.
 
-### Polling
+### Опрос {#polling_1}
 
-Sensors are read on the interval configured above (120 seconds by default),
-and the poller runs once immediately on startup so a restart doesn't leave
-the reading blank until the first cycle finishes.
+Датчики опрашиваются с указанным выше интервалом (по умолчанию 120 секунд). Опрос также запускается сразу при старте, чтобы после перезапуска показание не оставалось пустым до завершения первого цикла.
 
-Storage locations don't change nearly as fast as a running print, so there's
-no need to poll as often as printer sensors do — a drybox's temperature and
-humidity drift slowly, which is why the default interval here is far longer
-than the fixed 15-second cadence used for printer sensors.
+Состояние мест хранения меняется намного медленнее, чем выполняющаяся печать, поэтому столь частый опрос, как у принтеров, не нужен. Температура и влажность бокса меняются медленно; поэтому интервал по умолчанию значительно больше фиксированных 15 секунд для датчиков принтера.
