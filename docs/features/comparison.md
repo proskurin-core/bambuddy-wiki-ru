@@ -1,166 +1,166 @@
 ---
-title: Archive Comparison
-description: Compare print settings side-by-side
+title: Сравнение архивов
+description: Сравнивайте настройки печати рядом друг с другом
 ---
 
-# Archive Comparison
+# Сравнение архивов {#archive-comparison}
 
-Compare 2-5 archives side-by-side to understand setting differences and optimize your prints.
-
----
-
-## :material-compare: How It Works
-
-Archive comparison extracts settings from 3MF files and displays them in a table with differences highlighted.
-
-### Starting a Comparison
-
-**Method 1: Context Menu**
-
-1. Right-click an archive
-2. Select **Compare**
-3. Select up to 4 more archives
-4. Click **Compare**
-
-**Method 2: Multi-Select**
-
-1. Select 2-5 archives (Ctrl+click or Shift+click)
-2. Right-click the selection
-3. Choose **Compare Selected**
+Сравнивайте от 2 до 5 архивов рядом друг с другом, чтобы понять различия в настройках и оптимизировать печать.
 
 ---
 
-## :material-table: Comparison View
+## :material-compare: Как это работает {#how-it-works}
 
-Archives are displayed in columns with settings in rows:
+При сравнении архивов настройки извлекаются из файлов 3MF и отображаются в таблице с выделенными различиями.
 
-| Setting | Benchy v1 | Benchy v2 | Benchy v3 |
+### Как начать сравнение {#starting-a-comparison}
+
+**Способ 1: контекстное меню**
+
+1. Щёлкните архив правой кнопкой мыши
+2. Выберите **Сравнить**
+3. Выберите ещё до четырёх архивов
+4. Нажмите **Сравнить**
+
+**Способ 2: множественный выбор**
+
+1. Выберите от 2 до 5 архивов (Ctrl+щелчок или Shift+щелчок)
+2. Щёлкните выделение правой кнопкой мыши
+3. Выберите **Сравнить выбранные**
+
+---
+
+## :material-table: Окно сравнения {#comparison-view}
+
+Архивы отображаются в столбцах, а настройки — в строках:
+
+| Настройка | Benchy v1 | Benchy v2 | Benchy v3 |
 |---------|:---------:|:---------:|:---------:|
-| Layer Height | 0.20mm | **0.16mm** | 0.20mm |
-| Infill | 15% | 15% | **20%** |
-| Speed | 100mm/s | **80mm/s** | 100mm/s |
-| Material | PLA | PLA | **PETG** |
+| Высота слоя | 0,20 мм | **0,16 мм** | 0,20 мм |
+| Заполнение | 15% | 15% | **20%** |
+| Скорость | 100 мм/с | **80 мм/с** | 100 мм/с |
+| Материал | PLA | PLA | **PETG** |
 
-### Highlighting
+### Выделение {#highlighting}
 
-- **Bold** values indicate differences from other archives
-- Makes it easy to spot what changed between prints
-
----
-
-## :material-cog: Compared Settings
-
-### Print Settings
-
-| Setting | Description |
-|---------|-------------|
-| Layer height | First layer and subsequent layers |
-| Wall loops | Number of perimeter walls |
-| Infill pattern | Grid, gyroid, honeycomb, etc. |
-| Infill percentage | Fill density |
-| Top/bottom layers | Solid layer count |
-
-### Speed Settings
-
-| Setting | Description |
-|---------|-------------|
-| Print speed | Overall movement speed |
-| Travel speed | Non-printing moves |
-| First layer speed | Initial layer speed |
-| Infill speed | Internal fill speed |
-
-### Temperature Settings
-
-| Setting | Description |
-|---------|-------------|
-| Nozzle temp | Hotend temperature |
-| Bed temp | First layer and subsequent |
-| Chamber temp | Enclosure temperature |
-
-### Material Settings
-
-| Setting | Description |
-|---------|-------------|
-| Filament type | PLA, PETG, ABS, etc. |
-| Filament brand | Manufacturer |
-| Color | Filament color |
-
-### Support Settings
-
-| Setting | Description |
-|---------|-------------|
-| Support enabled | Yes/no |
-| Support type | Normal, tree, etc. |
-| Support pattern | Grid, lines, etc. |
-| Support interface | Interface layers |
+- **Жирным шрифтом** отмечены значения, отличающиеся от других архивов
+- Это помогает быстро увидеть, что изменилось между печатями
 
 ---
 
-## :material-chart-bar: Results Comparison
+## :material-cog: Сравниваемые настройки {#compared-settings}
 
-Beyond settings, compare print results:
+### Настройки печати {#print-settings}
 
-| Metric | Benchy v1 | Benchy v2 | Benchy v3 |
+| Настройка | Описание |
+|---------|-------------|
+| Высота слоя | Первый и последующие слои |
+| Количество стенок | Число стенок периметра |
+| Шаблон заполнения | Сетка, гироид, соты и т. д. |
+| Процент заполнения | Плотность заполнения |
+| Верхние/нижние слои | Число сплошных слоёв |
+
+### Настройки скорости {#speed-settings}
+
+| Настройка | Описание |
+|---------|-------------|
+| Скорость печати | Общая скорость движения |
+| Скорость перемещения | Движения без печати |
+| Скорость первого слоя | Скорость печати первого слоя |
+| Скорость заполнения | Скорость внутреннего заполнения |
+
+### Настройки температуры {#temperature-settings}
+
+| Настройка | Описание |
+|---------|-------------|
+| Температура сопла | Температура хотэнда |
+| Температура стола | Для первого и последующих слоёв |
+| Температура камеры | Температура внутри корпуса |
+
+### Настройки материала {#material-settings}
+
+| Настройка | Описание |
+|---------|-------------|
+| Тип филамента | PLA, PETG, ABS и т. д. |
+| Бренд филамента | Производитель |
+| Цвет | Цвет филамента |
+
+### Настройки поддержек {#support-settings}
+
+| Настройка | Описание |
+|---------|-------------|
+| Поддержки включены | Да/нет |
+| Тип поддержек | Обычные, древовидные и т. д. |
+| Шаблон поддержек | Сетка, линии и т. д. |
+| Интерфейс поддержек | Контактные слои |
+
+---
+
+## :material-chart-bar: Сравнение результатов {#results-comparison}
+
+Помимо настроек можно сравнить результаты печати:
+
+| Показатель | Benchy v1 | Benchy v2 | Benchy v3 |
 |--------|:---------:|:---------:|:---------:|
-| Duration | 2h 15m | **2h 45m** | 2h 10m |
-| Filament | 45g | 42g | **48g** |
-| Result | Success | Success | **Failed** |
+| Длительность | 2 ч 15 мин | **2 ч 45 мин** | 2 ч 10 мин |
+| Филамент | 45 г | 42 г | **48 г** |
+| Результат | Успешно | Успешно | **Ошибка** |
 
-This helps correlate settings with outcomes.
-
----
-
-## :material-magnify: Difference Filtering
-
-Focus on what matters:
-
-### Show Only Differences
-
-Toggle to hide settings that are identical across all archives.
-
-### Group by Category
-
-Organize settings by type:
-
-- Print settings
-- Speed settings
-- Temperature settings
-- Material settings
-- Support settings
+Это помогает связать настройки с результатами.
 
 ---
 
-## :material-content-copy: Copying Settings
+## :material-magnify: Фильтрация различий {#difference-filtering}
 
-Found better settings? Apply them to future prints:
+Сосредоточьтесь на важных отличиях:
 
-1. Note the settings from the comparison
-2. Update your slicer profile
-3. Or use the K-profiles feature for pressure advance settings
+### Показывать только различия {#show-only-differences}
 
----
+Включите этот параметр, чтобы скрыть одинаковые во всех архивах настройки.
 
-## :material-lightbulb: Use Cases
+### Группировка по категориям {#group-by-category}
 
-!!! tip "Troubleshooting Failures"
-    Compare a successful print with a failed one to identify what changed.
+Упорядочьте настройки по типу:
 
-!!! tip "Optimizing Quality"
-    Compare prints with different layer heights to see the quality/time tradeoff.
-
-!!! tip "Material Comparison"
-    Same model in different materials - compare settings and results.
-
-!!! tip "Speed Tuning"
-    Compare prints at different speeds to find the sweet spot.
-
-!!! tip "Profile Validation"
-    Compare prints from different slicer profiles to ensure consistency.
+- Настройки печати
+- Настройки скорости
+- Настройки температуры
+- Настройки материала
+- Настройки поддержек
 
 ---
 
-## :material-alert: Limitations
+## :material-content-copy: Копирование настроек {#copying-settings}
 
-- Maximum 5 archives per comparison
-- Requires 3MF file (not all settings available for imported archives)
-- Some slicer-specific settings may not be parsed
+Нашли более удачные настройки? Примените их к будущим печатям:
+
+1. Запишите настройки из сравнения
+2. Обновите профиль слайсера
+3. Или используйте K-профили для настройки опережения давления
+
+---
+
+## :material-lightbulb: Примеры использования {#use-cases}
+
+!!! tip "Поиск причин неудач"
+    Сравните успешную и неудачную печать, чтобы выяснить, что изменилось.
+
+!!! tip "Оптимизация качества"
+    Сравните печати с разной высотой слоя, чтобы оценить соотношение качества и времени.
+
+!!! tip "Сравнение материалов"
+    Сравните настройки и результаты печати одной модели разными материалами.
+
+!!! tip "Настройка скорости"
+    Сравните печати на разных скоростях, чтобы найти оптимальную.
+
+!!! tip "Проверка профиля"
+    Сравните печати с разными профилями слайсера, чтобы проверить их согласованность.
+
+---
+
+## :material-alert: Ограничения {#limitations}
+
+- Не более 5 архивов за одно сравнение
+- Требуется файл 3MF (для импортированных архивов доступны не все настройки)
+- Некоторые специфичные для слайсера настройки могут не распознаваться

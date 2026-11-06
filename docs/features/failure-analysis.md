@@ -1,248 +1,248 @@
 ---
-title: Failure Analysis
-description: Identify patterns in print failures
+title: Анализ неудач
+description: Выявление закономерностей в неудачных печатях
 ---
 
-# Failure Analysis
+# Анализ неудач {#failure-analysis}
 
-Understand why prints fail by analyzing patterns across materials, printers, and settings.
+Анализируйте закономерности по материалам, принтерам и настройкам, чтобы понять причины неудачных печатей.
 
 ---
 
-## :material-chart-timeline-variant: Failure Dashboard
+## :material-chart-timeline-variant: Панель анализа неудач {#failure-dashboard}
 
-The Failure Analysis widget on the Statistics page shows:
+Виджет анализа неудач на странице статистики показывает:
 
-### Failure Rate
+### Доля неудач {#failure-rate}
 
-Overall success vs failure percentage:
+Общий процент успешных и неудачных печатей:
 
 ```
-Success: 89%  |  Failed: 8%  |  Stopped: 3%
+Успешно: 89%  |  Неудачно: 8%  |  Остановлено: 3%
 ```
 
-### Failure Trend
+### Динамика неудач {#failure-trend}
 
-Track if failure rate is:
+Отслеживайте изменение доли неудач:
 
-- :material-trending-down:{ style="color: #4caf50" } **Improving** - Fewer failures over time
-- :material-trending-neutral: **Stable** - Consistent rate
-- :material-trending-up:{ style="color: #f44336" } **Worsening** - More failures recently
+- :material-trending-down:{ style="color: #4caf50" } **Улучшение** — со временем неудач становится меньше
+- :material-trending-neutral: **Стабильно** — доля не меняется
+- :material-trending-up:{ style="color: #f44336" } **Ухудшение** — в последнее время неудач больше
 
 ---
 
-## :material-link-variant: Correlation Analysis
+## :material-link-variant: Анализ взаимосвязей {#correlation-analysis}
 
-Identify what's causing failures by analyzing correlations:
+Анализируйте взаимосвязи, чтобы определить причины неудач:
 
-### By Material
+### По материалу {#by-material}
 
-| Material | Success Rate | Failures |
+| Материал | Успешных печатей | Неудач |
 |----------|:------------:|:--------:|
 | PLA | 95% | 3 |
 | PETG | 88% | 8 |
 | ABS | 75% | 12 |
 | TPU | 70% | 6 |
 
-Spot materials that need attention.
+Выявляйте материалы, требующие внимания.
 
-### By Printer
+### По принтеру {#by-printer}
 
-| Printer | Success Rate | Failures |
+| Принтер | Успешных печатей | Неудач |
 |---------|:------------:|:--------:|
 | Workshop X1C | 92% | 5 |
 | Office P1S | 85% | 10 |
 | Garage A1 | 78% | 15 |
 
-Identify problematic machines.
+Определяйте проблемные принтеры.
 
-### By Time of Day
+### По времени суток {#by-time-of-day}
 
-| Time | Success Rate |
+| Время | Успешных печатей |
 |------|:------------:|
-| Morning (6-12) | 91% |
-| Afternoon (12-18) | 89% |
-| Evening (18-24) | 88% |
-| Night (0-6) | 85% |
+| Утро (6–12) | 91% |
+| День (12–18) | 89% |
+| Вечер (18–24) | 88% |
+| Ночь (0–6) | 85% |
 
-Environmental factors may affect overnight prints.
+На ночную печать могут влиять условия окружающей среды.
 
-### By Duration
+### По длительности {#by-duration}
 
-| Print Length | Success Rate |
+| Длительность печати | Успешных печатей |
 |-------------|:------------:|
-| < 1 hour | 95% |
-| 1-4 hours | 91% |
-| 4-12 hours | 87% |
-| > 12 hours | 80% |
+| < 1 часа | 95% |
+| 1–4 часа | 91% |
+| 4–12 часов | 87% |
+| > 12 часов | 80% |
 
-Longer prints have more opportunities to fail.
-
----
-
-## :material-format-list-bulleted-type: Common Failure Modes
-
-### Adhesion Failures
-
-**Symptoms:**
-
-- Print detaches from bed
-- Warping corners
-- First layer issues
-
-**Correlations to check:**
-
-- Bed temperature settings
-- Bed cleanliness (time since last clean)
-- Material type (ABS/PETG more prone)
-- Room temperature changes
-
-### Layer Adhesion
-
-**Symptoms:**
-
-- Delamination between layers
-- Weak parts
-- Cracks along layer lines
-
-**Correlations to check:**
-
-- Nozzle temperature
-- Print speed
-- Cooling fan settings
-- Humidity (wet filament)
-
-### Stringing/Oozing
-
-**Symptoms:**
-
-- Strings between parts
-- Blobs on surface
-
-**Correlations to check:**
-
-- Retraction settings
-- Temperature (too high)
-- Travel speed
-
-### Spaghetti
-
-**Symptoms:**
-
-- Tangled mess of filament
-- Print knocked off bed
-
-**Correlations to check:**
-
-- Adhesion (root cause)
-- AI detection (was it enabled?)
-- Print complexity
+При более длительной печати вероятность сбоя выше.
 
 ---
 
-## :material-text-box-search: Investigating Failures
+## :material-format-list-bulleted-type: Распространённые виды неудач {#common-failure-modes}
 
-### Step 1: Filter Failed Prints
+### Проблемы с адгезией к столу {#adhesion-failures}
 
-1. Go to **Archives**
-2. Filter by **Status: Failed**
-3. Review the list
+**Признаки:**
 
-### Step 2: Look for Patterns
+- Модель отрывается от стола
+- Загибаются углы
+- Проблемы с первым слоем
 
-Check what failed prints have in common:
+**Что проверить:**
 
-- Same printer?
-- Same material?
-- Same time period?
-- Similar settings?
+- Настройки температуры стола
+- Чистоту стола (когда его в последний раз очищали)
+- Тип материала (ABS/PETG более склонны к таким проблемам)
+- Изменения температуры в помещении
 
-### Step 3: Compare with Success
+### Адгезия слоёв {#layer-adhesion}
 
-Use Archive Comparison to compare a failed print with a successful one:
+**Признаки:**
 
-1. Select a failed print and similar successful print
-2. Right-click > Compare
-3. Look for setting differences
+- Расслоение
+- Непрочные детали
+- Трещины вдоль слоёв
 
-### Step 4: Document Findings
+**Что проверить:**
 
-Add notes to failed archives:
+- Температуру сопла
+- Скорость печати
+- Настройки вентилятора охлаждения
+- Влажность (сырой филамент)
 
-- What you observed
-- Suspected cause
-- Changes made
+### Нити и подтекание {#stringingoozing}
+
+**Признаки:**
+
+- Нити между деталями
+- Наплывы на поверхности
+
+**Что проверить:**
+
+- Настройки ретракта
+- Температуру (слишком высокая)
+- Скорость перемещения
+
+### Спагетти {#spaghetti}
+
+**Признаки:**
+
+- Спутанный клубок филамента
+- Модель сдвинулась со стола
+
+**Что проверить:**
+
+- Адгезию к столу (первопричину)
+- Обнаружение с помощью ИИ (было ли включено?)
+- Сложность модели
 
 ---
 
-## :material-tag: Failure Tags
+## :material-text-box-search: Изучение неудач {#investigating-failures}
 
-Tag failed prints for easier analysis:
+### Шаг 1. Отфильтруйте неудачные печати {#step-1-filter-failed-prints}
 
-| Tag | Use For |
+1. Перейдите в **Архив**
+2. Выберите фильтр **Статус: ошибка**
+3. Изучите список
+
+### Шаг 2. Найдите закономерности {#step-2-look-for-patterns}
+
+Проверьте, что общего у неудачных печатей:
+
+- Один и тот же принтер?
+- Один и тот же материал?
+- Один и тот же период времени?
+- Похожие настройки?
+
+### Шаг 3. Сравните с успешной печатью {#step-3-compare-with-success}
+
+Используйте сравнение архивов, чтобы сопоставить неудачную и успешную печати:
+
+1. Выберите неудачную и похожую успешную печать
+2. Щёлкните правой кнопкой мыши > Сравнить
+3. Найдите отличия в настройках
+
+### Шаг 4. Запишите выводы {#step-4-document-findings}
+
+Добавьте заметки к неудачным печатям в архиве:
+
+- Что вы наблюдали
+- Предполагаемую причину
+- Внесённые изменения
+
+---
+
+## :material-tag: Теги неудач {#failure-tags}
+
+Отмечайте неудачные печати тегами для удобства анализа:
+
+| Тег | Для чего использовать |
 |-----|---------|
-| `adhesion-fail` | Bed adhesion issues |
-| `layer-fail` | Layer adhesion issues |
-| `spaghetti` | Complete failures |
-| `warping` | Warping issues |
-| `stringing` | Quality issues |
+| `adhesion-fail` | Проблемы с адгезией к столу |
+| `layer-fail` | Проблемы с адгезией слоёв |
+| `spaghetti` | Полные неудачи |
+| `warping` | Деформация и отслоение углов |
+| `stringing` | Проблемы с качеством поверхности |
 
-Filter by tags to see specific failure types.
-
----
-
-## :material-camera: Photo Documentation
-
-Add photos to failed prints:
-
-1. Open the failed archive
-2. Click **Add Photo**
-3. Upload images of the failure
-
-Visual documentation helps:
-
-- Remember what went wrong
-- Share with others for help
-- Track if fixes work
+Фильтруйте по тегам, чтобы увидеть определённые типы неудач.
 
 ---
 
-## :material-trending-up: Improving Success Rate
+## :material-camera: Фотографии {#photo-documentation}
 
-### Quick Wins
+Добавляйте фотографии к неудачным печатям:
 
-1. **Dry your filament** - Wet filament causes many failures
-2. **Clean your bed** - Regular cleaning improves adhesion
-3. **Level your bed** - Run auto-leveling regularly
-4. **Control temperature** - Avoid drafts and temp swings
+1. Откройте неудачную печать в архиве
+2. Нажмите **Добавить фото**
+3. Загрузите изображения неудачной печати
 
-### Medium-term Fixes
+Фотографии помогут:
 
-1. **Tune materials** - Create profiles for each material
-2. **Calibrate flow** - Ensure correct extrusion
-3. **Check hardware** - Worn nozzles, loose belts
-
-### Long-term Solutions
-
-1. **Track patterns** - Use failure analysis regularly
-2. **Document changes** - Note what worked
-3. **Preventive maintenance** - Follow maintenance schedules
+- Вспомнить, что пошло не так
+- Поделиться проблемой и получить помощь
+- Проверить, помогают ли исправления
 
 ---
 
-## :material-lightbulb: Tips
+## :material-trending-up: Повышение доли успешных печатей {#improving-success-rate}
 
-!!! tip "Don't Delete Failures"
-    Keep failed prints in your archive - they're valuable data for analysis.
+### Быстрые меры {#quick-wins}
 
-!!! tip "Consistent Tagging"
-    Use consistent tags for failures to enable filtering and pattern detection.
+1. **Высушите филамент** — сырой филамент вызывает множество проблем
+2. **Очистите стол** — регулярная очистка улучшает адгезию
+3. **Выровняйте стол** — регулярно запускайте автоматическое выравнивание
+4. **Контролируйте температуру** — избегайте сквозняков и перепадов температуры
 
-!!! tip "Photo Everything"
-    Photos of failures are invaluable for diagnosis and tracking improvements.
+### Среднесрочные меры {#medium-term-fixes}
 
-!!! tip "Check the Obvious"
-    Most failures are due to: wet filament, dirty bed, or temperature issues.
+1. **Настройте материалы** — создайте профили для каждого материала
+2. **Откалибруйте поток** — убедитесь в правильной экструзии
+3. **Проверьте оборудование** — износ сопла и ослабление ремней
 
-!!! tip "One Change at a Time"
-    When fixing issues, change one thing at a time to know what worked.
+### Долгосрочные решения {#long-term-solutions}
+
+1. **Отслеживайте закономерности** — регулярно анализируйте неудачи
+2. **Записывайте изменения** — отмечайте, что помогло
+3. **Проводите профилактику** — соблюдайте график обслуживания
+
+---
+
+## :material-lightbulb: Советы {#tips}
+
+!!! tip "Не удаляйте неудачные печати"
+    Сохраняйте их в архиве — это ценные данные для анализа.
+
+!!! tip "Используйте теги последовательно"
+    Единые теги неудач помогут фильтровать данные и находить закономерности.
+
+!!! tip "Фотографируйте всё"
+    Фотографии неудачных печатей незаменимы для диагностики и отслеживания улучшений.
+
+!!! tip "Проверяйте очевидное"
+    Большинство неудач связано с сырым филаментом, грязным столом или проблемами с температурой.
+
+!!! tip "Меняйте по одному параметру"
+    При устранении неполадок меняйте что-то одно за раз, чтобы понять, что помогло.

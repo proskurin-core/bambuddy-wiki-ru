@@ -1,145 +1,145 @@
 ---
-title: Full-Text Search
-description: Fast search across all archive metadata
+title: Полнотекстовый поиск
+description: Быстрый поиск по всем метаданным архива
 ---
 
-# Full-Text Search
+# Полнотекстовый поиск {#full-text-search}
 
-Bambuddy uses SQLite FTS5 (Full-Text Search) for lightning-fast search across all your archives.
+Bambuddy использует SQLite FTS5 (полнотекстовый поиск) для очень быстрого поиска по всем архивам.
 
 ---
 
-## :material-magnify: Search Features
+## :material-magnify: Возможности поиска {#search-features}
 
-### What's Searchable
+### Что можно искать {#whats-searchable}
 
-| Field | Example |
+| Поле | Пример |
 |-------|---------|
-| **Print name** | "benchy" |
-| **Filename** | "calibration_cube.3mf" |
-| **Tags** | "functional" |
-| **Notes** | "great layer adhesion" |
-| **Designer** | "printables username" |
-| **Filament type** | "PLA", "PETG", "ABS" |
-| **Printer name** | "Workshop X1C" |
+| **Название печати** | "benchy" |
+| **Имя файла** | "calibration_cube.3mf" |
+| **Теги** | "functional" |
+| **Заметки** | "great layer adhesion" |
+| **Дизайнер** | "printables username" |
+| **Тип филамента** | "PLA", "PETG", "ABS" |
+| **Название принтера** | "Workshop X1C" |
 
-### Search Syntax
+### Синтаксис поиска {#search-syntax}
 
-| Syntax | Description | Example |
+| Синтаксис | Описание | Пример |
 |--------|-------------|---------|
-| `word` | Simple search | `benchy` |
-| `"phrase"` | Exact phrase | `"phone stand"` |
-| `word*` | Prefix match | `ben*` matches "benchy" |
-| `word1 word2` | Both words | `phone stand` |
-| `word1 OR word2` | Either word | `benchy OR boat` |
-| `-word` | Exclude word | `phone -case` |
+| `word` | Простой поиск | `benchy` |
+| `"phrase"` | Точная фраза | `"phone stand"` |
+| `word*` | Совпадение по префиксу | `ben*` находит "benchy" |
+| `word1 word2` | Оба слова | `phone stand` |
+| `word1 OR word2` | Любое из слов | `benchy OR boat` |
+| `-word` | Исключить слово | `phone -case` |
 
 ---
 
-## :material-lightning-bolt: Performance
+## :material-lightning-bolt: Производительность {#performance}
 
-FTS5 provides near-instant search:
+FTS5 обеспечивает практически мгновенный поиск:
 
-| Archive Count | Search Time |
+| Количество архивов | Время поиска |
 |:-------------:|:-----------:|
-| 100 | < 1ms |
-| 1,000 | < 5ms |
-| 10,000 | < 20ms |
-| 100,000 | < 100ms |
+| 100 | < 1 мс |
+| 1 000 | < 5 мс |
+| 10 000 | < 20 мс |
+| 100 000 | < 100 мс |
 
-### Why FTS5?
+### Почему FTS5? {#why-fts5}
 
-- **Tokenized index** - Pre-processes text for fast lookup
-- **Ranked results** - Most relevant first
-- **Incremental updates** - Index updates automatically
+- **Индекс по токенам** — текст предварительно обрабатывается для быстрого поиска
+- **Ранжирование результатов** — наиболее подходящие отображаются первыми
+- **Инкрементальное обновление** — индекс обновляется автоматически
 
 ---
 
-## :material-keyboard: Quick Access
+## :material-keyboard: Быстрый доступ {#quick-access}
 
-### Keyboard Shortcuts
+### Сочетания клавиш {#keyboard-shortcuts}
 
-| Shortcut | Action |
+| Сочетание | Действие |
 |----------|--------|
-| ++slash++ | Focus search box |
-| ++escape++ | Clear search / close |
-| ++enter++ | Execute search |
-| ++arrow-down++ | Navigate results |
+| ++slash++ | Перевести фокус в поле поиска |
+| ++escape++ | Очистить поиск / закрыть |
+| ++enter++ | Выполнить поиск |
+| ++arrow-down++ | Перемещаться по результатам |
 
-### Search Box Location
+### Расположение поля поиска {#search-box-location}
 
-The search box is prominently displayed on the Archives page header.
-
----
-
-## :material-filter: Combining Search with Filters
-
-Search works alongside other filters:
-
-1. Enter search term
-2. Apply additional filters (printer, date, status)
-3. Results show intersection
-
-**Example**: Search "benchy" + filter by "Last 7 days" + filter by "Success"
+Поле поиска находится на видном месте в заголовке страницы архива.
 
 ---
 
-## :material-cog: Index Management
+## :material-filter: Поиск с фильтрами {#combining-search-with-filters}
 
-The search index is automatically maintained:
+Поиск можно использовать вместе с другими фильтрами:
 
-### Automatic Updates
+1. Введите поисковый запрос
+2. Примените дополнительные фильтры (принтер, дата, статус)
+3. Результаты будут соответствовать всем заданным условиям
 
-- New archives are indexed immediately
-- Edits update the index
-- Deletions remove from index
-
-### Manual Rebuild
-
-If search results seem incorrect:
-
-1. Go to **Settings** > **System**
-2. Click **Rebuild Search Index**
-3. Wait for rebuild to complete
-
-!!! note "When to Rebuild"
-    Index rebuild is rarely needed. Only use if search results are clearly wrong or after database restoration.
+**Пример**: поиск "benchy" + фильтр "Последние 7 дней" + фильтр "Успешно"
 
 ---
 
-## :material-api: API Search
+## :material-cog: Управление индексом {#index-management}
 
-Search via the REST API:
+Поисковый индекс поддерживается автоматически:
+
+### Автоматическое обновление {#automatic-updates}
+
+- Новые архивы индексируются сразу
+- При изменении архива индекс обновляется
+- При удалении архив исключается из индекса
+
+### Перестроение вручную {#manual-rebuild}
+
+Если результаты поиска кажутся неверными:
+
+1. Перейдите в **Настройки** > **Система**
+2. Нажмите **Перестроить поисковый индекс**
+3. Дождитесь завершения операции
+
+!!! note "Когда нужно перестраивать индекс"
+    Перестроение требуется редко. Используйте его, только если результаты явно неверны или после восстановления базы данных.
+
+---
+
+## :material-api: Поиск через API {#api-search}
+
+Поиск через REST API:
 
 ```bash
 GET /api/v1/archives?search=benchy
 ```
 
-Response includes matching archives with relevance ranking.
+Ответ содержит найденные архивы, отсортированные по релевантности.
 
-### API Parameters
+### Параметры API {#api-parameters}
 
-| Parameter | Description |
+| Параметр | Описание |
 |-----------|-------------|
-| `search` | Search query string |
-| `limit` | Max results (default: 50) |
-| `offset` | Pagination offset |
+| `search` | Строка поискового запроса |
+| `limit` | Максимальное число результатов (по умолчанию: 50) |
+| `offset` | Смещение для постраничного вывода |
 
 ---
 
-## :material-lightbulb: Search Tips
+## :material-lightbulb: Советы по поиску {#search-tips}
 
-!!! tip "Use Specific Terms"
-    More specific searches yield better results. "voron stealthburner" is better than just "voron".
+!!! tip "Используйте конкретные слова"
+    Более точные запросы дают лучшие результаты. "voron stealthburner" лучше, чем просто "voron".
 
-!!! tip "Quote Phrases"
-    Use quotes for exact phrases: `"cable chain"` won't match "cable management chain".
+!!! tip "Заключайте фразы в кавычки"
+    Для поиска точной фразы используйте кавычки: `"cable chain"` не найдёт "cable management chain".
 
-!!! tip "Exclude with Minus"
-    Exclude unwanted results: `case -phone` finds cases that aren't phone cases.
+!!! tip "Исключайте слова с помощью минуса"
+    Исключайте ненужные результаты: `case -phone` находит чехлы, кроме чехлов для телефона.
 
-!!! tip "Prefix for Partial Matches"
-    Use asterisk for partial matching: `bench*` matches "benchy", "benchmark", "bench".
+!!! tip "Используйте префикс для частичного совпадения"
+    Звёздочка позволяет искать по части слова: `bench*` находит "benchy", "benchmark" и "bench".
 
-!!! tip "Check Filters"
-    If search returns nothing, check if filters are limiting results.
+!!! tip "Проверяйте фильтры"
+    Если поиск ничего не возвращает, проверьте, не ограничивают ли результаты фильтры.
