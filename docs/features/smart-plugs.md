@@ -1,800 +1,751 @@
 ---
-title: Smart Plugs
-description: Tasmota, Home Assistant, MQTT, and REST/Webhook integration for power control and automation
+title: Умные розетки
+description: Интеграция Tasmota, Home Assistant, MQTT и REST/Webhook для управления питанием, автоматизации и учёта энергии
 ---
 
-# Smart Plugs
+# Умные розетки {#smart-plugs}
 
-Control your printers with Tasmota, Home Assistant, REST/Webhook, or MQTT smart plugs for power monitoring, automation, and energy tracking.
+Управляйте питанием принтеров, автоматизируйте его и отслеживайте энергопотребление с помощью умных розеток Tasmota, Home Assistant, REST/Webhook или MQTT.
 
-![Smart Plugs Settings](../assets/settings-powerplugs.png){ .screenshot }
-
----
-
-## :material-power-plug: Overview
-
-Smart plug integration enables:
-
-- **Power control** - Turn printers on/off remotely
-- **Energy monitoring** - Track power consumption
-- **Auto power-on** - Start printer before scheduled prints
-- **Auto power-off** - Shut down after cooldown
-- **Automation** - Hands-free print scheduling
+![Настройки умных розеток](../assets/settings-powerplugs.png){ .screenshot }
 
 ---
 
-## :material-cog: Requirements
+## :material-power-plug: Обзор {#overview}
 
-Bambuddy supports four types of smart plug integrations:
+Интеграция умных розеток позволяет:
 
-### Option 1: Tasmota
+- **Управлять питанием** — включать и выключать принтеры удалённо
+- **Следить за энергией** — учитывать потребление
+- **Автоматически включать питание** перед запланированной печатью
+- **Автоматически выключать питание** после охлаждения
+- **Автоматизировать** печать по расписанию без ручных действий
 
-Direct control of Tasmota-flashed smart plugs:
+---
 
-| Feature | Required? |
+## :material-cog: Требования {#requirements}
+
+Bambuddy поддерживает четыре типа интеграции умных розеток:
+
+### Вариант 1: Tasmota {#option-1-tasmota}
+
+Прямое управление розетками с прошивкой Tasmota:
+
+| Возможность | Требуется? |
 |---------|:---------:|
-| Tasmota firmware | :material-check: Yes |
-| Power monitoring | Recommended |
-| HTTP API access | :material-check: Yes |
+| Прошивка Tasmota | :material-check: Да |
+| Мониторинг потребления | Рекомендуется |
+| Доступ к HTTP API | :material-check: Да |
 
-**Popular Options:**
+**Популярные варианты:**
 
-- **Sonoff S31** - Compact, power monitoring
-- **Gosund SP111** - Affordable, power monitoring
-- **Athom Plugs** - Pre-flashed with Tasmota
-- **Shelly Plug S** - High quality, Tasmota compatible
+- **Sonoff S31** — компактная, с мониторингом потребления
+- **Gosund SP111** — доступная, с мониторингом потребления
+- **Athom Plugs** — с предустановленной Tasmota
+- **Shelly Plug S** — качественная, совместима с Tasmota
 
-!!! tip "Pre-flashed Plugs"
-    Buy plugs pre-flashed with Tasmota to avoid the flashing process. Athom and some others sell them ready to use.
+!!! tip "Розетки с предустановленной прошивкой"
+    Чтобы не прошивать розетку самостоятельно, купите устройство с Tasmota. Athom и некоторые другие производители продают готовые к работе розетки.
 
-### Option 2: Home Assistant
+### Вариант 2: Home Assistant {#option-2-home-assistant}
 
-Control any switch/light entity through Home Assistant:
+Управление любыми сущностями переключателя или освещения через Home Assistant:
 
-| Feature | Required? |
+| Возможность | Требуется? |
 |---------|:---------:|
-| Home Assistant instance | :material-check: Yes |
-| Long-Lived Access Token | :material-check: Yes |
-| Network access to HA | :material-check: Yes |
+| Экземпляр Home Assistant | :material-check: Да |
+| Долгоживущий токен доступа | :material-check: Да |
+| Сетевой доступ к HA | :material-check: Да |
 
-**Supports:**
+**Поддерживаются:**
 
-- **Zigbee** - Plugs via ZHA or Zigbee2MQTT
-- **Z-Wave** - Plugs via Z-Wave JS
-- **Matter** - Matter-compatible devices
-- **WiFi** - Any WiFi plug integrated with HA
-- **ESPHome** - Custom ESP-based devices
+- **Zigbee** — розетки через ZHA или Zigbee2MQTT
+- **Z-Wave** — розетки через Z-Wave JS
+- **Matter** — совместимые устройства
+- **WiFi** — любые розетки Wi-Fi, подключённые к HA
+- **ESPHome** — собственные устройства на базе ESP
 
-!!! tip "Flexible Integration"
-    Home Assistant integration lets you use any device HA supports, including cloud-connected plugs that don't have local APIs.
+!!! tip "Гибкая интеграция"
+    Home Assistant позволяет использовать любое поддерживаемое им устройство, в том числе облачные розетки без локального API.
 
-!!! warning "Home Assistant over https"
-    Bambuddy checks Home Assistant's certificate against its built-in list of
-    public certificate authorities (the `certifi` bundle, not your operating
-    system's or browser's), and the certificate must be issued for the hostname
-    in the URL. **Test Connection** says which check failed:
+!!! warning "Home Assistant по HTTPS"
+    Bambuddy проверяет сертификат Home Assistant по встроенному списку публичных центров сертификации (пакет `certifi`, а не список ОС или браузера); сертификат должен быть выпущен для имени хоста в URL. **Проверить подключение** показывает, какая проверка не прошла:
 
-    - **IP address mismatch / Hostname mismatch**: the URL uses an IP address
-      or another name. Enter the hostname the certificate was issued for, e.g.
-      `https://ha.example.org:8123` instead of `https://192.168.1.10:8123`.
-    - **self-signed certificate** or **unable to get local issuer
-      certificate**: the certificate comes from your own certificate authority,
-      or is Home Assistant's self-signed one. Add that authority to Bambuddy's
-      trust store. In Docker, see [Self Signed CA Certificate
-      Support](../getting-started/docker.md) (`USE_SYSTEM_TRUST_STORE`). On a
-      native install, copy the CA certificate to
-      `/usr/local/share/ca-certificates/` (as a `.crt` file), run
-      `sudo update-ca-certificates`, add `SSL_CERT_DIR=/etc/ssl/certs` to
-      the environment Bambuddy runs with (the installer's service reads it
-      from Bambuddy's `.env`) and restart Bambuddy.
-    - **certificate has expired**: renew it in Home Assistant.
+    - **IP address mismatch / Hostname mismatch**: в URL указан IP-адрес или другое имя. Введите имя, для которого выдан сертификат, например `https://ha.example.org:8123` вместо `https://192.168.1.10:8123`.
+    - **self-signed certificate** или **unable to get local issuer certificate**: сертификат выдан вашим центром сертификации либо является самоподписанным сертификатом Home Assistant. Добавьте этот центр в доверенное хранилище Bambuddy. Для Docker см. [поддержку самоподписанного сертификата CA](../getting-started/docker.md) (`USE_SYSTEM_TRUST_STORE`). При нативной установке скопируйте сертификат CA в `/usr/local/share/ca-certificates/` как файл `.crt`, выполните `sudo update-ca-certificates`, добавьте `SSL_CERT_DIR=/etc/ssl/certs` в окружение Bambuddy (служба установщика читает его из `.env` Bambuddy) и перезапустите Bambuddy.
+    - **certificate has expired**: обновите сертификат в Home Assistant.
 
-#### HA Scripts for Multi-Device Control
+#### Скрипты HA для управления несколькими устройствами {#ha-scripts-for-multi-device-control}
 
-Want to control multiple devices together (e.g., printer + enclosure fan)? Use Home Assistant scripts:
+Чтобы управлять несколькими устройствами вместе (например, принтером и вентилятором корпуса), используйте скрипты Home Assistant:
 
-1. Create a script in HA that turns on/off multiple devices
-2. Add the script entity (e.g., `script.turn_on_printer_setup`) as a smart plug in Bambuddy
-3. Link it to a printer
-4. Configure automation triggers (optional)
-5. When triggered, the script executes your automation
+1. Создайте в HA скрипт включения или выключения нескольких устройств
+2. Добавьте сущность скрипта (например, `script.turn_on_printer_setup`) как умную розетку Bambuddy
+3. Привяжите её к принтеру
+4. При необходимости настройте триггеры автоматизации
+5. При срабатывании скрипт выполнит вашу автоматизацию
 
-**Script Automation Options:**
+**Параметры автоматизации скрипта:**
 
-| Option | Description |
+| Параметр | Описание |
 |--------|-------------|
-| **Run when printer turns on** | Automatically execute script when the main power plug is switched on: by hand, by its schedule, and at every print start |
-| **Run when printer turns off** | Automatically execute script when the main power plug is switched off: by hand, by its schedule, by auto-off after a print or drying, or by AI failure detection |
-| **Show on Printer Card** | Display a quick-run button on the printer card |
+| **Запускать при включении принтера** | Автоматически выполнять скрипт при включении основной розетки: вручную, по расписанию и при каждом начале печати |
+| **Запускать при выключении принтера** | Автоматически выполнять скрипт при выключении основной розетки: вручную, по расписанию, после печати или сушки либо при обнаружении ошибки ИИ |
+| **Показывать на карточке принтера** | Показывать кнопку быстрого запуска на карточке принтера |
 
-Scripts appear in a dedicated row on printer cards with "Run" buttons for quick access.
+Скрипты показаны отдельной строкой на карточке принтера с кнопками «Запустить».
 
-!!! example "Use Case: Enclosure Fan"
-    Create two HA scripts: one to turn on printer + fan, another to turn off both. Link them to your printer with "Run when printer turns on/off" enabled. Now when the main plug is switched, by you or by Bambuddy, both devices respond automatically. When Bambuddy switches plugs on its own, only a plug that powers the printer counts (an accessory plug such as a lamp runs no scripts), and scripts run once even when two plugs feed the printer. A script plug with **Enabled** off never runs automatically.
+!!! example "Пример: вентилятор корпуса"
+    Создайте два скрипта HA: первый включает принтер и вентилятор, второй выключает оба. Привяжите их к принтеру и включите запуск при включении и выключении принтера. Теперь оба устройства будут автоматически реагировать на переключение основной розетки вами или Bambuddy. При автоматическом переключении учитываются только розетки, питающие принтер; розетка аксессуара, например лампы, не запускает скрипты. Если принтер питают две розетки, скрипты запускаются один раз. Скрипт с выключенным параметром **Включено** автоматически не запускается.
 
-!!! note "Script Behavior"
-    Scripts can only be triggered ("Run"), not toggled on/off like regular plugs. They execute once when triggered and complete immediately.
+!!! note "Поведение скриптов"
+    Скрипты можно только запускать, а не включать и выключать как обычные розетки. При запуске они выполняются один раз и сразу завершаются.
 
-### Option 3: REST / Webhook
+### Вариант 3: REST / Webhook {#option-3-rest-webhook}
 
-Control any device with an HTTP API using custom REST requests:
+Управляйте любым устройством с HTTP API посредством пользовательских REST-запросов:
 
-| Feature | Required? |
+| Возможность | Требуется? |
 |---------|:---------:|
-| HTTP-accessible device/service | :material-check: Yes |
-| Power control | :material-check: Yes (via custom URLs) |
-| Status monitoring | Optional |
-| Energy monitoring | Optional |
+| Устройство или сервис, доступный по HTTP | :material-check: Да |
+| Управление питанием | :material-check: Да (через пользовательские URL) |
+| Мониторинг состояния | Необязательно |
+| Мониторинг энергии | Необязательно |
 
-**Supports:**
+**Поддерживаются:**
 
-- **openHAB** - REST API for item control
-- **ioBroker** - Simple REST API
-- **FHEM** - HTTP command interface
-- **Node-RED** - Custom HTTP endpoints
-- **Any REST API** - Any system with an HTTP interface
+- **openHAB** — REST API управления элементами
+- **ioBroker** — простой REST API
+- **FHEM** — HTTP-интерфейс команд
+- **Node-RED** — пользовательские конечные точки HTTP
+- **Любой REST API** — любая система с HTTP-интерфейсом
 
-!!! tip "Universal Integration"
-    The REST/Webhook type is a catch-all for any home automation system or device that exposes an HTTP API. If your system isn't directly supported by the Tasmota or Home Assistant options, REST/Webhook can likely control it.
+!!! tip "Универсальная интеграция"
+    Тип REST/Webhook подходит для любой системы автоматизации дома или устройства с HTTP API. Если Tasmota или Home Assistant не поддерживают вашу систему напрямую, ею, вероятно, можно управлять через REST/Webhook.
 
-### Option 4: MQTT (Monitor-Only)
+### Вариант 4: MQTT (только мониторинг) {#option-4-mqtt-monitor-only}
 
-Subscribe to MQTT topics for energy monitoring from any MQTT-enabled device:
+Подписывайтесь на топики MQTT для мониторинга энергии любого устройства с поддержкой MQTT:
 
-| Feature | Required? |
+| Возможность | Требуется? |
 |---------|:---------:|
-| MQTT broker | :material-check: Yes |
-| Device publishing JSON data | :material-check: Yes |
-| Control capability | :material-close: No (monitor-only) |
+| Брокер MQTT | :material-check: Да |
+| Публикация данных JSON устройством | :material-check: Да |
+| Управление | :material-close: Нет (только мониторинг) |
 
-**Supports:**
+**Поддерживаются:**
 
-- **Zigbee2MQTT** - Any Zigbee energy monitor
-- **Shelly** - Via native MQTT or Zigbee2MQTT
-- **Tasmota Discovery** - Subscribe to Tasmota sensor topics
-- **ESPHome** - ESP devices publishing to MQTT
-- **Any MQTT source** - Any device publishing JSON with power data
+- **Zigbee2MQTT** — любой монитор энергии Zigbee
+- **Shelly** — через собственный MQTT или Zigbee2MQTT
+- **Tasmota Discovery** — подписка на топики датчиков Tasmota
+- **ESPHome** — устройства ESP, публикующие данные в MQTT
+- **Любой источник MQTT** — устройство, публикующее JSON с данными о мощности
 
-!!! note "Monitor-Only"
-    MQTT plugs are **monitor-only** for energy tracking. They cannot be turned on/off through Bambuddy. Use your MQTT broker, Home Assistant, or other automation to control them.
+!!! note "Только мониторинг"
+    Розетки MQTT предназначены **только для мониторинга** энергии. Включить или выключить их через Bambuddy нельзя. Для управления используйте брокер MQTT, Home Assistant или другую автоматизацию.
 
 ---
 
-## :material-plus-circle: Adding a Smart Plug
+## :material-plus-circle: Добавление умной розетки {#adding-a-smart-plug}
 
-### Adding a Tasmota Plug
+### Добавление розетки Tasmota {#adding-a-tasmota-plug}
 
-#### Automatic Discovery
+#### Автоматическое обнаружение {#automatic-discovery}
 
-The easiest way to add Tasmota plugs is with automatic discovery:
+Проще всего добавить розетку Tasmota автоматическим обнаружением:
 
-1. Go to **Settings** > **Smart Plugs**
-2. Click **Add Smart Plug**
-3. Select the **Tasmota** tab
-4. Click **Discover Tasmota Devices**
-5. Wait for the network scan to complete
-6. Click on a discovered device to select it
-7. Fill in remaining details and **Save**
+1. Откройте **Настройки** > **Умные розетки**
+2. Нажмите **Добавить умную розетку**
+3. Выберите вкладку **Tasmota**
+4. Нажмите **Обнаружить устройства Tasmota**
+5. Дождитесь окончания сканирования сети
+6. Нажмите обнаруженное устройство, чтобы выбрать его
+7. Заполните остальные сведения и нажмите **Сохранить**
 
-!!! tip "Network Auto-Detection"
-    Bambuddy automatically detects your local network and scans all 254 addresses. Works with password-protected devices too!
+!!! tip "Автоматическое определение сети"
+    Bambuddy автоматически определяет локальную сеть и сканирует все 254 адреса. Это работает и с устройствами, защищёнными паролем.
 
-#### Manual Entry
+#### Ручной ввод {#manual-entry}
 
-If discovery doesn't find your plug:
+Если обнаружение не нашло розетку:
 
-1. Go to **Settings** > **Smart Plugs**
-2. Click **Add Smart Plug**
-3. Select the **Tasmota** tab
-4. Enter configuration:
+1. Откройте **Настройки** > **Умные розетки**
+2. Нажмите **Добавить умную розетку**
+3. Выберите вкладку **Tasmota**
+4. Заполните настройки:
 
-| Field | Description |
+| Поле | Описание |
 |-------|-------------|
-| **Name** | Friendly name |
-| **IP Address** | Plug's network IP |
-| **Printer** | Associated printer |
-| **Powers the printer** | On when this plug feeds the printer itself; off for accessories (see [Powers the printer](#powers-the-printer)) |
+| **Название** | Удобное название |
+| **IP-адрес** | Сетевой IP розетки |
+| **Принтер** | Связанный принтер |
+| **Питает принтер** | Включите, если розетка питает сам принтер; выключите для аксессуаров (см. [Питает принтер](#powers-the-printer)) |
 
-5. Click **Save**
-6. Click **Test** to verify connection
+5. Нажмите **Сохранить**
+6. Нажмите **Проверить** для проверки подключения
 
-### Adding a Home Assistant Plug
+### Добавление розетки Home Assistant {#adding-a-home-assistant-plug}
 
-#### Initial Setup (One-Time)
+#### Первоначальная настройка {#initial-setup-one-time}
 
-Before adding HA plugs, configure the connection:
+Перед добавлением розеток HA настройте соединение:
 
-1. Go to **Settings** > **Network**
-2. Find the **Home Assistant** section
-3. Enter your Home Assistant URL (e.g., `http://192.168.1.100:8123`)
-4. Enter your Long-Lived Access Token
-5. Click **Test Connection** to verify
-6. Enable **Enable Home Assistant** toggle
+1. Откройте **Настройки** > **Сеть**
+2. Найдите раздел **Home Assistant**
+3. Введите URL Home Assistant (например, `http://192.168.1.100:8123`)
+4. Введите долгоживущий токен доступа
+5. Нажмите **Проверить подключение**
+6. Включите переключатель **Включить Home Assistant**
 
-!!! info "Creating an Access Token"
-    In Home Assistant: Profile > Long-Lived Access Tokens > Create Token. Copy the token immediately - it won't be shown again!
+!!! info "Создание токена доступа"
+    В Home Assistant откройте Profile > Long-Lived Access Tokens > Create Token. Скопируйте токен сразу: он больше не будет показан!
 
-!!! tip "Using self-signed CA certificates"
-    If you are not running Bambuddy as a Home Assistant Add-on and you are using self-signed CA certificates you will need to add your CA certificate to the System Trust Store.
-    Refer to details in [**Getting Started -> Docker**](../getting-started/docker.md).
+!!! tip "Самоподписанные сертификаты CA"
+    Если Bambuddy работает не как дополнение Home Assistant и используются самоподписанные сертификаты CA, добавьте сертификат CA в системное доверенное хранилище. Подробнее см. [Начало работы → Docker](../getting-started/docker.md).
 
+#### Автоматическая настройка (дополнение Home Assistant) {#automatic-configuration-home-assistant-add-on}
 
-#### Automatic Configuration (Home Assistant Add-on)
+Когда Bambuddy работает как [дополнение Home Assistant](https://github.com/hobbypunk90/homeassistant-addon-bambuddy/), интеграция **настраивается автоматически** через переменные окружения, предоставленные супервизором Home Assistant:
 
-When running Bambuddy as a [Home Assistant add-on](https://github.com/hobbypunk90/homeassistant-addon-bambuddy/), the integration is **automatically configured** using environment variables provided by the Home Assistant supervisor:
+**Как это работает:**
 
-**How it works:**
+- Дополнение автоматически задаёт переменные `HA_URL` и `HA_TOKEN`
+- Bambuddy обнаруживает их и настраивает интеграцию при запуске
+- Подключение к `http://supervisor/core` использует токен супервизора
+- Ручная настройка не нужна
 
-- The add-on sets `HA_URL` and `HA_TOKEN` environment variables automatically
-- Bambuddy detects these and configures the integration on startup
-- The connection is established to `http://supervisor/core` using the supervisor-provided token
-- No manual configuration needed!
+**В интерфейсе:**
 
-**In the UI:**
+Когда переменные окружения действуют, отображаются:
 
-When environment variables are active, you'll see:
+- :material-lock: Значки замка у полей URL и токена (только чтение)
+- :material-check: Метки управления через окружение
+- :material-check-circle: Индикатор автоматического включения через переменные окружения
+- :material-connection: Интеграция включена автоматически
 
-- :material-lock: Lock icons on the URL and Token fields (read-only)
-- :material-check: "(Environment Managed)" labels
-- :material-check-circle: "Automatically enabled via environment variables" badge on the toggle
-- :material-connection: The integration is automatically enabled
+!!! success "Без настройки"
+    Дополнение Home Assistant настраивает интеграцию автоматически: создавать токены и вводить URL вручную не нужно.
 
-!!! success "Zero Configuration"
-    The Home Assistant add-on automatically configures the integration - no need to create access tokens or enter URLs manually!
+!!! note "Ручное изменение недоступно"
+    Пока действуют переменные окружения, изменить URL или токен через интерфейс нельзя. Для других значений настройте их в дополнении или используйте обычную установку.
 
-!!! note "Manual Override Disabled"
-    When environment variables are active, you cannot edit the URL or token through the UI. To use different values, configure them in the add-on settings or use the standard installation method.
+#### Добавление розетки {#adding-the-plug}
 
-#### Adding the Plug
+1. Откройте **Настройки** > **Умные розетки**
+2. Нажмите **Добавить умную розетку**
+3. Выберите вкладку **Home Assistant**
+4. Выберите сущность в списке (показываются все `switch`, `light` и `input_boolean`)
+5. Введите удобное название
+6. Выберите связанный принтер
+7. Отключите **Питает принтер**, если сущность управляет аксессуаром, а не принтером, например фильтром камеры, лампой или нагревателем корпуса (см. [Питает принтер](#powers-the-printer))
+8. **Необязательно:** настройте сущности датчиков энергии (см. ниже)
+9. Нажмите **Сохранить**
 
-1. Go to **Settings** > **Smart Plugs**
-2. Click **Add Smart Plug**
-3. Select the **Home Assistant** tab
-4. Select an entity from the dropdown (shows all switch/light/input_boolean entities)
-5. Enter a friendly name
-6. Select the associated printer
-7. Turn **Powers the printer** off if this entity drives an accessory rather than the printer itself — a chamber filter, a light, an enclosure heater (see [Powers the printer](#powers-the-printer))
-8. **(Optional)** Configure energy sensor entities (see below)
-9. Click **Save**
+!!! tip "Выбор сущности"
+    Список показывает понятное имя и текущее состояние. Уже настроенные сущности исключаются.
 
-!!! tip "Entity Selection"
-    The dropdown shows the entity's friendly name and current state. Already-configured entities are filtered out.
+### Добавление розетки REST / Webhook {#adding-a-rest-webhook-plug}
 
-### Adding a REST / Webhook Plug
+Розетки REST позволяют управлять устройством HTTP-запросами к заданным URL.
 
-REST plugs let you control any device by sending HTTP requests to custom URLs.
+#### Добавление розетки {#adding-the-plug_1}
 
-#### Adding the Plug
+1. Откройте **Настройки** > **Умные розетки**
+2. Нажмите **Добавить умную розетку**
+3. Выберите вкладку **REST / Webhook**
+4. Настройте управление:
 
-1. Go to **Settings** > **Smart Plugs**
-2. Click **Add Smart Plug**
-3. Select the **REST / Webhook** tab
-4. Configure the control settings:
+**Управление (нужен хотя бы один URL):**
 
-**Control (at least one URL required):**
-
-| Field | Description | Example |
+| Поле | Описание | Пример |
 |-------|-------------|---------|
-| **Turn ON URL** | URL to turn device on | `http://openhab:8080/rest/items/MyPlug` |
-| **Turn OFF URL** | URL to turn device off | `http://openhab:8080/rest/items/MyPlug` |
-| **HTTP Method** | Request method | `GET`, `POST`, `PUT`, or `PATCH` |
-| **ON Request Body** | Body sent with ON request | `ON` |
-| **OFF Request Body** | Body sent with OFF request | `OFF` |
+| **URL включения** | URL включения устройства | `http://openhab:8080/rest/items/MyPlug` |
+| **URL выключения** | URL выключения устройства | `http://openhab:8080/rest/items/MyPlug` |
+| **Метод HTTP** | Метод запроса | `GET`, `POST`, `PUT` или `PATCH` |
+| **Тело запроса включения** | Тело запроса включения | `ON` |
+| **Тело запроса выключения** | Тело запроса выключения | `OFF` |
 
-**Headers (Optional):**
+**Заголовки (необязательно):**
 
-| Field | Description | Example |
+| Поле | Описание | Пример |
 |-------|-------------|---------|
-| **Custom Headers** | JSON object of headers | `{"Authorization": "Bearer your-token"}` |
+| **Пользовательские заголовки** | Объект заголовков JSON | `{"Authorization": "Bearer your-token"}` |
 
-!!! note "Saved passwords, headers and tokens"
-    Once saved, a plug's password, its custom headers and the Home Assistant token are never shown again: the field shows `********` instead. Leave it as is to keep the saved value, clear it to remove it, or enter a new one. If you change where they are sent (the plug's IP address, any of its REST URLs, its type, or the Home Assistant URL), enter them again. **Test** uses the saved value only for the saved address.
+!!! note "Сохранённые пароли, заголовки и токены"
+    После сохранения пароль розетки, пользовательские заголовки и токен Home Assistant больше не показываются: вместо них поле содержит `********`. Оставьте его без изменений, чтобы сохранить значение; очистите для удаления или введите новое. При изменении адреса отправки (IP розетки, любого REST URL, типа розетки или URL Home Assistant) введите их повторно. **Проверить** использует сохранённое значение только для сохранённого адреса.
 
-    A REST plug's URLs and request bodies often hold the device's credential too, so only users who may edit smart plugs see them. Users who may control plugs still switch them, and anyone who can see plugs still sees their status; the plug list shows **REST** instead of the URL.
+    URL и тела запросов розетки REST также могут содержать её учётные данные, поэтому их видят только пользователи с правом изменения умных розеток. Пользователи с правом управления по-прежнему могут переключать розетки, а все имеющие доступ к просмотру видят их состояние; в списке вместо URL отображается **REST**.
 
-**Status Monitoring (Optional):**
+**Мониторинг состояния (необязательно):**
 
-| Field | Description | Example |
+| Поле | Описание | Пример |
 |-------|-------------|---------|
-| **Status URL** | GET endpoint to check state | `http://openhab:8080/rest/items/MyPlug/state` |
-| **State JSON Path** | Dot notation path to state value | `state` or `data.power.status` |
-| **ON Value** | String that means device is ON | `ON`, `true`, `1` |
+| **URL состояния** | GET-точка для проверки состояния | `http://openhab:8080/rest/items/MyPlug/state` |
+| **JSON-путь состояния** | Путь к значению через точки | `state` или `data.power.status` |
+| **Значение ON** | Строка, означающая включение | `ON`, `true`, `1` |
 
-**Energy Monitoring (Optional):**
+**Мониторинг энергии (необязательно):**
 
-Each value (power, energy) can use its own URL or fall back to the shared Status URL. This is useful when your system exposes individual endpoints for each data point (e.g., ioBroker simple-api).
+Для каждого значения (мощности и энергии) можно указать свой URL или использовать общий URL состояния. Это полезно, когда система предоставляет отдельные точки для каждого показания (например, simple-api ioBroker).
 
-| Field | Description | Example |
+| Поле | Описание | Пример |
 |-------|-------------|---------|
-| **Power URL** | Separate endpoint for power data (uses Status URL if empty) | `http://iobroker:8087/get/shelly.0.Power` |
-| **Power JSON Path** | Path to power value in response | `val` or `power` or `data.power_w` |
-| **Power Multiplier** | Multiply raw value (default `1`) | `0.001` to convert mW → W |
-| **Energy URL** | Separate endpoint for energy data (uses Status URL if empty) | `http://iobroker:8087/get/shelly.0.Energy` |
-| **Energy JSON Path (today)** | Path to a counter that **resets at midnight** | `val` or `energy.today` |
-| **Energy Multiplier** | Multiply raw value (default `1`) | `0.001` to convert Wh → kWh |
-| **Energy JSON Path (lifetime)** | Path to a **cumulative** counter that never resets | `aenergy.total` |
-| **Lifetime Multiplier** | Multiply raw value (default `1`) | `0.001` to convert Wh → kWh |
+| **URL мощности** | Отдельная точка для мощности (если пусто, используется URL состояния) | `http://iobroker:8087/get/shelly.0.Power` |
+| **JSON-путь мощности** | Путь к значению мощности в ответе | `val`, `power` или `data.power_w` |
+| **Множитель мощности** | Множитель исходного значения (по умолчанию `1`) | `0.001` для мВт → Вт |
+| **URL энергии** | Отдельная точка для энергии (если пусто, используется URL состояния) | `http://iobroker:8087/get/shelly.0.Energy` |
+| **JSON-путь энергии (сегодня)** | Путь к счётчику, который **сбрасывается в полночь** | `val` или `energy.today` |
+| **Множитель энергии** | Множитель исходного значения (по умолчанию `1`) | `0.001` для Вт·ч → кВт·ч |
+| **JSON-путь энергии (за всё время)** | Путь к **накопительному** счётчику, который не сбрасывается | `aenergy.total` |
+| **Множитель общего счётчика** | Множитель исходного значения (по умолчанию `1`) | `0.001` для Вт·ч → кВт·ч |
 
-!!! tip "Plugs that count in watt-seconds"
-    Some plugs, such as the myStrom Switch, report energy in watt-seconds (Ws). Use a multiplier of `0.000000277778` (1 ÷ 3,600,000) to convert Ws → kWh. Any multiplier above zero is accepted.
+!!! tip "Розетки с измерением в ватт-секундах"
+    Некоторые розетки, например myStrom Switch, передают энергию в ватт-секундах (Ws). Для перевода в кВт·ч используйте множитель `0.000000277778` (1 ÷ 3 600 000). Принимается любой множитель больше нуля.
 
-!!! warning "Today and lifetime are different counters — don't mix them up"
-    This is the single most common REST misconfiguration.
+!!! warning "Суточный и общий счётчики различаются — не путайте их"
+    Это самая частая ошибка настройки REST.
 
-    Most plugs, **every Shelly among them**, expose only a *cumulative* counter:
-    a number that climbs forever and never resets. Put it in the **lifetime**
-    field, not the today field.
+    Большинство розеток, **включая все Shelly**, предоставляют только *накопительный* счётчик: он постоянно растёт и не сбрасывается. Укажите его в поле **за всё время**, а не в поле за сегодня.
 
-    Put a lifetime counter in the today field and it looks fine at first — the
-    number goes up. But it never drops back to zero at midnight, so "Today"
-    silently reports your all-time usage, while **Yesterday and Total stay at
-    zero forever** (and so does the energy figure on the Statistics page).
+    Если указать общий счётчик в суточном поле, сначала всё выглядит нормально: число растёт. Но в полночь оно не обнуляется, поэтому «Сегодня» незаметно показывает потребление за всё время, а **«Вчера» и «Всего» навсегда остаются нулевыми**, как и значение энергии на странице статистики.
 
-    Fill in the lifetime field and Bambuddy works out Today and Yesterday for
-    you, by comparing the counter now against its value at the last local
-    midnight. Those two figures need a day or two of hourly readings to appear —
-    Today shows up after the first midnight the install lives through, Yesterday
-    after the second. Total is correct immediately.
+    Если заполнить поле общего счётчика, Bambuddy вычисляет сегодняшнее и вчерашнее потребление, сравнивая текущее значение со значением в последнюю местную полночь. Для этих двух значений нужен один-два дня почасовых показаний: «Сегодня» появится после первой полуночи работы установки, «Вчера» — после второй. «Всего» правильно сразу.
 
-!!! tip "When to use separate URLs"
-    If your system returns all data in a single response (like Tasmota, openHAB, or any Shelly Gen2+), just set the **Status URL** and use JSON paths — no separate URLs needed. Use separate Power/Energy URLs when your system requires individual requests per data point.
+!!! tip "Когда использовать отдельные URL"
+    Если система возвращает все данные одним ответом (как Tasmota, openHAB или Shelly Gen2+), укажите только **URL состояния** и JSON-пути. Отдельные URL мощности и энергии нужны, когда система требует отдельный запрос для каждого показания.
 
-5. Click **Save**
+5. Нажмите **Сохранить**
 
-!!! example "openHAB Example"
-    - **Turn ON URL**: `http://openhab:8080/rest/items/MyPlug`
-    - **Turn OFF URL**: `http://openhab:8080/rest/items/MyPlug`
-    - **HTTP Method**: `POST`
-    - **ON Body**: `ON`
-    - **OFF Body**: `OFF`
+!!! example "Пример openHAB"
+    - **URL включения**: `http://openhab:8080/rest/items/MyPlug`
+    - **URL выключения**: `http://openhab:8080/rest/items/MyPlug`
+    - **Метод HTTP**: `POST`
+    - **Тело включения**: `ON`
+    - **Тело выключения**: `OFF`
 
-!!! example "ioBroker Example"
-    - **Turn ON URL**: `http://iobroker:8087/set/0_userdata.0.plug?value=true`
-    - **Turn OFF URL**: `http://iobroker:8087/set/0_userdata.0.plug?value=false`
-    - **HTTP Method**: `GET`
-    - (No body needed for GET requests)
+!!! example "Пример ioBroker"
+    - **URL включения**: `http://iobroker:8087/set/0_userdata.0.plug?value=true`
+    - **URL выключения**: `http://iobroker:8087/set/0_userdata.0.plug?value=false`
+    - **Метод HTTP**: `GET`
+    - Для запросов GET тело не требуется
 
-!!! example "ioBroker with Energy Monitoring (separate URLs)"
-    - **Turn ON URL**: `http://iobroker:8087/set/shelly.0.Relay0.Switch?value=true`
-    - **Turn OFF URL**: `http://iobroker:8087/set/shelly.0.Relay0.Switch?value=false`
-    - **HTTP Method**: `GET`
-    - **Status URL**: `http://iobroker:8087/get/shelly.0.Relay0.Switch`
-    - **State JSON Path**: `val`
-    - **ON Value**: `true`
-    - **Power URL**: `http://iobroker:8087/get/shelly.0.Relay0.Power`
-    - **Power JSON Path**: `val`
-    - **Energy URL**: `http://iobroker:8087/get/shelly.0.Relay0.Energy`
-    - **Energy JSON Path**: `val`
-    - **Energy Multiplier**: `0.001` (converts Wh to kWh)
+!!! example "ioBroker с мониторингом энергии (отдельные URL)"
+    - **URL включения**: `http://iobroker:8087/set/shelly.0.Relay0.Switch?value=true`
+    - **URL выключения**: `http://iobroker:8087/set/shelly.0.Relay0.Switch?value=false`
+    - **Метод HTTP**: `GET`
+    - **URL состояния**: `http://iobroker:8087/get/shelly.0.Relay0.Switch`
+    - **JSON-путь состояния**: `val`
+    - **Значение ON**: `true`
+    - **URL мощности**: `http://iobroker:8087/get/shelly.0.Relay0.Power`
+    - **JSON-путь мощности**: `val`
+    - **URL энергии**: `http://iobroker:8087/get/shelly.0.Relay0.Energy`
+    - **JSON-путь энергии**: `val`
+    - **Множитель энергии**: `0.001` (переводит Вт·ч в кВт·ч)
 
-!!! example "Shelly Plug S Gen2 / Gen3 (direct, no bridge)"
-    A Shelly answers everything from one RPC endpoint, and its only energy figure
-    is the lifetime counter `aenergy.total`, in watt-hours.
+!!! example "Shelly Plug S Gen2 / Gen3 (напрямую, без моста)"
+    Shelly возвращает все данные через одну точку RPC; единственное значение энергии — накопительный счётчик `aenergy.total` в ватт-часах.
 
-    - **Turn ON URL**: `http://<shelly-ip>/rpc/Switch.Set?id=0&on=true`
-    - **Turn OFF URL**: `http://<shelly-ip>/rpc/Switch.Set?id=0&on=false`
-    - **HTTP Method**: `GET`
-    - **Status URL**: `http://<shelly-ip>/rpc/Switch.GetStatus?id=0`
-    - **State JSON Path**: `output`
-    - **ON Value**: `true`
-    - **Power JSON Path**: `apower`
-    - **Power Multiplier**: `1` (Shelly reports watts already)
-    - **Energy JSON Path (today)**: *leave empty* — a Shelly has no daily counter
-    - **Energy JSON Path (lifetime)**: `aenergy.total`
-    - **Lifetime Multiplier**: `0.001` (converts Wh to kWh)
+    - **URL включения**: `http://<shelly-ip>/rpc/Switch.Set?id=0&on=true`
+    - **URL выключения**: `http://<shelly-ip>/rpc/Switch.Set?id=0&on=false`
+    - **Метод HTTP**: `GET`
+    - **URL состояния**: `http://<shelly-ip>/rpc/Switch.GetStatus?id=0`
+    - **JSON-путь состояния**: `output`
+    - **Значение ON**: `true`
+    - **JSON-путь мощности**: `apower`
+    - **Множитель мощности**: `1` (Shelly уже передаёт ватты)
+    - **JSON-путь энергии (сегодня)**: *оставьте пустым* — у Shelly нет суточного счётчика
+    - **JSON-путь энергии (за всё время)**: `aenergy.total`
+    - **Множитель общего счётчика**: `0.001` (переводит Вт·ч в кВт·ч)
 
-    Bambuddy derives Today and Yesterday from the lifetime counter. Give it a
-    couple of days to fill in.
+    Bambuddy вычисляет значения за сегодня и вчера по общему счётчику. Для их заполнения нужно несколько дней.
 
-!!! example "FHEM Example"
-    - **Turn ON URL**: `http://fhem:8083/fhem?cmd=set%20MyPlug%20on`
-    - **Turn OFF URL**: `http://fhem:8083/fhem?cmd=set%20MyPlug%20off`
-    - **HTTP Method**: `GET`
+!!! example "Пример FHEM"
+    - **URL включения**: `http://fhem:8083/fhem?cmd=set%20MyPlug%20on`
+    - **URL выключения**: `http://fhem:8083/fhem?cmd=set%20MyPlug%20off`
+    - **Метод HTTP**: `GET`
 
-!!! example "Node-RED Example"
-    - **Turn ON URL**: `http://nodered:1880/plug/on`
-    - **Turn OFF URL**: `http://nodered:1880/plug/off`
-    - **HTTP Method**: `POST`
-    - **Headers**: `{"Content-Type": "application/json"}`
-    - **ON Body**: `{"state": "on"}`
-    - **OFF Body**: `{"state": "off"}`
+!!! example "Пример Node-RED"
+    - **URL включения**: `http://nodered:1880/plug/on`
+    - **URL выключения**: `http://nodered:1880/plug/off`
+    - **Метод HTTP**: `POST`
+    - **Заголовки**: `{"Content-Type": "application/json"}`
+    - **Тело включения**: `{"state": "on"}`
+    - **Тело выключения**: `{"state": "off"}`
 
-!!! tip "JSON Path"
-    The JSON path uses dot notation to navigate nested objects. For a response like `{"data": {"power": {"status": "ON"}}}`, the path would be `data.power.status`.
+!!! tip "JSON-путь"
+    Для перехода по вложенным объектам JSON-путь использует точки. Для ответа `{"data": {"power": {"status": "ON"}}}` путь будет `data.power.status`.
 
-### Adding an MQTT Plug
+### Добавление розетки MQTT {#adding-an-mqtt-plug}
 
-MQTT plugs subscribe to topics and extract power/energy data from JSON payloads. Each data type (power, energy, state) can use a **different MQTT topic** with its own settings.
+Розетки MQTT подписываются на топики и извлекают данные мощности и энергии из JSON. Каждый тип данных (мощность, энергия, состояние) может использовать **отдельный топик MQTT** со своими настройками.
 
-#### Prerequisites
+#### Перед началом работы {#prerequisites}
 
-Configure your MQTT broker in **Settings** > **Network** (same broker used for MQTT Publishing).
+Настройте брокер MQTT в **Настройки** > **Сеть** (используется тот же брокер, что и для публикации MQTT).
 
-#### Adding the Plug
+#### Добавление розетки {#adding-the-plug_2}
 
-1. Go to **Settings** > **Smart Plugs**
-2. Click **Add Smart Plug**
-3. Select the **MQTT** tab
-4. Configure each data source:
+1. Откройте **Настройки** > **Умные розетки**
+2. Нажмите **Добавить умную розетку**
+3. Выберите вкладку **MQTT**
+4. Настройте каждый источник данных:
 
-**Power Monitoring:**
+**Мониторинг мощности:**
 
-| Field | Description | Example |
+| Поле | Описание | Пример |
 |-------|-------------|---------|
-| **Topic** | MQTT topic for power data | `zigbee2mqtt/shelly/power` |
-| **JSON Path** | Path to power value in JSON | `power_l1` or `data.power` |
-| **Multiplier** | Unit conversion | `1.0` or `0.001` for mW→W |
+| **Топик** | Топик MQTT для мощности | `zigbee2mqtt/shelly/power` |
+| **JSON-путь** | Путь к мощности в JSON | `power_l1` или `data.power` |
+| **Множитель** | Преобразование единиц | `1.0` или `0.001` для мВт → Вт |
 
-**Energy Monitoring (Optional):**
+**Мониторинг энергии (необязательно):**
 
-| Field | Description | Example |
+| Поле | Описание | Пример |
 |-------|-------------|---------|
-| **Topic** | MQTT topic for energy data | `zigbee2mqtt/shelly/energy` |
-| **JSON Path** | Path to energy value in JSON | `energy_l1` |
-| **Multiplier** | Unit conversion | `1.0` or `0.001` for Wh→kWh |
+| **Топик** | Топик MQTT для энергии | `zigbee2mqtt/shelly/energy` |
+| **JSON-путь** | Путь к энергии в JSON | `energy_l1` |
+| **Множитель** | Преобразование единиц | `1.0` или `0.001` для Вт·ч → кВт·ч |
 
-**State Monitoring (Optional):**
+**Мониторинг состояния (необязательно):**
 
-| Field | Description | Example |
+| Поле | Описание | Пример |
 |-------|-------------|---------|
-| **Topic** | MQTT topic for state data | `zigbee2mqtt/shelly/state` |
-| **JSON Path** | Path to on/off state in JSON | `state_l1` |
-| **ON Value** | What value means "ON" | `ON`, `true`, `1` (auto-detected if empty) |
+| **Топик** | Топик MQTT для состояния | `zigbee2mqtt/shelly/state` |
+| **JSON-путь** | Путь к состоянию включения в JSON | `state_l1` |
+| **Значение ON** | Значение, означающее включение | `ON`, `true`, `1` (определяется автоматически, если поле пусто) |
 
-5. Click **Save**
+5. Нажмите **Сохранить**
 
-!!! info "Separate Topics"
-    Each data type can subscribe to a **different MQTT topic**. This is useful when your device publishes power, energy, and state to separate topics.
+!!! info "Отдельные топики"
+    Каждый тип данных может использовать **свой топик MQTT**. Это полезно, когда устройство публикует мощность, энергию и состояние в разные топики.
 
-!!! example "Same Topic Example"
-    If your device publishes everything to one topic:
+!!! example "Пример одного топика"
+    Если устройство публикует всё в один топик:
 
-    - Power Topic: `zigbee2mqtt/shelly-working-room`
-    - Power Path: `power_l1`
-    - Energy Topic: `zigbee2mqtt/shelly-working-room`
-    - Energy Path: `energy_l1`
+    - Топик мощности: `zigbee2mqtt/shelly-working-room`
+    - Путь мощности: `power_l1`
+    - Топик энергии: `zigbee2mqtt/shelly-working-room`
+    - Путь энергии: `energy_l1`
 
-!!! example "Separate Topics Example"
-    If your device publishes to different topics:
+!!! example "Пример отдельных топиков"
+    Если устройство публикует данные в разные топики:
 
-    - Power Topic: `sensors/power/shelly`
-    - Power Path: `value`
-    - Energy Topic: `sensors/energy/shelly`
-    - Energy Path: `total_kwh`
+    - Топик мощности: `sensors/power/shelly`
+    - Путь мощности: `value`
+    - Топик энергии: `sensors/energy/shelly`
+    - Путь энергии: `total_kwh`
 
-!!! example "JSON Path Examples"
-    For JSON `{"power_l1": 150, "energy_l1": 2.5}`:
+!!! example "Примеры JSON-путей"
+    Для JSON `{"power_l1": 150, "energy_l1": 2.5}`:
 
-    - Power path: `power_l1`
-    - Energy path: `energy_l1`
+    - Путь мощности: `power_l1`
+    - Путь энергии: `energy_l1`
 
-    For nested JSON `{"data": {"power": 150}}`:
+    Для вложенного JSON `{"data": {"power": 150}}`:
 
-    - Power path: `data.power`
+    - Путь мощности: `data.power`
 
-!!! tip "Finding Your Topic"
-    Use an MQTT client like MQTT Explorer to browse your broker and find the topic your device publishes to.
+!!! tip "Поиск топика"
+    Используйте клиент MQTT, например MQTT Explorer, чтобы просмотреть брокер и найти топик публикации устройства.
 
-!!! tip "Custom ON Value"
-    Some devices report state as `true`/`false` instead of `ON`/`OFF`. Set the **ON Value** to match your device (e.g., `true`, `1`, `on`). Leave empty for auto-detection of common values.
+!!! tip "Своё значение ON"
+    Некоторые устройства передают `true`/`false` вместо `ON`/`OFF`. Укажите соответствующее устройству **значение ON** (например, `true`, `1`, `on`). Оставьте поле пустым для автоматического определения распространённых значений.
 
-#### Energy Sensor Configuration
+#### Настройка датчиков энергии {#energy-sensor-configuration}
 
-Many Home Assistant smart plugs expose energy data as **separate sensor entities** rather than as attributes on the switch entity. Common examples include:
+Многие умные розетки Home Assistant предоставляют данные энергии как **отдельные сущности датчиков**, а не атрибуты переключателя. Примеры:
 
-- **Tapo P110M** - `sensor.tapo_power`, `sensor.tapo_today_energy`, `sensor.tapo_total_energy`
-- **IKEA plugs via Zigbee2mqtt** - `sensor.ikea_plug_power`, `sensor.ikea_plug_energy`
-- **Shelly plugs** - `sensor.shelly_power`, `sensor.shelly_energy`
+- **Tapo P110M** — `sensor.tapo_power`, `sensor.tapo_today_energy`, `sensor.tapo_total_energy`
+- **Розетки IKEA через Zigbee2mqtt** — `sensor.ikea_plug_power`, `sensor.ikea_plug_energy`
+- **Розетки Shelly** — `sensor.shelly_power`, `sensor.shelly_energy`
 
-To enable energy tracking for these plugs:
+Чтобы включить учёт энергии:
 
-1. After selecting the switch entity, expand **Energy Monitoring (Optional)**
-2. Select the appropriate sensor for each field:
-   - **Power Sensor (W)** - Current power consumption
-   - **Energy Today (kWh)** - Today's energy usage
-   - **Total Energy (kWh)** - Lifetime energy usage (used for per-print tracking)
+1. После выбора сущности переключателя разверните **Мониторинг энергии (необязательно)**
+2. Выберите датчик для каждого поля:
+   - **Датчик мощности (Вт)** — текущее потребление
+   - **Энергия сегодня (кВт·ч)** — сегодняшнее потребление
+   - **Общая энергия (кВт·ч)** — потребление за всё время (для учёта каждой печати)
 
-!!! info "Sensor Selection"
-    The dropdowns show all HA sensors with power/energy units (W, kW, kWh, Wh). You can select sensors from any device - they don't need to match the switch entity.
+!!! info "Выбор датчика"
+    Списки показывают все датчики HA с единицами мощности и энергии (Вт, кВт, кВт·ч, Вт·ч). Можно выбрать датчики любого устройства; они не обязаны соответствовать сущности переключателя.
 
-!!! tip "Per-Print Energy Tracking"
-    The **Total Energy** sensor is required for per-print energy tracking. Bambuddy records the total at print start and end to calculate energy used.
+!!! tip "Учёт энергии каждой печати"
+    Для учёта энергии каждой печати необходим датчик **Общая энергия**. Bambuddy записывает общий счётчик в начале и конце печати, чтобы вычислить расход.
 
 ---
 
-## :material-gauge: Home Assistant Sensors
+## :material-gauge: Датчики Home Assistant {#home-assistant-sensors}
 
-Read-only Home Assistant sensors (door contacts, thermometers, and similar)
-can be bound to a printer to show their state on the printer's card, with
-alerts and notifications — see [Sensors → Printer Sensors](sensors.md#printer-sensors)
-for the full guide. Sensors use the same Home Assistant URL and token
-configured here for smart plugs.
+Датчики Home Assistant только для чтения (контакты двери, термометры и т. п.) можно привязать к принтеру для отображения состояния на его карточке, предупреждений и уведомлений. Полное руководство см. в разделе [Датчики → Датчики принтера](sensors.md#printer-sensors). Они используют тот же URL и токен Home Assistant, которые настроены здесь для розеток.
 
 ---
 
-## :material-view-grid: Switchbar Quick Access
+## :material-view-grid: Быстрый доступ на боковой панели {#switchbar-quick-access}
 
-Add frequently-used plugs to the sidebar for quick access:
+Добавьте часто используемые розетки на боковую панель:
 
-![Switchbar Quick Access](../assets/quick_power_plug_sidebar.png){ .screenshot style="max-width: 300px" }
+![Быстрый доступ к розеткам](../assets/quick_power_plug_sidebar.png){ .screenshot style="max-width: 300px" }
 
-1. In **Settings** > **Smart Plugs**, expand a plug's settings
-2. Enable **Show in Switchbar**
-3. A plug icon appears in the sidebar footer
-4. Hover to see status and control all switchbar plugs
+1. В **Настройки** > **Умные розетки** разверните настройки розетки
+2. Включите **Показывать на панели переключателей**
+3. Значок розетки появится внизу боковой панели
+4. Наведите курсор, чтобы увидеть состояние и управлять всеми розетками панели
 
-The switchbar shows:
+Панель показывает:
 
-- Current power state (ON/OFF)
-- Power consumption (if available)
-- Quick on/off toggle buttons
+- Текущее состояние питания (ON/OFF)
+- Потребление мощности, если доступно
+- Кнопки быстрого включения и выключения
 
-!!! tip "Multiple Plugs"
-    Add multiple plugs to the switchbar for one-click access to your entire printer farm.
-
----
-
-## :material-open-in-new: Admin Link (Tasmota Only)
-
-Each Tasmota smart plug card includes a direct link to the Tasmota web interface:
-
-1. Click the **Admin** link on the plug card
-2. Opens Tasmota interface in a new tab
-3. Auto-login if username/password configured in Bambuddy
-
-!!! tip "Quick Configuration"
-    Use the admin link for quick access to Tasmota settings like power reporting, schedules, and firmware updates.
-
-!!! note "Home Assistant, REST, and MQTT Plugs"
-    HA, REST/Webhook, and MQTT plugs don't have an admin link. Manage them through their respective interfaces.
+!!! tip "Несколько розеток"
+    Добавьте несколько розеток для доступа ко всей ферме одним нажатием.
 
 ---
 
-## :material-lan: Finding Plug IP Address (Tasmota Only)
+## :material-open-in-new: Ссылка администратора (только Tasmota) {#admin-link-tasmota-only}
 
-### From Tasmota Interface
+Каждая карточка розетки Tasmota содержит прямую ссылку на её веб-интерфейс:
 
-1. Access your plug's web interface
-2. Go to **Information**
-3. Note the **IP Address**
+1. Нажмите ссылку **Admin** на карточке
+2. Интерфейс Tasmota откроется в новой вкладке
+3. Если имя пользователя и пароль настроены в Bambuddy, вход выполнится автоматически
 
-### From Router
+!!! tip "Быстрая настройка"
+    Используйте ссылку администратора для доступа к настройкам Tasmota: отчётам о мощности, расписаниям и обновлениям прошивки.
 
-1. Log into your router
-2. Find connected devices
-3. Locate the plug by name or MAC
-
-### Static IP (Recommended)
-
-Assign a static IP to prevent changes:
-
-=== "In Tasmota"
-
-    1. Go to plug web interface
-    2. **Configuration** > **Configure WiFi**
-    3. Enter static IP settings
-
-=== "In Router"
-
-    Create a DHCP reservation for the plug's MAC address.
+!!! note "Розетки Home Assistant, REST и MQTT"
+    У розеток HA, REST/Webhook и MQTT нет ссылки администратора. Управляйте ими в соответствующих интерфейсах.
 
 ---
 
-## :material-power: Power Control
+## :material-lan: Как найти IP-адрес розетки (только Tasmota) {#finding-plug-ip-address-tasmota-only}
 
-### Manual Control
+### В интерфейсе Tasmota {#from-tasmota-interface}
 
-Toggle power from Bambuddy:
+1. Откройте веб-интерфейс розетки
+2. Перейдите в **Information**
+3. Запишите **IP Address**
 
-1. Go to printer card
-2. Click the power icon :material-power:
-3. Select **On** or **Off**
+### На маршрутизаторе {#from-router}
 
-Or from Settings > Smart Plugs:
+1. Войдите в интерфейс маршрутизатора
+2. Найдите подключённые устройства
+3. Найдите розетку по имени или MAC-адресу
 
-- Click the power toggle for any plug
+### Статический IP (рекомендуется) {#static-ip-recommended}
 
-### Power Status
+Назначьте статический IP, чтобы адрес не менялся:
 
-| Icon | Status |
+=== "В Tasmota"
+
+    1. Откройте веб-интерфейс розетки
+    2. Выберите **Configuration** > **Configure WiFi**
+    3. Введите настройки статического IP
+
+=== "На маршрутизаторе"
+
+    Создайте резервирование DHCP для MAC-адреса розетки.
+
+---
+
+## :material-power: Управление питанием {#power-control}
+
+### Ручное управление {#manual-control}
+
+Переключение питания из Bambuddy:
+
+1. Откройте карточку принтера
+2. Нажмите значок питания :material-power:
+3. Выберите **Вкл.** или **Выкл.**
+
+Также в **Настройки > Умные розетки**:
+
+- Нажмите переключатель питания нужной розетки
+
+### Состояние питания {#power-status}
+
+| Значок | Состояние |
 |:----:|--------|
-| :material-power:{ style="color: #4caf50" } | On |
-| :material-power:{ style="color: #9e9e9e" } | Off |
-| :material-power:{ style="color: #f44336" } | Unreachable |
+| :material-power:{ style="color: #4caf50" } | Включена |
+| :material-power:{ style="color: #9e9e9e" } | Выключена |
+| :material-power:{ style="color: #f44336" } | Недоступна |
 
 ---
 
-## :material-robot: Automation
+## :material-robot: Автоматизация {#automation}
 
-### Powers the printer
+### Питает принтер {#powers-the-printer}
 
-Deleting a printer deletes the plugs linked to it.
+При удалении принтера связанные с ним розетки удаляются.
 
-Linking a plug to a printer serves two different purposes, and Bambuddy needs to know which one you mean:
+Связь розетки с принтером может иметь два разных назначения, и Bambuddy должен знать, какое имеется в виду:
 
-- The plug **feeds the printer** — switching it off really does take the printer down.
-- The plug feeds an **accessory** that follows the print cycle — a filter fan, a chamber light, an enclosure heater. The printer stays on.
+- Розетка **питает принтер**: её выключение действительно отключает принтер.
+- Розетка питает **аксессуар**, работающий по циклу печати: вентилятор фильтра, подсветку камеры или нагреватель корпуса. Принтер остаётся включённым.
 
-The **Powers the printer** toggle appears on the plug (card and add/edit dialog) as soon as a printer is linked, and is **on** by default:
+Переключатель **Питает принтер** появляется на карточке и в окне добавления/редактирования после привязки принтера и по умолчанию **включён**:
 
-| Setting | Effect when the plug switches off |
+| Настройка | Что происходит при выключении розетки |
 |---------|-----------------------------------|
-| **On** (default) | The printer is immediately shown as offline, without waiting for its connection to time out |
-| **Off** | The printer's status is left alone — only the plug switches off |
+| **Включено** (по умолчанию) | Принтер сразу показывается отключённым, без ожидания тайм-аута соединения |
+| **Выключено** | Состояние принтера не меняется, выключается только розетка |
 
-Turn it **off** for accessory plugs. Otherwise their auto-off marks the printer offline, which shows the printer as **Unknown** and stops the queue from dispatching to it.
+Отключайте настройку для розеток аксессуаров. Иначе их автоматическое выключение пометит принтер как отключённый; его состояние станет **Неизвестно**, и очередь перестанет отправлять ему задания.
 
-The setting also decides which plug the queue power-cycles when it needs to bring an offline printer back: if several plugs are linked, the one marked **Powers the printer** is used for the boot wait, and the rest are switched on afterwards.
+Настройка также определяет, какую розетку очередь переключает для запуска отключённого принтера: если привязано несколько розеток, ожидание загрузки производится для отмеченной **Питает принтер**, а остальные включаются после этого.
 
-#### Which plug the printer card shows
+#### Какая розетка показывается на карточке принтера {#which-plug-the-printer-card-shows}
 
-A printer card has one **Power** row — a plug name, its current draw, and the auto-off and on/off buttons. When several plugs are linked to the same printer, Bambuddy picks the one for that row in this order:
+На карточке принтера одна строка **Питание**: название розетки, текущая мощность, кнопки автоматического выключения и переключения. При нескольких привязанных розетках Bambuddy выбирает её в следующем порядке:
 
-1. The plug can be switched — a Home Assistant script can only be run, and an MQTT plug is monitor-only, so neither answers the on/off button
-2. **Powers the printer** is on
-3. The plug is enabled
-4. **Show on Printer Card** is on
-5. The plug can report watts, so the row shows a figure rather than `--`
-6. Oldest plug, if several are still equal
+1. Розетка поддерживает переключение: скрипт Home Assistant можно только запускать, а MQTT-розетка доступна только для мониторинга, поэтому они не работают с кнопкой включения/выключения
+2. Включено **Питает принтер**
+3. Розетка включена в настройках
+4. Включено **Показывать на карточке принтера**
+5. Розетка может сообщать мощность в ваттах, чтобы строка показывала значение вместо `--`
+6. Самая старая розетка, если остальные условия равны
 
-Every one of these is a preference, and none of them excludes a plug: a printer whose only plug is an accessory, is disabled, is hidden, or is monitor-only still gets its Power row, because that row is where the on/off button lives. **Powers the printer** ranks above **Show on Printer Card** deliberately — hiding the plug that really feeds the printer should not hand the power buttons to a filter fan.
+Каждое условие лишь определяет предпочтение и не исключает розетку. Даже если единственная розетка принтера — аксессуар, отключена, скрыта или доступна только для мониторинга, строка питания остаётся, поскольку там расположена кнопка переключения. **Питает принтер** намеренно имеет приоритет над **Показывать на карточке принтера**: скрытие питающей принтер розетки не должно передавать кнопки питания вентилятору фильтра.
 
-Whether a plug can report watts is read from its configuration — a Home Assistant plug with a **Power Sensor** entity, an MQTT plug with a power topic, a REST plug with a power path, or any Tasmota device. It is approximate on purpose, since asking every plug for a live reading would slow down every card: a Home Assistant plug with no power sensor may still report a figure from the switch entity's own attributes, and a Tasmota device without energy metering is counted as though it had it. It only ever breaks a tie between plugs that are equal on everything above.
+Возможность сообщать ватты определяется конфигурацией: датчик **Мощность** у розетки Home Assistant, топик мощности у MQTT, путь мощности у REST или любое устройство Tasmota. Это приблизительная оценка: получение текущих показаний от каждой розетки замедлило бы карточки. Розетка HA без отдельного датчика мощности может сообщать значение через атрибуты переключателя, а Tasmota без измерения энергии считается поддерживающей его. Критерий используется только при равенстве предыдущих.
 
-The plug in the Power row is not repeated in the Home Assistant button row below it. A printer whose only entities are scripts is the exception: it falls back to showing one of them in the Power row, and that script keeps its one-click button in the row underneath.
+Розетка из строки питания не повторяется в строке кнопок Home Assistant ниже. Исключение — принтер, у которого есть только скрипты: один попадает в строку питания и сохраняет кнопку быстрого запуска в строке ниже.
 
-!!! note "Existing plugs"
-    Plugs configured before this setting existed are treated as **Powers the printer**, which is the behaviour they already had. Only change it where the plug really is an accessory.
+!!! note "Существующие розетки"
+    Розетки, настроенные до появления этой настройки, считаются **Питающими принтер** — как и раньше. Меняйте настройку только для настоящих аксессуаров.
 
-### Auto Power On
+### Автоматическое включение питания {#auto-power-on}
 
-Automatically turn on printer before prints:
+Чтобы принтер автоматически включался перед печатью:
 
-1. Enable **Auto Power On** for the plug
-2. When a queued print is ready:
-   - Bambuddy turns on the plug
-   - Waits for printer to boot
-   - Starts the print
+1. Включите **Автоматическое включение** для розетки
+2. Когда задание из очереди готово:
+   - Bambuddy включает розетку
+   - Ждёт загрузки принтера
+   - Запускает печать
 
-This works for a job pinned to one printer and for a job queued against a
-printer class (**Any X1C**, a Slicer Pipeline whose target type is **Printer
-class**). For a class job, Bambuddy first looks for a printer of that class
-that is already on and free; only if there is none does it switch one on.
+Это работает для задания, закреплённого за конкретным принтером, и для задания класса принтеров (**Любой X1C**, конвейер слайсера с типом назначения **Класс принтера**). Для класса Bambuddy сначала ищет включённый и свободный принтер нужного класса; только если такого нет, включает другой.
 
-Which printer it picks:
+Выбор принтера:
 
-- Printers that are **waiting for a plate-clear acknowledgment** are passed
-  over. Switching one on would only leave it idling behind the plate-clear
-  gate. If every candidate is waiting on that, nothing is switched on and the
-  job's waiting reason says the printers are offline. The acknowledgment does
-  not need the printer switched on — clear the plate from the printer card
-  while it is still powered down and the next queue check can wake it.
-- Printers whose file is not compatible with the class are never switched on.
-- Printers whose **loaded filament cannot print the job** are passed over. A
-  printer keeps its last reported AMS and external-spool trays after the power
-  goes, so Bambuddy can tell that the machine at the other end of the farm is
-  the one holding the colour the job asks for, and switches on only that one.
-  A printer it has never heard from -- one that has been off since Bambuddy
-  last started -- is still switched on, because no reading is not the same as
-  no filament.
-- **One printer per queue check.** With several class jobs queued and several
-  printers off, they come up one per check rather than all at once.
+- Принтеры, **ожидающие подтверждения очистки стола**, пропускаются: после включения они всё равно останутся в ожидании очистки. Если все кандидаты ждут подтверждения, никто не включается, а причина ожидания задания сообщает, что принтеры отключены. Подтвердить очистку можно на карточке даже при выключенном питании; следующая проверка очереди сможет включить его.
+- Принтеры, несовместимые с файлом задания класса, никогда не включаются.
+- Принтеры, чей **загруженный филамент не подходит для задания**, пропускаются. После выключения сохраняются последние данные AMS и внешних катушек, поэтому Bambuddy определяет принтер с нужным цветом и включает только его. Принтер, от которого ещё не получено данных с последнего запуска Bambuddy, всё же включается: отсутствие показаний не означает отсутствие филамента.
+- **Один принтер за проверку очереди.** Если заданий класса и выключенных принтеров несколько, принтеры включаются по одному за проверку, а не все сразу.
 
-A printer with no enabled **Auto Power On** plug is never switched on. When
-that is why a job is waiting, its waiting reason says so explicitly --
-`Offline, no Auto On smart plug: X1C-2` -- rather than the plain `Offline:`
-used for printers Bambuddy can bring back itself.
+Принтер без розетки с включённым **Автоматическим включением** никогда не включается. Если задание ждёт по этой причине, она указывается явно: `Offline, no Auto On smart plug: X1C-2`, а не просто `Offline:`, используемое для принтеров, которые Bambuddy может включить сам.
 
-### Auto Power Off
+### Автоматическое выключение питания {#auto-power-off}
 
-Automatically turn off after prints:
+Чтобы автоматически выключать питание после печати:
 
-1. Enable **Auto Power Off** for the plug
-2. Set **Cooldown Temperature** (e.g., 40°C)
-3. Set **Cooldown Time** (e.g., 5 minutes)
-4. After print completes:
-   - Wait for bed to cool below threshold
-   - Wait additional cooldown time
-   - Turn off the plug
+1. Включите **Автоматическое выключение** для розетки
+2. Задайте **Температуру охлаждения** (например, 40°C)
+3. Задайте **Время охлаждения** (например, 5 минут)
+4. После завершения печати система:
+   - Ждёт охлаждения стола ниже порога
+   - Ждёт дополнительное время охлаждения
+   - Выключает розетку
 
-By default, auto-off is **one-shot** — it disables itself after each print and must be re-enabled manually. To keep auto-off active between prints, enable the **Keep Enabled** toggle under the Auto Off settings. This is useful for accessories like chamber filters (e.g., BentoBox on a Home Assistant switch) that should always power off when a print completes.
+По умолчанию автоматическое выключение **одноразовое**: после каждой печати оно отключается и требует повторного включения вручную. Чтобы оно оставалось активным, включите **Оставлять включённым** в настройках автоотключения. Это полезно для аксессуаров, например фильтров камеры (BentoBox на переключателе Home Assistant), которые должны выключаться после каждой печати.
 
-### Auto Off After AMS Drying
+### Автовыключение после сушки AMS {#auto-off-after-ams-drying}
 
-Cut power automatically after an AMS filament drying cycle (immediate, scheduled, or automatic) completes. Independent of the print-finish Auto Off above — drying-finish has its own toggle and its own delay because the AMS chamber stays warm longer than the hotend after a dry cycle.
+Автоматически отключает питание после завершения цикла сушки филамента AMS (немедленного, запланированного или автоматического). Эта функция независима от выключения после печати: у неё отдельный переключатель и задержка, потому что камера AMS после сушки дольше остаётся тёплой, чем хотэнд.
 
-1. On the smart plug card, enable **Auto Off After Drying**
-2. Set **Drying delay (minutes)** — the default is **10 minutes** to give the AMS time to cool off before power is cut
-3. After any AMS attached to the linked printer finishes drying:
-    - Wait the configured number of minutes
-    - Turn off the plug
+1. На карточке розетки включите **Автовыключение после сушки**
+2. Укажите **Задержку после сушки (минуты)** — по умолчанию **10 минут**, чтобы AMS успел остыть
+3. После завершения сушки любым AMS, подключённым к связанному принтеру:
+    - Выждите заданное число минут
+    - Выключите розетку
 
-Bambuddy detects drying completion at the MQTT layer by watching for the AMS `dry_time` field falling from a positive value to `0`, so the toggle fires for:
+Bambuddy обнаруживает завершение сушки на уровне MQTT по переходу поля AMS `dry_time` с положительного значения на `0`, поэтому функция срабатывает для:
 
-- :material-check: Queue-triggered auto-drying
-- :material-check: Ambient (humidity-threshold) auto-drying
-- :material-check: Manually-started drying from the printer card
+- :material-check: Автоматической сушки, запущенной очередью
+- :material-check: Автоматической сушки по влажности окружающей среды
+- :material-check: Сушки, запущенной вручную с карточки принтера
 
-!!! note "Per-AMS routing"
-    The trigger is **plug-vs-printer-level**, not per-AMS. If your printer has multiple AMS units on one plug, the auto-off fires whenever **any** of them finishes a cycle. Per-AMS targeting (separate plug for AMS only, or different plugs for AMS 0 vs AMS 1 on dual-AMS printers) is not currently supported.
+!!! note "Работа с несколькими AMS"
+    Триггер работает на уровне **розетки и принтера**, а не отдельного AMS. Если у принтера несколько AMS на одной розетке, выключение срабатывает после завершения цикла **любым** из них. Отдельный выбор AMS (розетка только для AMS или разные розетки для AMS 0 и AMS 1) пока не поддерживается.
 
-### Safety Checks
+### Проверки безопасности {#safety-checks}
 
-Auto power-off includes safety checks:
+Автоматическое выключение:
 
-- :material-check: Only triggers after successful prints
-- :material-check: Waits for cooldown
-- :material-check: Checks for queued prints
-- :material-check: Verifies printer is idle
+- :material-check: Срабатывает только после успешной печати
+- :material-check: Ожидает охлаждения
+- :material-check: Проверяет наличие заданий в очереди
+- :material-check: Убеждается, что принтер не занят
 
 ---
 
-## :material-lightning-bolt: Energy Monitoring
+## :material-lightning-bolt: Мониторинг энергии {#energy-monitoring}
 
-Track power consumption:
+Отслеживайте потребление:
 
-### Real-time Data
+### Данные в реальном времени {#real-time-data}
 
-| Metric | Description |
+| Показатель | Описание |
 |--------|-------------|
-| **Power (W)** | Current draw |
-| **Voltage (V)** | Line voltage |
-| **Current (A)** | Amperage |
-| **Energy (kWh)** | Cumulative |
+| **Мощность (Вт)** | Текущее потребление |
+| **Напряжение (В)** | Напряжение сети |
+| **Ток (А)** | Сила тока |
+| **Энергия (кВт·ч)** | Накопительное значение |
 
-### Per-Print Tracking
+### Учёт каждой печати {#per-print-tracking}
 
-Enable energy tracking to record:
+Включите учёт энергии, чтобы записывать:
 
-- Energy per print
-- Electricity costs
-- Efficiency comparisons
+- Расход энергии на печать
+- Стоимость электричества
+- Сравнение эффективности
 
-[:material-arrow-right: Energy Tracking](energy.md)
+[:material-arrow-right: Учёт энергии](energy.md)
 
-### Power Alerts
+### Предупреждения о мощности {#power-alerts}
 
-Get a notification when a plug's power draw leaves a range, for example a printer drawing far more than usual, or one that stopped drawing power in the middle of a job. Set it in the plug's **Edit** dialog under **Power Alerts**:
+Получайте уведомления, когда потребление розетки выходит из диапазона: например, принтер потребляет намного больше обычного или перестал потреблять энергию посреди задания. Задайте пороги в разделе **Предупреждения о мощности** окна **Редактировать** розетки:
 
-| Field | Description |
+| Поле | Описание |
 |-------|-------------|
-| **Alert if above (W)** | Alert when the power rises above this value |
-| **Alert if below (W)** | Alert when the power falls below this value |
+| **Предупреждать выше (Вт)** | Предупреждать при превышении значения |
+| **Предупреждать ниже (Вт)** | Предупреждать при падении ниже значения |
 
-Leave a field empty to switch that direction off.
+Оставьте поле пустым, чтобы отключить соответствующее направление.
 
-- **Checked in the background,** about once a minute, whether or not Bambuddy is open in a browser.
-- **One alert per crossing:** you're told when the power leaves the range, and again only after it has been back inside it. A printer idling below the low value is reported once, not every few minutes. Two alerts from the same plug are at least 5 minutes apart.
-- **The low value only counts while the plug reports itself switched on,** so turning a printer off (by hand or with [Auto Power Off](#auto-power-off)) doesn't report "power low". A plug that can't report whether it is on (a REST plug without a status URL, an MQTT plug with only a power topic) gets no low alerts; the high value works for every plug.
-- **An unreachable plug** is tried again after 10 minutes rather than every minute. MQTT plugs are checked every minute regardless, since their values arrive on their own.
-- **Sent as the Printer Error event**, titled "Printer Error: Power High" or "Power Low", to every notification provider with **Printer Error** turned on. If the plug is linked to a printer, a provider limited to other printers doesn't get it.
-- After a restart, a plug that is still outside its range is reported once more.
-
----
-
-## :material-chart-line: Power Dashboard
-
-View power statistics:
-
-- Current power draw
-- Energy over time
-- Cost calculations
-- Peak usage
+- **Проверка выполняется в фоне** примерно раз в минуту, независимо от того, открыт ли Bambuddy в браузере.
+- **Одно предупреждение на пересечение порога:** уведомление отправляется при выходе из диапазона и повторно только после возвращения в него. Простой принтер ниже нижнего порога сообщается один раз, а не каждые несколько минут. Между двумя уведомлениями одной розетки проходит не менее 5 минут.
+- **Нижний порог учитывается только при включённой розетке**, поэтому выключение вручную или через [автоотключение](#auto-power-off) не вызывает предупреждение о низкой мощности. Если розетка не может сообщить своё состояние (REST без URL состояния, MQTT только с топиком мощности), предупреждения о низкой мощности не отправляются; верхний порог работает для всех.
+- **Недоступная розетка** проверяется повторно через 10 минут, а не каждую минуту. Розетки MQTT проверяются каждую минуту независимо от доступности, так как значения поступают сами.
+- Уведомления отправляются как событие **Ошибка принтера**, с заголовком высокой или низкой мощности, всем поставщикам с включённой **Ошибкой принтера**. Если розетка привязана к принтеру, поставщик с ограничением на другие принтеры уведомление не получает.
+- После перезапуска розетка, всё ещё находящаяся вне диапазона, сообщается ещё раз.
 
 ---
 
-## :material-console: Tasmota Commands (Technical Reference)
+## :material-chart-line: Панель мощности {#power-dashboard}
 
-Bambuddy uses these Tasmota HTTP commands for direct Tasmota integration:
+Просматривайте статистику:
 
-| Action | Command |
+- Текущая мощность
+- Энергия за период
+- Расчёт стоимости
+- Пиковое потребление
+
+---
+
+## :material-console: Команды Tasmota (технический справочник) {#tasmota-commands-technical-reference}
+
+Для прямой интеграции Bambuddy использует следующие HTTP-команды Tasmota:
+
+| Действие | Команда |
 |--------|---------|
-| Turn On | `http://{ip}/cm?cmnd=Power%20On` |
-| Turn Off | `http://{ip}/cm?cmnd=Power%20Off` |
-| Status | `http://{ip}/cm?cmnd=Status%200` |
-| Energy | `http://{ip}/cm?cmnd=Status%208` |
+| Включить | `http://{ip}/cm?cmnd=Power%20On` |
+| Выключить | `http://{ip}/cm?cmnd=Power%20Off` |
+| Состояние | `http://{ip}/cm?cmnd=Status%200` |
+| Энергия | `http://{ip}/cm?cmnd=Status%208` |
 
-### Testing Manually
+### Ручная проверка {#testing-manually}
 
 ```bash
 # Turn on
@@ -806,120 +757,120 @@ curl "http://192.168.1.100/cm?cmnd=Status%200"
 
 ---
 
-## :material-shield-alert: Safety Considerations
+## :material-shield-alert: Безопасность {#safety-considerations}
 
-### Don't Cut Power Mid-Print
+### Не отключайте питание во время печати {#dont-cut-power-mid-print}
 
-Auto power-off is safe because:
+Автовыключение безопасно, поскольку:
 
-- Only triggers after print completion
-- Waits for cooldown
-- Checks printer state
+- Срабатывает только после завершения печати
+- Ожидает охлаждения
+- Проверяет состояние принтера
 
-**Never** manually power off during printing!
+**Никогда** не отключайте питание вручную во время печати!
 
-### Surge Protection
+### Защита от перенапряжения {#surge-protection}
 
-Consider adding surge protection:
+Рассмотрите установку защиты от перенапряжения:
 
-- Protects printer electronics
-- Protects smart plug
-- Especially important for unstable power
+- Она защищает электронику принтера
+- Защищает умную розетку
+- Особенно важна при нестабильном питании
 
-### Fire Safety
+### Пожарная безопасность {#fire-safety}
 
-Smart plugs have current limits:
+У умных розеток есть ограничения по току:
 
-- Most handle 10-15A
-- 3D printers typically draw 3-8A
-- Check your plug's rating
+- Большинство рассчитано на 10–15 А
+- 3D-принтеры обычно потребляют 3–8 А
+- Проверьте номинал своей розетки
 
 ---
 
-## :material-help-circle: Troubleshooting
+## :material-help-circle: Устранение неполадок {#troubleshooting}
 
-### Tasmota: Plug Not Responding
+### Tasmota: розетка не отвечает {#tasmota-plug-not-responding}
 
-1. Check plug is powered
-2. Verify IP address is correct
-3. Ensure plug is on same network
-4. Check if Tasmota web interface loads
-5. Verify no firewall blocking
+1. Убедитесь, что розетка получает питание
+2. Проверьте правильность IP-адреса
+3. Убедитесь, что розетка в той же сети
+4. Проверьте загрузку веб-интерфейса Tasmota
+5. Убедитесь, что межсетевой экран не блокирует подключение
 
-### Home Assistant: Plug Shows Offline
+### Home Assistant: розетка отображается отключённой {#home-assistant-plug-shows-offline}
 
-1. Check HA connection in Settings > Network
-2. Click **Test Connection** to verify
-3. Ensure the access token hasn't expired
-4. Verify HA is reachable from Bambuddy's network
-5. Check if entity exists in HA
+1. Проверьте подключение HA в **Настройки > Сеть**
+2. Нажмите **Проверить подключение**
+3. Убедитесь, что срок токена не истёк
+4. Проверьте доступность HA из сети Bambuddy
+5. Убедитесь, что сущность существует в HA
 
-### Home Assistant: Entities Not Loading
+### Home Assistant: сущности не загружаются {#home-assistant-entities-not-loading}
 
-1. Verify HA URL is correct (include port if needed)
-2. Check access token has correct permissions
-3. Try regenerating the access token
-4. Ensure HA integration is enabled
+1. Проверьте URL HA, включая порт при необходимости
+2. Проверьте права токена доступа
+3. Попробуйте создать токен заново
+4. Убедитесь, что интеграция HA включена
 
-### REST/Webhook: Plug Not Responding
+### REST/Webhook: розетка не отвечает {#restwebhook-plug-not-responding}
 
-1. Test the URL directly with `curl`:
+1. Проверьте URL непосредственно через `curl`:
    ```bash
    curl -X POST "http://your-device:8080/api/endpoint" -d "ON"
    ```
-2. Verify the URL is reachable from Bambuddy's network
-3. Check that headers are valid JSON (if configured)
-4. Ensure the HTTP method matches what the target API expects
-5. Check the target service's logs for errors
+2. Убедитесь, что URL доступен из сети Bambuddy
+3. Проверьте корректность JSON заголовков, если они заданы
+4. Убедитесь, что метод HTTP соответствует ожидаемому целевым API
+5. Проверьте журнал целевого сервиса на ошибки
 
-### REST/Webhook: Status Not Updating
+### REST/Webhook: состояние не обновляется {#restwebhook-status-not-updating}
 
-1. Verify the Status URL returns valid JSON
-2. Test the JSON path against the actual response:
+1. Убедитесь, что URL состояния возвращает корректный JSON
+2. Проверьте JSON-путь по фактическому ответу:
    ```bash
    curl "http://your-device:8080/api/status"
    ```
-3. Ensure the ON Value matches exactly what the API returns (case-sensitive)
-4. Check that the State JSON Path correctly navigates to the state field
+3. Убедитесь, что значение ON точно совпадает с ответом API с учётом регистра
+4. Проверьте, что JSON-путь состояния ведёт к нужному полю
 
-### Auto Power-Off Not Working
+### Автовыключение не работает {#auto-power-off-not-working}
 
-1. Check feature is enabled
-2. Verify cooldown settings
-3. Ensure print completed successfully
-4. Check for queued prints (won't power off if more queued)
+1. Проверьте, включена ли функция
+2. Проверьте настройки охлаждения
+3. Убедитесь, что печать успешно завершилась
+4. Проверьте очередь: при наличии других заданий питание не выключается
 
-### Power Data Incorrect
+### Неверные данные мощности {#power-data-incorrect}
 
-1. Not all plugs have power monitoring
-2. For Tasmota: Calibrate in **Configuration** > **Configure Other**
-3. For HA: Check if entity has power attributes or configure separate energy sensors
-4. Check plug specifications
+1. Мониторинг мощности есть не у всех розеток
+2. Для Tasmota выполните калибровку в **Configuration** > **Configure Other**
+3. Для HA проверьте атрибуты мощности сущности или настройте отдельные датчики энергии
+4. Проверьте характеристики розетки
 
-### Home Assistant: No Energy Data
+### Home Assistant: нет данных энергии {#home-assistant-no-energy-data}
 
-Many HA plugs expose energy data as separate sensor entities, not as switch attributes:
+Многие розетки HA предоставляют энергию отдельными сущностями датчиков, а не атрибутами переключателя:
 
-1. When adding/editing the plug, expand **Energy Monitoring (Optional)**
-2. Select the appropriate power sensor (W)
-3. Select energy today and total sensors (kWh) if available
-4. The sensors should appear in the dropdown if they have power/energy units
+1. При добавлении или редактировании розетки разверните **Мониторинг энергии (необязательно)**
+2. Выберите датчик мощности (Вт)
+3. Выберите датчики энергии за сегодня и за всё время (кВт·ч), если доступны
+4. Датчики должны появиться в списке, если используют единицы мощности или энергии
 
 ---
 
-## :material-lightbulb: Tips
+## :material-lightbulb: Советы {#tips}
 
-!!! tip "Start Simple"
-    Start with manual power control before enabling automation.
+!!! tip "Начните с простого"
+    Перед включением автоматизации попробуйте ручное управление питанием.
 
-!!! tip "Test Cooldown"
-    Monitor a few prints to find the right cooldown temperature for your printer.
+!!! tip "Проверьте охлаждение"
+    Проследите за несколькими печатями, чтобы подобрать температуру охлаждения для принтера.
 
-!!! tip "Label Plugs"
-    If you have multiple plugs, label them physically to match Bambuddy names.
+!!! tip "Подпишите розетки"
+    Если розеток несколько, подпишите их в соответствии с названиями в Bambuddy.
 
-!!! tip "Dedicated Circuit"
-    If possible, put printers on a dedicated circuit to avoid tripping breakers.
+!!! tip "Отдельная цепь"
+    По возможности подключайте принтеры к отдельной электрической цепи, чтобы избежать срабатывания автоматов.
 
-!!! tip "Energy Baseline"
-    Track energy for a week to establish your typical consumption baseline.
+!!! tip "Базовое потребление"
+    Отслеживайте энергию неделю, чтобы определить обычный уровень потребления.

@@ -1,40 +1,40 @@
 ---
-title: API Reference
-description: Complete REST API documentation
+title: Справочник API
+description: Полная документация REST API
 ---
 
-# API Reference
+# Справочник API {#api-reference}
 
-Bambuddy provides a REST API for integration with external tools and automation.
+Bambuddy предоставляет REST API для интеграции с внешними инструментами и автоматизации.
 
 ---
 
-## :material-key: Authentication
+## :material-key: Аутентификация {#authentication}
 
-### API Key Authentication
+### Аутентификация по ключу API {#api-key-authentication}
 
-Include your API key in the `X-API-Key` header:
+Передайте ключ API в заголовке `X-API-Key`:
 
 ```bash
 curl -H "X-API-Key: your-api-key" \
   http://localhost:8000/api/v1/printers
 ```
 
-### Getting an API Key
+### Получение ключа API {#getting-an-api-key}
 
-1. Go to **Settings** > **API Keys**
-2. Click **Create API Key**
-3. Select permissions
-4. Copy the key (shown only once)
+1. Перейдите в **Настройки** > **Ключи API**
+2. Нажмите **Создать ключ API**
+3. Выберите разрешения
+4. Скопируйте ключ (он показывается только один раз)
 
-See [API Keys & Webhooks](../features/api-keys.md) for details.
+Подробнее см. [Ключи API и вебхуки](../features/api-keys.md).
 
-### Media Token
+### Токен медиаресурсов {#media-token}
 
-Thumbnails, plate previews, timelapses, print photos, QR codes, cover images
-and link icons are loaded by the browser as `<img>` and `<video>` sources,
-which cannot carry an `Authorization` header. Those routes therefore also
-accept a token in the query string:
+Миниатюры, предпросмотр пластин, таймлапсы, фотографии печати, QR-коды, обложки
+и значки ссылок браузер загружает как источники `<img>` и `<video>`, которые
+не могут передавать заголовок `Authorization`. Поэтому эти конечные точки также
+принимают токен в строке запроса:
 
 ```bash
 curl -X POST -H "Authorization: Bearer <jwt>" \
@@ -44,77 +44,76 @@ curl -X POST -H "Authorization: Bearer <jwt>" \
 curl "http://localhost:8000/api/v1/archives/42/thumbnail?token=..."
 ```
 
-Any signed-in user can mint one; it is valid for 60 minutes and is not
-consumed, so one token serves every image on a page. It is **authentication,
-not authorisation** — each route still applies the permission and ownership
-rules of the resource it serves, so a media token reaches exactly the images
-its holder could already see listed.
+Любой вошедший пользователь может создать токен; он действует 60 минут и не
+расходуется, поэтому одного токена достаточно для всех изображений на странице.
+Он обеспечивает **аутентификацию, а не авторизацию**: каждая конечная точка
+по-прежнему проверяет права и принадлежность ресурса. Токен даёт доступ только
+к тем изображениям, которые его владелец уже мог видеть в списке.
 
-!!! note "Scripts and integrations do not need one"
-    The media routes accept `X-API-Key` and `Authorization: Bearer` directly.
-    The query token exists only for browser element loads.
+!!! note "Скриптам и интеграциям токен не нужен"
+    Конечные точки медиаресурсов принимают `X-API-Key` и `Authorization: Bearer` напрямую.
+    Токен в запросе нужен только при загрузке элементов браузером.
 
-!!! warning "Not the camera stream token"
-    A `camera_stream`, `camwall` or `overlay` token is refused on these routes,
-    and a media token is refused on the camera routes. Before Bambuddy 1.2.6
-    the media routes took the camera stream token, which made `camera:view` a
-    prerequisite for seeing any image in the app; see
-    [Long-Lived Camera Tokens](../features/camera.md#long-lived-camera-tokens)
-    for what the camera scopes do reach.
+!!! warning "Это не токен трансляции камеры"
+    Токены `camera_stream`, `camwall` и `overlay` отклоняются этими конечными точками,
+    а токен медиаресурсов не принимается конечными точками камер. До Bambuddy 1.2.6
+    медиаресурсы принимали токен трансляции камеры, поэтому для просмотра любых
+    изображений требовалось разрешение `camera:view`. Информацию об областях
+    доступа камер см. в разделе [Долгосрочные токены камеры](../features/camera.md#long-lived-camera-tokens).
 
 ---
 
-## :material-web: Interactive API Browser
+## :material-web: Интерактивный обозреватель API {#interactive-api-browser}
 
-Bambuddy includes a built-in API browser for exploring and testing endpoints without external tools.
+Встроенный обозреватель API Bambuddy позволяет изучать и проверять конечные точки без внешних инструментов.
 
-### Accessing the API Browser
+### Доступ к обозревателю API {#accessing-the-api-browser}
 
-1. Go to **Settings** > **API Keys**
-2. The API Browser appears in the right column
+1. Перейдите в **Настройки** > **Ключи API**
+2. Обозреватель API появится в правом столбце
 
-### Features
+### Возможности {#features}
 
-| Feature | Description |
+| Возможность | Описание |
 |---------|-------------|
-| **OpenAPI Integration** | Automatically loads all endpoints from the schema |
-| **Grouped by Category** | Endpoints organized by printers, archives, settings, etc. |
-| **Parameter Inputs** | Fill in path, query, and body parameters |
-| **Auto-examples** | Request body pre-filled with schema examples |
-| **Live Execution** | Execute requests and see real responses |
-| **Response Display** | Formatted JSON with status code and timing |
-| **Search** | Filter endpoints across all categories |
+| **Интеграция OpenAPI** | Автоматически загружает из схемы все конечные точки |
+| **Группировка по категориям** | Конечные точки распределены по принтерам, архивам, настройкам и т. д. |
+| **Ввод параметров** | Заполнение параметров пути, запроса и тела |
+| **Автоматические примеры** | Тело запроса заранее заполнено примерами из схемы |
+| **Выполнение запросов** | Выполнение запросов и просмотр реальных ответов |
+| **Отображение ответа** | Форматированный JSON с кодом состояния и временем выполнения |
+| **Поиск** | Фильтрация конечных точек во всех категориях |
 
-### Testing with API Keys
+### Проверка с ключами API {#testing-with-api-keys}
 
-1. Paste your API key in the "API Key for Testing" input
-2. The key is sent as `X-API-Key` header with each request
-3. Test authenticated endpoints without external tools
+1. Вставьте ключ API в поле ключа для тестирования
+2. Ключ отправляется в заголовке `X-API-Key` с каждым запросом
+3. Проверяйте защищённые конечные точки без внешних инструментов
 
-!!! tip "Quick Setup"
-    After creating a new API key, click "Use in API Browser" to automatically add it for testing.
+!!! tip "Быстрая настройка"
+    После создания ключа API нажмите «Использовать в обозревателе API», чтобы автоматически добавить его для тестирования.
 
 ---
 
-## :material-link: Base URL
+## :material-link: Базовый URL {#base-url}
 
 ```
 http://your-server:8000/api/v1
 ```
 
-All endpoints are relative to this base URL.
+Все конечные точки указаны относительно этого базового URL.
 
 ---
 
-## :material-printer-3d: Printers
+## :material-printer-3d: Принтеры {#printers}
 
-### List Printers
+### Список принтеров {#list-printers}
 
 ```http
 GET /printers
 ```
 
-**Response:**
+**Ответ:**
 ```json
 [
   {
@@ -129,13 +128,13 @@ GET /printers
 ]
 ```
 
-### Get Printer
+### Получение принтера {#get-printer}
 
 ```http
 GET /printers/{id}
 ```
 
-**Response:**
+**Ответ:**
 ```json
 {
   "id": 1,
@@ -148,15 +147,15 @@ GET /printers/{id}
 }
 ```
 
-Live state (print progress, temperatures, AMS) comes from `GET /printers/{id}/status`.
+Текущее состояние (прогресс печати, температуры и AMS) предоставляется через `GET /printers/{id}/status`.
 
-### Get Printer Status
+### Получение состояния принтера {#get-printer-status}
 
 ```http
 GET /printers/{id}/status
 ```
 
-**Response:**
+**Ответ:**
 ```json
 {
   "id": 1,
@@ -192,47 +191,47 @@ GET /printers/{id}/status
 }
 ```
 
-`layer_num` is the current layer; `total_layers` is the layer count of the running job. `temperatures` carries a `_target` companion for the heaters that have one, and omits `chamber` entirely on models without a chamber sensor. `state` is the firmware's own value (`IDLE`, `PREPARE`, `SLICING`, `RUNNING`, `PAUSE`, `FINISH`, `FAILED`), not a lowercased Bambuddy label.
+`layer_num` — текущий слой; `total_layers` — число слоёв выполняемого задания. В `temperatures` есть соответствующее поле `_target` для нагревателей с заданной целью; на моделях без датчика камеры `chamber` полностью отсутствует. `state` — исходное значение прошивки (`IDLE`, `PREPARE`, `SLICING`, `RUNNING`, `PAUSE`, `FINISH`, `FAILED`), а не преобразованная в нижний регистр метка Bambuddy.
 
-`current_archive_id` is the [archive](#get-archive) of the running print while `state` is `RUNNING` or `PAUSE`, and `null` otherwise. Use it to tie a running print to its archive, for prints sent from the cloud and over LAN alike, rather than matching by file name or time, which can pick an earlier run of the same file. One case is matched by name: after a Bambuddy restart mid-print, a print that reports no job id (sent from Bambu Studio over LAN, Handy or the printer's screen) is linked to the printing archive of that name. It stays `null` until the archive exists, which can take a minute while Bambuddy downloads the 3MF from the printer at the start, for a print Bambuddy does not archive (Auto-archive off), and once the archive has been deleted. `current_plate_id` is the plate of the 3MF being printed, with the same `RUNNING`/`PAUSE` rule: the plate Bambuddy sent when it started the print, otherwise the one in the G-code path the printer reports.
+`current_archive_id` — [архив](#get-archive) текущей печати, когда `state` равно `RUNNING` или `PAUSE`, и `null` в остальных случаях. Используйте его для связи печати с архивом как при отправке через облако, так и по локальной сети: сопоставление по имени файла или времени может выбрать предыдущую печать того же файла. Исключение — перезапуск Bambuddy во время печати без идентификатора задания (отправленной из Bambu Studio по локальной сети, Handy или с экрана принтера): тогда она связывается с архивом выполняющейся печати с тем же именем. Поле остаётся `null` до создания архива, что может занять минуту при загрузке 3MF с принтера в начале печати, для печати без архивации (автоархивация выключена) и после удаления архива. `current_plate_id` — пластина печатаемого 3MF с тем же правилом `RUNNING`/`PAUSE`: пластина, отправленная Bambuddy при запуске, либо указанная в пути G-code, который сообщает принтер.
 
-`full_code` identifies the fault: 16 hex characters for a fault from the printer's `hms[]` array (the four groups the printer screen shows), 8 for a `print_error`.
+`full_code` идентифицирует ошибку: 16 шестнадцатеричных символов для ошибки из массива `hms[]` принтера (четыре группы на экране принтера), 8 — для `print_error`.
 
-`severity` is Bambu's alert level: `1` error (the print was stopped), `2` warning (the print is paused), `3` notice (the print carries on), `0` when the printer set no valid level. For an `hms[]` fault it is the level the printer sends; a `print_error` carries no level, so it is taken from the first digit of the error number (`4xxx` → 1, `8xxx` → 2, `Cxxx` → 3).
+`severity` — уровень оповещения Bambu: `1` — ошибка (печать остановлена), `2` — предупреждение (печать на паузе), `3` — уведомление (печать продолжается), `0` — принтер не задал допустимый уровень. Для ошибки `hms[]` используется уровень, отправленный принтером; у `print_error` уровня нет, поэтому он определяется по первой цифре номера ошибки (`4xxx` → 1, `8xxx` → 2, `Cxxx` → 3).
 
-`description` is the text Bambu publishes for the fault on this printer model, taken from Bambu Studio's HMS files, so a client does not have to carry its own copy of the catalogue. It is English only and is not localized. It is `null` when Bambu publishes no text for the code. Treat `null` as "no text available", never as "no fault": the fault is fully reported either way, and `full_code` is what identifies it. Bambuddy's own UI counts a fault when it offers actions, or when it has a description and isn't an `hms[]` notice (`severity` 3 with a 16-character `full_code`). The same fields are on the `printer_status` [WebSocket](../features/monitoring.md) message.
+`description` — опубликованный Bambu текст ошибки для этой модели принтера из файлов HMS Bambu Studio, поэтому клиенту не нужна собственная копия каталога. Текст доступен только на английском языке и не локализован. Если Bambu не публикует текст для кода, значение равно `null`. Считайте `null` отсутствием текста, а не отсутствием ошибки: ошибка сообщается полностью в любом случае и определяется полем `full_code`. Интерфейс Bambuddy учитывает ошибку, когда для неё предлагаются действия либо есть описание и она не является уведомлением `hms[]` (`severity` 3 при 16-символьном `full_code`). Те же поля присутствуют в сообщении `printer_status` через [WebSocket](../features/monitoring.md).
 
-`awaiting_plate_clear` is a Bambuddy-side gate, not printer telemetry. It goes `true` when a print reaches a terminal state and stays `true` until the plate is confirmed clear via [Clear Plate](#clear-plate); the queue will not dispatch the next job in the meantime. It survives restarts and Auto Off power cycles, so a printer that reports `IDLE` after a reboot can still be waiting. The same flag is pushed over the [WebSocket](../features/monitoring.md) `printer_status` message and over [MQTT](../features/mqtt.md) — including a dedicated retained topic, which is the better subscription for automations because it does not depend on the printer still being powered on.
+`awaiting_plate_clear` — блокировка на стороне Bambuddy, а не телеметрия принтера. Она становится `true` при завершении печати и сохраняется до подтверждения очистки стола через [подтверждение очистки](#clear-plate); до этого очередь не отправит следующее задание. Значение переживает перезапуск и циклы автоматического выключения, поэтому принтер со статусом `IDLE` после перезагрузки всё ещё может ожидать подтверждения. Флаг также передаётся в сообщении `printer_status` по [WebSocket](../features/monitoring.md) и через [MQTT](../features/mqtt.md), включая отдельный сохраняемый топик, который лучше подходит для автоматизации, поскольку не зависит от включённого принтера.
 
-### Refresh Printer Status
+### Обновление состояния принтера {#refresh-printer-status}
 
-Request a full status update from the printer via MQTT pushall command. Useful for getting fresh AMS data after swapping spools.
+Запрашивает полное обновление состояния принтера командой MQTT pushall. Полезно для получения свежих данных AMS после замены катушек.
 
 ```http
 POST /printers/{id}/refresh-status
 ```
 
-**Response:**
+**Ответ:**
 ```json
 {
   "status": "refresh_requested"
 }
 ```
 
-**Errors:**
+**Ошибки:**
 
-- `404` - Printer not found
-- `400` - Printer not connected
+- `404` - Принтер не найден
+- `400` - Принтер не подключён
 
-### Clear HMS Errors
+### Очистка ошибок HMS {#clear-hms-errors}
 
-Clear HMS/print errors on the printer. Sends a `clean_print_error` MQTT command and clears errors locally.
+Очищает ошибки HMS и печати на принтере. Отправляет команду MQTT `clean_print_error` и очищает ошибки локально.
 
 ```http
 POST /printers/{id}/hms/clear
 ```
 
-**Response:**
+**Ответ:**
 ```json
 {
   "success": true,
@@ -240,23 +239,23 @@ POST /printers/{id}/hms/clear
 }
 ```
 
-**Errors:**
+**Ошибки:**
 
-- `404` - Printer not found
-- `400` - Printer not connected
-- `500` - Failed to clear HMS errors
+- `404` - Принтер не найден
+- `400` - Принтер не подключён
+- `500` - Не удалось очистить ошибки HMS
 
-**Permission:** `printers:control`
+**Разрешение:** `printers:control`
 
-### Clear Plate
+### Подтверждение очистки стола {#clear-plate}
 
 ```http
 POST /printers/{id}/clear-plate
 ```
 
-Acknowledge that the build plate has been cleared after a finished/failed print. Sets a plate-cleared flag so the scheduler can start the next queued print.
+Подтверждает очистку стола после завершённой или неудачной печати. Устанавливает флаг очистки, чтобы планировщик мог запустить следующее задание в очереди.
 
-**Response:**
+**Ответ:**
 ```json
 {
   "success": true,
@@ -264,32 +263,32 @@ Acknowledge that the build plate has been cleared after a finished/failed print.
 }
 ```
 
-Acknowledgement is accepted whenever `awaiting_plate_clear` is `true`, whatever the printer currently reports — after an Auto Off power cycle it boots into `IDLE` with no memory of the finished print, and the gate still needs clearing. The reported state only matters as a fallback when the flag is not set.
+Подтверждение принимается всякий раз, когда `awaiting_plate_clear` равно `true`, независимо от текущего состояния принтера: после автоматического выключения он загружается в `IDLE` и не помнит завершённую печать, но блокировку всё равно нужно снять. Состояние принтера используется как запасной вариант, только если флаг не установлен.
 
-The printer does **not** have to be online. Clearing the plate only mutates Bambuddy-side state — no command is sent to the printer — so it works on a machine [Auto Power Off](../features/smart-plugs.md) has switched off, which with that feature enabled is the normal end-of-print situation. The queue still waits for the printer to come back before dispatching; releasing the gate is what allows it to power the printer on again.
+Принтер **не обязан** быть подключён. Подтверждение меняет только состояние Bambuddy и не отправляет команду принтеру, поэтому работает и после [автоматического выключения питания](../features/smart-plugs.md), что при включённой функции является обычной ситуацией после печати. Перед отправкой очередь всё равно ждёт возвращения принтера; снятие блокировки позволяет ей снова включить питание.
 
-**Errors:**
+**Ошибки:**
 
-- `404` - Printer not found
-- `400` - Printer is not awaiting acknowledgement and is not in `FINISH`/`FAILED` state
+- `404` - Принтер не найден
+- `400` - Принтер не ожидает подтверждения и не находится в состоянии `FINISH`/`FAILED`
 
-**Permission:** `printers:clear_plate`
+**Разрешение:** `printers:clear_plate`
 
-### Set Print Speed
+### Установка скорости печати {#set-print-speed}
 
-Change the print speed preset during an active print.
+Изменяет предустановку скорости во время печати.
 
 ```http
 POST /printers/{id}/print-speed?mode=N
 ```
 
-**Query Parameters:**
+**Параметры запроса:**
 
-| Parameter | Type | Required | Description |
+| Параметр | Тип | Обязателен | Описание |
 |-----------|------|:--------:|-------------|
-| `mode` | int | Yes | Speed preset: `1` (Silent 50%), `2` (Standard 100%), `3` (Sport 124%), `4` (Ludicrous 166%) |
+| `mode` | int | Да | Предустановка скорости: `1` (тихий режим 50%), `2` (стандартный 100%), `3` (спорт 124%), `4` (максимальный 166%) |
 
-**Response:**
+**Ответ:**
 ```json
 {
   "success": true,
@@ -297,22 +296,22 @@ POST /printers/{id}/print-speed?mode=N
 }
 ```
 
-**Errors:**
+**Ошибки:**
 
-- `404` - Printer not found
-- `400` - Printer not connected
-- `422` - Invalid mode (must be 1-4)
-- `500` - The printer could not be sent the command (its connection is down)
+- `404` - Принтер не найден
+- `400` - Принтер не подключён
+- `422` - Недопустимый режим (должен быть от 1 до 4)
+- `500` - Не удалось отправить команду принтеру (соединение разорвано)
 
-**Permission:** `printers:control`
+**Разрешение:** `printers:control`
 
-### Add Printer
+### Добавление принтера {#add-printer}
 
 ```http
 POST /printers
 ```
 
-**Request:**
+**Запрос:**
 ```json
 {
   "name": "New Printer",
@@ -322,30 +321,30 @@ POST /printers
 }
 ```
 
-### Update Printer
+### Изменение принтера {#update-printer}
 
 ```http
 PATCH /printers/{id}
 ```
 
-**Request:**
+**Запрос:**
 ```json
 {
   "name": "Updated Name"
 }
 ```
 
-### Delete Printer
+### Удаление принтера {#delete-printer}
 
 ```http
 DELETE /printers/{id}
 ```
 
-`?delete_archives=false` keeps the printer's archives. What is limited to the printer is deleted with it: notification providers and smart plugs assigned to it, and virtual printers that send to it. API keys limited to it lose it; a key whose last printer goes reaches none.
+`?delete_archives=false` сохраняет архивы принтера. Объекты, привязанные к принтеру, удаляются вместе с ним: назначенные ему службы уведомлений и умные розетки, а также виртуальные принтеры, отправляющие на него задания. В ограниченных ключах API принтер исключается из списка; если удалён последний доступный принтер, ключ не получает доступ ни к одному.
 
-### Download Multiple Printer Files
+### Загрузка нескольких файлов с принтера {#download-multiple-printer-files}
 
-API clients can request a disk-backed ZIP containing files from printer storage:
+Клиенты API могут запросить ZIP с файлами из хранилища принтера, формируемый на диске:
 
 ```http
 POST /printers/{id}/files/download-zip
@@ -363,69 +362,69 @@ Content-Type: application/json
 }
 ```
 
-The response is a ZIP attachment. `sizes` is an optional map of FTP-reported byte sizes. Supplying it lets Bambuddy reject an oversized selection or insufficient free space before FTP transfer begins; existing clients that send only `paths`, relative paths, or duplicate paths remain supported, and actual downloaded bytes are always capped. Up to 1,000 paths and 10 GiB total can be requested. Files that cannot be downloaded are skipped; response headers report requested, downloaded, and failed counts, and an all-failed request preserves the historical empty-ZIP response.
+Ответ — вложение ZIP. Необязательное поле `sizes` содержит словарь размеров в байтах, сообщённых FTP. Оно позволяет Bambuddy отклонить слишком большой запрос или запрос при недостатке места до начала передачи FTP. По-прежнему поддерживаются клиенты, отправляющие только `paths`, относительные и повторяющиеся пути; фактический объём загрузки всегда ограничен. Можно запросить до 1000 путей общим объёмом до 10 ГиБ. Недоступные файлы пропускаются; заголовки ответа содержат количество запрошенных, загруженных и неудачных файлов. Если загрузить не удалось ни одного файла, сохраняется прежний ответ с пустым ZIP.
 
-`sizes` is all-or-nothing: send it for every path or omit it entirely. A map covering only some of the selection is rejected, as is a negative size, and the keys must match the `paths` strings exactly — if `paths` are relative, the `sizes` keys have to be relative too.
+`sizes` нужно передать для всех путей или полностью опустить. Словарь только для части файлов и отрицательный размер отклоняются; ключи должны точно совпадать со строками `paths`: если пути относительные, ключи `sizes` тоже должны быть относительными.
 
-| Status | Meaning |
+| Статус | Значение |
 |--------|---------|
-| `400` | Empty selection |
-| `413` | Selection exceeds 1,000 paths or 10 GiB |
-| `422` | `sizes` does not cover exactly the selected paths, or a size is negative |
-| `504` | The 30-minute preparation deadline passed |
-| `507` | The app data volume cannot safely stage the selection |
+| `400` | Пустой выбор |
+| `413` | Выбрано более 1000 путей или 10 ГиБ |
+| `422` | `sizes` не соответствует в точности выбранным путям или содержит отрицательный размер |
+| `504` | Истёк 30-минутный срок подготовки |
+| `507` | На томе данных приложения недостаточно места для безопасной подготовки выбранных файлов |
 
-**Permission:** `printers:files`
+**Разрешение:** `printers:files`
 
-The web UI uses an asynchronous browser-native variant so neither large source files nor the result have to be buffered into a JavaScript `Blob`, and the initiating HTTP request does not occupy a proxy connection for the whole FTP transfer:
+Веб-интерфейс использует асинхронный встроенный механизм браузера: крупные исходные файлы и результат не нужно буферизовать в JavaScript `Blob`, а исходный HTTP-запрос не занимает соединение прокси на всё время передачи FTP:
 
-1. `POST /printers/{id}/files/download-job` with normal authentication and `paths`, `sizes`, `filename`, and `as_zip`. The endpoint returns the job immediately. It validates more strictly than `download-zip` does: duplicate paths are rejected with `400`, and `as_zip: false` requires exactly one path, because a native download has no container to put a second file in.
-2. Poll `GET /printers/{id}/files/download-jobs/{job_id}`. The body carries `job_id`, `printer_id`, `state`, `requested`, `successful`, `failed`, `token`, `filename`, and `message`, where `state` is one of `queued`, `preparing`, `ready`, `failed`, or `cancelled`. `DELETE` the same URL to cancel; the FTP worker cooperatively stops and removes partial staging.
-3. When `state` is `ready`, the body's `token` fills in the native `GET /printers/{id}/files/dl/{token}/{filename}` URL. The token is short-lived, single-use, and bound to the printer ID. A spent or expired token answers `403` with a short text file rather than JSON, because the browser reaches this URL through a download click and saves whatever comes back.
+1. Вызовите `POST /printers/{id}/files/download-job` с обычной аутентификацией и параметрами `paths`, `sizes`, `filename`, `as_zip`. Задание возвращается сразу. Проверка строже, чем у `download-zip`: повторяющиеся пути отклоняются с кодом `400`, а `as_zip: false` требует ровно одного пути, поскольку загрузка браузера не имеет контейнера для второго файла.
+2. Опрашивайте `GET /printers/{id}/files/download-jobs/{job_id}`. Тело содержит `job_id`, `printer_id`, `state`, `requested`, `successful`, `failed`, `token`, `filename`, `message`; `state` принимает значения `queued`, `preparing`, `ready`, `failed`, `cancelled`. Для отмены отправьте `DELETE` по тому же адресу; обработчик FTP корректно остановится и удалит промежуточные данные.
+3. Когда `state` равно `ready`, вставьте `token` из ответа в URL загрузки `GET /printers/{id}/files/dl/{token}/{filename}`. Токен краткосрочный, одноразовый и привязан к ID принтера. Использованный или просроченный токен возвращает `403` с коротким текстовым файлом вместо JSON: браузер переходит по адресу при скачивании и сохраняет полученный ответ.
 
-All job and polling endpoints require `printers:files`, including the API key's optional `printer_ids` allowlist. Only the final `/dl/` URL bypasses the gateway middleware, and it validates its resource-bound token itself. Staging lives under the configured archive data volume and is eligible for cleanup after one hour; cleanup runs at startup, before preparation, and every 15 minutes. Job state and cancellation are published as files, so any app worker can report on or cancel a job that another one is running. Preparations do not wait on each other: free space is re-checked against the bytes actually written throughout every transfer, so two jobs that start together each stop on their own when the volume runs low.
+Все конечные точки заданий и опроса требуют `printers:files` и учитывают необязательный список разрешённых `printer_ids` ключа API. Только конечный URL `/dl/` обходит промежуточный слой шлюза и сам проверяет привязанный к ресурсу токен. Промежуточные данные хранятся на настроенном томе архива и подлежат очистке через час; очистка выполняется при запуске, перед подготовкой и каждые 15 минут. Состояние и отмена задания публикуются в файлах, поэтому любой обработчик может сообщить о задании другого обработчика или отменить его. Подготовки не ждут друг друга: свободное место повторно проверяется по фактически записанным байтам в ходе каждой передачи, и одновременно запущенные задания независимо остановятся при нехватке места.
 
 ---
 
-## :material-archive: Archives
+## :material-archive: Архив {#archives}
 
-### Archives and their prints
+### Архивы и их печати {#archives-and-their-prints}
 
-An archive is a file. Each print of it is a **run** with its own printer, plate, start and end, status and failure reason, outcome verdict, filament, cost, energy, timelapse and finish photos. Plates of one file, reprints, and the same file printing on several printers at once are all runs of one archive.
+Архив представляет файл. Каждая его печать — отдельный **запуск** со своими принтером, пластиной, временем начала и окончания, состоянием, причиной неудачи, оценкой результата, филаментом, стоимостью, энергией, таймлапсом и фотографиями завершения. Пластины одного файла, повторные печати и одновременная печать файла на нескольких принтерах являются запусками одного архива.
 
-- `GET /archives/{id}/runs` lists an archive's runs, newest first. Each carries its own `notes`, `photos` (served by `GET /archives/{id}/photos/{filename}`) and `timelapse_path`. `photos` is a list for a run that keeps its own (empty when it has none), and null for a run logged before runs kept their own photos: its photos are among the archive's. `estimate_seconds` and `estimate_grams` are the slicer's estimate for the plate it printed. They are null for a run of a multi-plate file whose plate is not known, and for every run of an archive printed more than once whose plates are not known (a plain G-code file, or the 3MF missing).
-- `GET /archives/{id}/runs/{run_id}/timelapse` streams one run's timelapse video (media token, as the archive's own timelapse route): plates of one file each keep their own. `404` for a run of another archive, without a video, or on a printer outside your access.
-- `PATCH /print-log/{run_id}` with `notes` sets one run's own note.
-- `GET /archives/prints?date_from=&date_to=` lists the runs that ended between two days (`tz`, `printer_id`, `limit` up to 1000, `offset`), of the archives you see as in the archive list, in id order: the archives calendar. `GET /print-log` answers `deleted_archive_ids`: archives of its runs that were deleted.
-- `GET /archives/{id}?run_id=<run>` returns the archive as that run printed it: the run's printer, status, times, plate, verdict, video and photos.
-- `PATCH /archives/{id}` with `run_id` sets one finished run's outcome: only `user_verdict` (with its `user_verdict_source`), `status` and `failure_reason` (`400` for other fields; `404` for a run that is not the archive's, is still printing, or is on a printer outside your access).
-- `latest_run_id` on an archive is its latest run by start, a print running now included: the one its per-print fields show.
+- `GET /archives/{id}/runs` возвращает запуски архива, начиная с новых. Каждый содержит собственные `notes`, `photos` (доступны через `GET /archives/{id}/photos/{filename}`) и `timelapse_path`. `photos` — список для запуска с собственными фотографиями (пустой, если их нет) и null для запуска, записанного до появления собственных фотографий: его фотографии находятся в архиве. `estimate_seconds` и `estimate_grams` — оценки слайсера для напечатанной пластины. Они равны null для запуска многопластинного файла с неизвестной пластиной и для всех запусков архива, напечатанного более одного раза с неизвестными пластинами (обычный G-code или отсутствие 3MF).
+- `GET /archives/{id}/runs/{run_id}/timelapse` транслирует таймлапс одного запуска (используется токен медиаресурсов, как и для таймлапса архива): каждая пластина файла сохраняет собственное видео. `404` возвращается для запуска другого архива, запуска без видео или на недоступном вам принтере.
+- `PATCH /print-log/{run_id}` с `notes` задаёт собственную заметку запуска.
+- `GET /archives/prints?date_from=&date_to=` перечисляет завершённые между двумя датами запуски доступных вам архивов в порядке ID (`tz`, `printer_id`, `limit` до 1000, `offset`): это календарь архивов. `GET /print-log` возвращает `deleted_archive_ids` — удалённые архивы его запусков.
+- `GET /archives/{id}?run_id=<run>` возвращает архив в виде указанного запуска: принтер, состояние, время, пластину, оценку, видео и фотографии запуска.
+- `PATCH /archives/{id}` с `run_id` задаёт результат одного завершённого запуска: только `user_verdict` (с его `user_verdict_source`), `status` и `failure_reason` (`400` для других полей; `404` для запуска другого архива, ещё выполняющегося или на недоступном принтере).
+- `latest_run_id` архива — последний по времени начала запуск, включая текущую печать: именно его показывают поля, относящиеся к печати.
 
-**Deprecated fields.** On an archive, `status`, `started_at`, `completed_at`, `failure_reason`, `user_verdict`, `user_verdict_source`, `user_verdict_at`, `printer_id`, `plate_id`, `timelapse_path`, `actual_time_seconds`, `time_estimate_seconds` (the estimate for the plate it printed, which `time_accuracy` compares with; `print_time_seconds` adds every plate up) and `time_accuracy` describe its latest run, `energy_kwh`, `energy_cost` and `wear_cost` its first, and `photos` holds every run's finish photos together with the ones uploaded by hand. They are flagged `deprecated` in the OpenAPI schema and stay for one more release. Read them from the runs instead.
+**Устаревшие поля.** В архиве `status`, `started_at`, `completed_at`, `failure_reason`, `user_verdict`, `user_verdict_source`, `user_verdict_at`, `printer_id`, `plate_id`, `timelapse_path`, `actual_time_seconds`, `time_estimate_seconds` (оценка напечатанной пластины, с которой сравнивается `time_accuracy`; `print_time_seconds` суммирует все пластины) и `time_accuracy` описывают последний запуск, `energy_kwh`, `energy_cost` и `wear_cost` — первый, а `photos` содержит фотографии завершения всех запусков и загруженные вручную. В схеме OpenAPI они помечены `deprecated` и сохранятся ещё на один выпуск. Вместо этого читайте их из запусков.
 
-**Printer access.** A user limited to some printers sees an archive when it, or any of its runs, is on one of their printers, and then only their runs of it. When the archive's latest run is on a printer outside their access, the per-print fields show their own latest run instead. On an archive that also printed on printers outside their access, `energy_kwh`, `energy_cost` and `wear_cost` are those of the run shown to them, and the time-accuracy fields are empty. The run list and counts include only their runs, and the video and finish photos of prints on other printers are left out (`404` on their routes). Changes to the whole archive (delete, its video, its source, F3D and project page, and in `PATCH` anything but `notes`, `tags`, `is_favorite`, `project_id` or a `run_id` outcome) answer `403` while it also printed on printers outside their access.
+**Доступ к принтерам.** Пользователь с ограниченным доступом видит архив, когда он или любой его запуск относится к одному из доступных принтеров, причём видит только свои запуски. Если последний запуск архива выполнен на недоступном принтере, поля печати показывают последний доступный ему запуск. Если архив также печатался на недоступных принтерах, `energy_kwh`, `energy_cost` и `wear_cost` относятся к показанному запуску, а поля точности времени пусты. Список и счётчики включают только доступные запуски; видео и фотографии завершения с других принтеров исключаются (их конечные точки возвращают `404`). Изменение всего архива — удаление, изменение видео, исходника, F3D и страницы проекта, а также в `PATCH` всего кроме `notes`, `tags`, `is_favorite`, `project_id` или результата с `run_id` — возвращает `403`, пока архив также печатался на недоступных принтерах.
 
-### List Archives
+### Список архивов {#list-archives}
 
 ```http
 GET /archives
 ```
 
-**Query Parameters:**
+**Параметры запроса:**
 
-| Parameter | Type | Description |
+| Параметр | Тип | Описание |
 |-----------|------|-------------|
-| `printer_id` | int | Archives with any run on this printer (none for a printer outside your access); their run counts are of the runs on it. `GET /archives/search` takes it the same way |
-| `project_id` | int | Filter by project |
-| `date_from` | date | From this day (YYYY-MM-DD) |
-| `date_to` | date | To this day, inclusive (YYYY-MM-DD) |
-| `tz` | string | IANA time zone the dates are calendar days in (e.g. `Europe/Berlin`); Bambuddy's own `TZ` when omitted or not a zone |
-| `limit` | int | Max results (default: 50) |
-| `offset` | int | Pagination offset |
+| `printer_id` | int | Архивы с любым запуском на этом принтере (для недоступного принтера — ни одного); счётчики учитывают запуски на нём. `GET /archives/search` принимает параметр так же |
+| `project_id` | int | Фильтр по проекту |
+| `date_from` | date | Начиная с этой даты (YYYY-MM-DD) |
+| `date_to` | date | По эту дату включительно (YYYY-MM-DD) |
+| `tz` | string | Часовой пояс IANA для календарных дат (например, `Europe/Berlin`); при отсутствии или недопустимом значении используется `TZ` Bambuddy |
+| `limit` | int | Максимум результатов (по умолчанию: 50) |
+| `offset` | int | Смещение для постраничного вывода |
 
-For text search use `GET /archives/search?q=...` (at least 2 characters; also takes `printer_id`, `project_id`, `status`, `limit` and `offset`).
+Для текстового поиска используйте `GET /archives/search?q=...` (не менее 2 символов; также принимает `printer_id`, `project_id`, `status`, `limit` и `offset`).
 
-**Response:** a list of archives, newest first.
+**Ответ:** список архивов, сначала новые.
 ```json
 [
   {
@@ -444,27 +443,27 @@ For text search use `GET /archives/search?q=...` (at least 2 characters; also ta
 ]
 ```
 
-`status` is one of `completed`, `failed`, `aborted`, `cancelled` or `printing`.
+`status` принимает одно из значений `completed`, `failed`, `aborted`, `cancelled` или `printing`.
 
-`started_at` is when the print started, as Bambuddy saw it start, not when the archive was written: that waits for the 3MF download. `created_at` is when the archive was written. `started_at` and `completed_at` belong to the latest run (`latest_run_id`); each run has its own.
+`started_at` — время начала печати, как его обнаружил Bambuddy, а не время записи архива: она ожидает загрузку 3MF. `created_at` — время записи архива. `started_at` и `completed_at` относятся к последнему запуску (`latest_run_id`); у каждого запуска свои значения.
 
-### Get Archive
+### Получение архива {#get-archive}
 
 ```http
 GET /archives/{id}
 ```
 
-The id of an archive merged into another (see [Merge Duplicate Archives](#merge-duplicate-archives)) returns the archive it went into.
+При запросе идентификатора архива, объединённого с другим (см. [Объединение дубликатов архивов](#merge-duplicate-archives)), возвращается архив, в который он вошёл.
 
-### Find Archive Videos
+### Поиск видео архива {#find-archive-videos}
 
 ```http
 GET /archives/{id}/printer-media
 ```
 
-Returns an attached timelapse, matching printer-side timelapse, and IP-camera chunks whose timestamps overlap the print window. Directory inspection is read-only; no printer file is downloaded until a separate download request is made. Callers without `printers:files` still receive an attached local timelapse, plus a `printer_files_forbidden` warning, while printer discovery is skipped.
+Возвращает прикреплённый таймлапс, соответствующий таймлапс на принтере и фрагменты IP-камеры, время которых пересекается с периодом печати. Просмотр каталогов выполняется только для чтения; файлы с принтера не загружаются до отдельного запроса. Клиенты без `printers:files` всё равно получают прикреплённый локальный таймлапс и предупреждение `printer_files_forbidden`, но поиск на принтере пропускается.
 
-A printer-side timelapse is only looked for when nothing is attached to the archive yet, so `local_timelapse` and a `"kind": "timelapse"` entry in `remote_files` do not appear together. When a copy is attached, `local_timelapse` is `{"name": ..., "size": ...}`; otherwise it is `null`.
+Поиск таймлапса на принтере выполняется только при отсутствии вложения в архиве, поэтому `local_timelapse` и запись `"kind": "timelapse"` в `remote_files` не появляются одновременно. При наличии копии `local_timelapse` содержит `{"name": ..., "size": ...}`, иначе — `null`.
 
 ```json
 {
@@ -484,26 +483,26 @@ A printer-side timelapse is only looked for when nothing is attached to the arch
 }
 ```
 
-`warnings` distinguishes the reasons a listing came back short, so a caller can tell an unreachable printer from one that simply has no footage:
+`warnings` различает причины неполного списка, позволяя отличить недоступный принтер от отсутствия видеозаписей:
 
-| Warning | Meaning |
+| Предупреждение | Значение |
 |---------|---------|
-| `printer_files_forbidden` | The caller lacks `printers:files`, so only the attached copy was considered |
-| `printer_missing` | The archive names a printer that no longer exists |
-| `timelapse_unavailable` | No timelapse directory could be read — the printer is off, unreachable, or in the FTPS handshake cool-off |
-| `ipcam_unavailable` | `/ipcam` could not be read, for the same set of reasons |
+| `printer_files_forbidden` | У вызывающего нет `printers:files`, поэтому рассматривалась только прикреплённая копия |
+| `printer_missing` | В архиве указан несуществующий принтер |
+| `timelapse_unavailable` | Не удалось прочитать каталог таймлапсов: принтер выключен, недоступен или ожидает после ошибки согласования FTPS |
+| `ipcam_unavailable` | Не удалось прочитать `/ipcam` по тем же причинам |
 
-An archive with no printer or no recorded start time returns empty lists and no warning, because there is nothing to look for rather than something that failed.
+Архив без принтера или записанного времени начала возвращает пустые списки без предупреждения: искать нечего, ошибка не возникала.
 
-**Permissions:** `archives:read_all` or ownership through `archives:read_own`; `printers:files` is additionally required for the printer-side portion of the response
+**Разрешения:** `archives:read_all` или владение через `archives:read_own`; для части ответа с данными принтера дополнительно требуется `printers:files`
 
-### Download an Attached Timelapse
+### Загрузка прикреплённого таймлапса {#download-an-attached-timelapse}
 
 ```http
 POST /archives/{id}/media-download-token
 ```
 
-Mints a single-use token bound to this archive's attached timelapse and returns it with the file's name:
+Создаёт одноразовый токен, привязанный к прикреплённому таймлапсу архива, и возвращает его вместе с именем файла:
 
 ```json
 {
@@ -512,25 +511,25 @@ Mints a single-use token bound to this archive's attached timelapse and returns 
 }
 ```
 
-Then fetch the file itself, which needs no other credential:
+Затем получите сам файл: другие учётные данные не нужны:
 
 ```http
 GET /archives/{id}/media/dl/{token}/{filename}
 ```
 
-The token expires after five minutes and is consumed on first use. Because a browser reaches this URL through a download click and saves whatever comes back, a spent token, a missing attachment, or a file gone from disk answers with a short text file explaining the failure rather than a JSON error body.
+Токен истекает через пять минут и расходуется при первом использовании. Браузер переходит по адресу при скачивании и сохраняет ответ, поэтому использованный токен, отсутствие вложения или удалённый с диска файл возвращают короткий текстовый файл с объяснением вместо JSON с ошибкой.
 
-**Permissions:** `archives:read_all` or ownership through `archives:read_own`. Printer access is not required, and neither is `camera:view` — the attached copy is an archive asset. `404` if this archive has no attached timelapse.
+**Разрешения:** `archives:read_all` или владение через `archives:read_own`. Доступ к принтеру и `camera:view` не нужны: прикреплённая копия является ресурсом архива. `404`, если у архива нет прикреплённого таймлапса.
 
-Printer-side files found by the endpoint above are fetched through the printer download job endpoints instead, which require `printers:files`.
+Файлы на принтере, найденные указанной выше конечной точкой, загружаются через конечные точки заданий скачивания с принтера, для которых требуется `printers:files`.
 
-### Update Archive
+### Изменение архива {#update-archive}
 
 ```http
 PATCH /archives/{id}
 ```
 
-**Request:**
+**Запрос:**
 ```json
 {
   "print_name": "Updated Name",
@@ -540,54 +539,53 @@ PATCH /archives/{id}
 }
 ```
 
-`filament_used_grams` is accepted between 0 and 100000 and is written to the archive's most recent run as well, so the filament totals on the Projects page and in the Prometheus metrics — which sum the runs, not the archives — agree with the card. A run that measured its own weight through spool tracking keeps that measurement; only a run with no figure, or one that inherited the archive's, is updated. Nothing is deducted from Spoolman or from internal inventory. It exists for a print that archived without its 3MF, where nothing else can supply a figure: the figure is read out of the 3MF when the print is archived, and such an archive has no file to read. Changing the figure, or setting `cost`, needs `archives:update_all`; with `archives:update_own` the figure can only be filled in on your archive without its 3MF while it has none (`403` otherwise).
+`filament_used_grams` принимает значения от 0 до 100000 и также записывается в последний запуск архива, чтобы суммы филамента на странице проектов и в метриках Prometheus, которые суммируют запуски, совпадали с карточкой. Запуск с собственным измерением веса через отслеживание катушек сохраняет его; обновляется только запуск без значения или унаследовавший его от архива. Из Spoolman или внутреннего учёта ничего не вычитается. Поле предназначено для печати, архивированной без 3MF, когда значение больше неоткуда получить: обычно оно считывается из 3MF при архивации, но здесь файла нет. Для изменения значения или установки `cost` требуется `archives:update_all`; с `archives:update_own` значение можно лишь заполнить в своём архиве без 3MF, если оно отсутствует (иначе `403`).
 
-`status` accepts `completed`, `failed`, `aborted` or `cancelled` (`422` for anything else) and is written to the most recent run as well. `failed` and `aborted` count as failures in the statistics, `cancelled` as stopped.
+`status` принимает `completed`, `failed`, `aborted` или `cancelled` (иначе `422`) и также записывается в последний запуск. В статистике `failed` и `aborted` считаются неудачами, а `cancelled` — остановкой.
 
-`cost` accepts 0 to 1000000 (`422` otherwise). A completed most recent run that had the archive's cost (or none) gets the new cost too, so the statistics and project totals agree with the card; a run priced from its own spools, and a failed or cancelled one, keep theirs. **Recalculate costs** (`POST /archives/recalculate-costs`) updates such a run the same way.
+`cost` принимает от 0 до 1000000 (иначе `422`). Последний успешно завершённый запуск со стоимостью архива или без неё также получает новое значение, чтобы статистика и суммы проекта совпадали с карточкой. Запуск со стоимостью собственных катушек, неудачный или отменённый сохраняет свою стоимость. **Пересчитать стоимость** (`POST /archives/recalculate-costs`) обновляет запуск по тому же правилу.
 
-While the archive is being reprinted (`status` is `printing`), its most recent run is the previous print's: an edit then changes the archive only, and none of the fields above reach that run.
+Во время повторной печати архива (`status` равно `printing`) его последний запуск относится к предыдущей печати: изменение затрагивает только архив, и перечисленные поля в тот запуск не попадают.
 
-### Delete Archive
+### Удаление архива {#delete-archive}
 
 ```http
 DELETE /archives/{id}
 ```
 
-### Download 3MF
+### Загрузка 3MF {#download-3mf}
 
 ```http
 GET /archives/{id}/download
 ```
 
-Returns the 3MF file as a download. Add `?inline=true` to open it instead of saving it.
+Возвращает файл 3MF для скачивания. Добавьте `?inline=true`, чтобы открыть его вместо сохранения.
 
-### Attach a Source 3MF by Name
+### Прикрепление исходного 3MF по имени {#attach-a-source-3mf-by-name}
 
 ```http
 POST /archives/upload-source?print_name=Benchy
 ```
 
-For slicer post-processing scripts: attaches the project 3MF (the unsliced
-source) to the most recent archive matching the name, replacing a source it
-already had: an exact print name first, then a file name starting with it, then
-a print name containing it. Send the file as multipart `file`; it must be a `.3mf`. Without
-`print_name` the file name is used, with a trailing `_source` dropped
-(`Benchy_source.3mf` → `Benchy`). Only archives on printers you may use are
-matched.
+Для скриптов постобработки слайсера: прикрепляет 3MF проекта (ненарезанный
+исходник) к последнему подходящему архиву, заменяя прежний исходник. Сначала
+ищется точное название печати, затем имя файла с таким началом, затем название
+печати, содержащее это имя. Передайте файл `.3mf` как multipart `file`. Без
+`print_name` используется имя файла без завершающего `_source`
+(`Benchy_source.3mf` → `Benchy`). Учитываются только архивы доступных вам принтеров.
 
 ```bash
 curl -H "X-API-Key: your-key" -F "file=@Benchy_source.3mf" \
   "http://localhost:8000/api/v1/archives/upload-source?print_name=Benchy"
 ```
 
-**Response:** `{"status": "uploaded", "archive_id": 123, "archive_name": "Benchy", "source_3mf_path": "...", "filename": "Benchy_source.3mf"}`
+**Ответ:** `{"status": "uploaded", "archive_id": 123, "archive_name": "Benchy", "source_3mf_path": "...", "filename": "Benchy_source.3mf"}`
 
-**Errors:** `400` not a 3MF · `404` no archive matches the name
+**Ошибки:** `400` — файл не является 3MF · `404` — архив с подходящим именем не найден
 
-**Permission:** `archives:update_all`
+**Разрешение:** `archives:update_all`
 
-### Merge Duplicate Archives
+### Объединение дубликатов архивов {#merge-duplicate-archives}
 
 ```http
 GET /archives/merge-count
@@ -595,9 +593,9 @@ GET /archives/merge-preview
 POST /archives/merge
 ```
 
-Archives holding the same file (same content), owned by the same user and in the same project merge into the oldest of them, which takes in their runs, photos, videos and files; the others are hidden. `GET /archives/{id}` of a merged id returns the archive it went into, and a queued print of one prints it; the other per-archive routes answer `404` for a merged id. See [Merging duplicates](../features/archiving.md#merging-duplicates).
+Архивы с одним файлом (одинаковым содержимым), одним владельцем и проектом объединяются в старейший, который получает их запуски, фотографии, видео и файлы; остальные скрываются. `GET /archives/{id}` для объединённого ID возвращает итоговый архив, а печать в очереди печатает его; остальные конечные точки для объединённого ID возвращают `404`. См. [Объединение дубликатов](../features/archiving.md#merging-duplicates).
 
-`GET /archives/merge-preview` lists the groups:
+`GET /archives/merge-preview` перечисляет группы:
 
 ```json
 {"groups": [{"survivor": {"id": 12, "print_name": "Planter", "filename": "Planter.3mf", "created_at": "2026-09-01T09:00:00", "run_count": 2},
@@ -605,61 +603,61 @@ Archives holding the same file (same content), owned by the same user and in the
              "skipped": null}]}
 ```
 
-`skipped` is `busy` (an archive of the group is printing, queued, being dispatched, tracked by Spoolman, sliced or edited, or finished printing in the last 30 minutes) or `conflicting_files` (different source 3MF / F3D files, or a hand-attached video beside another), else `null`.
+`skipped` принимает `busy` (архив группы печатается, находится в очереди, отправляется, отслеживается Spoolman, нарезается, редактируется или завершил печать в последние 30 минут), `conflicting_files` (разные исходники 3MF / F3D или вручную прикреплённое видео наряду с другим) либо `null`.
 
-`GET /archives/merge-count` returns `{"groups": 3}`: how many groups there are, whether or not one can merge now. It is cheap (it reads no files), for offering the merge.
+`GET /archives/merge-count` возвращает `{"groups": 3}` — количество групп независимо от возможности объединения сейчас. Операция недорога, файлы не читаются; она служит для предложения объединения.
 
-`POST /archives/merge` with `{"survivor_ids": [12, ...]}` merges each listed group as it stands at that moment and returns `{"merged": [{"survivor_id": 12, "merged_ids": [31]}], "skipped": [{"survivor_id": 40, "reason": "busy"}]}`. A reason can also be `failed` (that group was rolled back; the others still merged) or `not_a_group`.
+`POST /archives/merge` с `{"survivor_ids": [12, ...]}` объединяет каждую указанную группу в её текущем состоянии и возвращает `{"merged": [{"survivor_id": 12, "merged_ids": [31]}], "skipped": [{"survivor_id": 40, "reason": "busy"}]}`. Причина также может быть `failed` (эта группа откачена, остальные объединены) или `not_a_group`.
 
-**Permission:** `archives:update_all` and `archives:delete_all`. A user limited to some printers only sees and merges archives every print of which ran on their printers.
+**Разрешение:** `archives:update_all` и `archives:delete_all`. Пользователь с ограниченным доступом видит и объединяет только архивы, все печати которых выполнялись на доступных ему принтерах.
 
-### Export Archives
+### Экспорт архивов {#export-archives}
 
 ```http
 GET /archives/export
 ```
 
-**Query Parameters:**
+**Параметры запроса:**
 
-| Parameter | Type | Description |
+| Параметр | Тип | Описание |
 |-----------|------|-------------|
-| `format` | string | csv or xlsx |
-| `printer_id` | int | Filter by printer |
-| `project_id` | int | Filter by project |
-| `status` | string | `completed`, `failed`, `aborted`, `cancelled` or `printing`; several comma-separated (`failed,aborted`) |
-| `date_from` | string | From this date (YYYY-MM-DD) or date and time (ISO) |
-| `date_to` | string | To this date, inclusive (YYYY-MM-DD), or date and time (ISO) |
-| `tz` | string | IANA time zone a plain date is a calendar day in; Bambuddy's own `TZ` when omitted or not a zone. A date and time without an offset is UTC |
-| `search` | string | Search query |
-| `fields` | string | Comma-separated columns to include, from the columns below (`400` for any other) |
+| `format` | string | csv или xlsx |
+| `printer_id` | int | Фильтр по принтеру |
+| `project_id` | int | Фильтр по проекту |
+| `status` | string | `completed`, `failed`, `aborted`, `cancelled` или `printing`; несколько значений через запятую (`failed,aborted`) |
+| `date_from` | string | Начиная с даты (YYYY-MM-DD) или даты и времени (ISO) |
+| `date_to` | string | По дату включительно (YYYY-MM-DD) либо дату и время (ISO) |
+| `tz` | string | Часовой пояс IANA для календарной даты; при отсутствии или недопустимом значении используется `TZ` Bambuddy. Дата и время без смещения считаются UTC |
+| `search` | string | Поисковый запрос |
+| `fields` | string | Включаемые столбцы через запятую из перечисленных ниже (для остальных `400`) |
 
-One row per print: the archive's file columns (`id`, `print_name`, `filename`, `project_name`, `tags`, `notes`, the slicer settings, `created_at`) repeated on each, then that print's own `run_id`, `status`, `printer_id`, `printer_name`, `plate_id`, `started_at`, `completed_at`, `duration_seconds`, `filament_type`, `filament_used_grams`, `cost`, `energy_kwh`, `energy_cost`, `wear_cost`, `failure_reason`, `user_verdict` and `quantity`. An archive printed before prints were logged as runs is one row of its own fields, with no `run_id`.
+Одна строка на печать: в каждой повторяются поля файла архива (`id`, `print_name`, `filename`, `project_name`, `tags`, `notes`, настройки слайсера, `created_at`), затем собственные поля печати `run_id`, `status`, `printer_id`, `printer_name`, `plate_id`, `started_at`, `completed_at`, `duration_seconds`, `filament_type`, `filament_used_grams`, `cost`, `energy_kwh`, `energy_cost`, `wear_cost`, `failure_reason`, `user_verdict` и `quantity`. Архив, напечатанный до появления записи запусков, представлен одной строкой собственных полей без `run_id`.
 
-`printer_id`, `status`, `date_from` and `date_to` pick prints (the dates by when the print started; an archive without runs by when it was created). `project_id` and `search` pick archives. A user limited to some printers gets only the prints on theirs; a file they see whose every print ran elsewhere is one row with empty print columns.
+`printer_id`, `status`, `date_from` и `date_to` выбирают печати (даты — по началу печати; для архива без запусков — по созданию). `project_id` и `search` выбирают архивы. Пользователь с ограниченным доступом получает только печати на своих принтерах; видимый ему файл, все печати которого выполнены на других принтерах, представлен одной строкой с пустыми полями печати.
 
 ---
 
-## :material-folder-multiple: Projects
+## :material-folder-multiple: Проекты {#projects}
 
-### List Projects
+### Список проектов {#list-projects}
 
 ```http
 GET /projects
 ```
 
-### Get Project
+### Получение проекта {#get-project}
 
 ```http
 GET /projects/{id}
 ```
 
-### Create Project
+### Создание проекта {#create-project}
 
 ```http
 POST /projects
 ```
 
-**Request:**
+**Запрос:**
 ```json
 {
   "name": "Voron Build",
@@ -669,13 +667,13 @@ POST /projects
 }
 ```
 
-### Update Project
+### Изменение проекта {#update-project}
 
 ```http
 PATCH /projects/{id}
 ```
 
-### Delete Project
+### Удаление проекта {#delete-project}
 
 ```http
 DELETE /projects/{id}
@@ -683,28 +681,28 @@ DELETE /projects/{id}
 
 ---
 
-## :material-printer-3d-nozzle: Print Queue
+## :material-printer-3d-nozzle: Очередь печати {#print-queue}
 
-### Get Queue
+### Получение очереди {#get-queue}
 
 ```http
 GET /queue
 ```
 
-**Query Parameters:**
+**Параметры запроса:**
 
-| Parameter | Type | Description |
+| Параметр | Тип | Описание |
 |-----------|------|-------------|
-| `printer_id` | int | Filter by printer |
+| `printer_id` | int | Фильтр по принтеру |
 | `status` | string | pending, printing, completed |
 
-### Add to Queue
+### Добавление в очередь {#add-to-queue}
 
 ```http
 POST /queue
 ```
 
-**Request:**
+**Запрос:**
 ```json
 {
   "archive_id": 123,
@@ -713,19 +711,19 @@ POST /queue
 }
 ```
 
-### Remove from Queue
+### Удаление из очереди {#remove-from-queue}
 
 ```http
 DELETE /queue/{id}
 ```
 
-### Reorder Queue
+### Изменение порядка очереди {#reorder-queue}
 
 ```http
 POST /queue/reorder
 ```
 
-**Request:**
+**Запрос:**
 ```json
 {
   "items": [
@@ -735,36 +733,36 @@ POST /queue/reorder
 }
 ```
 
-Only pending items move. Positions must be unique.
+Перемещаются только ожидающие элементы. Позиции должны быть уникальными.
 
-### List Batches
+### Список партий {#list-batches}
 
 ```http
 GET /queue/batches
 ```
 
-**Query Parameters:**
+**Параметры запроса:**
 
-| Parameter | Type | Description |
+| Параметр | Тип | Описание |
 |-----------|------|-------------|
-| `status` | string | `active`, `completed`, or `cancelled` |
+| `status` | string | `active`, `completed` или `cancelled` |
 
-Batches with neither queue items nor per-plate targets are omitted &mdash; see
-[Batch Orders](../features/print-queue.md#batch-orders). Fetching one by id
-(`GET /queue/batches/{batch_id}`) returns it regardless.
+Партии без элементов очереди и целевых количеств по пластинам не включаются в список — см.
+[Заказы партий](../features/print-queue.md#batch-orders). Запрос по ID
+(`GET /queue/batches/{batch_id}`) возвращает такую партию в любом случае.
 
-### Create Batch or Order
+### Создание партии или заказа {#create-batch-or-order}
 
 ```http
 POST /queue/batches
 ```
 
-Without `plates` this creates a plain grouping: pass `item_ids` to group existing
-pending items, or omit them and pass the returned `id` as `batch_id` on later
-`POST /queue` calls. With `plates` it becomes an **order** that records how many
-runs of each plate are wanted, so a failed run still counts as owed.
+Без `plates` создаётся обычная группа: передайте `item_ids` для группировки ожидающих
+элементов либо опустите их и используйте возвращённый `id` как `batch_id` в последующих
+вызовах `POST /queue`. С `plates` создаётся **заказ**, в котором указано требуемое
+число запусков каждой пластины; неудачный запуск остаётся невыполненным.
 
-**Request:**
+**Запрос:**
 ```json
 {
   "name": "Bracket run",
@@ -779,22 +777,22 @@ runs of each plate are wanted, so a failed run still counts as owed.
 }
 ```
 
-`plate_id` is `null` for a single-plate file. A `quantity_target` of `0` is
-allowed &mdash; a plate that is not required yet keeps its row so the target can
-be raised later &mdash; but an order in which every target is `0` is rejected.
+Для файла с одной пластиной `plate_id` равно `null`. Значение `quantity_target` равное `0`
+допускается: строка пока не требуемой пластины сохраняется, чтобы позднее увеличить
+цель. Но заказ, в котором все цели равны `0`, отклоняется.
 
-### Update an Order
+### Изменение заказа {#update-an-order}
 
 ```http
 PATCH /queue/batches/{batch_id}
 ```
 
-Every field is optional. Supplying `plates` **replaces** the whole target set, so
-a plate left out of the list has its target row removed. Lowering a target below
-what has already been dispatched is allowed and simply leaves nothing owed;
-queued items are never cancelled implicitly.
+Все поля необязательны. Передача `plates` **заменяет** весь набор целей, поэтому
+строка цели пластины, отсутствующей в списке, удаляется. Цель можно уменьшить ниже
+уже отправленного количества — тогда невыполненного остатка не будет; элементы
+очереди никогда не отменяются автоматически.
 
-**Request:**
+**Запрос:**
 ```json
 {
   "name": "Bracket run (revised)",
@@ -802,18 +800,18 @@ queued items are never cancelled implicitly.
 }
 ```
 
-### Dispatch Remaining Runs
+### Отправка оставшихся печатей {#dispatch-remaining-runs}
 
 ```http
 POST /queue/batches/{batch_id}/dispatch
 ```
 
-Creates queue items for the runs the order still owes. Each is copied from the
-most recent item for that plate, inheriting its printer or model target, AMS
-mapping, filament overrides and print options, and is appended to the end of the
-relevant printer's queue.
+Создаёт элементы очереди для оставшихся запусков заказа. Каждый копируется из
+последнего элемента этой пластины, наследуя назначенный принтер или модель,
+сопоставление AMS, переопределения филамента и параметры печати, и добавляется
+в конец очереди соответствующего принтера.
 
-**Request:**
+**Запрос:**
 ```json
 {
   "plate_id": 2,
@@ -822,60 +820,60 @@ relevant printer's queue.
 }
 ```
 
-| Field | Type | Description |
+| Поле | Тип | Описание |
 |-------|------|-------------|
-| `plate_id` | int \| null | Which plate to dispatch. Only read when `only_plate` is true |
-| `only_plate` | bool | Restrict to the single plate named above. Default `false` &mdash; every plate with work outstanding |
-| `limit` | int | Cap on items created across all plates. Omit to queue everything owed |
+| `plate_id` | int \| null | Какую пластину отправить. Учитывается только при `only_plate` равном true |
+| `only_plate` | bool | Ограничить указанной выше пластиной. По умолчанию `false` — все пластины с невыполненной работой |
+| `limit` | int | Ограничение числа элементов по всем пластинам. Опустите, чтобы поставить в очередь весь остаток |
 
-Returns `400` when a plate owes runs but has never been queued, since there is no
-existing item to copy settings from, and when the batch has been cancelled.
+Возвращает `400`, если для пластины остаются запуски, но она никогда не была в
+очереди и копировать настройки неоткуда, а также если партия отменена.
 
-### Ungroup a Batch
+### Разгруппировка партии {#ungroup-a-batch}
 
 ```http
 POST /queue/batches/{batch_id}/ungroup
 ```
 
-Clears `batch_id` from every member the caller owns. The batch row is deleted
-once no members remain.
+Очищает `batch_id` у каждого элемента, принадлежащего вызывающему пользователю.
+Строка партии удаляется, когда в ней не остаётся элементов.
 
-### Cancel a Batch
+### Отмена партии {#cancel-a-batch}
 
 ```http
 DELETE /queue/batches/{batch_id}
 ```
 
-Cancels the batch's pending items and marks the batch cancelled. Items that have
-already run are untouched.
+Отменяет ожидающие элементы партии и помечает партию отменённой. Уже
+выполненные элементы не меняются.
 
 ---
 
-## :material-calendar-clock: Scheduled Drying Sessions
+## :material-calendar-clock: Запланированные сеансы сушки {#scheduled-drying-sessions}
 
-### Get Scheduled Drying Sessions
+### Получение запланированных сеансов сушки {#get-scheduled-drying-sessions}
 
 ```http
 GET /scheduled-dryings
 ```
 
-**Query Parameters:**
+**Параметры запроса:**
 
-| Parameter | Type | Description |
+| Параметр | Тип | Описание |
 |-----------|------|-------------|
-| `printer_id` | int | Filter by printer |
+| `printer_id` | int | Фильтр по принтеру |
 
-Returns sessions that are `pending`, `running`, or `failed`, earliest start time first, with sessions that have no start time ahead of the rest. Completed and cancelled sessions are not returned.
+Возвращает сеансы в состоянии `pending`, `running` или `failed`, начиная с наиболее раннего времени старта; сеансы без времени идут первыми. Завершённые и отменённые сеансы не возвращаются.
 
-**Permission:** `printers:read`
+**Разрешение:** `printers:read`
 
-### Create Scheduled Drying Session
+### Создание запланированного сеанса сушки {#create-scheduled-drying-session}
 
 ```http
 POST /scheduled-dryings
 ```
 
-**Request:**
+**Запрос:**
 ```json
 {
   "printer_id": 1,
@@ -888,61 +886,61 @@ POST /scheduled-dryings
 }
 ```
 
-`start_after` is the earliest start, and it is optional: omit it (or send `null`) and the session runs as soon as the printer is idle and the AMS is ready. The drying popover has no equivalent — its **Now** option starts drying immediately through `POST /printers/{id}/drying/start` instead — so this is an API-only way to say "next time the printer is free".
+Необязательное поле `start_after` задаёт самое раннее время начала. Если опустить его или передать `null`, сеанс начнётся, как только принтер освободится и AMS будет готова. В окне сушки эквивалента нет: вариант **Сейчас** запускает сушку немедленно через `POST /printers/{id}/drying/start`. Таким образом, ожидание освобождения принтера доступно только через API.
 
-**Permission:** `printers:control`
+**Разрешение:** `printers:control`
 
-### Cancel or Dismiss Scheduled Drying Session
+### Отмена или удаление запланированного сеанса сушки {#cancel-or-dismiss-scheduled-drying-session}
 
 ```http
 DELETE /scheduled-dryings/{id}
 ```
 
-Cancels a `pending` or `running` session and responds with `{"status": "cancelled"}`. A running session is also sent a stop command. On a `failed` session the record is deleted instead, and the response is `{"status": "dismissed"}`.
+Отменяет сеанс в состоянии `pending` или `running` и возвращает `{"status": "cancelled"}`. Для выполняющегося сеанса также отправляется команда остановки. Запись сеанса `failed` вместо этого удаляется, а ответ содержит `{"status": "dismissed"}`.
 
-**Permission:** `printers:control`
+**Разрешение:** `printers:control`
 
 ---
 
-## :material-cube-scan: Spool Inventory
+## :material-cube-scan: Учёт катушек {#spool-inventory}
 
-### List Spools
+### Список катушек {#list-spools}
 
 ```http
 GET /inventory/spools
 ```
 
-**Query Parameters:**
+**Параметры запроса:**
 
-| Parameter | Type | Description |
+| Параметр | Тип | Описание |
 |-----------|------|-------------|
-| `include_archived` | bool | Include archived spools (default `false`) |
+| `include_archived` | bool | Включать архивированные катушки (по умолчанию `false`) |
 
-### Get Spool
+### Получение катушки {#get-spool}
 
 ```http
 GET /inventory/spools/{id}
 ```
 
-### Find Spool by Tag
+### Поиск катушки по метке {#find-spool-by-tag}
 
-Look up a single spool by its NFC tag identifiers without listing the whole inventory. This is intended for NFC inventory integrations that scan a Bambu Lab spool tag and need to check whether it already exists before creating or updating it.
+Находит одну катушку по идентификаторам NFC-метки без получения всего списка. Предназначено для интеграций учёта NFC, которые сканируют метку катушки Bambu Lab и проверяют её наличие перед созданием или обновлением.
 
 ```http
 GET /inventory/spools/by-tag
 ```
 
-**Query Parameters:**
+**Параметры запроса:**
 
-| Parameter | Type | Description |
+| Параметр | Тип | Описание |
 |-----------|------|-------------|
-| `tray_uuid` | string | Bambu Lab spool UUID from the tag — the same value the AMS reports over MQTT |
-| `tag_uid` | string | RFID tag UID |
-| `include_archived` | bool | Include archived spools (default `false`) |
+| `tray_uuid` | string | UUID катушки Bambu Lab с метки — то же значение AMS передаёт через MQTT |
+| `tag_uid` | string | UID RFID-метки |
+| `include_archived` | bool | Включать архивированные катушки (по умолчанию `false`) |
 
-At least one of `tray_uuid` or `tag_uid` must be supplied. Values are normalised (case-insensitive, non-hex separators ignored). `tray_uuid` is matched first and `tag_uid` is used as a fallback. Returns the single matching spool.
+Необходимо передать хотя бы `tray_uuid` или `tag_uid`. Значения нормализуются без учёта регистра и не-шестнадцатеричных разделителей. Сначала ищется `tray_uuid`, затем в качестве запасного варианта — `tag_uid`. Возвращается одна подходящая катушка.
 
-**Response:**
+**Ответ:**
 ```json
 {
   "id": 42,
@@ -954,34 +952,34 @@ At least one of `tray_uuid` or `tag_uid` must be supplied. Values are normalised
 }
 ```
 
-**Errors:**
+**Ошибки:**
 
-- `400` - Neither `tray_uuid` nor `tag_uid` was provided
-- `404` - No matching spool found
+- `400` - Не передан ни `tray_uuid`, ни `tag_uid`
+- `404` - Подходящая катушка не найдена
 
-!!! note "Required scope"
-    This endpoint accepts **inventory read** *or* **inventory update** access — for API keys, either the **Read Status** scope *or* the **Manage Inventory** scope. This lets a key that can already create, update, and delete spools look one up to dedupe an NFC scan. (Listing spools and fetching a spool by id still require **Read Status**.)
+!!! note "Необходимая область доступа"
+    Эта конечная точка принимает доступ на **чтение учёта** или **изменение учёта**: для ключей API — область **Чтение состояния** или **Управление филаментом**. Это позволяет ключу, который уже может создавать, изменять и удалять катушки, найти катушку для устранения дубликатов при NFC-сканировании. Список катушек и получение по ID по-прежнему требуют **Чтение состояния**.
 
 ---
 
-## :material-chart-line: Statistics
+## :material-chart-line: Статистика {#statistics}
 
-### Get Statistics
+### Получение статистики {#get-statistics}
 
 ```http
 GET /archives/stats
 ```
 
-**Query Parameters:**
+**Параметры запроса:**
 
-| Parameter | Type | Description |
+| Параметр | Тип | Описание |
 |-----------|------|-------------|
-| `date_from` | date | Period start, `YYYY-MM-DD` (inclusive) |
-| `date_to` | date | Period end, `YYYY-MM-DD` (inclusive) |
-| `tz` | string | IANA time zone the dates are calendar days in (e.g. `Europe/Berlin`); Bambuddy's own `TZ` when omitted or not a zone |
-| `created_by_id` | int | Only prints by this user (`-1`: prints with no user) |
+| `date_from` | date | Начало периода, `YYYY-MM-DD` (включительно) |
+| `date_to` | date | Конец периода, `YYYY-MM-DD` (включительно) |
+| `tz` | string | Часовой пояс IANA для календарных дат (например, `Europe/Berlin`); при отсутствии или недопустимом значении используется `TZ` Bambuddy |
+| `created_by_id` | int | Только печати этого пользователя (`-1`: печати без пользователя) |
 
-**Response (excerpt):**
+**Ответ (фрагмент):**
 ```json
 {
   "total_prints": 1234,
@@ -998,85 +996,85 @@ GET /archives/stats
 }
 ```
 
-### Export Statistics
+### Экспорт статистики {#export-statistics}
 
 ```http
 GET /archives/stats/export?format=csv
 ```
 
-| Parameter | Type | Description |
+| Параметр | Тип | Описание |
 |-----------|------|-------------|
-| `format` | string | `csv` (default) or `xlsx` |
-| `days` | int | How many days back (default 30) |
-| `printer_id` | int | Filter by printer |
-| `project_id` | int | Filter by project |
-| `created_by_id` | int | Only prints by this user (`-1`: prints with no user) |
+| `format` | string | `csv` (по умолчанию) или `xlsx` |
+| `days` | int | Количество предыдущих дней (по умолчанию 30) |
+| `printer_id` | int | Фильтр по принтеру |
+| `project_id` | int | Фильтр по проекту |
+| `created_by_id` | int | Только печати этого пользователя (`-1`: печати без пользователя) |
 
 ---
 
-## :material-camera: Camera
+## :material-camera: Камера {#camera}
 
-An `<img>` or `<video>` tag cannot send an `Authorization` header, so the stream
-and snapshot endpoints also accept a token in the query string. Pass either a
-60-minute browser token (`POST /printers/camera/stream-token`) or a long-lived
-camera token — see [Long-Lived Camera Tokens](../features/camera.md#long-lived-camera-tokens).
+Теги `<img>` и `<video>` не могут передавать заголовок `Authorization`, поэтому
+конечные точки трансляции и снимка принимают токен в строке запроса. Передайте
+браузерный токен на 60 минут (`POST /printers/camera/stream-token`) или долгосрочный
+токен камеры — см. [Долгосрочные токены камеры](../features/camera.md#long-lived-camera-tokens).
 
-### Stream (MJPEG)
+### Трансляция (MJPEG) {#stream-mjpeg}
 
 ```http
 GET /printers/{id}/camera/stream
 ```
 
-Returns MJPEG stream. Query params:
+Возвращает поток MJPEG. Параметры запроса:
 
-| Parameter | Type | Description |
+| Параметр | Тип | Описание |
 |-----------|------|-------------|
-| `fps` | int | Frames per second (1-30) |
-| `token` | string | Camera token, when auth is enabled |
-| `viewer` | string | Optional id of this viewer, repeated on its stop call (see Stop Stream) |
+| `fps` | int | Кадров в секунду (1–30) |
+| `token` | string | Токен камеры при включённой аутентификации |
+| `viewer` | string | Необязательный ID этого просмотра, повторяемый в запросе его остановки (см. остановку трансляции) |
 
-### Snapshot
+### Снимок {#snapshot}
 
 ```http
 GET /printers/{id}/camera/snapshot
 ```
 
-Returns single JPEG image. Accepts the same `token` query param.
+Возвращает одно изображение JPEG. Принимает тот же параметр запроса `token`.
 
-### Stop Stream
+### Остановка трансляции {#stop-stream}
 
 ```http
 POST /printers/{id}/camera/stop?viewer={viewer}
 ```
 
-Terminates active streams for printer. The shared stream of a built-in camera
-is left running while any viewer is still attached. For an external camera
-(RTSP, USB), pass the `viewer` id you put on your stream URL (letters, digits,
-`-` and `_`, up to 64): your own streams end, as does any that has sent no
-picture for 10 seconds, and other viewers' streams keep running. Without
-`viewer`, every stream of the printer ends.
+Останавливает активные потоки принтера. Общий поток встроенной камеры
+продолжает работать, пока подключён хотя бы один зритель. Для внешней камеры
+(RTSP, USB) передайте ID `viewer` из URL трансляции (буквы, цифры, `-` и `_`,
+до 64 символов): ваши потоки и потоки, не отправлявшие изображение 10 секунд,
+завершатся, а потоки других зрителей продолжат работать. Без `viewer`
+завершаются все потоки принтера.
 
 ---
 
-## :material-monitor-dashboard: Cam Wall
+## :material-monitor-dashboard: Стена камер {#cam-wall}
 
-### Wall Feed
+### Данные стены {#wall-feed}
 
 ```http
 GET /camwall/printers
 ```
 
-Every printer plus the handful of status fields a [Cam Wall](printers.md#cam-wall-view)
-tile draws. One call for the whole wall — a kiosk display polls this on a fixed
-interval with no WebSocket to invalidate it.
+Все принтеры и несколько полей состояния, отображаемых плиткой [стены камер](printers.md#cam-wall-view).
+Один запрос получает данные всей стены: киоск опрашивает её с фиксированным
+интервалом без WebSocket для обновления.
 
-| Parameter | Type | Description |
+| Параметр | Тип | Описание |
 |-----------|------|-------------|
-| `token` | string | A **Cam Wall**-scoped camera token, when auth is enabled |
+| `token` | string | Токен камеры с областью **Стена камер** при включённой аутентификации |
 
-Authenticated **only** by a `camwall`-scoped token. A `camera_stream` token is
-refused here — it was minted to hand out video, not to enumerate a fleet by
-name.
+Аутентификация выполняется **только** токеном с областью `camwall`. Токен
+`camera_stream` отклоняется: он создан для выдачи видео, а не для получения
+списка принтеров по именам.
 
 ```json
 [
@@ -1095,34 +1093,33 @@ name.
 ]
 ```
 
-That list is the entire payload. It deliberately carries no `serial_number`, no
-`ip_address`, no `access_code`, and no print filename: the token travels in a URL
-displayed on a screen, so the feed behind it must not disclose more than the
-camera picture already does.
+Этот список составляет весь ответ. Он намеренно не содержит `serial_number`,
+`ip_address`, `access_code` и имени файла печати: токен передаётся в URL, видимом
+на экране, поэтому данные не должны раскрывать больше, чем изображение камеры.
 
 ---
 
-## :material-video-box: Streaming Overlay
+## :material-video-box: Оверлей трансляции {#streaming-overlay}
 
-### Overlay Status
+### Состояние оверлея {#overlay-status}
 
 ```http
 GET /printers/{printer_id}/overlay-status
 ```
 
-Everything the [streaming overlay](../features/camera.md#streaming-overlay-for-obs)
-draws for one printer — name, model, camera rotation, live print state,
-temperatures, and the one display setting it reads. A token-authenticated
-sibling of the printer status endpoint, so an OBS browser source with no login
-session can back the overlay.
+Все данные [оверлея трансляции](../features/camera.md#streaming-overlay-for-obs)
+для одного принтера: имя, модель, поворот камеры, текущее состояние печати,
+температуры и используемая настройка отображения. Это аналог конечной точки
+состояния принтера с аутентификацией по токену, позволяющий использовать оверлей
+в браузерном источнике OBS без сеанса входа.
 
-| Parameter | Type | Description |
+| Параметр | Тип | Описание |
 |-----------|------|-------------|
-| `token` | string | A **Streaming Overlay**-scoped camera token, when auth is enabled |
+| `token` | string | Токен камеры с областью **Оверлей трансляции** при включённой аутентификации |
 
-Authenticated **only** by an `overlay`-scoped token. A `camwall` or
-`camera_stream` token is refused here — unlike the Cam Wall feed this names the
-file being printed, so it sits behind its own scope.
+Аутентификация выполняется **только** токеном с областью `overlay`. Токены
+`camwall` и `camera_stream` отклоняются: в отличие от данных стены камер здесь
+указано имя печатаемого файла, поэтому используется отдельная область доступа.
 
 ```json
 {
@@ -1144,54 +1141,54 @@ file being printed, so it sits behind its own scope.
 }
 ```
 
-`model` is `null` when the printer has none stored. `temperatures` holds only
-the readings the printer reports and is `{}` when it reports none; chamber
-readings are left out on models without a real chamber sensor.
+`model` равно `null`, если модель принтера не сохранена. `temperatures` содержит
+только показания, передаваемые принтером, и равно `{}`, если их нет; показания
+камеры исключены для моделей без физического датчика камеры.
 
-That object is the entire payload. Like the Cam Wall feed it carries no
-`serial_number`, `ip_address`, or `access_code` — but it *does* carry the print
-filename, which is why the overlay scope is distinct from `camwall`.
+Этот объект составляет весь ответ. Как и данные стены камер, он не содержит
+`serial_number`, `ip_address` или `access_code`, но содержит имя файла печати,
+поэтому область оверлея отличается от `camwall`.
 
 ---
 
-### Overlay branding logo
+### Логотип оверлея {#overlay-branding-logo}
 
-All paths below are relative to `/api/v1`. The logo is shared by the installation.
+Все пути ниже указаны относительно `/api/v1`. Логотип общий для всей установки.
 
-| Method | Path | Purpose | Permission when login is enabled |
+| Метод | Путь | Назначение | Разрешение при включённом входе |
 |--------|------|---------|----------------------------------|
-| `POST` | `/settings/overlay-logo` | Upload multipart `file` | `settings:update` |
-| `GET` | `/settings/overlay-logo` | Read PNG for settings preview | `settings:read` |
-| `DELETE` | `/settings/overlay-logo` | Remove saved logo | `settings:update` |
-| `GET` | `/overlay-branding/logo?token=...` | Read PNG for OBS | Valid `overlay` token |
+| `POST` | `/settings/overlay-logo` | Загрузить multipart `file` | `settings:update` |
+| `GET` | `/settings/overlay-logo` | Получить PNG для предпросмотра в настройках | `settings:read` |
+| `DELETE` | `/settings/overlay-logo` | Удалить сохранённый логотип | `settings:update` |
+| `GET` | `/overlay-branding/logo?token=...` | Получить PNG для OBS | Действительный токен `overlay` |
 
-Uploads accept static PNG and WebP images up to 2 MiB and 4 million pixels. Images are decoded, resized to fit 512 × 512, and stored as PNG with transparency. Invalid images return `400`; oversized uploads return `413`. Reading a missing logo returns `404`. Reads use `Cache-Control: no-store`. Upload and delete return `{"status":"ok"}`. Deleting an absent logo succeeds.
+Принимаются статичные изображения PNG и WebP размером до 2 МиБ и 4 млн пикселей. Изображения декодируются, уменьшаются до 512 × 512 и сохраняются как PNG с прозрачностью. Некорректные изображения возвращают `400`, слишком большие — `413`. Чтение отсутствующего логотипа возвращает `404`. При чтении используется `Cache-Control: no-store`. Загрузка и удаление возвращают `{"status":"ok"}`. Удаление отсутствующего логотипа считается успешным.
 
 ---
 
-## OctoEverywhere AI Failure Detection
+## Обнаружение ошибок ИИ OctoEverywhere {#octoeverywhere-ai-failure-detection}
 
-For setup, inspection timing, and recovery from usage limits or account errors, see
-[AI Failure Detection](../features/failure-detection.md#octoeverywhere).
+Настройку, интервалы проверки и восстановление после ограничений использования или ошибок учётной записи см.
+в разделе [Обнаружение ошибок с помощью ИИ](../features/failure-detection.md#octoeverywhere).
 
-### Settings
+### Настройки {#settings}
 
-Read these fields with `GET /settings/` and update them with `PUT /settings/`.
-When authentication is enabled, these endpoints require `settings:read` and
-`settings:update`, respectively. Omitted fields are preserved by a settings update.
+Читайте эти поля через `GET /settings/` и изменяйте через `PUT /settings/`.
+При включённой аутентификации требуются соответственно `settings:read` и
+`settings:update`. Опущенные при обновлении поля сохраняют прежние значения.
 
-| Key | Default / values |
+| Ключ | По умолчанию / значения |
 |-----|------------------|
 | `octoeverywhere_enabled` | `false` |
-| `octoeverywhere_api_key` | Write-only Gadget API key. Omit it from an update to preserve the saved key; send an empty string to clear it. Always empty in settings responses and excluded from Git backups. |
-| `octoeverywhere_api_key_configured` | Read-only boolean indicating whether a key is saved; defaults to `false`. |
-| `octoeverywhere_poll_interval` | `20` by default; an integer from `5` to `30` seconds. Normally clamped to the server minimum; temporarily shortened to the recommended interval when `FasterInspectionSuggested` is true, still respecting the minimum. |
-| `octoeverywhere_confidence` | `medium`; accepts `lowest`, `low`, `medium`, `high`, `highest`, sent as API confidence levels 1, 2, 3, 4, 5 respectively for both `WarningConfidenceLevel` and `PauseConfidenceLevel`. |
-| `octoeverywhere_action` | `notify`; accepts `notify`, `pause`, `pause_and_off`. |
-| `octoeverywhere_enabled_printers` | Empty string (default) for all printers, or a JSON-encoded array of printer IDs; `"[]"` monitors none. |
+| `octoeverywhere_api_key` | Ключ API Gadget только для записи. Опустите при обновлении, чтобы сохранить ключ; передайте пустую строку для удаления. В ответах настроек всегда пуст и исключён из резервных копий Git. |
+| `octoeverywhere_api_key_configured` | Логическое значение только для чтения: сохранён ли ключ; по умолчанию `false`. |
+| `octoeverywhere_poll_interval` | По умолчанию `20`; целое от `5` до `30` секунд. Обычно ограничивается минимумом сервера; при `FasterInspectionSuggested` равном true временно сокращается до рекомендуемого интервала с соблюдением минимума. |
+| `octoeverywhere_confidence` | `medium`; принимает `lowest`, `low`, `medium`, `high`, `highest`, которые передаются как уровни уверенности API 1, 2, 3, 4, 5 соответственно для `WarningConfidenceLevel` и `PauseConfidenceLevel`. |
+| `octoeverywhere_action` | `notify`; принимает `notify`, `pause`, `pause_and_off`. |
+| `octoeverywhere_enabled_printers` | Пустая строка (по умолчанию) для всех принтеров либо массив ID принтеров в формате JSON; `"[]"` отключает мониторинг всех принтеров. |
 
-For example, to select printers 1 and 2 and use a 30-second interval while preserving
-the saved key and other settings:
+Например, чтобы выбрать принтеры 1 и 2 и интервал 30 секунд, сохранив
+ключ и другие настройки:
 
 ```json
 {
@@ -1200,49 +1197,48 @@ the saved key and other settings:
 }
 ```
 
-### Status and Test Endpoints
+### Конечные точки состояния и проверки {#status-and-test-endpoints}
 
-All paths below are relative to the `/api/v1` base URL.
+Все пути ниже указаны относительно базового URL `/api/v1`.
 
-| Endpoint | Purpose | Permission when authentication is enabled |
+| Конечная точка | Назначение | Разрешение при включённой аутентификации |
 |----------|---------|-------------------------------------------|
-| `GET /octoeverywhere/status` | Service status, `last_error_code`, `api_key_configured`, `poll_interval`, per-printer quality, recent history, and notification coverage. Printer data, history, and coverage are limited to the caller's accessible printers. | `settings:read` |
-| `GET /octoeverywhere/printer-status` | Printer-card monitoring state, limited to the caller's accessible printers. Error messages and codes also require `settings:read`. | `printers:read` |
-| `POST /octoeverywhere/test-connection` | Test key/account eligibility using optional `api_key` and `confidence` fields, falling back to saved settings when omitted. Does not update settings or upload an image. | `settings:update` |
+| `GET /octoeverywhere/status` | Состояние службы, `last_error_code`, `api_key_configured`, `poll_interval`, качество по принтерам, недавняя история и охват уведомлений. Данные принтеров, история и охват ограничены доступными вызывающему принтерами. | `settings:read` |
+| `GET /octoeverywhere/printer-status` | Состояние мониторинга карточек, ограниченное доступными вызывающему принтерами. Для сообщений и кодов ошибок также требуется `settings:read`. | `printers:read` |
+| `POST /octoeverywhere/test-connection` | Проверить доступность ключа и учётной записи с необязательными `api_key` и `confidence`; при их отсутствии используются сохранённые настройки. Настройки не изменяются, изображение не загружается. | `settings:update` |
 
-Send an empty JSON object (`{}`) to test the saved settings. Sending an empty
-`api_key` tests with no key. The `confidence` field accepts the same five values
-as `octoeverywhere_confidence`.
+Отправьте пустой JSON-объект (`{}`), чтобы проверить сохранённые настройки. Пустой
+`api_key` выполняет проверку без ключа. Поле `confidence` принимает те же пять значений,
+что и `octoeverywhere_confidence`.
 
-A successful test with the configured key resumes blocked inspections and preserves
-existing monitoring contexts, but it does not verify the remaining inspection
-allowance. The next inspection can stop monitoring again if the allowance is still
-exhausted. See [Troubleshooting OctoEverywhere](../features/failure-detection.md#troubleshooting-octoeverywhere)
-for account recovery steps.
+Успешная проверка настроенного ключа возобновляет заблокированные проверки и сохраняет
+существующие контексты мониторинга, но не проверяет оставшийся лимит. Следующая
+проверка может снова остановить мониторинг, если лимит всё ещё исчерпан. Порядок
+восстановления учётной записи см. в разделе [Устранение неполадок OctoEverywhere](../features/failure-detection.md#troubleshooting-octoeverywhere).
 
-Notification providers use the existing `on_ai_failure_detection` event subscription.
-The status response's `notifications.configured` indicates that an enabled provider
-subscribes to this event for all printers or a printer within the caller's scope;
-`notifications.uncovered_printers` lists monitored active printer IDs within that
-scope without a matching subscription. These fields describe configuration, not
-successful notification delivery.
+Службы уведомлений используют существующую подписку на событие `on_ai_failure_detection`.
+Поле `notifications.configured` в ответе состояния показывает, что включённая служба
+подписана на событие для всех принтеров или принтера в области доступа вызывающего;
+`notifications.uncovered_printers` перечисляет ID активных отслеживаемых принтеров
+в этой области без подходящей подписки. Поля описывают настройки, а не успешную
+доставку уведомлений.
 
-Each per-printer status and Test result includes a nullable `error_code`. Status
-responses also include `last_error_code` alongside `last_error`. These codes identify
-known API errors without exposing remote response details. In the printer-status
-response, error messages and codes are `null` for callers without `settings:read`.
+Состояние каждого принтера и результат проверки содержат допускающий null `error_code`.
+Ответы состояния также содержат `last_error_code` рядом с `last_error`. Эти коды
+определяют известные ошибки API, не раскрывая детали удалённого ответа. В ответе
+printer-status сообщения и коды ошибок равны `null` для клиентов без `settings:read`.
 
 ---
 
-## :material-cog: System
+## :material-cog: Система {#system}
 
-### System Info
+### Информация о системе {#system-info}
 
 ```http
 GET /system/info
 ```
 
-**Response** (trimmed):
+**Ответ** (сокращён):
 ```json
 {
   "app": {"version": "1.2.6b1"},
@@ -1253,19 +1249,19 @@ GET /system/info
 }
 ```
 
-Sections: `app`, `database`, `printers`, `storage`, `system`, `memory`, `cpu`.
+Разделы: `app`, `database`, `printers`, `storage`, `system`, `memory`, `cpu`.
 
-**Permission:** `system:read`
+**Разрешение:** `system:read`
 
-### Health Check
+### Проверка работоспособности {#health-check}
 
 ```http
 GET /health
 ```
 
-At the server root, not under `/api/v1`, and without authentication.
+Находится в корне сервера, а не под `/api/v1`; аутентификация не требуется.
 
-**Response:**
+**Ответ:**
 ```json
 {
   "status": "healthy"
@@ -1274,9 +1270,9 @@ At the server root, not under `/api/v1`, and without authentication.
 
 ---
 
-## :material-alert-circle: Error Responses
+## :material-alert-circle: Ответы с ошибками {#error-responses}
 
-### Error Format
+### Формат ошибки {#error-format}
 
 ```json
 {
@@ -1285,61 +1281,61 @@ At the server root, not under `/api/v1`, and without authentication.
 }
 ```
 
-### HTTP Status Codes
+### Коды состояния HTTP {#http-status-codes}
 
-| Code | Meaning |
+| Код | Значение |
 |------|---------|
-| 200 | Success |
-| 201 | Created |
-| 400 | Bad Request |
-| 401 | Unauthorized (no/invalid API key) |
-| 403 | Forbidden (insufficient permissions) |
-| 404 | Not Found |
-| 429 | Rate Limited |
-| 500 | Server Error |
+| 200 | Успешно |
+| 201 | Создано |
+| 400 | Некорректный запрос |
+| 401 | Нет аутентификации (ключ API отсутствует или недействителен) |
+| 403 | Доступ запрещён (недостаточно разрешений) |
+| 404 | Не найдено |
+| 429 | Превышено ограничение частоты |
+| 500 | Ошибка сервера |
 
 ---
 
-## :material-speedometer: Rate Limits
+## :material-speedometer: Ограничения частоты запросов {#rate-limits}
 
-The API has no general request limit and sends no rate-limit headers. A few routes answer `429` when repeated too often:
+API не имеет общего ограничения запросов и не отправляет заголовки лимита. Некоторые конечные точки возвращают `429` при слишком частых повторениях:
 
-| Route | Limit |
+| Маршрут | Ограничение |
 |-------|-------|
-| Login | 10 failed attempts per username and 20 per IP address in 15 minutes |
-| 2FA code | 5 failed attempts in 15 minutes |
-| Email code | 3 sends in 10 minutes |
-| Password reset email | 3 per address and 10 per IP address in 15 minutes |
-| `POST /notifications/app-message` | 20 per minute per API key or user |
-| `POST /connect/token` (connected apps) | 20 failed exchanges per app and per IP address in 15 minutes |
+| Вход | 10 неудачных попыток на имя пользователя и 20 на IP-адрес за 15 минут |
+| Код 2FA | 5 неудачных попыток за 15 минут |
+| Код по электронной почте | 3 отправки за 10 минут |
+| Письмо сброса пароля | 3 на адрес и 10 на IP-адрес за 15 минут |
+| `POST /notifications/app-message` | 20 в минуту на ключ API или пользователя |
+| `POST /connect/token` (подключённые приложения) | 20 неудачных обменов на приложение и IP-адрес за 15 минут |
 
 ---
 
-## :material-code-json: Content Types
+## :material-code-json: Типы содержимого {#content-types}
 
-### Request
+### Запрос {#request}
 
 ```http
 Content-Type: application/json
 ```
 
-### Response
+### Ответ {#response}
 
 ```http
 Content-Type: application/json
 ```
 
-Except for file downloads (application/octet-stream) and images (image/jpeg).
+За исключением скачиваемых файлов (application/octet-stream) и изображений (image/jpeg).
 
 ---
 
-## :material-webhook: Webhooks
+## :material-webhook: Вебхуки {#webhooks}
 
-Bambuddy can send webhooks for events. Configure in Settings > Notifications.
+Bambuddy может отправлять вебхуки при событиях. Настройте их в разделе «Настройки > Уведомления».
 
-### Webhook Payload
+### Данные вебхука {#webhook-payload}
 
-The payload is flat: `title`, `message`, `timestamp`, `source`, `event`, and the event's own values as top-level fields.
+Данные имеют плоскую структуру: `title`, `message`, `timestamp`, `source`, `event` и собственные значения события как поля верхнего уровня.
 
 ```json
 {
@@ -1355,16 +1351,16 @@ The payload is flat: `title`, `message`, `timestamp`, `source`, `event`, and the
 }
 ```
 
-See [Notifications](../features/notifications.md#webhook-custom) for every field and the Slack format.
+Все поля и формат Slack описаны в разделе [Уведомления](../features/notifications.md#webhook-custom).
 
-### Event Types
+### Типы событий {#event-types}
 
-| Event | Trigger |
+| Событие | Условие |
 |-------|---------|
-| `print_start` | Print begins |
-| `print_progress` | Progress milestone |
-| `print_complete` | Print finishes |
-| `print_failed` | Print fails |
-| `print_stopped` | Print is stopped |
-| `printer_offline` | Connection lost |
-| `printer_error` | HMS error |
+| `print_start` | Печать начинается |
+| `print_progress` | Достигнут определённый прогресс |
+| `print_complete` | Печать завершена |
+| `print_failed` | Печать завершилась ошибкой |
+| `print_stopped` | Печать остановлена |
+| `printer_offline` | Соединение потеряно |
+| `printer_error` | Ошибка HMS |

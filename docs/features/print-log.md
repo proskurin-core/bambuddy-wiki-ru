@@ -1,225 +1,225 @@
 ---
-title: Print Log
-description: Chronological table view of all print activity with filtering and search
+title: Журнал печати
+description: Хронологическая таблица всей активности печати с фильтрацией и поиском
 ---
 
-# Print Log
+# Журнал печати {#print-log}
 
-The Print Log provides a chronological table of all print activity across your printers, giving you a quick at-a-glance history of every print.
-
----
-
-## :material-clipboard-list: Overview
-
-The Print Log is a dedicated view mode within the Archives page that focuses on print activity as a flat, filterable table. Unlike the standard archive views (grid, list, calendar), the Print Log shows one row per print event with key details at a glance.
-
-### Accessing the Print Log
-
-1. Go to the **Archives** page
-2. Click the :material-clipboard-list: **Print Log** button in the header toolbar (next to the grid/list/calendar view toggles)
+Журнал печати представляет всю активность ваших принтеров в хронологической таблице и позволяет быстро просмотреть историю каждой печати.
 
 ---
 
-## :material-table: Table Columns
+## :material-clipboard-list: Обзор {#overview}
 
-Each row in the Print Log represents a single print event:
+Журнал печати — отдельный режим страницы архива, в котором активность представлена плоской таблицей с фильтрами. В отличие от стандартных видов архива (сетка, список, календарь), журнал показывает по одной строке на событие печати с основными сведениями.
 
-| Column | Description |
+### Открытие журнала печати {#accessing-the-print-log}
+
+1. Перейдите на страницу **Архив**
+2. Нажмите :material-clipboard-list: **Журнал печати** на панели в заголовке рядом с переключателями сетки, списка и календаря
+
+---
+
+## :material-table: Столбцы таблицы {#table-columns}
+
+Каждая строка журнала соответствует одному событию печати:
+
+| Столбец | Описание |
 |--------|-------------|
-| **Date/Time** | When the print completed |
-| **Print Name** | Name of the print (with thumbnail) |
-| **Printer** | Which printer ran the job |
-| **User** | Username who started the print (when authentication is enabled) |
-| **Status** | Result badge (color-coded), with the failure-cause classification shown underneath when set |
-| **Duration** | Total print time |
-| **Filament** | Material type and color indicator |
-| **Filament Used** | How much filament this run consumed, in grams |
-| **Actions** | Per-row :material-pencil: edit and :material-delete: delete buttons (see [Per-row actions](#per-row-actions)) |
+| **Дата/время** | Время завершения печати |
+| **Название печати** | Название печати с миниатюрой |
+| **Принтер** | Принтер, выполнивший задание |
+| **Пользователь** | Имя пользователя, запустившего печать, если включена аутентификация |
+| **Статус** | Цветной индикатор результата; при наличии под ним указана причина неудачи |
+| **Длительность** | Общее время печати |
+| **Филамент** | Тип материала и индикатор цвета |
+| **Израсходовано филамента** | Расход филамента на эту печать в граммах |
+| **Действия** | Кнопки :material-pencil: изменения и :material-delete: удаления строки (см. [Действия со строкой](#per-row-actions)) |
 
-Five more columns are available but hidden by default &mdash; switch them on with [Choosing columns](#choosing-columns):
+Ещё пять столбцов по умолчанию скрыты; включите их в разделе [Выбор столбцов](#choosing-columns):
 
-| Column | Description |
+| Столбец | Описание |
 |--------|-------------|
-| **Finished** | When the print ended, as opposed to the **Date/Time** column's start |
-| **Cost** | Filament cost for this run, in your configured currency |
-| **Energy** | Power drawn during the run, in kWh. Needs a [smart plug](energy.md) |
-| **Energy Cost** | What that power cost |
-| **Wear Cost** | Printer wear for this run: its duration at the printer's [wear cost per printing hour](statistics.md#printer-wear-cost) |
+| **Завершено** | Время окончания печати; в столбце **Дата/время** указано время начала |
+| **Стоимость** | Стоимость филамента для этой печати в настроенной валюте |
+| **Энергия** | Энергия, потреблённая при печати, в кВт·ч. Нужна [умная розетка](energy.md) |
+| **Стоимость энергии** | Стоимость потреблённой энергии |
+| **Стоимость износа** | Износ принтера для этой печати: длительность, умноженная на [стоимость износа за час печати](statistics.md#printer-wear-cost) |
 
-!!! note "These are per-run figures, not the archive's"
-    **Filament Used** and **Cost** are measured for *this* print, not copied from the file's estimate: a print that failed part-way is scaled to the progress it reached, tracked spools are preferred over estimates, and a multi-plate project dispatched one plate at a time counts only the plate that ran. That is why a row can differ from the filament figure on the archive card, which is the whole file's total.
+!!! note "Это показатели конкретной печати, а не архива"
+    **Израсходовано филамента** и **Стоимость** рассчитываются для *этой* печати, а не копируются из оценки файла: для прерванной печати учитывается достигнутый прогресс, данные отслеживаемых катушек имеют приоритет над оценкой, а при отправке многопластинного проекта по одной пластине учитывается только напечатанная пластина. Поэтому значение в строке может отличаться от расхода на карточке архива, где указан итог для всего файла.
 
-    **Energy** and **Energy Cost** are written by a background task shortly after the print ends, so a run that just finished shows &mdash; for a moment before the measurement lands.
+    **Энергия** и **Стоимость энергии** записываются фоновым заданием вскоре после окончания печати, поэтому сразу после завершения некоторое время отображается прочерк, пока не поступят измерения.
 
-### Sorting
+### Сортировка {#sorting}
 
-Click any column header to sort the log by it, and click again to reverse. Dates, durations and amounts open on largest-first; text columns open A&ndash;Z. The arrow in the header shows which column is active and which way it runs, and your choice is remembered for next time.
+Нажмите заголовок любого столбца для сортировки журнала; повторное нажатие меняет направление. Даты, длительности и суммы сначала сортируются по убыванию, текст — от A до Z. Стрелка в заголовке показывает активный столбец и направление, а выбор запоминается.
 
-Sorting applies to the **whole log**, not the page you are looking at &mdash; asking for the most expensive print returns the most expensive print, not the most expensive one of the 25 rows currently on screen. Changing the sort returns you to page 1.
+Сортировка применяется ко **всему журналу**, а не только к текущей странице: запрос самой дорогой печати найдёт её во всём журнале, а не только среди 25 видимых строк. При изменении сортировки открывается первая страница.
 
-Rows with nothing in the sorted column always come last, in both directions, so sorting by **Cost** or **Energy** never opens on a screenful of blanks.
+Строки без значения в сортируемом столбце всегда остаются в конце, независимо от направления, поэтому сортировка по **Стоимости** или **Энергии** не откроется на странице пустых значений.
 
-### Choosing columns
+### Выбор столбцов {#choosing-columns}
 
-Click :material-view-column: **Columns** above the table to pick which of the columns above appear, and in what order. Drag a row (or use the arrows) to reorder, and the eye icon to show or hide.
+Нажмите :material-view-column: **Столбцы** над таблицей, чтобы выбрать отображаемые столбцы и их порядок. Перетаскивайте строки или используйте стрелки для изменения порядка; значок глаза показывает или скрывает столбец.
 
-The choice is stored in your browser, so it is per-device rather than per-account &mdash; a second person using the same Bambuddy keeps their own layout, and clearing site data resets it. **Reset** in the picker restores the defaults.
+Настройка хранится в браузере, поэтому она привязана к устройству, а не учётной записи: другой пользователь того же Bambuddy сохраняет собственный вид, а очистка данных сайта сбрасывает настройки. Кнопка **Сбросить** возвращает значения по умолчанию.
 
-### Status Badges
+### Индикаторы статуса {#status-badges}
 
-| Status | Color | Description |
+| Статус | Цвет | Описание |
 |--------|-------|-------------|
-| **Completed** | Green | Print finished successfully |
-| **Failed** | Red | Print encountered an error |
-| **Stopped** | Orange | Print was manually stopped |
-| **Cancelled** | Grey | Print was cancelled before finishing |
-| **Skipped** | Purple | Print was skipped in the queue |
+| **Завершено** | Зелёный | Печать успешно завершена |
+| **Ошибка** | Красный | При печати произошла ошибка |
+| **Остановлено** | Оранжевый | Печать остановлена вручную |
+| **Отменено** | Серый | Печать отменена до завершения |
+| **Пропущено** | Фиолетовый | Печать пропущена в очереди |
 
 ---
 
-## :material-filter: Filtering
+## :material-filter: Фильтрация {#filtering}
 
-Narrow down log entries using the filter controls at the top of the table:
+Используйте фильтры над таблицей, чтобы сузить список записей:
 
-| Filter | Description |
+| Фильтр | Описание |
 |--------|-------------|
-| **Search** | Free-text search across print names |
-| **Printer** | Show entries from a specific printer |
-| **User** | Show entries from a specific user |
-| **Status** | Filter by result (completed, failed, stopped, cancelled, skipped) |
-| **Date From** | Show entries from this date onward |
-| **Date To** | Show entries up to this date |
+| **Поиск** | Произвольный текстовый поиск по названиям печатей |
+| **Принтер** | Записи определённого принтера |
+| **Пользователь** | Записи определённого пользователя |
+| **Статус** | Фильтр по результату: завершено, ошибка, остановлено, отменено, пропущено |
+| **Дата с** | Записи начиная с указанной даты |
+| **Дата по** | Записи до указанной даты |
 
-### Combining Filters
+### Совместное использование фильтров {#combining-filters}
 
-All filters can be combined. For example, show only failed prints from "Workshop X1C" in the last week by selecting the printer, status, and date range together.
+Все фильтры можно комбинировать. Например, выберите принтер, статус и период, чтобы показать только неудачные печати «Workshop X1C» за последнюю неделю.
 
 ---
 
-## :material-book-open-page-variant: Pagination
+## :material-book-open-page-variant: Постраничная навигация {#pagination}
 
-The Print Log supports configurable pagination for navigating large histories:
+Для больших журналов доступна настройка постраничного вывода:
 
-| Setting | Options |
+| Настройка | Варианты |
 |---------|---------|
-| **Rows per page** | 10, 25, 50, or 100 |
-| **Navigation** | Previous / Next page buttons |
+| **Строк на странице** | 10, 25, 50 или 100 |
+| **Навигация** | Кнопки предыдущей и следующей страницы |
 
-The current page range and total entry count are displayed alongside the navigation controls.
+Рядом с кнопками показаны диапазон текущих записей и их общее количество.
 
 ---
 
-## :material-cursor-pointer: Per-row actions
+## :material-cursor-pointer: Действия со строкой {#per-row-actions}
 
-Every row in the Print Log has two action buttons on the right:
+Справа в каждой строке журнала находятся две кнопки:
 
-### :material-pencil: Edit (classification)
+### :material-pencil: Изменение классификации {#edit-classification}
 
-Click the pencil icon to classify the print run -- set or change the **failure cause** and **status** on a single entry.
+Нажмите значок карандаша, чтобы классифицировать отдельную печать — задать или изменить **причину неудачи** и **статус**.
 
-| Field | Values |
+| Поле | Значения |
 |-------|--------|
-| **Status** | Completed, Failed, Stopped, Cancelled, Skipped |
-| **Failure cause** | Adhesion failure, Spaghetti / Detached, Layer shift, Clogged nozzle, Filament runout, Warping, Stringing, Under-extrusion, Power failure, User cancelled, No status update received, Stopped by the printer kill switch, Other |
+| **Статус** | Завершено, ошибка, остановлено, отменено, пропущено |
+| **Причина неудачи** | Проблема с адгезией, спагетти / отрыв, сдвиг слоёв, засор сопла, закончился филамент, деформация, нити, недостаточная экструзия, сбой питания, отмена пользователем, не получено обновление статуса, остановка аварийным выключателем принтера, другое |
 
-The classification you pick here is what the **Failure Analysis** widget groups by, so updates flow into the dashboard charts immediately.
+По выбранной классификации группирует данные виджет **Анализ неудач**, поэтому изменения сразу отражаются на графиках панели.
 
-!!! tip "Works on orphan entries too"
-    If a print failed before any archive was created (for example, a dispatch error or a manual log entry), there is no archive to edit through -- the Print Log row editor is the only way to classify those runs.
+!!! tip "Работает и для записей без архива"
+    Если печать завершилась неудачей до создания архива (например, ошибка отправки или запись журнала вручную), редактировать архив невозможно. В таком случае редактор строки журнала — единственный способ классифицировать печать.
 
-### :material-delete: Delete (single row)
+### :material-delete: Удаление одной строки {#delete-single-row}
 
-Click the trash icon to remove a single entry from the log. The entry's filament, time, and cost contributions drop out of Quick Stats in the same response cycle. The matching archive (if any) is not affected -- the log row is independent of the archive.
+Нажмите значок корзины, чтобы удалить отдельную запись журнала. Её филамент, время и стоимость исключаются из быстрой статистики в том же цикле ответа. Соответствующий архив, если он есть, не изменяется: строка журнала независима от архива.
 
-!!! note "Permission gating"
-    Both buttons honour the same ownership shape as archive edits. With `ARCHIVES_UPDATE_OWN` / `ARCHIVES_DELETE_OWN` you can only act on entries you created; `ARCHIVES_UPDATE_ALL` / `ARCHIVES_DELETE_ALL` see every entry.
-
----
-
-## :material-delete-sweep: Clearing the Log
-
-The **Clear** button removes all log entries from the database.
-
-!!! warning "Permanent Action"
-    Clearing the log permanently deletes all log entries. This action cannot be undone.
-
-!!! note "Archives Are Not Affected"
-    The Print Log is stored independently from your archives and print queue. Clearing the log only removes log entries -- your archived 3MF files, metadata, and queue history remain untouched.
+!!! note "Проверка разрешений"
+    Обе кнопки учитывают владельца так же, как изменение архивов. С `ARCHIVES_UPDATE_OWN` / `ARCHIVES_DELETE_OWN` можно работать только с созданными вами записями; `ARCHIVES_UPDATE_ALL` / `ARCHIVES_DELETE_ALL` позволяют работать со всеми.
 
 ---
 
-## :material-database: How It Works
+## :material-delete-sweep: Очистка журнала {#clearing-the-log}
 
-### Automatic Logging
+Кнопка **Очистить** удаляет все записи журнала из базы данных.
 
-Log entries are written automatically whenever a print completes. No configuration is required -- once archiving is active, print events are recorded in the log.
+!!! warning "Необратимое действие"
+    Очистка навсегда удаляет все записи журнала. Отменить действие нельзя.
 
-### Independent Storage
-
-The Print Log uses its own database table (`print_log_entries`), separate from the archives table. This means:
-
-- Log entries exist independently of archives
-- Deleting an archive does not remove its log entry
-- Clearing the log does not affect archives
-- The log stays reachable with no archives at all &mdash; purging every archive leaves the log and its history intact
-- The log is lightweight and optimized for fast querying
+!!! note "Архивы не затрагиваются"
+    Журнал хранится отдельно от архивов и очереди печати. Очистка удаляет только записи журнала; архивные файлы 3MF, метаданные и история очереди остаются без изменений.
 
 ---
 
-## :material-lock: Permissions
+## :material-database: Как это работает {#how-it-works}
 
-When authentication is enabled, the Print Log respects the following permissions:
+### Автоматическая запись {#automatic-logging}
 
-| Action | Required Permission |
+Записи создаются автоматически при каждом завершении печати. Настройка не требуется: после включения архивации события печати записываются в журнал.
+
+### Независимое хранение {#independent-storage}
+
+Журнал использует собственную таблицу базы данных (`print_log_entries`), отдельную от таблицы архивов. Это означает:
+
+- Записи журнала существуют независимо от архивов
+- Удаление архива не удаляет запись журнала
+- Очистка журнала не затрагивает архивы
+- Журнал доступен даже без архивов: удаление всех архивов сохраняет журнал и его историю
+- Журнал занимает мало места и оптимизирован для быстрых запросов
+
+---
+
+## :material-lock: Разрешения {#permissions}
+
+При включённой аутентификации журнал учитывает следующие разрешения:
+
+| Действие | Необходимое разрешение |
 |--------|-------------------|
-| **View** the Print Log | `ARCHIVES_READ` |
-| **Edit** classification on a row you own | `ARCHIVES_UPDATE_OWN` |
-| **Edit** classification on any row | `ARCHIVES_UPDATE_ALL` |
-| **Delete** a single row you own | `ARCHIVES_DELETE_OWN` |
-| **Delete** any single row | `ARCHIVES_DELETE_ALL` |
-| **Clear** all log entries | `ARCHIVES_DELETE_ALL` |
+| **Просмотр** журнала | `ARCHIVES_READ` |
+| **Изменение** классификации своей записи | `ARCHIVES_UPDATE_OWN` |
+| **Изменение** классификации любой записи | `ARCHIVES_UPDATE_ALL` |
+| **Удаление** отдельной своей записи | `ARCHIVES_DELETE_OWN` |
+| **Удаление** любой отдельной записи | `ARCHIVES_DELETE_ALL` |
+| **Очистка** всех записей журнала | `ARCHIVES_DELETE_ALL` |
 
 ---
 
-## :material-api: API Access
+## :material-api: Доступ через API {#api-access}
 
-### List Log Entries
+### Список записей журнала {#list-log-entries}
 
 ```http
 GET /api/v1/print-log/
 ```
 
-**Query Parameters:**
+**Параметры запроса:**
 
-| Parameter | Type | Description |
+| Параметр | Тип | Описание |
 |-----------|------|-------------|
-| `search` | string | Search print names |
-| `printer_id` | integer | Filter by printer ID |
-| `created_by_username` | string | Filter by username |
-| `status` | string | Filter by status (completed, failed, stopped, cancelled, skipped) |
-| `date_from` | datetime | Start of date range |
-| `date_to` | datetime | End of date range |
-| `limit` | integer | Number of entries per page (default 50, max 500) |
-| `offset` | integer | Pagination offset |
-| `sort_by` | string | Column to order by (default `date`). One of `date`, `print_name`, `printer`, `user`, `status`, `duration`, `completed_at`, `filament`, `filament_used`, `cost`, `energy`, `energy_cost`, `wear_cost`. Anything else returns 400 |
-| `sort_dir` | string | `asc` or `desc` (default `desc`). Rows with no value in the sorted column come last either way |
+| `search` | string | Поиск по названиям печати |
+| `printer_id` | integer | Фильтр по ID принтера |
+| `created_by_username` | string | Фильтр по имени пользователя |
+| `status` | string | Фильтр по статусу (completed, failed, stopped, cancelled, skipped) |
+| `date_from` | datetime | Начало диапазона дат |
+| `date_to` | datetime | Конец диапазона дат |
+| `limit` | integer | Число записей на странице (по умолчанию 50, максимум 500) |
+| `offset` | integer | Смещение для постраничного вывода |
+| `sort_by` | string | Столбец сортировки (по умолчанию `date`): `date`, `print_name`, `printer`, `user`, `status`, `duration`, `completed_at`, `filament`, `filament_used`, `cost`, `energy`, `energy_cost`, `wear_cost`. Другое значение возвращает 400 |
+| `sort_dir` | string | `asc` или `desc` (по умолчанию `desc`). Строки без значения сортируемого столбца всегда помещаются в конец |
 
-**Example:**
+**Пример:**
 
 ```bash
 curl -H "X-API-Key: your-key" \
   "http://localhost:8000/api/v1/print-log/?status=failed&limit=10"
 ```
 
-### Update a Single Entry
+### Изменение одной записи {#update-a-single-entry}
 
 ```http
 PATCH /api/v1/print-log/{entry_id}
 ```
 
-Edit the classification (failure cause and/or status) or the note of one entry. Requires `ARCHIVES_UPDATE_OWN` for entries you created, or `ARCHIVES_UPDATE_ALL` for any entry.
+Изменяет классификацию (причину неудачи и/или статус) или заметку одной записи. Для собственных записей требуется `ARCHIVES_UPDATE_OWN`, для любых — `ARCHIVES_UPDATE_ALL`.
 
-**Request body:**
+**Тело запроса:**
 
 ```json
 {
@@ -228,16 +228,16 @@ Edit the classification (failure cause and/or status) or the note of one entry. 
 }
 ```
 
-All fields are optional. To clear an existing classification send `"failure_reason": ""`. `notes` is the print's own note, shown on its [archive window](archiving.md#the-archive-window) beside the archive's note on the file; `""` clears it.
+Все поля необязательны. Чтобы очистить классификацию, отправьте `"failure_reason": ""`. Поле `notes` содержит собственную заметку печати, отображаемую в [окне архива](archiving.md#the-archive-window) рядом с заметкой архива о файле; `""` очищает её.
 
-| Field | Valid values |
+| Поле | Допустимые значения |
 |-------|--------------|
-| `failure_reason` | `""` (clear), `adhesionFailure`, `spaghettiDetached`, `layerShift`, `cloggedNozzle`, `filamentRunout`, `warping`, `stringing`, `underExtrusion`, `powerFailure`, `userCancelled`, `noStatusUpdate`, `killSwitch`, `other` |
+| `failure_reason` | `""` (очистить), `adhesionFailure`, `spaghettiDetached`, `layerShift`, `cloggedNozzle`, `filamentRunout`, `warping`, `stringing`, `underExtrusion`, `powerFailure`, `userCancelled`, `noStatusUpdate`, `killSwitch`, `other` |
 | `status` | `completed`, `failed`, `stopped`, `cancelled`, `skipped` |
 
-Unknown values return HTTP 400 -- the canonical vocabulary above is enforced server-side.
+Неизвестные значения возвращают HTTP 400: сервер проверяет их по приведённому списку.
 
-**Example:**
+**Пример:**
 
 ```bash
 curl -X PATCH -H "X-API-Key: your-key" -H "Content-Type: application/json" \
@@ -245,30 +245,30 @@ curl -X PATCH -H "X-API-Key: your-key" -H "Content-Type: application/json" \
   "http://localhost:8000/api/v1/print-log/42"
 ```
 
-### Delete a Single Entry
+### Удаление одной записи {#delete-a-single-entry}
 
 ```http
 DELETE /api/v1/print-log/{entry_id}
 ```
 
-Removes one entry from the log. The entry's filament, time, and cost contributions drop out of `/api/v1/archives/stats` on the same request cycle. The linked archive (if any) is untouched. Requires `ARCHIVES_DELETE_OWN` for entries you created, or `ARCHIVES_DELETE_ALL` for any entry.
+Удаляет одну запись журнала. Её вклад в расход филамента, время и стоимость исключается из `/api/v1/archives/stats` в том же цикле запроса. Связанный архив, если он есть, не изменяется. Для собственных записей требуется `ARCHIVES_DELETE_OWN`, для любых — `ARCHIVES_DELETE_ALL`.
 
-**Example:**
+**Пример:**
 
 ```bash
 curl -X DELETE -H "X-API-Key: your-key" \
   "http://localhost:8000/api/v1/print-log/42"
 ```
 
-### Clear All Log Entries
+### Очистка всех записей журнала {#clear-all-log-entries}
 
 ```http
 DELETE /api/v1/print-log/
 ```
 
-Removes all log entries. Requires `ARCHIVES_DELETE_ALL` permission.
+Удаляет все записи журнала. Требуется разрешение `ARCHIVES_DELETE_ALL`.
 
-**Example:**
+**Пример:**
 
 ```bash
 curl -X DELETE -H "X-API-Key: your-key" \
@@ -277,16 +277,16 @@ curl -X DELETE -H "X-API-Key: your-key" \
 
 ---
 
-## :material-lightbulb: Tips
+## :material-lightbulb: Советы {#tips}
 
-!!! tip "Quick Status Check"
-    Use the status filter to quickly find all failed prints and investigate patterns.
+!!! tip "Быстрая проверка статуса"
+    Используйте фильтр статуса, чтобы быстро найти все неудачные печати и изучить закономерности.
 
-!!! tip "Date Range Analysis"
-    Set a date range to review a specific time period, such as "last week" or "this month."
+!!! tip "Анализ периода"
+    Задайте диапазон дат, например «прошлая неделя» или «этот месяц».
 
-!!! tip "Per-User Tracking"
-    When authentication is enabled, filter by user to see each person's print activity.
+!!! tip "Отслеживание по пользователям"
+    При включённой аутентификации используйте фильтр пользователя, чтобы увидеть печати каждого участника.
 
-!!! tip "Lightweight History"
-    The Print Log loads faster than the full archive views since it only fetches tabular data without thumbnails and 3MF metadata.
+!!! tip "Компактная история"
+    Журнал загружается быстрее полного представления архива, поскольку получает только табличные данные без миниатюр и метаданных 3MF.
