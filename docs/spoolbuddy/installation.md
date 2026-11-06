@@ -44,10 +44,10 @@ sudo ./install.sh
 ### Примеры автоматической установки {#unattended-examples}
 
 ```bash
-# SpoolBuddy-only mode
+# Режим только SpoolBuddy
 sudo ./install.sh --mode spoolbuddy --bambuddy-url http://192.168.1.100:8000 --api-key bb_xxx --yes
 
-# Full local mode
+# Полный локальный режим
 sudo ./install.sh --mode full --port 8000 --yes
 ```
 
@@ -72,13 +72,13 @@ sudo reboot
 После перезагрузки убедитесь, что оборудование подключено и определяется правильно:
 
 ```bash
-# SPI devices present
+# Проверка наличия устройств SPI
 ls /dev/spidev0.*
 
-# I2C bus 1 present
+# Проверка наличия шины I2C 1
 ls /dev/i2c-1
 
-# NAU7802 visible on bus 1 (0x2A)
+# Проверка видимости NAU7802 на шине 1 (0x2A)
 sudo i2cdetect -y 1
 ```
 
@@ -98,10 +98,10 @@ sudo /opt/bambuddy/spoolbuddy/venv/bin/python /opt/bambuddy/spoolbuddy/scripts/s
 ## :material-application-cog: Управление службами {#service-management}
 
 ```bash
-# SpoolBuddy service status
+# Состояние службы SpoolBuddy
 sudo systemctl status spoolbuddy
 
-# Follow SpoolBuddy logs
+# Просмотр журнала SpoolBuddy в реальном времени
 sudo journalctl -u spoolbuddy -f
 ```
 
