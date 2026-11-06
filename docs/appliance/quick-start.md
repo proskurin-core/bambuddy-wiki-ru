@@ -1,37 +1,37 @@
 ---
-title: Quick Start
-description: Flash the Bambuddy Appliance image, run the setup wizard, and reach Bambuddy
+title: Быстрый старт
+description: Запись образа Bambuddy Appliance, запуск мастера настройки и доступ к Bambuddy
 ---
 
-# Quick Start
+# Быстрый старт {#quick-start}
 
-From a downloaded image to a running Bambuddy in about half an hour, most of which is the card writing itself.
+От скачанного образа до работающего Bambuddy проходит около получаса; большую часть времени занимает запись карты.
 
-!!! tip "There is a printed version"
-    The same walkthrough is available as a [20-page A5 booklet](https://bambuddy.cool/assets/downloads/bambuddy-appliance-quickstart.pdf) &mdash; the one buyers get, also [in German](https://bambuddy.cool/assets/downloads/bambuddy-appliance-quickstart-de.pdf). Handy to have beside you rather than on the screen you are configuring.
+!!! tip "Есть печатная версия"
+    Это же руководство доступно в виде [20-страничной брошюры A5](https://bambuddy.cool/assets/downloads/bambuddy-appliance-quickstart.pdf), которую получают покупатели; есть также [немецкая версия](https://bambuddy.cool/assets/downloads/bambuddy-appliance-quickstart-de.pdf). Её удобно держать рядом, не занимая экран устройства, на котором выполняется настройка.
 
 ---
 
-## 1. Write the card
+## 1. Запишите карту {#1-write-the-card}
 
-You need the image, a microSD card of at least 64 GB, and a card reader. See [what to buy](index.md#what-you-need-to-buy) if you have not bought the hardware yet.
+Понадобятся образ, карта microSD объёмом не менее 64 ГБ и устройство для чтения карт. Если оборудование ещё не куплено, см. [что необходимо купить](index.md#what-you-need-to-buy).
 
-### Download and verify
+### Скачивание и проверка {#download-and-verify}
 
-Two files arrive together: the image, whose name ends in `.img.xz`, and a short `SHA256SUMS` beside it.
+Предоставляются два файла: образ с расширением `.img.xz` и небольшой файл `SHA256SUMS` рядом с ним.
 
-!!! warning "Do not unpack the `.img.xz`"
-    Raspberry Pi Imager reads the compressed file as it is. Unpacking it first costs time and about 22 GB of disk, and gains nothing.
+!!! warning "Не распаковывайте `.img.xz`"
+    Raspberry Pi Imager читает сжатый файл напрямую. Предварительная распаковка занимает время и около 22 ГБ на диске, не принося пользы.
 
-A card written from a half-finished download boots to nothing in particular, and the failure looks like a hardware fault. One command rules it out &mdash; run it in the folder holding both files:
+Карта, записанная из недокачанного файла, может не загрузиться, и проблема будет похожа на неисправность оборудования. Проверьте файл одной командой из папки, содержащей оба файла:
 
-=== ":material-apple: macOS and Linux"
+=== ":material-apple: macOS и Linux"
 
     ```bash
     shasum -a 256 -c SHA256SUMS
     ```
 
-    You are looking for the word `OK`.
+    В результате должно появиться `OK`.
 
 === ":material-microsoft-windows: Windows"
 
@@ -39,223 +39,223 @@ A card written from a half-finished download boots to nothing in particular, and
     Get-FileHash *.img.xz -Algorithm SHA256
     ```
 
-    Compare the hash it prints with the one inside `SHA256SUMS`. They should match character for character.
+    Сравните выведенный хеш со значением в `SHA256SUMS`. Они должны совпадать посимвольно.
 
-If it does not match, download it again rather than trying to use the file.
+Если значения различаются, скачайте файл заново.
 
-### Raspberry Pi Imager
+### Raspberry Pi Imager {#raspberry-pi-imager}
 
-[Raspberry Pi Imager](https://www.raspberrypi.com/software/) is free and official, for Windows, macOS and Linux. Put the card in your reader before you start.
+[Raspberry Pi Imager](https://www.raspberrypi.com/software/) — бесплатная официальная программа для Windows, macOS и Linux. Перед запуском вставьте карту в устройство чтения.
 
-1. **Device** &mdash; choose Raspberry Pi 5. This only filters the next screen; it does not change what gets written.
-2. **Operating system** &mdash; scroll to the very bottom and pick **Use custom**. It is the last entry, below *Erase*, and almost everyone scrolls past it.
-3. Select the **`.img.xz`** you downloaded.
-4. **Storage** &mdash; choose your card. It shows the size and where the card is mounted; read it before continuing.
-5. **Write**, then confirm the erase warning. Imager asks once, in red, and it means it.
-6. **Let it verify.** It writes, then reads the card back to check every byte. There is a button offering to skip this. Don't.
-7. **Write complete.** The card is ejected for you.
+1. **Device** — выберите Raspberry Pi 5. Это только фильтрует следующий экран и не меняет записываемый образ.
+2. **Operating system** — прокрутите список до самого конца и выберите **Use custom**. Это последний пункт под *Erase*, его легко пропустить.
+3. Выберите скачанный **`.img.xz`**.
+4. **Storage** — выберите карту. Проверьте показанные размер и место подключения.
+5. Нажмите **Write** и подтвердите предупреждение об удалении данных. Imager задаёт вопрос один раз и выделяет его красным.
+6. **Дождитесь проверки.** После записи программа считывает карту и проверяет каждый байт. Не используйте кнопку пропуска проверки.
+7. **Запись завершена.** Карта извлекается автоматически.
 
-!!! info "Customisation stays greyed out, and that is correct"
-    Imager skips its own settings screen for a custom image, so it jumps straight from Storage to writing. Hostname, WiFi, password and time zone all belong to the appliance's own setup wizard.
+!!! info "Параметры настройки недоступны — это нормально"
+    Для пользовательского образа Imager пропускает собственный экран настроек и переходит от выбора накопителя к записи. Имя хоста, Wi-Fi, пароль и часовой пояс задаются в мастере самого устройства.
 
-!!! danger "Check the storage device twice"
-    Imager hides internal drives by default, but an external disk plugged into the same computer appears in that list looking much like a card reader. The confirmation is the last thing between you and the wrong drive.
-
----
-
-## 2. Before you power on
-
-Two of the things you need live on your **printer**, not on the appliance. Getting them ready first makes the rest quick.
-
-- [x] **Storage inserted** in the printer, if your model takes any &mdash; a microSD card on the X1 and P1 series, a USB stick on the H2 series. The A1 and A1 Mini have storage built in and need nothing. A printer that takes storage cannot receive a file without it.
-- [x] **LAN Only Mode** switched on, from the printer's touchscreen.
-- [x] **Developer Mode** switched on. It appears once LAN Only Mode is on. Without it Bambuddy can watch your printer but not control it.
-- [x] The printer's **access code** (eight characters, shown when Developer Mode is enabled), its **IP address**, and its **serial number**.
-
-See [Enabling Developer Mode](../getting-started/index.md#enabling-developer-mode) for the full walkthrough.
-
-!!! warning "The access code changes"
-    Every time you toggle LAN Only Mode or Developer Mode off and on again, the printer generates a new access code. If Bambuddy stops connecting weeks later, this is usually why.
+!!! danger "Дважды проверьте выбранный накопитель"
+    Imager по умолчанию скрывает внутренние диски, но внешний диск, подключённый к тому же компьютеру, появляется в списке и похож на устройство чтения карт. Подтверждение — последняя возможность избежать записи на неправильный диск.
 
 ---
 
-## 3. Power on
+## 2. Подготовка перед включением {#2-before-you-power-on}
 
-Put the card in the Pi and connect the power supply. The first boot takes a couple of minutes while the pre-baked Bambuddy container is loaded from the card.
+Два необходимых пункта относятся к **принтеру**, а не к устройству Appliance. Подготовьте их заранее, чтобы ускорить настройку.
 
-Then pick whichever applies:
+- [x] **Накопитель вставлен** в принтер, если он предусмотрен моделью: microSD для серий X1 и P1, USB-накопитель для серии H2. В A1 и A1 Mini накопитель встроен. Принтер, которому нужен накопитель, не может получать файлы без него.
+- [x] На сенсорном экране принтера включён **режим «Только локальная сеть»**.
+- [x] Включён **режим разработчика**. Он появляется после включения режима локальной сети. Без него Bambuddy может наблюдать за принтером, но не управлять им.
+- [x] Записаны **код доступа** принтера (восемь символов, показывается при включении режима разработчика), его **IP-адрес** и **серийный номер**.
 
-=== ":material-ethernet: With an ethernet cable"
+Полную инструкцию см. в разделе [Включение режима разработчика](../getting-started/index.md#enabling-developer-mode).
 
-    The appliance takes a DHCP lease and serves the setup wizard straight away. Open:
+!!! warning "Код доступа меняется"
+    При каждом выключении и повторном включении режима локальной сети или разработчика принтер создаёт новый код доступа. Если через несколько недель Bambuddy перестанет подключаться, часто причина именно в этом.
+
+---
+
+## 3. Включите устройство {#3-power-on}
+
+Вставьте карту в Pi и подключите питание. Первая загрузка занимает несколько минут, пока с карты загружается заранее включённый контейнер Bambuddy.
+
+Выберите подходящий вариант:
+
+=== ":material-ethernet: С кабелем Ethernet"
+
+    Устройство получает адрес по DHCP и сразу запускает мастер настройки. Откройте:
 
     ```
     http://bambuddy.local:8000
     ```
 
-    If that name doesn't resolve, find the appliance's IP in your router's client list and browse to `http://<ip>:8000`.
+    Если имя не определяется, найдите IP-адрес устройства в списке клиентов маршрутизатора и откройте `http://<ip>:8000`.
 
-=== ":material-wifi: Without ethernet"
+=== ":material-wifi: Без Ethernet"
 
-    The appliance raises its own WiFi access point:
+    Устройство создаёт собственную точку доступа Wi-Fi:
 
     | | |
     |---|---|
-    | Network | `Bambuddy-Setup` |
-    | Setup page | `http://bambuddy.local:8000` |
+    | Сеть | `Bambuddy-Setup` |
+    | Страница настройки | `http://bambuddy.local:8000` |
 
-    Join it from a phone or laptop. Most devices open the setup page by themselves through the captive-portal prompt. If yours doesn't, browse to the address above.
+    Подключитесь к ней с телефона или ноутбука. Большинство устройств автоматически открывает страницу настройки через приглашение портала. Если этого не произошло, откройте указанный выше адрес.
 
-!!! info "Why the wizard waits"
-    Before it lets you continue, the wizard waits for the clock to synchronise. A Raspberry Pi has no battery-backed clock, and an unsynchronised clock breaks every HTTPS connection the appliance needs to make &mdash; including the one that fetches your printers' certificates. This usually takes a few seconds.
+!!! info "Почему мастер ожидает"
+    Прежде чем продолжить, мастер ждёт синхронизации часов. В Raspberry Pi нет часов с резервным питанием, а неверное время нарушает все необходимые HTTPS-соединения, в том числе получение сертификатов принтеров. Обычно это занимает несколько секунд.
 
 ---
 
-## 4. The setup wizard
+## 4. Мастер настройки {#4-the-setup-wizard}
 
-The wizard shows one screen at a time. On ethernet, the WiFi screen is skipped &mdash; you're already connected.
+Мастер показывает по одному экрану. При подключении по Ethernet экран Wi-Fi пропускается, поскольку устройство уже в сети.
 
-| Screen | What it asks |
+| Экран | Что требуется |
 |---|---|
-| **Welcome** | Nothing. Continue. |
-| **Connect to your WiFi** | Pick your network and enter its password. **Skipped on ethernet.** |
-| **Configure your appliance** | A device name (used as its `.local` hostname), your time zone, and the language for Bambuddy. All changeable later. |
-| **Your licence key** | The key from your order confirmation. Skippable &mdash; see below. |
-| **Set a password** | Required &mdash; see below. |
-| **Almost there** | The hand-off. Read the next section before pressing the button. |
+| **Welcome** | Ничего. Продолжите. |
+| **Connect to your WiFi** | Выберите сеть и введите пароль. **Пропускается при Ethernet.** |
+| **Configure your appliance** | Имя устройства (используется как имя хоста `.local`), часовой пояс и язык Bambuddy. Всё можно изменить позже. |
+| **Your licence key** | Ключ из подтверждения заказа. Можно пропустить — см. ниже. |
+| **Set a password** | Обязательный шаг — см. ниже. |
+| **Almost there** | Переход к работе. Прочитайте следующий раздел перед нажатием кнопки. |
 
-![Connect to your WiFi](../assets/appliance-wizard-wifi.jpg){ .screenshot }
+![Подключение к Wi-Fi](../assets/appliance-wizard-wifi.jpg){ .screenshot }
 
-![Configure your appliance](../assets/appliance-wizard-settings.jpg){ .screenshot }
+![Настройка устройства](../assets/appliance-wizard-settings.jpg){ .screenshot }
 
-### Your licence key
+### Лицензионный ключ {#your-licence-key}
 
-![Your licence key](../assets/appliance-wizard-subscription-key.jpg){ .screenshot }
+![Лицензионный ключ](../assets/appliance-wizard-subscription-key.jpg){ .screenshot }
 
-Twenty characters in four groups, from your order confirmation. Dashes and capitals do not matter &mdash; the wizard normalises what you type, including the letters the key alphabet avoids (`I`, `L`, `O`, `U`).
+Ключ из подтверждения заказа содержит двадцать символов в четырёх группах. Дефисы и регистр не имеют значения: мастер нормализует ввод, включая буквы, исключённые из алфавита ключа (`I`, `L`, `O`, `U`).
 
-The key is what opens the update channel. It is not a licence to run the software: Bambuddy is AGPL and is never gated, which is why this screen has a **Skip for now** button and the password screen does not.
+Ключ открывает канал обновлений, но не является лицензией на запуск ПО: Bambuddy распространяется по AGPL и никогда не блокируется. Поэтому на этом экране есть кнопка **Skip for now**, а на экране пароля её нет.
 
-!!! tip "Skipping it costs nothing permanent"
-    A unit with no key runs exactly as it would with one, and simply receives no appliance updates. The appliance's own page then carries a notice with an **Enter a key** button until you add one, and the key is sent with the next heartbeat &mdash; no reset, no re-flash.
+!!! tip "Ключ можно добавить позже"
+    Устройство без ключа работает точно так же, но не получает обновлений компонентов. На его странице отображается уведомление с кнопкой **Enter a key**, пока ключ не добавлен; затем ключ отправляется со следующим сигналом состояния. Сброс и повторная запись образа не нужны.
 
 ---
 
-## 5. Set the password
+## 5. Установите пароль {#5-set-the-password}
 
-The wizard cannot be finished without this step. There is no skip button, and `/api/apply` and `/api/finish` both refuse until a password has been set, so the state is not reachable by driving the API either.
+Без этого шага завершить мастер нельзя. Кнопки пропуска нет, а `/api/apply` и `/api/finish` отклоняют запросы до установки пароля, поэтому обойти шаг через API тоже нельзя.
 
-!!! info "The appliance already gave itself a password"
-    On its first boot, before SSH was allowed to accept a connection, the appliance generated a password unique to that card and wrote it to **`bambuddy-password.txt` on the boot partition** &mdash; readable by putting the card in any computer, which is the only out-of-band channel a headless box has.
+!!! info "Устройство уже создало пароль"
+    При первой загрузке, до разрешения подключений SSH, устройство создало уникальный для карты пароль и записало его в **`bambuddy-password.txt` на загрузочном разделе**. Чтобы прочитать файл, вставьте карту в компьютер: это единственный внеполосный канал устройства без экрана.
 
-    That is what secures it until you reach this screen. Setting your own replaces it and deletes the file.
+    Этот пароль защищает устройство до текущего шага. Установка собственного пароля заменяет его и удаляет файл.
 
-One password unlocks **three** things, and this screen replaces it in all three at once:
+Один пароль открывает доступ к **трём** компонентам; этот экран заменяет его сразу для всех:
 
-- the admin panel on port `8001`, as user `admin`
-- the local console
-- **SSH on port 22, which is enabled by default and reachable from your entire LAN**
+- панели администратора на порту `8001` под пользователем `admin`;
+- локальной консоли;
+- **SSH на порту 22, включённому по умолчанию и доступному из всей локальной сети**.
 
-Eight characters minimum. There is no "forgot password" link and no email to send one to, so put it somewhere you will find it again.
+Требуется не менее восьми символов. Ссылки для восстановления и адреса для отправки пароля нет, поэтому сохраните его в надёжном доступном месте.
 
-You can change it later at any time:
+Пароль можно изменить позже:
 
 ```bash
 sudo bambuddy-appliance set-admin-password
 ```
 
-![Set a recovery password](../assets/appliance-wizard-password.jpg){ .screenshot }
+![Установка пароля восстановления](../assets/appliance-wizard-password.jpg){ .screenshot }
 
 ---
 
-## 6. The network switch
+## 6. Переключение сети {#6-the-network-switch}
 
-This is the only confusing part of the whole process, and it only happens if you set up over WiFi. Read it *before* you press the button.
+Этот шаг нужен только при настройке через Wi-Fi. Прочитайте его *до* нажатия кнопки.
 
-=== ":material-wifi: If you set up over WiFi"
+=== ":material-wifi: Настройка через Wi-Fi"
 
-    1. Press **Apply and switch networks**. The appliance shows its progress: loading Bambuddy, joining your WiFi, starting up.
-    2. **The `Bambuddy-Setup` network disappears.** This is supposed to happen &mdash; the appliance has stopped being a hotspot and joined your network instead.
-    3. **Your phone or laptop goes quiet. Reconnect it to your normal WiFi.** It will not do this by itself, and nothing is broken.
-    4. Open the address the wizard showed you, usually `http://bambuddy.local:8000`. Give it thirty to sixty seconds.
+    1. Нажмите **Apply and switch networks**. Устройство покажет ход загрузки Bambuddy, подключения к Wi-Fi и запуска.
+    2. **Сеть `Bambuddy-Setup` исчезнет.** Так и должно быть: устройство перестаёт работать точкой доступа и подключается к вашей сети.
+    3. **Телефон или ноутбук потеряет связь. Подключите его обратно к обычной сети Wi-Fi.** Автоматически это не произойдёт; устройство исправно.
+    4. Откройте адрес, показанный мастером, обычно `http://bambuddy.local:8000`. Подождите 30–60 секунд.
 
-=== ":material-ethernet: If you set up over ethernet"
+=== ":material-ethernet: Настройка через Ethernet"
 
-    Press **Start Bambuddy**, wait thirty to sixty seconds, and open the address shown. Your network never changes, so nothing disconnects.
+    Нажмите **Start Bambuddy**, подождите 30–60 секунд и откройте показанный адрес. Сеть не меняется и соединение не прерывается.
 
-!!! tip "Mistyped the WiFi password?"
-    The appliance notices it can't join, and brings the `Bambuddy-Setup` network back up. Rejoin it &mdash; the wizard is waiting exactly where you left it, and you can try again. It retries this indefinitely rather than stranding you.
-
----
-
-## 7. Set up Bambuddy
-
-The first time Bambuddy opens it asks how you want to sign in. Create an account with a username and password, or choose to run without authentication on a trusted home network. You can change your mind later.
-
-!!! info "Two different doors"
-    This account belongs to **Bambuddy**. It is separate from the appliance password you set in the wizard, which covers the admin panel, the console, and SSH.
+!!! tip "Ошиблись в пароле Wi-Fi?"
+    Устройство обнаружит неудачное подключение и снова создаст сеть `Bambuddy-Setup`. Подключитесь к ней: мастер продолжит работу с того же места, и вы сможете повторить попытку. Устройство будет повторять это без ограничения числа попыток.
 
 ---
 
-## 8. Add your printer
+## 7. Настройте Bambuddy {#7-set-up-bambuddy}
 
-Open the **Printers** page and press **Add Printer**. You need the three things you noted in [Before you power on](#2-before-you-power-on):
+При первом открытии Bambuddy предложит выбрать способ входа. Создайте учётную запись с именем пользователя и паролем или выберите работу без аутентификации в доверенной домашней сети. Решение можно изменить позже.
 
-| Field | Where it comes from |
+!!! info "Два разных способа доступа"
+    Эта учётная запись принадлежит **Bambuddy**. Она отделена от пароля устройства, заданного в мастере и защищающего панель администратора, консоль и SSH.
+
+---
+
+## 8. Добавьте принтер {#8-add-your-printer}
+
+Откройте страницу **Принтеры** и нажмите **Добавить принтер**. Понадобятся данные, записанные в разделе [Подготовка перед включением](#2-before-you-power-on):
+
+| Поле | Где взять |
 |---|---|
-| **Name** | Whatever you like &mdash; `Workshop X1C` |
-| **IP address** | The printer's screen, or your router |
-| **Access code** | Eight characters, from Developer Mode |
-| **Serial number** | The printer's screen |
+| **Название** | Любое удобное имя, например `Workshop X1C` |
+| **IP-адрес** | Экран принтера или маршрутизатор |
+| **Код доступа** | Восемь символов из режима разработчика |
+| **Серийный номер** | Экран принтера |
 
-Save. The indicator turns green once connected, and temperatures begin updating on their own. If it doesn't, it is almost always the access code &mdash; check it hasn't changed &mdash; or Developer Mode being off.
+Сохраните данные. После подключения индикатор станет зелёным, а температуры начнут обновляться автоматически. Если этого не произошло, чаще всего причина в изменившемся коде доступа или выключенном режиме разработчика.
 
-The full walkthrough is in [First Printer Setup](../getting-started/first-printer.md).
+Полная инструкция приведена в разделе [Настройка первого принтера](../getting-started/first-printer.md).
 
 ---
 
-## Where everything lives
+## Адреса {#where-everything-lives}
 
-| Address | What |
+| Адрес | Назначение |
 |---|---|
-| `http://bambuddy.local:8000` | Bambuddy &mdash; printers, queue, history |
-| `http://bambuddy.local:8001` | Appliance admin panel (user `admin`) |
-| `ssh pi@bambuddy.local` | Shell, for recovery |
+| `http://bambuddy.local:8000` | Bambuddy: принтеры, очередь, история |
+| `http://bambuddy.local:8001` | Панель администратора Appliance (пользователь `admin`) |
+| `ssh pi@bambuddy.local` | Командная оболочка для восстановления |
 
-Port `8000` is served by a small proxy sitting in front of Bambuddy. It passes the API, websockets, and camera streams straight through, so Home Assistant, your slicer, and the live view all behave exactly as they would against a plain Bambuddy install.
+Порт `8000` обслуживает небольшой прокси перед Bambuddy. Он напрямую передаёт API, WebSocket и потоки камеры, поэтому Home Assistant, слайсер и просмотр камеры работают так же, как при обычной установке Bambuddy.
 
 ---
 
-## Network: extra IPs, and reaching it from anywhere
+## Сеть: дополнительные IP-адреса и удалённый доступ {#network-extra-ips-and-reaching-it-from-anywhere}
 
-Two things on the admin panel's **Network** tab. Neither is needed for a normal setup &mdash; reach for them when one address isn't enough, or when you aren't home. Both are covered in full on the [Admin Panel](admin-panel.md) page.
+На вкладке **Network** панели администратора доступны две функции. Для обычной настройки они не нужны: используйте их, когда одного адреса недостаточно или вы не дома. Подробности см. на странице [Панель администратора](admin-panel.md).
 
-### Secondary IP aliases
+### Дополнительные IP-псевдонимы {#secondary-ip-aliases}
 
-A [Virtual Printer](../features/virtual-printer.md) impersonates a real one so your slicer can send straight to it, and each one needs an address of its own. Add one alias per virtual printer under **Network &rsaquo; Secondary IP aliases**, or from the shell:
+[Виртуальный принтер](../features/virtual-printer.md) представляет собой реальный принтер для слайсера, чтобы тот мог отправлять на него файлы напрямую; каждому виртуальному принтеру нужен собственный адрес. Добавьте по одному псевдониму через **Network &rsaquo; Secondary IP aliases** или в командной строке:
 
 ```bash
 bambuddy-appliance net-alias-add 192.168.1.50/24
 bambuddy-appliance net-alias-remove 192.168.1.50/24
 ```
 
-Aliases are added *alongside* the appliance's primary DHCP address and never replace it, so you cannot strand the appliance off its own network from here.
+Псевдонимы добавляются *наряду* с основным адресом DHCP и не заменяют его, поэтому таким способом нельзя отключить устройство от сети.
 
-!!! warning "Pick an address your router won't hand out"
-    Choose one outside the DHCP range. Otherwise your router will eventually lease the same address to another device, and the two will fight over it.
+!!! warning "Выберите адрес, который не выдаст маршрутизатор"
+    Адрес должен находиться вне диапазона DHCP. Иначе маршрутизатор со временем выдаст его другому устройству и возникнет конфликт.
 
-### Remote access (Tailscale)
+### Удалённый доступ (Tailscale) {#remote-access-tailscale}
 
-Reach your printers from anywhere without opening a port on your router. Tailscale builds a private connection between your own devices; the account is free and takes about a minute.
+Доступ к принтерам из любой точки без открытия порта маршрутизатора. Tailscale создаёт частное соединение между вашими устройствами; учётная запись бесплатна, её создание занимает около минуты.
 
-1. **Network &rsaquo; Set up remote access.** The daemon ships logged out and stays that way until you sign in here.
-2. **Scan the QR code with your phone.** Sign up or log in, then approve the appliance. The page notices by itself.
-3. **Use the address it gives you.** Paste the MagicDNS name into your slicer's Add Printer dialog to reach your virtual printers from anywhere on your tailnet.
+1. Откройте **Network &rsaquo; Set up remote access**. Демон установлен без выполненного входа и остаётся в этом состоянии до авторизации.
+2. **Отсканируйте QR-код телефоном.** Зарегистрируйтесь или войдите и подтвердите устройство. Страница обнаружит это автоматически.
+3. **Используйте выданный адрес.** Вставьте имя MagicDNS в окно добавления принтера слайсера, чтобы обращаться к виртуальным принтерам из любой точки вашей сети tailnet.
 
 ---
 
-## Next
+## Дальше {#next}
 
-- [Admin Panel](admin-panel.md) &mdash; what the box itself can tell you
-- [Updates &amp; Backups](updates.md) &mdash; before you need them, not after
-- [Recovery](recovery.md) &mdash; the factory reset, lockouts, and what to try first
+- [Панель администратора](admin-panel.md) — сведения об устройстве
+- [Обновления и резервные копии](updates.md) — изучите заранее
+- [Восстановление](recovery.md) — сброс, потеря доступа и первые шаги при проблемах

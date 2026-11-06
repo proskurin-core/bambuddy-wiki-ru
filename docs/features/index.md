@@ -1,273 +1,273 @@
 ---
-title: Features
-description: Explore all Bambuddy features
+title: Возможности
+description: Изучите возможности Bambuddy
 ---
 
-# Features
+# Возможности {#features}
 
-Bambuddy is packed with features to help you manage your 3D printing workflow. Explore them all below.
+Bambuddy предлагает множество возможностей для управления процессом 3D-печати. Ознакомьтесь с ними ниже.
 
 ---
 
-## :material-printer-3d-nozzle-outline: NEW: Integrated Slicing
+## :material-printer-3d-nozzle-outline: НОВИНКА: встроенная нарезка {#new-integrated-slicing}
 
 <div class="feature-card highlight" markdown>
 
-### [:material-cursor-pointer: Server-Side Slicing](slicer-api.md)
+### [:material-cursor-pointer: Нарезка на сервере](slicer-api.md) {#server-side-slicing}
 
-**Slice STL and 3MF files without a desktop slicer installed.** The optional `slicer-api/` Compose stack runs OrcaSlicer or Bambu Studio headlessly inside Docker; one **Slice** button in File Manager, Archives, and MakerWorld produces a ready-to-print `.gcode.3mf` in the same folder.
+**Нарезайте STL и 3MF без настольного слайсера.** Необязательный стек Compose `slicer-api/` запускает OrcaSlicer или Bambu Studio без графического интерфейса внутри Docker. Кнопка **Нарезать** в файловом менеджере, архиве и MakerWorld создаёт готовый к печати `.gcode.3mf` в той же папке.
 
-- One-click Slice button &mdash; result lands in the library with embedded thumbnail, ready for dispatch
-- Multi-plate 3MFs open a plate picker first; multi-color plates render one filament dropdown per AMS slot the print actually uses, auto-matched against your imported / Orca Cloud / Bambu Cloud / standard presets by type and colour
-- Slice-time preset lookup order is **Imported &rarr; Orca Cloud &rarr; Bambu Cloud &rarr; Standard**, so a locally-imported preset always wins over a cloud preset of the same name
-- Toast tracker follows the job from queued to completed across pages, so a long slice never pins the modal
-- Headless-friendly &mdash; runs on a NAS, mini-PC, or RPi 5 without a desktop slicer install
+- Нарезка одним нажатием &mdash; результат с встроенной миниатюрой появляется в библиотеке и готов к отправке
+- Для 3MF с несколькими пластинами сначала открывается выбор пластины; для многоцветной пластины отображается список филамента для каждого используемого слота AMS с автоматическим подбором импортированных, облачных Orca и Bambu или стандартных пресетов по типу и цвету
+- Порядок поиска пресетов при нарезке: **импортированные &rarr; Orca Cloud &rarr; Bambu Cloud &rarr; стандартные**. Локально импортированный пресет имеет приоритет перед одноимённым облачным
+- Всплывающий индикатор отслеживает задание от постановки в очередь до завершения на разных страницах, поэтому длительная нарезка не удерживает окно открытым
+- Работа без графического интерфейса &mdash; запускается на NAS, мини-ПК или RPi 5 без установки настольного слайсера
 
-[Setup Guide :material-arrow-right:](slicer-api.md){ .md-button .md-button--primary }
+[Руководство по настройке :material-arrow-right:](slicer-api.md){ .md-button .md-button--primary }
 
 </div>
 
 ---
 
-## :material-printer-3d: Printers & Monitoring
+## :material-printer-3d: Принтеры и мониторинг {#printers-monitoring}
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### [:material-monitor-dashboard: Real-time Monitoring](monitoring.md)
-Live printer status, temperatures, print progress, and HMS error tracking via WebSocket.
+### [:material-monitor-dashboard: Мониторинг в реальном времени](monitoring.md) {#real-time-monitoring}
+Текущее состояние принтера, температуры, ход печати и отслеживание ошибок HMS через WebSocket.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-camera: Camera Streaming](camera.md)
-MJPEG live video streaming and snapshots from your printer's built-in camera.
+### [:material-camera: Трансляция с камеры](camera.md) {#camera-streaming}
+Трансляция MJPEG и снимки со встроенной камеры принтера.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-eye-check: AI Failure Detection](failure-detection.md)
-Monitor camera snapshots with self-hosted Obico or optional OctoEverywhere cloud analysis. Configure notifications, pause actions, and which printers to monitor.
+### [:material-eye-check: Обнаружение ошибок с помощью ИИ](failure-detection.md) {#ai-failure-detection}
+Анализ снимков камеры с помощью самостоятельно размещённого Obico или облачного OctoEverywhere. Настройте уведомления, приостановку и список отслеживаемых принтеров.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-water-percent: AMS & Humidity](ams.md)
-Monitor AMS slot status, humidity levels, and temperature. Remote manual drying, scheduled drying sessions, queue auto-drying, ambient drying, continue drying while printing on capable hardware (H2D / H2C / H2S / P2S / X2D / X1C / A2L / H2D Pro), configurable drying presets, and per-filament humidity thresholds (different trigger per material — e.g. Nylon at 20%, PLA at 60%).
+### [:material-water-percent: AMS и влажность](ams.md) {#ams-humidity}
+Отслеживание состояния слотов AMS, влажности и температуры. Удалённая сушка вручную, по расписанию, автоматическая сушка очереди, сушка при температуре окружающей среды и продолжение сушки во время печати на поддерживаемых устройствах (H2D / H2C / H2S / P2S / X2D / X1C / A2L / H2D Pro), настраиваемые пресеты и пороги влажности для каждого филамента (например, 20% для Nylon и 60% для PLA).
 </div>
 
 <div class="feature-card" markdown>
-### [:material-tune-vertical: Printer Control](printer-control.md)
-Print from printer cards via button or drag-and-drop, print speed presets, chamber temperature, light control, fan status monitoring, AI detection modules, and per-printer **Maintenance Mode** for taking units out of service without removing them.
+### [:material-tune-vertical: Управление принтером](printer-control.md) {#printer-control}
+Запуск печати с карточки кнопкой или перетаскиванием, пресеты скорости, температура камеры, управление светом, состояние вентиляторов, модули обнаружения с ИИ и **режим обслуживания** для временного вывода принтера из работы без удаления.
 </div>
 
 </div>
 
-![Printers Page](../assets/printers.png){ .screenshot }
+![Страница принтеров](../assets/printers.png){ .screenshot }
 
 ---
 
-## :material-archive: Print Archive
+## :material-archive: Архив печати {#print-archive}
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### [:material-archive-outline: Print Archiving](archiving.md)
-Automatic 3MF archiving with metadata extraction, 3D preview, and duplicate detection.
+### [:material-archive-outline: Архивация печати](archiving.md) {#print-archiving}
+Автоматическая архивация 3MF с извлечением метаданных, предпросмотром 3D и обнаружением дубликатов.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-clipboard-list: Print Log](print-log.md)
-Chronological table of all print activity with filtering, search, and status tracking.
+### [:material-clipboard-list: Журнал печати](print-log.md) {#print-log}
+Хронологическая таблица всех печатей с фильтрацией, поиском и отслеживанием состояния.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-magnify: Full-Text Search](search.md)
-Fast FTS5 search across print names, filenames, tags, notes, designer, and filament.
+### [:material-magnify: Полнотекстовый поиск](search.md) {#full-text-search}
+Быстрый поиск FTS5 по названиям печатей и файлов, тегам, заметкам, дизайнерам и филаменту.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-folder-multiple: Projects](projects.md)
-Group related prints into projects with progress tracking and color-coded badges.
+### [:material-folder-multiple: Проекты](projects.md) {#projects}
+Объединение связанных печатей в проекты с отслеживанием прогресса и цветными метками.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-compare: Archive Comparison](comparison.md)
-Compare 2-5 archives side-by-side with highlighted setting differences.
+### [:material-compare: Сравнение архивов](comparison.md) {#archive-comparison}
+Сравнение 2–5 архивов рядом с выделением различий в настройках.
 </div>
 
 </div>
 
-![Archives Page](../assets/archives.png){ .screenshot }
+![Страница архива](../assets/archives.png){ .screenshot }
 
 ---
 
-## :material-chart-line: Analytics
+## :material-chart-line: Аналитика {#analytics}
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### [:material-view-dashboard: Statistics Dashboard](statistics.md)
-Customizable drag-and-drop widgets for success rates, filament usage, costs, and more.
+### [:material-view-dashboard: Панель статистики](statistics.md) {#statistics-dashboard}
+Настраиваемые виджеты с перетаскиванием для доли успешных печатей, расхода филамента, затрат и других показателей.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-alert-circle: Failure Analysis](failure-analysis.md)
-Correlate failures with conditions to identify patterns and improve reliability.
+### [:material-alert-circle: Анализ неудач](failure-analysis.md) {#failure-analysis}
+Сопоставление неудач с условиями для выявления закономерностей и повышения надёжности.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-lightning-bolt: Energy Tracking](energy.md)
-Track power consumption per print or cumulative, with cost calculations.
+### [:material-lightning-bolt: Учёт энергии](energy.md) {#energy-tracking}
+Учёт энергопотребления по печатям и суммарно с расчётом стоимости.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-file-export: Export](export.md)
-Export archives and statistics to CSV or Excel with filter support.
+### [:material-file-export: Экспорт](export.md) {#export}
+Экспорт архивов и статистики в CSV или Excel с поддержкой фильтров.
 </div>
 
 </div>
 
-![Statistics Page](../assets/statistics.png){ .screenshot }
+![Страница статистики](../assets/statistics.png){ .screenshot }
 
 ---
 
-## :material-robot: Automation
+## :material-robot: Автоматизация {#automation}
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### [:material-printer-3d-nozzle: Print Queue](print-queue.md)
-Queue prints with drag-and-drop ordering, a quantity per plate, batch orders that track what is still owed, timeline schedule view, scheduled start times, configurable default print options, and automation.
+### [:material-printer-3d-nozzle: Очередь печати](print-queue.md) {#print-queue}
+Очередь печати с изменением порядка перетаскиванием, количеством для каждой пластины, пакетными заказами с отслеживанием остатка, временной шкалой, запуском по расписанию, настройкой параметров по умолчанию и автоматизацией.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-power-plug: Smart Plugs](smart-plugs.md)
-Tasmota, Home Assistant, REST/Webhook, and MQTT integration for auto power-on before print, power-off after cooldown, and energy monitoring.
+### [:material-power-plug: Умные розетки](smart-plugs.md) {#smart-plugs}
+Интеграция с Tasmota, Home Assistant, REST/Webhook и MQTT для автоматического включения перед печатью, выключения после охлаждения и учёта энергии.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-printer-3d: Virtual Printer](virtual-printer.md)
-Emulate a Bambu printer on your network to send prints directly from your slicer.
+### [:material-printer-3d: Виртуальный принтер](virtual-printer.md) {#virtual-printer}
+Эмуляция принтера Bambu в сети для отправки печати прямо из слайсера.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-bell-ring: Notifications](notifications.md)
-Multi-provider alerts via WhatsApp, Telegram, Discord, Email, and more.
+### [:material-bell-ring: Уведомления](notifications.md) {#notifications}
+Уведомления через WhatsApp, Telegram, Discord, электронную почту и другие сервисы.
 </div>
 
 </div>
 
-![Queue Page](../assets/print-queue.png){ .screenshot }
+![Страница очереди](../assets/print-queue.png){ .screenshot }
 
 ---
 
-## :material-puzzle: Integrations
+## :material-puzzle: Интеграции {#integrations}
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### [:material-cylinder: Spool Inventory](inventory.md)
-Built-in spool tracking with AMS slot assignment, automatic usage tracking, and remaining weight management.
+### [:material-cylinder: Учёт филамента](inventory.md) {#spool-inventory}
+Встроенный учёт катушек с назначением слотов AMS, автоматическим отслеживанием расхода и управлением оставшимся весом.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-map-marker: Storage Locations](storage-locations.md)
-Catalog of shelves, drawers, and dryboxes — assign spools to named storage spots and filter inventory by location.
+### [:material-map-marker: Места хранения](storage-locations.md) {#storage-locations}
+Каталог полок, ящиков и сухих боксов: назначайте катушкам места хранения и фильтруйте филамент по ним.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-database-sync-outline: Spoolman](spoolman.md)
-Sync filament inventory with Spoolman for complete spool tracking.
+### [:material-database-sync-outline: Spoolman](spoolman.md) {#spoolman}
+Синхронизация учёта филамента со Spoolman для полного отслеживания катушек.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-cloud: Cloud Profiles](cloud-profiles.md)
-Manage Bambu Cloud slicer presets and compare template differences.
+### [:material-cloud: Облачные профили](cloud-profiles.md) {#cloud-profiles}
+Управление пресетами слайсера Bambu Cloud и сравнение различий шаблонов.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-harddisk: Local Profiles](local-profiles.md)
-Import OrcaSlicer presets without Bambu Cloud. Supports .orca_filament, .bbscfg, .bbsflmt, .zip, and .json exports.
+### [:material-harddisk: Локальные профили](local-profiles.md) {#local-profiles}
+Импорт пресетов OrcaSlicer без Bambu Cloud. Поддерживаются файлы .orca_filament, .bbscfg, .bbsflmt, .zip и .json.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-speedometer: K-Profiles](k-profiles.md)
-Pressure advance settings management for optimal print quality.
+### [:material-speedometer: K-профили](k-profiles.md) {#k-profiles}
+Управление настройками опережения давления для оптимального качества печати.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-key: API Keys & Webhooks](api-keys.md)
-REST API with granular permissions for external integrations.
+### [:material-key: Ключи API и вебхуки](api-keys.md) {#api-keys-webhooks}
+REST API с детальными разрешениями для внешних интеграций.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-page-layout-sidebar-left: Sidebar Customization](external-links.md)
-Show or hide Bambuddy pages, reorder navigation, and add custom links to external tools.
+### [:material-page-layout-sidebar-left: Настройка боковой панели](external-links.md) {#sidebar-customization}
+Отображение и скрытие страниц Bambuddy, изменение порядка навигации и добавление ссылок на внешние инструменты.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-wifi: MQTT Publishing](mqtt.md)
-Publish events to external MQTT brokers for Home Assistant and Node-RED.
+### [:material-wifi: Публикация MQTT](mqtt.md) {#mqtt-publishing}
+Публикация событий во внешние брокеры MQTT для Home Assistant и Node-RED.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-chart-line: Prometheus Metrics](prometheus.md)
-Export printer telemetry for Grafana dashboards and monitoring systems.
+### [:material-chart-line: Метрики Prometheus](prometheus.md) {#prometheus-metrics}
+Экспорт телеметрии принтеров для панелей Grafana и систем мониторинга.
 </div>
 
 </div>
 
 ---
 
-## :material-wrench: Maintenance & Security
+## :material-wrench: Обслуживание и безопасность {#maintenance-security}
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### [:material-tools: Maintenance Tracker](maintenance.md)
-Schedule and track maintenance tasks with interval reminders.
+### [:material-tools: Учёт обслуживания](maintenance.md) {#maintenance-tracker}
+Планирование и учёт обслуживания с напоминаниями об интервалах.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-folder: File Manager](file-manager.md)
-Browse and manage files on your printer's internal storage.
+### [:material-folder: Файловый менеджер](file-manager.md) {#file-manager}
+Просмотр и управление файлами во внутренней памяти принтера.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-backup-restore: Backup & Restore](backup.md)
-Full database backup and restore for data protection. GitHub backup for automatic cloud profile sync.
+### [:material-backup-restore: Резервное копирование и восстановление](backup.md) {#backup-restore}
+Полное резервное копирование и восстановление базы данных. Резервное копирование на GitHub для автоматической синхронизации облачных профилей.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-elephant: PostgreSQL Support](postgresql.md)
-Optional external PostgreSQL database for larger setups. SQLite remains the zero-config default.
+### [:material-elephant: Поддержка PostgreSQL](postgresql.md) {#postgresql-support}
+Необязательная внешняя база PostgreSQL для крупных установок. SQLite остаётся вариантом по умолчанию, не требующим настройки.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-information: System Info](system-info.md)
-View database statistics, system resources, and generate support bundles.
+### [:material-information: Информация о системе](system-info.md) {#system-info}
+Просмотр статистики базы данных и системных ресурсов, создание пакетов поддержки.
 </div>
 
 <div class="feature-card" markdown>
-### [:material-lock: Authentication](authentication.md)
-Optional user authentication with role-based access control. Advanced Auth via Email for self-service password resets, LDAP / Active Directory integration, **Two-Factor Authentication** (TOTP + Email OTP with single-use backup codes), and **Single Sign-On (OIDC / SSO)** for PocketID, Authentik, Keycloak and any standards-compliant provider.
+### [:material-lock: Аутентификация](authentication.md) {#authentication}
+Необязательная аутентификация с ролевым доступом. Расширенная аутентификация по электронной почте для самостоятельного сброса пароля, интеграция LDAP / Active Directory, **двухфакторная аутентификация** (TOTP и одноразовый код по почте с резервными кодами) и **единый вход (OIDC / SSO)** через PocketID, Authentik, Keycloak и других поставщиков, соответствующих стандарту.
 </div>
 
 </div>
 
 ---
 
-## :material-lightbulb: Pro Tips
+## :material-lightbulb: Полезные советы {#pro-tips}
 
-!!! tip "Keyboard Shortcuts"
-    Press ++question++ anywhere to see available keyboard shortcuts. Navigate between pages with number keys ++1++ through ++5++.
+!!! tip "Сочетания клавиш"
+    Нажмите ++question++ на любой странице, чтобы увидеть сочетания клавиш. Переходите между страницами цифровыми клавишами от ++1++ до ++5++.
 
-!!! tip "Context Menus"
-    Right-click (or long press on mobile) on cards for quick actions like re-print, compare, or delete.
+!!! tip "Контекстные меню"
+    Щёлкните карточку правой кнопкой мыши или нажмите и удерживайте на мобильном устройстве для быстрого доступа к повторной печати, сравнению и удалению.
 
-!!! tip "Customizable Themes"
-    Bambuddy offers extensive theme customization with separate settings for dark and light modes:
+!!! tip "Настраиваемые темы"
+    Bambuddy позволяет подробно настроить тему отдельно для светлого и тёмного режимов:
 
-    - **Style**: Classic (clean shadows), Glow (accent-colored glow), Vibrant (dramatic shadows)
-    - **Background**: Neutral, Warm, Cool + dark-only options (OLED, Slate, Forest)
-    - **Accent Colors**: Green, Teal, Blue, Orange, Purple, Red
+    - **Стиль**: Classic (чёткие тени), Glow (свечение акцентного цвета), Vibrant (выразительные тени)
+    - **Фон**: Neutral, Warm, Cool и варианты только для тёмной темы (OLED, Slate, Forest)
+    - **Акцентные цвета**: зелёный, бирюзовый, синий, оранжевый, фиолетовый, красный
 
-    Mix and match any combination in Settings → Appearance.
+    Выберите любое сочетание в разделе Настройки → Внешний вид.
