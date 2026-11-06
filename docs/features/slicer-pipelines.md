@@ -1,162 +1,162 @@
 ---
-title: Slicer Pipelines
-description: Reusable preset bundles for one-click slicing and dispatch
+title: Конвейеры слайсера
+description: Многоразовые наборы пресетов для нарезки и отправки одним нажатием
 ---
 
-# Slicer Pipelines
+# Конвейеры слайсера {#slicer-pipelines}
 
-Save a printer + process + filament + bed-type combination once, then apply the whole bundle with a single click on the next file. Each pipeline can target a specific printer or a printer **class**, run multiple copies, and fan copies out across multiple printers in parallel.
-
----
-
-## :material-pipe: What a Pipeline Is
-
-A **pipeline** is a named, reusable bundle that captures everything the Slice dialog needs to slice a file the same way every time:
-
-- **Printer profile** (e.g. `Bambu Lab H2D 0.4 nozzle`)
-- **Process profile** (e.g. `0.20mm Standard @BBL H2D`)
-- **One filament profile per AMS slot** (resolved against your imported / cloud / standard preset library)
-- **Bed type** (Cool Plate / Engineering Plate / Textured PEI / …)
-- **Target** — either a specific printer, or a printer class (e.g. *any X1C*)
-- **Copies** — slice the file once, dispatch the resulting `.gcode.3mf` as N independent print queue items
-- **Fanout strategy** — when N > 1, how to distribute the copies across printers in the class
-
-Pipelines live under **Settings → Workflow → Slicer Pipelines** for editing, and on the **Print Queue → Pipelines** tab for the live runs dashboard.
+Сохраните сочетание принтера, процесса, филамента и типа пластины один раз, а затем применяйте весь набор к следующему файлу одним нажатием. Каждый конвейер может быть нацелен на конкретный принтер или **класс** принтеров, запускать несколько копий и распределять их параллельно между принтерами.
 
 ---
 
-## :material-content-save: Saving a Pipeline
+## :material-pipe: Что такое конвейер {#what-a-pipeline-is}
 
-The fastest way to make one is to open the Slice dialog for any file:
+**Конвейер** — именованный многоразовый набор всех параметров, необходимых окну нарезки для одинаковой обработки файла:
 
-1. Pick your printer, process, filaments, and bed type as normal
-2. Click **Save as pipeline** at the bottom of the dialog
-3. Give the pipeline a name (e.g. `H2D — PETG-CF 0.4mm`)
-4. Confirm
+- **Профиль принтера** (например, `Bambu Lab H2D 0.4 nozzle`)
+- **Профиль процесса** (например, `0.20mm Standard @BBL H2D`)
+- **По одному профилю филамента на слот AMS** (из библиотеки импортированных, облачных или стандартных пресетов)
+- **Тип пластины** (Cool Plate, Engineering Plate, Textured PEI и т. д.)
+- **Назначение** — конкретный принтер или класс принтеров (например, *любой X1C*)
+- **Копии** — файл нарезается один раз, полученный `.gcode.3mf` отправляется как N независимых заданий очереди печати
+- **Стратегия распределения** — при N > 1 определяет, как распределять копии между принтерами класса
 
-Your new pipeline appears under **Settings → Workflow → Slicer Pipelines** and is immediately available on every file's **Run with pipeline** menu.
-
-You can also create one from scratch in Settings, but starting from a real Slice dialog avoids re-picking the same triplet manually.
-
----
-
-## :material-play-circle: Running a Pipeline
-
-Pipelines can be applied to any sliceable file:
-
-- **File Manager** — the row's overflow menu (⋮) and the per-row action button both expose **Run with pipeline → \<name\>**
-- **Archives** — the row menu offers **Reprint with pipeline → \<name\>** for any archive whose source 3MF is still in the library
-
-Clicking a pipeline kicks off a **pipeline run** that:
-
-1. Slices the file via the slicer sidecar using the pipeline's printer + process + filament + bed type
-2. Creates one or more **print queue items** (one per copy) with the resulting `.gcode.3mf`
-3. Hands dispatch to the existing queue scheduler
-
-Each run shows up live on the **Print Queue → Pipelines** dashboard.
+Конвейеры редактируются в **Настройки → Рабочий процесс → Конвейеры слайсера**, а текущие запуски отображаются на вкладке **Очередь печати → Конвейеры**.
 
 ---
 
-## :material-target: Targeting
+## :material-content-save: Сохранение конвейера {#saving-a-pipeline}
 
-Pipelines can be pinned in one of two ways:
+Быстрее всего создать конвейер из окна нарезки любого файла:
 
-### Specific printer
+1. Как обычно выберите принтер, процесс, филаменты и тип пластины
+2. Нажмите **Сохранить как конвейер** внизу окна
+3. Задайте название конвейера (например, `H2D — PETG-CF 0.4mm`)
+4. Подтвердите
 
-The run goes to *that printer's* queue. Useful when one printer is the only one wearing the right nozzle / bed / colour combination for this recipe.
+Новый конвейер появится в **Настройки → Рабочий процесс → Конвейеры слайсера** и сразу станет доступен в меню запуска с конвейером каждого файла.
 
-### Printer class
-
-The run goes to *any printer of this class* (e.g. *any H2D*). This lets one pipeline serve a fleet of identical machines — the queue scheduler picks the first available printer of the class. With **copies > 1** the run becomes a **fanout** (see below).
-
-The Target picker on every pipeline card is grouped by **Specific printer** and **Printer class**; only printers and classes that at least one saved pipeline points at appear in the filter dropdowns so the menu stays short on installs with many printers.
+Можно создать конвейер с нуля в настройках, но окно нарезки позволяет не выбирать те же профили повторно вручную.
 
 ---
 
-## :material-content-copy: Multi-Copy & Fanout
+## :material-play-circle: Запуск конвейера {#running-a-pipeline}
 
-A pipeline run can produce up to **N copies** of the sliced file as independent queue items. When targeting is set to **printer class**, those copies are distributed across the available printers in the class according to the chosen **fanout strategy**:
+Конвейеры применяются к любым файлам, которые можно нарезать:
 
-| Strategy | Behaviour |
+- **Файловый менеджер** — меню строки (⋮) и кнопка действия строки предлагают запуск с конвейером → <название>
+- **Архив** — меню строки предлагает повторную печать с конвейером → <название> для любого архива, исходный 3MF которого ещё находится в библиотеке
+
+При выборе конвейера начинается **запуск**, который:
+
+1. Нарезает файл через дополнительный контейнер слайсера с принтером, процессом, филаментом и типом пластины из конвейера
+2. Создаёт одно или несколько **заданий очереди печати** с полученным `.gcode.3mf`, по одному на копию
+3. Передаёт отправку существующему планировщику очереди
+
+Каждый запуск отображается в реальном времени на панели **Очередь печати → Конвейеры**.
+
+---
+
+## :material-target: Назначение {#targeting}
+
+Конвейер можно привязать одним из двух способов:
+
+### Конкретный принтер {#specific-printer}
+
+Запуск поступает в очередь *этого принтера*. Это удобно, когда только один принтер имеет нужное для задачи сочетание сопла, пластины и цвета.
+
+### Класс принтеров {#printer-class}
+
+Запуск поступает на *любой принтер этого класса* (например, *любой H2D*). Один конвейер может обслуживать парк одинаковых устройств: планировщик выбирает первый доступный принтер класса. При **количестве копий больше 1** копии распределяются между принтерами (см. ниже).
+
+Список назначения на каждой карточке конвейера сгруппирован по конкретным принтерам и классам. В фильтрах отображаются только принтеры и классы, на которые указывает хотя бы один сохранённый конвейер, чтобы список оставался коротким даже при большом числе принтеров.
+
+---
+
+## :material-content-copy: Несколько копий и распределение {#multi-copy-fanout}
+
+Запуск конвейера может создать до **N копий** нарезанного файла как независимые задания очереди. При назначении **классу принтеров** копии распределяются между доступными принтерами этого класса согласно выбранной стратегии:
+
+| Стратегия | Поведение |
 |----------|-----------|
-| **Spread** | Distribute copies as evenly as possible across all idle printers in the class — finishes the batch fastest. |
-| **Single printer** | Send every copy to the same printer (the first idle one matching the class). Best when colour-change overhead between copies is what dominates wall-clock. |
-| **First N** | Send one copy to each of the first N idle printers, in class order. |
+| **Распределить** | Распределяет копии как можно равномернее между всеми свободными принтерами класса — самый быстрый способ завершить партию. |
+| **Один принтер** | Отправляет все копии на один принтер — первый свободный принтер подходящего класса. Подходит, когда основное время занимает смена цвета между копиями. |
+| **Первые N** | Отправляет по одной копии первым N свободным принтерам в порядке класса. |
 
-The slice runs **once** per pipeline run — N copies share the same `.gcode.3mf` — so a 5-copy fanout doesn't pay the slice cost 5×.
-
----
-
-## :material-view-dashboard: The Runs Dashboard
-
-**Print Queue → Pipelines** lists every pipeline run across every pipeline. Each row shows:
-
-- Run number, pipeline name, **status badge** (queued / slicing / dispatching / in-progress / completed / partial-failure / failed / cancelled), and the **target** chip (`Any X1C` or the specific printer name)
-- Source filename
-- Created-at timestamp, total copies, and a `completed/total` roll-up — failed copies are flagged in red
-- Per-copy detail when expanded (each copy's status, assigned printer, and per-copy error message if any)
-
-### Filters
-
-Three filter dropdowns at the top of the dashboard:
-
-- **Pipeline** — narrow to one specific pipeline's runs
-- **Status** — narrow to runs in a single state (e.g. *partial failure*)
-- **Target** — narrow to runs of a specific printer or printer class
-
-Each dropdown shows only entries that actually exist in your data, so empty options never appear.
-
-### In-flight actions
-
-- **Cancel** — visible on `queued` / `slicing` / `dispatching` / `in_progress` runs; cancels every still-pending copy. A run's queue jobs belong to whoever started it, so cancelling someone else's run takes the right to change everyone's queue jobs
-- **Retry failed** — visible on `partial_failure` / `failed` runs; re-runs only the copies that didn't complete (the successful copies are not re-printed)
-
-### Clearing terminal runs
-
-The **Clear log** button (top-right of the filter row) opens a confirmation modal and then deletes every **terminal** run (`completed`, `failed`, `cancelled`, `partial_failure`): your own, or everyone's if you may change everyone's queue jobs. In-flight runs are **never** deleted — clearing during an active batch is safe.
-
-A run started by someone else shows its source file and its queue jobs only if you can see them on the File Manager, Archives and Queue pages.
+Нарезка выполняется **один раз** за запуск: N копий используют один `.gcode.3mf`. Поэтому распределение пяти копий не требует пятикратной нарезки.
 
 ---
 
-## :material-shield-account: Permissions
+## :material-view-dashboard: Панель запусков {#the-runs-dashboard}
 
-Three distinct permissions gate the feature so authoring a recipe is a different trust dimension than spending filament with it:
+В разделе **Очередь печати → Конвейеры** перечислены все запуски всех конвейеров. Каждая строка содержит:
 
-| Permission | What it allows |
+- Номер запуска, название конвейера, **индикатор состояния** (в очереди, нарезка, отправка, выполняется, завершён, частичная ошибка, ошибка, отменён) и метку **назначения** (`Any X1C` или имя конкретного принтера)
+- Имя исходного файла
+- Время создания, общее количество копий и сводку `completed/total`; неудачные копии отмечаются красным
+- При раскрытии — сведения о каждой копии: состояние, назначенный принтер и сообщение об ошибке, если есть
+
+### Фильтры {#filters}
+
+Вверху панели находятся три выпадающих фильтра:
+
+- **Конвейер** — запуски определённого конвейера
+- **Состояние** — запуски в одном состоянии, например с частичной ошибкой
+- **Назначение** — запуски для определённого принтера или класса
+
+Каждый список содержит только значения, действительно присутствующие в данных, поэтому пустые варианты не показываются.
+
+### Действия с выполняющимися запусками {#in-flight-actions}
+
+- **Отменить** — доступно для состояний `queued`, `slicing`, `dispatching` и `in_progress`; отменяет все ещё ожидающие копии. Задания очереди принадлежат пользователю, запустившему конвейер, поэтому для отмены чужого запуска нужно право изменять задания очереди всех пользователей
+- **Повторить неудачные** — доступно для `partial_failure` и `failed`; повторно запускает только незавершённые копии, не перепечатывая успешные
+
+### Очистка завершённых запусков {#clearing-terminal-runs}
+
+Кнопка **Очистить журнал** справа в строке фильтров открывает окно подтверждения и удаляет все запуски в конечных состояниях (`completed`, `failed`, `cancelled`, `partial_failure`): собственные или все, если у вас есть право изменять задания очереди всех пользователей. Выполняющиеся запуски **никогда** не удаляются, поэтому очистка во время активной партии безопасна.
+
+Для чужого запуска исходный файл и задания очереди показываются только при наличии доступа к ним на страницах файлового менеджера, архива и очереди.
+
+---
+
+## :material-shield-account: Разрешения {#permissions}
+
+Три отдельных разрешения разграничивают создание конвейеров и расход филамента при их запуске:
+
+| Разрешение | Что позволяет |
 |------------|----------------|
-| `pipelines:read` | View saved pipelines + view the runs dashboard |
-| `pipelines:write` | Create, edit, delete pipelines; clear the runs log |
-| `pipelines:run` | Kick off a pipeline run, cancel a running run, retry failed copies |
+| `pipelines:read` | Просматривать сохранённые конвейеры и панель запусков |
+| `pipelines:write` | Создавать, изменять и удалять конвейеры; очищать журнал запусков |
+| `pipelines:run` | Запускать конвейер, отменять выполняющийся запуск и повторять неудачные копии |
 
-Default group membership:
+Разрешения групп по умолчанию:
 
-| Group | `pipelines:read` | `pipelines:write` | `pipelines:run` |
+| Группа | `pipelines:read` | `pipelines:write` | `pipelines:run` |
 |-------|:---:|:---:|:---:|
-| Administrators | :material-check: | :material-check: | :material-check: |
-| Operators | :material-check: | :material-check: | :material-check: |
-| Viewers | :material-check: | — | — |
+| Администраторы | :material-check: | :material-check: | :material-check: |
+| Операторы | :material-check: | :material-check: | :material-check: |
+| Наблюдатели | :material-check: | — | — |
 
-API keys can read and run pipelines, but not author them:
+Ключи API могут просматривать и запускать конвейеры, но не создавать их:
 
-- `pipelines:read` needs the key's **Read Status** toggle.
-- `pipelines:run` needs **Manage Queue** *and* **Manage Library** together, because a run slices into the library and then queues prints — two things a key is trusted with separately. A key holding only one gets a 403 naming the other.
-- `pipelines:write` is admin-only and rejects every API key. A key can run the recipe; it cannot rewrite it, or clear the runs log.
-- A pipeline whose presets come from Bambu Cloud or Orca Cloud additionally needs **Allow Cloud Access** on the key, since resolving those reads the cloud token stored on the key owner's account. Local and standard presets need nothing extra.
+- Для `pipelines:read` нужен переключатель ключа **Чтение состояния**.
+- Для `pipelines:run` нужны одновременно **Управление очередью** и **Управление библиотекой**, поскольку запуск нарезает файл в библиотеку и ставит печать в очередь. Для этих действий ключу предоставляются отдельные права. Если есть только одно из них, возвращается ошибка 403 с указанием отсутствующего.
+- `pipelines:write` доступно только администраторам и отклоняет все ключи API. Ключ может запустить конвейер, но не изменить его или очистить журнал запусков.
+- Для конвейера с пресетами Bambu Cloud или Orca Cloud у ключа дополнительно должен быть включён **доступ к облаку**, поскольку для разрешения пресетов считывается облачный токен владельца ключа. Для локальных и стандартных пресетов дополнительных разрешений не нужно.
 
-See [API Keys](api-keys.md#available-permissions) for the toggle list.
+Список переключателей см. в разделе [Ключи API](api-keys.md#available-permissions).
 
-!!! tip "Upgrading from an older version"
-    On installs seeded before pipelines existed, the upgrade gives the Administrators and Operators groups all three permissions, and any other group that can read the library or settings gets `pipelines:read`. That happens once: a permission you later remove from a group stays removed. Grant `pipelines:write` and `pipelines:run` through **Settings → Users → Groups** if a custom role needs them.
+!!! tip "Обновление со старой версии"
+    В установках, созданных до появления конвейеров, при обновлении группы администраторов и операторов получают все три разрешения, а остальные группы с правом чтения библиотеки или настроек — `pipelines:read`. Это происходит один раз: если позднее удалить разрешение у группы, оно останется удалённым. Выдайте пользовательской роли `pipelines:write` и `pipelines:run` через **Настройки → Пользователи → Группы**, если они ей нужны.
 
 ---
 
-## :material-file-tree: Where Things Live
+## :material-file-tree: Где что находится {#where-things-live}
 
-| Path | Purpose |
+| Путь | Назначение |
 |------|---------|
-| **Settings → Workflow → Slicer Pipelines** | Manage the pipeline catalogue (create / edit / delete / inspect) |
-| **Print Queue → Pipelines** | Live runs dashboard (filter / expand / cancel / retry / clear) |
-| **File Manager → ⋮ → Run with pipeline** | Apply a pipeline to a library file |
-| **Archives → ⋮ → Reprint with pipeline** | Re-run a pipeline against a previously-archived 3MF |
-| **Slice dialog → Save as pipeline** | Capture the current Slice modal selection as a new pipeline |
+| **Настройки → Рабочий процесс → Конвейеры слайсера** | Управление каталогом конвейеров: создание, изменение, удаление, просмотр |
+| **Очередь печати → Конвейеры** | Панель запусков: фильтрация, раскрытие, отмена, повтор и очистка |
+| **Файловый менеджер → ⋮ → Запуск с конвейером** | Применение конвейера к файлу библиотеки |
+| **Архив → ⋮ → Повторная печать с конвейером** | Повторный запуск конвейера для ранее сохранённого 3MF |
+| **Окно нарезки → Сохранить как конвейер** | Сохранение текущих настроек нарезки как нового конвейера |
