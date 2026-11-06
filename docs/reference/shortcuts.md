@@ -58,7 +58,7 @@ Bambuddy поддерживает сочетания клавиш для быс�
 
 ---
 
-## :material-dialog: Модальные и диалоговые окна {#modals-dialogs}
+## :material-dialog: Модальные и диалоговые окна {#material-dialog-modals-dialogs}
 
 | Сочетание | Действие |
 |:--------:|--------|
