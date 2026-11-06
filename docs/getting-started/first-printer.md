@@ -1,92 +1,92 @@
 ---
-title: First Printer Setup
-description: Connect your first Bambu Lab printer to Bambuddy
+title: Настройка первого принтера
+description: Подключите первый принтер Bambu Lab к Bambuddy
 ---
 
-# First Printer Setup
+# Настройка первого принтера {#first-printer-setup}
 
-This guide walks you through adding your first printer to Bambuddy.
-
----
-
-## :material-list-status: Prerequisites
-
-Before adding a printer, ensure:
-
-- [x] Bambuddy is running ([Installation](installation.md) or [Docker](docker.md))
-- [x] Your printer is powered on and connected to your network
-- [x] **SD card is inserted** in the printer (required for file transfers)
-- [x] Developer Mode is enabled ([see guide](index.md#enabling-developer-mode))
-- [x] You have the IP address, serial number, and access code
-
-!!! warning "SD Card Required"
-    An SD card must be inserted in your printer for Bambuddy to work properly. The SD card is required for file transfers, print uploads, and archiving. Without an SD card, prints cannot be started from Bambuddy and files cannot be transferred to/from the printer.
+Это руководство поможет добавить первый принтер в Bambuddy.
 
 ---
 
-## :material-printer-3d-nozzle: Adding Your Printer
+## :material-list-status: Перед началом работы {#prerequisites}
 
-### Step 1: Open the Add Printer Dialog
+Убедитесь, что:
 
-1. Open Bambuddy in your browser
-2. Go to the **Printers** page
-3. Click the **:material-plus: Add Printer** button
+- [x] Bambuddy запущен ([установка](installation.md) или [Docker](docker.md))
+- [x] Принтер включён и подключён к вашей сети
+- [x] В принтер **вставлена SD-карта** (она необходима для передачи файлов)
+- [x] Режим разработчика включён ([см. руководство](index.md#enabling-developer-mode))
+- [x] У вас есть IP-адрес, серийный номер и код доступа
 
-### Step 2: Enter Printer Details
+!!! warning "Необходима SD-карта"
+    Для правильной работы Bambuddy в принтер должна быть вставлена SD-карта. Она необходима для передачи файлов, загрузки заданий на печать и архивации. Без SD-карты нельзя запустить печать из Bambuddy или передать файлы на принтер и с него.
 
-Fill in the required information:
+---
 
-| Field | Description | Example |
+## :material-printer-3d-nozzle: Добавление принтера {#adding-your-printer}
+
+### Шаг 1. Откройте окно добавления принтера {#step-1-open-the-add-printer-dialog}
+
+1. Откройте Bambuddy в браузере
+2. Перейдите на страницу **Принтеры**
+3. Нажмите кнопку **:material-plus: Добавить принтер**
+
+### Шаг 2. Введите данные принтера {#step-2-enter-printer-details}
+
+Заполните обязательные поля:
+
+| Поле | Описание | Пример |
 |-------|-------------|---------|
-| **Name** | A friendly name for your printer | `Workshop X1C` |
-| **IP Address** | Your printer's local IP address | `192.168.1.100` |
-| **Access Code** | 8-character code from Developer Mode | `12345678` |
-| **Serial Number** | Your printer's serial number | `01P00A000000001` |
+| **Имя** | Удобное для вас имя принтера | `Workshop X1C` |
+| **IP-адрес** | Локальный IP-адрес принтера | `192.168.1.100` |
+| **Код доступа** | Код из 8 символов из режима разработчика | `12345678` |
+| **Серийный номер** | Серийный номер принтера | `01P00A000000001` |
 
-!!! tip "Finding Serial Number"
-    The serial number format varies by model:
+!!! tip "Как найти серийный номер"
+    Формат серийного номера зависит от модели:
 
-    - **X1 Series**: Starts with `01S` or `01P`
-    - **P1 Series**: Starts with `01P`
-    - **A1 Series**: Starts with `01A`
-    - **H2 Series**: Starts with `03W`
+    - **Серия X1**: начинается с `01S` или `01P`
+    - **Серия P1**: начинается с `01P`
+    - **Серия A1**: начинается с `01A`
+    - **Серия H2**: начинается с `03W`
 
-### Step 3: Save and Connect
+### Шаг 3. Сохраните данные и подключитесь {#step-3-save-and-connect}
 
-1. Click **Save**
-2. Bambuddy will attempt to connect to your printer
-3. Wait for the connection indicator to turn green
+1. Нажмите **Сохранить**
+2. Bambuddy попытается подключиться к принтеру
+3. Дождитесь, пока индикатор соединения станет зелёным
 
 ---
 
-## :material-check-circle: Verifying Connection
+## :material-check-circle: Проверка подключения {#verifying-connection}
 
-A successfully connected printer shows:
+После успешного подключения принтера отображаются:
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### :material-circle:{ style="color: #4caf50" } Green Indicator
-Connection is active and healthy
+### :material-circle:{ style="color: #4caf50" } Зелёный индикатор {#green-indicator}
+Соединение установлено и работает
 </div>
 
 <div class="feature-card" markdown>
-### :material-thermometer: Live Temperatures
-Nozzle, bed, and chamber readings update in real-time
+### :material-thermometer: Текущие температуры {#live-temperatures}
+Показания сопла, стола и камеры обновляются в реальном времени
 </div>
 
 <div class="feature-card" markdown>
-### :material-check-decagram: HMS Status
-Health Management System shows "OK" (green)
+### :material-check-decagram: Статус HMS {#hms-status}
+Система контроля состояния показывает «OK» (зелёный)
 </div>
 
 </div>
 
 ---
 
-## :material-layers: Understanding the Printer Card
+## :material-layers: Карточка принтера {#understanding-the-printer-card}
 
-Once connected, your printer card displays:
+После подключения карточка принтера выглядит так:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -109,93 +109,93 @@ Once connected, your printer card displays:
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Card Elements
+### Элементы карточки {#card-elements}
 
-| Element | Description |
+| Элемент | Описание |
 |---------|-------------|
-| **Connection indicator** | Green = connected, Red = disconnected |
-| **Camera button** | Open live camera feed |
-| **Settings button** | Edit printer settings |
-| **Temperatures** | Live nozzle, bed, and chamber temps |
-| **Progress bar** | Current print progress (if printing) |
-| **Layer info** | Current layer / total layers |
-| **Time remaining** | Estimated completion time |
-| **Filament used** | Grams consumed this print |
-| **AMS section** | Filament slots, humidity, and temperature |
-| **HMS status** | Health status indicator |
+| **Индикатор соединения** | Зелёный — подключён, красный — отключён |
+| **Кнопка камеры** | Открыть трансляцию с камеры |
+| **Кнопка настроек** | Изменить настройки принтера |
+| **Температуры** | Текущие температуры сопла, стола и камеры |
+| **Индикатор прогресса** | Ход текущей печати, если она выполняется |
+| **Информация о слоях** | Текущий слой / общее количество слоёв |
+| **Оставшееся время** | Расчётное время до завершения |
+| **Израсходованный филамент** | Количество граммов, израсходованных на эту печать |
+| **Раздел AMS** | Слоты филамента, влажность и температура |
+| **Статус HMS** | Индикатор состояния |
 
 ---
 
-## :material-camera: Camera Setup
+## :material-camera: Настройка камеры {#camera-setup}
 
-Bambuddy supports live camera streaming:
+Bambuddy поддерживает трансляцию с камеры:
 
-1. Click the :material-camera: camera icon on the printer card
-2. A new window opens with the live feed
-3. Toggle between **Live** stream and **Snapshot** mode
+1. Нажмите значок камеры :material-camera: на карточке принтера
+2. Откроется новое окно с трансляцией
+3. Переключайтесь между режимами **Live** (трансляция) и **Snapshot** (снимок)
 
-!!! note "Camera Requirements"
-    - Camera must be enabled in your printer settings
-    - Requires `ffmpeg` installed on the Bambuddy server for MJPEG streaming
-    - Works over Developer Mode connection
+!!! note "Требования к камере"
+    - Камера должна быть включена в настройках принтера
+    - Для трансляции MJPEG на сервере Bambuddy должен быть установлен `ffmpeg`
+    - Используется подключение через режим разработчика
 
 ---
 
-## :material-alert-circle: Connection Issues?
+## :material-alert-circle: Проблемы с подключением? {#connection-issues}
 
-If your printer won't connect:
+Если принтер не подключается:
 
-### Check These First
+### Сначала проверьте следующее {#check-these-first}
 
-1. **Is Developer Mode enabled?** Re-check that both LAN Only Mode and Developer Mode are enabled
-2. **Correct IP address?** Verify in printer network settings
-3. **Access code fresh?** Codes change when Developer Mode is toggled
-4. **Same network?** Bambuddy server and printer must be on the same LAN
-5. **Firewall rules?** Ensure ports 8883 (MQTT) and 990 (FTPS) are open
+1. **Включён ли режим разработчика?** Убедитесь, что включены и режим «Только локальная сеть», и режим разработчика
+2. **Правильный ли IP-адрес?** Проверьте его в настройках сети принтера
+3. **Актуален ли код доступа?** Он меняется при переключении режима разработчика
+4. **Одна ли сеть?** Сервер Bambuddy и принтер должны находиться в одной локальной сети
+5. **Правила межсетевого экрана?** Убедитесь, что порты 8883 (MQTT) и 990 (FTPS) открыты
 
-### Status Indicators
+### Индикаторы состояния {#status-indicators}
 
-| Indicator | Meaning |
+| Индикатор | Значение |
 |-----------|---------|
-| :material-circle:{ style="color: #4caf50" } Green | Connected and communicating |
-| :material-circle:{ style="color: #ff9800" } Yellow | Connecting or reconnecting |
-| :material-circle:{ style="color: #f44336" } Red | Disconnected or error |
+| :material-circle:{ style="color: #4caf50" } Зелёный | Подключён, обмен данными идёт |
+| :material-circle:{ style="color: #ff9800" } Жёлтый | Подключение или повторное подключение |
+| :material-circle:{ style="color: #f44336" } Красный | Отключён или произошла ошибка |
 
-### Still Having Issues?
+### Проблема не решена? {#still-having-issues}
 
-See the full [Troubleshooting Guide](../reference/troubleshooting.md#printer-connection-issues).
-
----
-
-## :material-printer-3d: Adding More Printers
-
-Repeat the process to add additional printers. Bambuddy supports unlimited printers - manage your entire print farm from one interface!
+См. полное [руководство по устранению неполадок](../reference/troubleshooting.md#printer-connection-issues).
 
 ---
 
-## :material-archive: What Happens Next?
+## :material-printer-3d: Добавление других принтеров {#adding-more-printers}
 
-Once your printer is connected, Bambuddy automatically:
-
-1. **Monitors print status** in real-time
-2. **Archives completed prints** with full metadata
-3. **Captures camera snapshots** on print completion (if enabled)
-4. **Tracks statistics** for your dashboard
-
-Start a print from Bambu Studio, Handy, or the printer itself - Bambuddy will detect it automatically!
+Повторите эти действия для каждого следующего принтера. Bambuddy поддерживает неограниченное количество принтеров: управляйте всей фермой из одного интерфейса!
 
 ---
 
-## :checkered_flag: Next Steps
+## :material-archive: Что происходит дальше? {#what-happens-next}
+
+После подключения принтера Bambuddy автоматически:
+
+1. **Отслеживает состояние печати** в реальном времени
+2. **Архивирует завершённые печати** со всеми метаданными
+3. **Делает снимки с камеры** по завершении печати, если эта функция включена
+4. **Собирает статистику** для панели
+
+Запустите печать из Bambu Studio, Handy или с самого принтера — Bambuddy обнаружит её автоматически!
+
+---
+
+## :checkered_flag: Следующие шаги {#next-steps}
 
 <div class="quick-start" markdown>
 
-[:material-archive: **Print Archiving**<br><small>How archiving works</small>](../features/archiving.md)
+[:material-archive: **Архивация печати**<br><small>Как работает архивация</small>](../features/archiving.md)
 
-[:material-bell-ring: **Notifications**<br><small>Get alerts on your phone</small>](../features/notifications.md)
+[:material-bell-ring: **Уведомления**<br><small>Получайте оповещения на телефон</small>](../features/notifications.md)
 
-[:material-chart-line: **Statistics**<br><small>Track your prints</small>](../features/statistics.md)
+[:material-chart-line: **Статистика**<br><small>Отслеживайте печати</small>](../features/statistics.md)
 
-[:material-clock-outline: **Print Queue**<br><small>Schedule prints</small>](../features/print-queue.md)
+[:material-clock-outline: **Очередь печати**<br><small>Планируйте печать</small>](../features/print-queue.md)
 
 </div>

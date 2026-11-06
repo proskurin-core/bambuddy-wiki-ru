@@ -1,31 +1,31 @@
 ---
-title: Getting Started
-description: Get up and running with Bambuddy in minutes
+title: Начало работы
+description: Начните работать с Bambuddy за несколько минут
 ---
 
-# Getting Started
+# Начало работы {#getting-started}
 
-> One command. Two minutes. Every print archived automatically.
+> Одна команда. Две минуты. Каждая печать автоматически сохраняется в архиве.
 
 ---
 
-## :rocket: Quick Install
+## :rocket: Быстрая установка {#quick-install}
 
 === ":material-docker: Docker (Linux / macOS)"
 
-    Interactive script — handles everything for you. Requires a bash-compatible shell (Linux, macOS, or WSL on Windows):
+    Интерактивный скрипт выполнит все действия за вас. Требуется оболочка, совместимая с bash (Linux, macOS или WSL в Windows):
 
     ```bash
     curl -fsSL https://raw.githubusercontent.com/maziggy/bambuddy/main/install/docker-install.sh -o docker-install.sh && chmod +x docker-install.sh && ./docker-install.sh
     ```
 
-    Open Bambuddy at `http://<your-host>:8000` in your browser — replace `<your-host>` with the IP or hostname of the machine running Bambuddy. On Linux with host networking you can use `localhost`; on Docker Desktop (macOS/Windows) localhost does **not** reach the container — use the LAN IP of the host machine instead.
+    Откройте в браузере `http://<your-host>:8000`, заменив `<your-host>` IP-адресом или именем компьютера, на котором работает Bambuddy. В Linux при использовании сети хоста можно указать `localhost`; в Docker Desktop (macOS/Windows) через localhost контейнер **недоступен** — используйте IP-адрес компьютера в локальной сети.
 
-    [:material-arrow-right: Full Docker Guide](docker.md)
+    [:material-arrow-right: Полное руководство по Docker](docker.md)
 
 === ":material-microsoft-windows: Docker (Windows)"
 
-    The interactive install script is bash-only — Windows PowerShell doesn't have `chmod`. Use the manual compose flow instead:
+    Интерактивный скрипт установки работает только в bash; в Windows PowerShell нет команды `chmod`. Вместо него выполните установку через Compose вручную:
 
     ```powershell
     mkdir bambuddy
@@ -34,149 +34,149 @@ description: Get up and running with Bambuddy in minutes
     docker compose up -d
     ```
 
-    Open Bambuddy at `http://<your-host>:8000` in your browser, replacing `<your-host>` with the LAN IP of the Windows machine running Docker Desktop. **`localhost` will not work** — Docker Desktop runs the container inside a Linux VM with `network_mode: host`, so the container is on the VM's network, not on Windows' loopback.
+    Откройте в браузере `http://<your-host>:8000`, заменив `<your-host>` IP-адресом Windows-компьютера с Docker Desktop в локальной сети. **`localhost` не сработает**: Docker Desktop запускает контейнер внутри виртуальной машины Linux с `network_mode: host`, поэтому контейнер находится в сети виртуальной машины, а не на loopback-интерфейсе Windows.
 
-    [:material-arrow-right: Full Docker Guide](docker.md)
+    [:material-arrow-right: Полное руководство по Docker](docker.md)
 
-=== ":material-microsoft-windows: Native (Windows)"
+=== ":material-microsoft-windows: Нативная установка (Windows)"
 
-    The Windows installer sets up Bambuddy natively on Windows without Docker. Run PowerShell as Administrator and start the installer:
+    Установщик Windows устанавливает Bambuddy непосредственно в Windows, без Docker. Запустите PowerShell от имени администратора и выполните команду:
 
     ```powershell
     powershell -ExecutionPolicy Bypass -Command "iwr -useb https://raw.githubusercontent.com/maziggy/bambuddy/main/install/windows-installer.ps1 -OutFile windows-installer.ps1; .\windows-installer.ps1"
     ```
 
-    Open Bambuddy either at `http://localhost:8000` or `http://<your-host>:8000` in your browser, replacing `<your-host>` with the LAN IP of the Windows machine running bambuddy.
+    Откройте в браузере `http://localhost:8000` или `http://<your-host>:8000`, заменив `<your-host>` IP-адресом Windows-компьютера, на котором работает Bambuddy, в локальной сети.
 
-    [:material-arrow-right: Full Native Windows Guide](windows-installer.md)
+    [:material-arrow-right: Полное руководство по нативной установке в Windows](windows-installer.md)
 
-=== ":material-language-python: Native (Linux / macOS)"
+=== ":material-language-python: Нативная установка (Linux / macOS)"
 
-    Interactive script — installs Python venv, builds the frontend, sets up a systemd/launchd service:
+    Интерактивный скрипт устанавливает виртуальное окружение Python, собирает фронтенд и настраивает службу systemd/launchd:
 
     ```bash
     curl -fsSL https://raw.githubusercontent.com/maziggy/bambuddy/main/install/install.sh -o install.sh && chmod +x install.sh && ./install.sh
     ```
 
-    Open Bambuddy at `http://<your-host>:8000` in your browser — replace `<your-host>` with the IP or hostname of the machine running Bambuddy, or use `localhost` if you're on the same machine (native installs run directly on host networking, no Docker VM in the way).
+    Откройте в браузере `http://<your-host>:8000`, заменив `<your-host>` IP-адресом или именем компьютера, на котором работает Bambuddy. На этом же компьютере можно использовать `localhost`: при нативной установке приложение работает непосредственно в сети хоста, без виртуальной машины Docker.
 
-    [:material-arrow-right: Full Installation Guide](installation.md)
+    [:material-arrow-right: Полное руководство по установке](installation.md)
 
 ---
 
-## :footprints: Next Steps
+## :footprints: Следующие шаги {#next-steps}
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### :material-numeric-1-circle: Enable Developer Mode
-Enable Developer Mode on your printer and note the access code.
+### :material-numeric-1-circle: Включите режим разработчика {#enable-developer-mode}
+Включите режим разработчика на принтере и запишите код доступа.
 
-[:material-arrow-right: See instructions](#enabling-developer-mode)
+[:material-arrow-right: Инструкция](#enabling-developer-mode)
 </div>
 
 <div class="feature-card" markdown>
-### :material-numeric-2-circle: Add Your Printer
-Enter your printer's IP, access code, and serial number.
+### :material-numeric-2-circle: Добавьте принтер {#add-your-printer}
+Введите IP-адрес, код доступа и серийный номер принтера.
 
-[:material-arrow-right: Add first printer](first-printer.md)
+[:material-arrow-right: Добавить первый принтер](first-printer.md)
 </div>
 
 <div class="feature-card" markdown>
-### :material-numeric-3-circle: Start Printing!
-Bambuddy automatically archives every print.
+### :material-numeric-3-circle: Начните печать! {#start-printing}
+Bambuddy автоматически архивирует каждую печать.
 
-[:material-arrow-right: Explore features](../features/index.md)
+[:material-arrow-right: Изучить возможности](../features/index.md)
 </div>
 
 </div>
 
 ---
 
-## Enabling Developer Mode
+## Включение режима разработчика {#enabling-developer-mode}
 
-Bambuddy connects to your printer via **Developer Mode** - a local connection that provides full control without internet.
+Bambuddy подключается к принтеру через **режим разработчика** — локальное соединение, обеспечивающее полное управление без интернета.
 
-!!! info "Why Developer Mode?"
-    Developer Mode provides direct communication between Bambuddy and your printer over your local network. This means:
+!!! info "Зачем нужен режим разработчика?"
+    Режим разработчика обеспечивает прямую связь Bambuddy с принтером по локальной сети. Это означает:
 
-    - :material-check: **Works offline** - No internet required
-    - :material-check: **Full control** - Start/stop prints, upload files, control lights
-    - :material-check: **Your data stays local** - No cloud dependency
+    - :material-check: **Работа без интернета** — подключение к интернету не требуется
+    - :material-check: **Полное управление** — запуск и остановка печати, загрузка файлов, управление подсветкой
+    - :material-check: **Данные остаются у вас** — зависимости от облака нет
 
-!!! warning "Developer Mode vs LAN Only Mode"
-    Since the January 2025 firmware update, standard LAN Only Mode (without Developer Mode) only provides **read-only** access. You can monitor your printer, but you cannot control it. **Developer Mode is required** for full functionality with Bambuddy.
+!!! warning "Режим разработчика и режим «Только локальная сеть»"
+    Начиная с обновления прошивки за январь 2025 года обычный режим «Только локальная сеть» без режима разработчика предоставляет доступ **только для чтения**. Вы можете наблюдать за принтером, но не управлять им. Для полной функциональности Bambuddy **необходим режим разработчика**.
 
-### Step 1: Enable LAN Only Mode
+### Шаг 1. Включите режим «Только локальная сеть» {#step-1-enable-lan-only-mode}
 
-1. On your printer's touchscreen, go to **Settings**
-2. Navigate to **Network** or **WLAN**
-3. Toggle **LAN Only Mode** to **ON**
+1. На сенсорном экране принтера откройте **Настройки**
+2. Перейдите в **Сеть** или **WLAN**
+3. Включите режим **«Только локальная сеть»**
 
-### Step 2: Enable Developer Mode
+### Шаг 2. Включите режим разработчика {#step-2-enable-developer-mode}
 
-1. After enabling LAN Only Mode, a **Developer Mode** option will appear
-2. Toggle **Developer Mode** to **ON**
-3. Note down the **Access Code** displayed (8 characters)
+1. После включения режима «Только локальная сеть» появится пункт **«Режим разработчика»**
+2. Включите **режим разработчика**
+3. Запишите отображаемый **код доступа** из 8 символов
 
-!!! warning "Access Code Changes"
-    The access code changes every time you toggle these modes off and on. If you re-enable Developer Mode, you'll need to update the access code in Bambuddy.
+!!! warning "Изменение кода доступа"
+    Код доступа меняется при каждом выключении и повторном включении этих режимов. Если вы снова включили режим разработчика, обновите код доступа в Bambuddy.
 
-### Step 3: Insert SD Card
+### Шаг 3. Вставьте SD-карту {#step-3-insert-sd-card}
 
-!!! warning "SD Card Required"
-    An SD card must be inserted in your printer for Bambuddy to work properly. The SD card is required for:
+!!! warning "Необходима SD-карта"
+    Для правильной работы Bambuddy в принтер должна быть вставлена SD-карта. Она необходима для:
 
-    - :material-check: File transfers to/from the printer
-    - :material-check: Starting prints from Bambuddy
-    - :material-check: Archiving completed prints
+    - :material-check: Передачи файлов на принтер и с него
+    - :material-check: Запуска печати из Bambuddy
+    - :material-check: Архивации завершённых печатей
 
-    Without an SD card, Bambuddy cannot transfer files or start prints on your printer.
+    Без SD-карты Bambuddy не сможет передавать файлы или запускать печать на принтере.
 
-### Step 4: Enable "Store sent files on external storage"
+### Шаг 4. Включите сохранение отправленных файлов на внешнем накопителе {#step-4-enable-store-sent-files-on-external-storage}
 
-Bambuddy needs the slicer to leave a copy of the `.gcode.3mf` on the printer's SD card so it can pull thumbnails and slicer metadata back into the archive. There are two places this setting can live, depending on your slicer + firmware combination:
+Чтобы получать миниатюры и метаданные слайсера для архива, Bambuddy нужна копия файла `.gcode.3mf`, сохранённая слайсером на SD-карте принтера. В зависимости от сочетания слайсера и прошивки настройка находится в одном из двух мест:
 
-=== "In the slicer (older Bambu Studio / OrcaSlicer)"
+=== "В слайсере (старые версии Bambu Studio / OrcaSlicer)"
 
-    1. Open **Bambu Studio** or **OrcaSlicer**
-    2. Go to the **Device** tab for your printer
-    3. Enable **"Store sent files on external storage"**
+    1. Откройте **Bambu Studio** или **OrcaSlicer**
+    2. Перейдите на вкладку **Устройство** вашего принтера
+    3. Включите **«Сохранять отправленные файлы на внешнем накопителе»**
 
-=== "On the printer (newer firmware, e.g. P2S 01.02.00.00 + Bambu Studio 2.6+)"
+=== "На принтере (новые версии прошивки, например P2S 01.02.00.00 + Bambu Studio 2.6+)"
 
-    Recent firmware/slicer releases moved the toggle out of the slicer onto the printer itself. If the option is missing in Bambu Studio's Device tab, set it on the printer:
+    В последних версиях прошивки и слайсера переключатель перенесли из слайсера на принтер. Если на вкладке устройства Bambu Studio такой настройки нет, установите её на принтере:
 
-    1. On the printer, open **Settings :material-arrow-right: Print Settings** (or **Print Options**, depending on firmware)
-    2. Enable the equivalent **"Store sent files on external storage"** option
+    1. На принтере откройте **Настройки :material-arrow-right: Настройки печати** (или **Параметры печати**, в зависимости от прошивки)
+    2. Включите соответствующий параметр **«Сохранять отправленные файлы на внешнем накопителе»**
 
-    Reported on a P2S in [#1170](https://github.com/maziggy/bambuddy/issues/1170).
+    Об этом сообщили для P2S в [#1170](https://github.com/maziggy/bambuddy/issues/1170).
 
-!!! info "Why is this needed?"
-    Bambuddy extracts thumbnails and 3D model previews from the 3MF files on the SD card. Without this setting, every print falls back to a no-3MF archive: no thumbnail, no source 3MF, no slicer metadata.
+!!! info "Зачем это нужно?"
+    Bambuddy извлекает миниатюры и предпросмотр 3D-моделей из файлов 3MF на SD-карте. Без этой настройки каждая печать будет архивироваться без 3MF: без миниатюры, исходного 3MF и метаданных слайсера.
 
-### Step 5: Gather Printer Information
+### Шаг 5. Подготовьте сведения о принтере {#step-5-gather-printer-information}
 
-You'll need these details to add your printer:
+Чтобы добавить принтер, понадобятся следующие данные:
 
-| Information | Where to Find |
+| Данные | Где найти |
 |------------|---------------|
-| **IP Address** | Settings :material-arrow-right: Network |
-| **Serial Number** | Settings :material-arrow-right: Device Info |
-| **Access Code** | Shown when Developer Mode is enabled |
+| **IP-адрес** | Настройки :material-arrow-right: Сеть |
+| **Серийный номер** | Настройки :material-arrow-right: Информация об устройстве |
+| **Код доступа** | Отображается при включении режима разработчика |
 
 ---
 
-## :checkered_flag: What's Next?
+## :checkered_flag: Что дальше? {#whats-next}
 
 <div class="quick-start" markdown>
 
-[:material-printer-3d: **Add Your Printer**<br><small>Connect your first printer</small>](first-printer.md)
+[:material-printer-3d: **Добавить принтер**<br><small>Подключите свой первый принтер</small>](first-printer.md)
 
-[:material-archive: **Print Archiving**<br><small>How automatic archiving works</small>](../features/archiving.md)
+[:material-archive: **Архивация печати**<br><small>Как работает автоматическая архивация</small>](../features/archiving.md)
 
-[:material-bell-ring: **Notifications**<br><small>Get alerts on your phone</small>](../features/notifications.md)
+[:material-bell-ring: **Уведомления**<br><small>Получайте оповещения на телефон</small>](../features/notifications.md)
 
-[:material-help-circle: **Troubleshooting**<br><small>Having issues?</small>](../reference/troubleshooting.md)
+[:material-help-circle: **Устранение неполадок**<br><small>Возникли проблемы?</small>](../reference/troubleshooting.md)
 
 </div>
