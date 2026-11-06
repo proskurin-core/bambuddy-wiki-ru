@@ -3,98 +3,98 @@ hide:
   - navigation
 ---
 
-# Privacy Policy
+# Политика конфиденциальности {#privacy-policy}
 
-## 1. Overview
+## 1. Общие сведения {#1-overview}
 
-This privacy policy explains how we collect, use, and protect your personal data when you visit wiki.bambuddy.cool (the "Wiki"). We take the protection of your personal data very seriously and treat it confidentially in accordance with the EU General Data Protection Regulation (GDPR) and applicable German data protection laws.
+Эта политика конфиденциальности объясняет, как мы собираем, используем и защищаем ваши персональные данные при посещении wiki.bambuddy.cool (далее — «Wiki»). Мы серьёзно относимся к защите персональных данных и обрабатываем их конфиденциально в соответствии с Общим регламентом ЕС о защите данных (GDPR) и применимым законодательством Германии о защите данных.
 
-**Data controller:**  
+**Контролёр персональных данных:**  
 Martin Ziegler  
 Warschauer Str. 12  
 10243 Berlin, Germany  
-Email: [martin@bambuddy.cool](mailto:martin@bambuddy.cool)
+Электронная почта: [martin@bambuddy.cool](mailto:martin@bambuddy.cool)
 
-## 2. Hosting
+## 2. Хостинг {#2-hosting}
 
-This website is hosted by a third-party provider. When you visit this website, the hosting provider automatically collects and stores information in server log files that your browser transmits. This includes:
+Этот сайт размещён у стороннего поставщика. При посещении сайта хостинг-провайдер автоматически собирает и сохраняет в серверных журналах информацию, передаваемую вашим браузером, в том числе:
 
-- IP address
-- Browser type and version
-- Operating system
-- Referrer URL
-- Date and time of access
+- IP-адрес
+- Тип и версию браузера
+- Операционную систему
+- URL источника перехода
+- Дату и время доступа
 
-This data is processed based on Art. 6(1)(f) GDPR, as it is necessary for the secure and efficient operation of this website. Server log files are deleted automatically after 30 days.
+Эти данные обрабатываются на основании ст. 6(1)(f) GDPR, поскольку они необходимы для безопасной и эффективной работы сайта. Серверные журналы автоматически удаляются через 30 дней.
 
-## 3. Analytics (Matomo)
+## 3. Аналитика (Matomo) {#3-analytics-matomo}
 
-We use **Matomo**, a self-hosted, open-source web analytics platform, to understand how visitors use this wiki. Matomo runs on our own infrastructure; no data is shared with third parties, and no data leaves the European Union.
+Мы используем **Matomo** — самостоятельно размещаемую платформу веб-аналитики с открытым исходным кодом — чтобы понимать, как посетители пользуются этой Wiki. Matomo работает на нашей собственной инфраструктуре; данные не передаются третьим лицам и не покидают Европейский союз.
 
-Our Matomo installation is configured to process data anonymously:
+Наш экземпляр Matomo настроен на анонимную обработку данных:
 
-- **No cookies** are set in your browser
-- **No personal identifiers** (user ID, order ID, referrer paths beyond the domain) are stored
-- **IP addresses are truncated** by 2 bytes (e.g. `144.76.176.12` is stored as `144.76.0.0`) before being written to the database, so no individual visitor can be identified
-- The anonymized IP is also used for geolocation (country-level only)
-- **Do Not Track (DNT)** browser signals are honored — if your browser sends DNT, no data is recorded
-- Raw visit logs are **automatically deleted after 180 days**
+- В браузере **не устанавливаются файлы cookie**
+- **Персональные идентификаторы** (ID пользователя, ID заказа, пути источника перехода за пределами домена) не сохраняются
+- Перед записью в базу данных **IP-адреса сокращаются** на 2 байта (например, `144.76.176.12` сохраняется как `144.76.0.0`), поэтому отдельного посетителя нельзя идентифицировать
+- Анонимизированный IP-адрес также используется для определения местоположения (только страны)
+- Учитывается сигнал браузера **Do Not Track (DNT)**: если браузер отправляет DNT, данные не записываются
+- Необработанные журналы посещений **автоматически удаляются через 180 дней**
 
-The following anonymous, aggregated data is collected:
+Собираются следующие анонимные агрегированные данные:
 
-- Pages visited and time spent
-- Referrer domain (how you arrived at the site)
-- Browser and device type
-- Approximate country (from the truncated IP)
+- Посещённые страницы и время на них
+- Домен источника перехода (как вы попали на сайт)
+- Тип браузера и устройства
+- Предполагаемая страна (по сокращённому IP-адресу)
 
-Because the data is anonymized at the point of collection and no cookies or personal identifiers are used, this processing does not require consent under the GDPR. Legal basis: **Art. 6(1)(f) GDPR (legitimate interest)** — our legitimate interest being the operation and improvement of this wiki.
+Поскольку данные анонимизируются в момент сбора, а файлы cookie и персональные идентификаторы не используются, такая обработка не требует согласия в соответствии с GDPR. Правовое основание: **ст. 6(1)(f) GDPR (законный интерес)** — наш законный интерес заключается в работе и улучшении этой Wiki.
 
-You have the right to object to this processing at any time under Art. 21 GDPR by enabling Do Not Track in your browser or by contacting us at [martin@bambuddy.cool](mailto:martin@bambuddy.cool).
+Вы вправе в любое время возразить против такой обработки в соответствии со ст. 21 GDPR, включив Do Not Track в браузере или написав нам на [martin@bambuddy.cool](mailto:martin@bambuddy.cool).
 
-## 4. Search Tracking
+## 4. Отслеживание поиска {#4-search-tracking}
 
-When you use the wiki search function, your search queries are sent to our server for analytics purposes. This helps us understand what documentation topics are most sought after. No personally identifiable information is stored with search queries.
+При использовании поиска Wiki ваши поисковые запросы отправляются на наш сервер для аналитики. Это помогает понять, какие темы документации наиболее востребованы. Информация, позволяющая установить личность, вместе с поисковыми запросами не сохраняется.
 
-Legal basis: Art. 6(1)(f) GDPR (legitimate interest in improving documentation).
+Правовое основание: ст. 6(1)(f) GDPR (законный интерес в улучшении документации).
 
-## 5. Local Storage
+## 5. Локальное хранилище {#5-local-storage}
 
-This wiki uses your browser's local storage to remember your preferences, such as:
+Wiki использует локальное хранилище браузера для сохранения ваших предпочтений, например:
 
-- Color scheme (light/dark mode)
-- Navigation state
+- Цветовой схемы (светлая или тёмная тема)
+- Состояния навигации
 
-This data never leaves your browser and is not transmitted to any server.
+Эти данные не покидают браузер и не передаются на сервер.
 
-## 6. Your Rights
+## 6. Ваши права {#6-your-rights}
 
-Under the GDPR, you have the following rights regarding your personal data:
+В соответствии с GDPR у вас есть следующие права в отношении персональных данных:
 
-- **Right of access** (Art. 15 GDPR)
-- **Right to rectification** (Art. 16 GDPR)
-- **Right to erasure** (Art. 17 GDPR)
-- **Right to restriction** (Art. 18 GDPR)
-- **Right to data portability** (Art. 20 GDPR)
-- **Right to object** (Art. 21 GDPR)
-- **Right to withdraw consent** (Art. 7(3) GDPR)
+- **Право на доступ** (ст. 15 GDPR)
+- **Право на исправление** (ст. 16 GDPR)
+- **Право на удаление** (ст. 17 GDPR)
+- **Право на ограничение обработки** (ст. 18 GDPR)
+- **Право на переносимость данных** (ст. 20 GDPR)
+- **Право на возражение** (ст. 21 GDPR)
+- **Право на отзыв согласия** (ст. 7(3) GDPR)
 
-To exercise any of these rights, please contact us at [martin@bambuddy.cool](mailto:martin@bambuddy.cool).
+Чтобы воспользоваться любым из этих прав, свяжитесь с нами по адресу [martin@bambuddy.cool](mailto:martin@bambuddy.cool).
 
-You also have the right to lodge a complaint with a supervisory authority:
+Вы также вправе подать жалобу в надзорный орган:
 
 Berliner Beauftragte für Datenschutz und Informationsfreiheit  
 Friedrichstr. 219  
 10969 Berlin  
 [www.datenschutz-berlin.de](https://www.datenschutz-berlin.de)
 
-## 7. Data Security
+## 7. Безопасность данных {#7-data-security}
 
-This website uses TLS (HTTPS) encryption for secure data transmission.
+Для безопасной передачи данных этот сайт использует шифрование TLS (HTTPS).
 
-## 8. Changes to This Policy
+## 8. Изменения политики {#8-changes-to-this-policy}
 
-We may update this privacy policy from time to time. The current version is always available on this page.
+Мы можем время от времени обновлять эту политику конфиденциальности. Актуальная версия всегда доступна на этой странице.
 
 ---
 
-*Last updated: April 10, 2026*
+*Последнее обновление: 10 апреля 2026 года*

@@ -4,43 +4,43 @@ hide:
   - toc
 ---
 
-# Legal Notice
+# Правовая информация {#legal-notice}
 
-**Information in accordance with Section 5 TMG (German Telemedia Act)**
+**Информация в соответствии с § 5 TMG (Закона Германии о телемедиа)**
 
-## Contact
+## Контакты {#contact}
 
 Martin Ziegler  
 Warschauer Str. 12  
 10243 Berlin  
 Germany
 
-Email: [martin@bambuddy.cool](mailto:martin@bambuddy.cool)
+Электронная почта: [martin@bambuddy.cool](mailto:martin@bambuddy.cool)
 
-## Responsible for Content
+## Ответственный за содержание {#responsible-for-content}
 
-Martin Ziegler (address as above)
+Martin Ziegler (адрес указан выше)
 
-## Dispute Resolution
+## Разрешение споров {#dispute-resolution}
 
-The European Commission provides a platform for online dispute resolution (ODR): [https://ec.europa.eu/consumers/odr/](https://ec.europa.eu/consumers/odr/)
+Европейская комиссия предоставляет платформу для онлайн-разрешения споров (ODR): [https://ec.europa.eu/consumers/odr/](https://ec.europa.eu/consumers/odr/)
 
-We are not willing or obliged to participate in dispute resolution proceedings before a consumer arbitration board.
+Мы не желаем и не обязаны участвовать в процедурах разрешения споров перед потребительской арбитражной комиссией.
 
-## Liability for Content
+## Ответственность за содержание {#liability-for-content}
 
-As a service provider, we are responsible for our own content on these pages in accordance with general laws pursuant to Section 7(1) TMG. However, according to Sections 8 to 10 TMG, we are not obligated to monitor transmitted or stored third-party information or to investigate circumstances that indicate illegal activity.
+Как поставщик услуг мы несём ответственность за собственное содержание этих страниц в соответствии с общим законодательством и § 7(1) TMG. Однако согласно §§ 8–10 TMG мы не обязаны контролировать передаваемую или хранимую информацию третьих лиц или выяснять обстоятельства, указывающие на незаконную деятельность.
 
-Obligations to remove or block the use of information under general laws remain unaffected. However, liability in this regard is only possible from the point in time at which a concrete infringement of the law becomes known. If we become aware of any such legal infringements, we will remove the relevant content immediately.
+Обязанности по удалению информации или блокированию её использования в соответствии с общим законодательством сохраняются. Однако ответственность в этом отношении возможна только с момента, когда становится известно о конкретном нарушении закона. Если нам станет известно о таких нарушениях, мы незамедлительно удалим соответствующее содержание.
 
-## Liability for Links
+## Ответственность за ссылки {#liability-for-links}
 
-Our website contains links to external third-party websites over whose content we have no influence. We therefore cannot accept any liability for this third-party content. The respective provider or operator of the linked pages is always responsible for the content of the linked pages.
+Наш сайт содержит ссылки на внешние сайты третьих лиц, на содержание которых мы не можем влиять. Поэтому мы не можем нести ответственность за содержание этих сайтов. За содержание страниц, на которые ведут ссылки, всегда отвечает соответствующий поставщик или оператор.
 
-## Copyright
+## Авторское право {#copyright}
 
-The content and works created by the site operator on these pages are subject to copyright law. The Bambuddy software itself is released under the [AGPL-3.0 License](https://www.gnu.org/licenses/agpl-3.0.en.html).
+Содержание и произведения, созданные оператором сайта на этих страницах, защищены авторским правом. Само программное обеспечение Bambuddy распространяется на условиях [лицензии AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.en.html).
 
 ---
 
-*Last updated: April 8, 2026*
+*Последнее обновление: 8 апреля 2026 года*
