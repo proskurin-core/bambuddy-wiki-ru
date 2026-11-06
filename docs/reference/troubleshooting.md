@@ -1,412 +1,359 @@
 ---
-title: Troubleshooting
-description: Common issues and solutions
+title: Устранение неполадок
+description: Распространённые проблемы и их решения
 ---
 
-# Troubleshooting
+# Устранение неполадок {#troubleshooting}
 
-Solutions for common issues with Bambuddy.
-
----
-
-## :material-printer-3d: Printer Connection Issues
-
-### Run the Connection Diagnostic first
-
-Before working through the steps below, let Bambuddy check for you. The
-built-in **Connection Diagnostic** runs the same checks a maintainer would:
-port reachability (MQTT 8883, FTPS 990, RTSPS 322), LAN Developer Mode,
-container network mode, printer/host subnet match, printer credentials, and
-the printer-side "Store sent files on external storage" toggle (install [step 4](../getting-started/index.md#step-4-enable-store-sent-files-on-external-storage)).
-Each result comes with a plain-language fix.
-
-!!! info "What the network checks read"
-
-    **Container network mode** names the engine Bambuddy is running under —
-    Docker, Podman, Kubernetes or an LXC/LXD system container — and whether
-    it shares the host's network. A container on a **macvlan** network, or
-    an **ipvlan** network in L2 mode, has its own address on the LAN and
-    passes too. Bridge networking is the shape that breaks printer discovery
-    and the Virtual Printer; ipvlan in L3 mode gets a warning as well, since it
-    passes no broadcast or multicast: the slicer can't find the Virtual
-    Printer, and printers can only be found with the subnet scan. Where the
-    mode cannot
-    be read (Podman on a host with no container bridges, for instance) the
-    check says so rather than guessing; if discovery and the Virtual Printer
-    work, there is nothing to change.
-
-    **Network subnet** compares the printer against the network configured on
-    whichever of Bambuddy's interfaces routes to it, at that interface's real
-    prefix. A `/22`, a `/16` or a `/25` is read as written, and on a host with
-    several NICs the printer is compared against the one it is actually
-    reached through. If no prefix can be established the check is skipped —
-    it will not assert that two addresses are on different networks without
-    knowing how far the network reaches.
-
-Open it from any of:
-
-- The **printer card** — a *Run diagnostic* button appears when a printer is offline.
-- The **Add Printer** dialog — *Run diagnostic* tests the address and credentials before you save.
-- **System page → Connection Diagnostic** — run it for any configured printer on demand.
-
-Most "won't connect" and "won't print" problems are identified here in a few seconds.
+Решения распространённых проблем Bambuddy.
 
 ---
 
-### Printer Won't Connect
+## :material-printer-3d: Проблемы с подключением принтера {#printer-connection-issues}
 
-**Symptoms:** Printer shows as disconnected, red indicator
+### Сначала запустите диагностику подключения {#run-the-connection-diagnostic-first}
 
-**Solutions:**
+Прежде чем переходить к действиям ниже, позвольте Bambuddy выполнить проверку. Встроенная **Диагностика подключения** выполняет те же проверки, что и сопровождающий проекта: доступность портов (MQTT 8883, FTPS 990, RTSPS 322), режим разработчика для локальной сети, сетевой режим контейнера, совпадение подсетей принтера и хоста, учётные данные принтера и настройку принтера «Сохранять отправленные файлы на внешнем накопителе» ([шаг 4](../getting-started/index.md#step-4-enable-store-sent-files-on-external-storage) установки). Для каждого результата приводится понятное решение.
 
-1. **Verify Developer Mode is enabled**
-   - Check printer: Settings > Network > LAN Only Mode (must be ON)
-   - Then enable Developer Mode (appears after LAN Only Mode)
-   - Toggle off and on to get a fresh access code
+!!! info "Что проверяют сетевые проверки"
 
-2. **Check IP address**
-   - Verify IP in printer network settings
-   - Ensure IP hasn't changed (use static IP or DHCP reservation)
+    Проверка **сетевого режима контейнера** определяет среду, в которой работает Bambuddy — Docker, Podman, Kubernetes или системный контейнер LXC/LXD, — и выясняет, использует ли он сеть хоста. Контейнер в сети **macvlan** или **ipvlan** в режиме L2 имеет собственный адрес в локальной сети и также проходит проверку. Сетевой мост мешает обнаружению принтеров и работе виртуального принтера. Для ipvlan в режиме L3 также выводится предупреждение, поскольку он не передаёт широковещательные и многоадресные пакеты: слайсер не сможет обнаружить виртуальный принтер, а принтеры можно найти только сканированием подсети. Если режим невозможно определить (например, Podman на хосте без контейнерных мостов), проверка сообщает об этом, не делая предположений. Если обнаружение и виртуальный принтер работают, менять ничего не нужно.
 
-3. **Verify access code**
-   - Access code changes when Developer Mode is toggled
-   - Copy the code exactly (case-sensitive)
-   - If the printer actively refused the code, the log says so:
-     `MQTT connection refused by the printer: Not authorized`. Run the
-     **Connection Diagnostic** — the *Printer credentials* check names the
-     cause when the printer told us, and hedges when all Bambuddy knows is
-     that there is no session (a rebooting printer, or one already at its
-     limit of simultaneous connections, looks the same from outside).
+    Проверка **сетевой подсети** сравнивает адрес принтера с сетью интерфейса Bambuddy, через который к нему проходит маршрут, с учётом фактической длины префикса этого интерфейса. Префиксы `/22`, `/16` или `/25` используются как указано; на хосте с несколькими сетевыми интерфейсами принтер сравнивается с тем, через который он действительно доступен. Если определить префикс не удалось, проверка пропускается: без данных о границах сети нельзя утверждать, что адреса принадлежат разным сетям.
 
-4. **Check network connectivity**
+Открыть диагностику можно из следующих мест:
+
+- **Карточка принтера** — кнопка *Запустить диагностику* появляется, когда принтер отключён.
+- Окно **Добавить принтер** — *Запустить диагностику* проверяет адрес и учётные данные до сохранения.
+- **Страница «Система» → Диагностика подключения** — проверку можно запустить для любого настроенного принтера.
+
+Большинство проблем с подключением и запуском печати обнаруживаются за несколько секунд.
+
+---
+
+### Принтер не подключается {#printer-wont-connect}
+
+**Признаки:** принтер отображается как отключённый, индикатор красный.
+
+**Решения:**
+
+1. **Убедитесь, что включён режим разработчика**
+   - На принтере проверьте: Настройки > Сеть > Только локальная сеть (режим должен быть включён)
+   - Затем включите режим разработчика (появляется после включения локального режима)
+   - Выключите и включите режим, чтобы получить новый код доступа
+
+2. **Проверьте IP-адрес**
+   - Проверьте адрес в сетевых настройках принтера
+   - Убедитесь, что адрес не изменился (используйте статический IP или резервирование DHCP)
+
+3. **Проверьте код доступа**
+   - Код меняется при переключении режима разработчика
+   - Скопируйте код точно, соблюдая регистр
+   - Если принтер явно отклонил код, в журнале появится `MQTT connection refused by the printer: Not authorized`. Запустите **Диагностику подключения**: проверка *Учётные данные принтера* укажет причину, если принтер её сообщил, и не будет делать однозначных выводов, если Bambuddy известно только отсутствие сессии. Перезагружающийся принтер или принтер, достигший лимита одновременных подключений, снаружи выглядит так же.
+
+4. **Проверьте связь по сети**
    ```bash
    ping YOUR_PRINTER_IP
    ```
 
-5. **Verify ports are accessible**
-   - MQTT: Port 8883
-   - FTPS: Port 990
+5. **Убедитесь, что порты доступны**
+   - MQTT: порт 8883
+   - FTPS: порт 990
 
    ```bash
    telnet YOUR_PRINTER_IP 8883
    ```
 
-6. **Check firewall rules**
-   - Ensure Bambuddy server can reach printer
-   - Check both server and network firewalls
+6. **Проверьте правила межсетевого экрана**
+   - Убедитесь, что сервер Bambuddy может связаться с принтером
+   - Проверьте межсетевые экраны сервера и сети
 
 ---
 
-### Connection Drops Frequently
+### Подключение часто обрывается {#connection-drops-frequently}
 
-**Symptoms:** Printer connects but disconnects intermittently
+**Признаки:** принтер подключается, но периодически отключается.
 
-**Solutions:**
+**Решения:**
 
-1. **Check WiFi signal strength**
-   - View signal strength on printer card
-   - Move printer closer to router if weak
+1. **Проверьте уровень сигнала Wi-Fi**
+   - Посмотрите уровень сигнала на карточке принтера
+   - При слабом сигнале переместите принтер ближе к маршрутизатору
 
-2. **Network congestion**
-   - Too many devices on network
-   - Try a dedicated network/VLAN
+2. **Перегрузка сети**
+   - Возможно, в сети слишком много устройств
+   - Попробуйте выделенную сеть или VLAN
 
-3. **Router issues**
-   - Restart router
-   - Check for firmware updates
-   - Disable "smart" features that may interfere
+3. **Проблемы с маршрутизатором**
+   - Перезапустите маршрутизатор
+   - Проверьте наличие обновлений прошивки
+   - Отключите интеллектуальные функции, которые могут создавать помехи
 
-4. **Check Bambuddy logs**
+4. **Проверьте журналы Bambuddy**
    ```bash
    tail -f logs/bambuddy.log
    ```
 
-5. **Enable FTP retry**
-   - Go to Settings > General > FTP Retry
-   - Enable retry with 3 attempts and 2 second delay
-   - Increase connection timeout (default 30s) for slow WiFi
-   - Helps with intermittent connection issues during file transfers
+5. **Включите повторные попытки FTP**
+   - Откройте Настройки > Общие > Повтор FTP
+   - Включите повтор с 3 попытками и задержкой 2 секунды
+   - При медленном Wi-Fi увеличьте тайм-аут подключения (по умолчанию 30 секунд)
+   - Это помогает при периодических обрывах во время передачи файлов
 
-!!! info "Printers that drop off and never come back"
-    From 1.2.6 Bambuddy watches for this. A printer that had a working
-    connection, has been silent for five minutes, and still answers on its MQTT
-    port has its session rebuilt automatically — the log records how long it was
-    gone and what the last connection error was. Printers that are switched off
-    are left alone, so powering a farm down overnight does not cause reconnect
-    churn. On earlier versions a session that died without recovering could stay
-    down until something else prompted a reconnect.
+!!! info "Принтеры отключаются и не подключаются снова"
+    Начиная с 1.2.6 Bambuddy отслеживает такую ситуацию. Если принтер ранее был подключён, не отвечает пять минут, но его порт MQTT доступен, сессия автоматически создаётся заново. В журнал записываются длительность отсутствия связи и последняя ошибка подключения. Выключенные принтеры не затрагиваются, поэтому отключение фермы на ночь не вызывает постоянных повторных подключений. В старых версиях прервавшаяся сессия могла не восстановиться до другого события, инициирующего подключение.
 
-!!! info "Commands are not sent again after a reconnect"
-    From 1.3.1, commands that were still waiting for the printer's
-    acknowledgement when the connection dropped are discarded when it comes
-    back, so an old Stop or print start can't hit the print that is running
-    now. The log line "Dropped N command(s) queued on the previous MQTT
-    connection" shows when that happened. A command sent in the seconds before
-    a drop may not arrive: send it again.
+!!! info "Команды не отправляются повторно после восстановления связи"
+    Начиная с 1.3.1 команды, для которых на момент обрыва ещё ожидалось подтверждение принтера, после восстановления отбрасываются. Поэтому старая команда остановки или запуска не затронет текущую печать. Строка журнала «Dropped N command(s) queued on the previous MQTT connection» сообщает, когда это произошло. Команда, отправленная за несколько секунд до обрыва, может не дойти: отправьте её ещё раз.
 
 ---
 
-### A1/A1 Mini FTP Issues
+### Проблемы FTP на A1/A1 Mini {#a1a1-mini-ftp-issues}
 
-**Symptoms:** File transfers fail with "read operation timed out" on A1 or A1 Mini printers
+**Признаки:** передача файлов на принтерах A1 или A1 Mini завершается ошибкой «read operation timed out».
 
-**Background:**
+**Причина:**
 
-A1 and A1 Mini printers have different FTP/SSL behavior than X1C/P1S printers. They have issues with SSL encryption on the FTP data channel, causing transfers to hang or timeout waiting for completion responses. Bambuddy v0.1.6+ automatically detects A1/A1 Mini printers and skips SSL on the data channel while keeping the control channel encrypted via implicit FTPS.
+Поведение FTP/SSL принтеров A1 и A1 Mini отличается от X1C/P1S. На канале данных FTP возникают проблемы с шифрованием SSL, из-за которых передача зависает или истекает время ожидания ответа о завершении. Bambuddy версии 0.1.6 и новее автоматически обнаруживает A1/A1 Mini и отключает SSL на канале данных, сохраняя шифрование управляющего канала через implicit FTPS.
 
-**Solutions:**
+**Решения:**
 
-1. **Update to latest Bambuddy version**
-   - Version 0.1.6+ automatically handles A1 SSL compatibility
-   - No manual configuration required
+1. **Обновите Bambuddy до последней версии**
+   - Версия 0.1.6 и новее автоматически обеспечивает совместимость SSL с A1
+   - Ручная настройка не требуется
 
-2. **Increase FTP timeout for weak WiFi**
-   - Go to Settings > General > FTP Retry
-   - Increase connection timeout from default 30s to 60-120s
-   - A1 printers often have weaker WiFi signal than X1C/P1S
+2. **Увеличьте тайм-аут FTP при слабом Wi-Fi**
+   - Откройте Настройки > Общие > Повтор FTP
+   - Увеличьте тайм-аут подключения с 30 секунд по умолчанию до 60–120 секунд
+   - Сигнал Wi-Fi у A1 часто слабее, чем у X1C/P1S
 
-3. **Improve WiFi signal**
-   - A1 printers are known to have weak WiFi reception
-   - Check signal strength on printer card (-30 to -50 dBm = excellent, -50 to -70 dBm = fair, below -70 dBm = weak)
-   - Move printer closer to router or add a WiFi extender
+3. **Улучшите сигнал Wi-Fi**
+   - Принтеры A1 известны слабым приёмом Wi-Fi
+   - Проверьте уровень сигнала на карточке принтера (от −30 до −50 дБм — отличный, от −50 до −70 дБм — удовлетворительный, ниже −70 дБм — слабый)
+   - Переместите принтер ближе к маршрутизатору или добавьте усилитель Wi-Fi
 
-4. **Enable FTP retry**
-   - Go to Settings > General > FTP Retry
-   - Enable retry with 3-5 attempts and 2-3 second delay
-   - Combined with longer timeout, helps recover from transient failures
-
----
-
-### Wrong Printer Status
-
-**Symptoms:** Status shows idle when printing, or vice versa
-
-**Solutions:**
-
-1. **Wait for sync**
-   - Status updates every few seconds
-   - Refresh the page
-
-2. **Check MQTT debug**
-   - Enable MQTT debug logging
-   - Verify messages are being received
-
-3. **Restart connection**
-   - Delete printer from Bambuddy
-   - Re-add with correct details
-
-### The Printer Accepts Every Job and Starts None of Them
-
-**Symptoms:** The 3MF uploads fine, the queue item goes to *Printing*, and the
-printer stays idle. After a few minutes the job fails. Temperature and filament
-controls report success and the printer ignores them. Printing the same file
-straight from Bambu Studio or OrcaSlicer works.
-
-**Cause:** the printer rejected the command because it could not verify it —
-HMS **0500-0500-0001-0007**, *MQTT command verification failed*. Bambu Lab
-firmware from `01.08.03.00beta` / `01.08.05.00` authenticates control commands,
-and **Developer Mode** is the documented way to turn that off for LAN control.
-
-This is confusing to diagnose because the printer keeps answering *queries*
-normally. Status, AMS contents, RFID tags and the camera all keep working, so
-the connection looks perfectly healthy — only commands are being dropped.
-
-**Fix:**
-
-1. On the printer: **Settings > Network**, turn on **LAN Only Mode**, then
-   enable **Developer Mode** (it appears once LAN Only Mode is on).
-2. **Restart the printer.** The setting does not take effect until it reboots.
-3. Re-check the access code — it changes when the mode is toggled.
-4. Start the job again.
-
-!!! note "Bambuddy 1.2.6 and newer"
-    Bambuddy now shows this error on the printer card with the fix attached, and
-    fails the queue item immediately rather than re-uploading the file twice
-    more. On older versions nothing surfaced it — the queue item failed with a
-    message about the SD card, and the Connection Diagnostic reported Developer
-    Mode as *passing*, because the probe it uses cannot tell this firmware's
-    silent refusal apart from a normal answer.
+4. **Включите повторные попытки FTP**
+   - Откройте Настройки > Общие > Повтор FTP
+   - Включите повтор с 3–5 попытками и задержкой 2–3 секунды
+   - Вместе с увеличенным тайм-аутом это помогает восстановиться после кратковременных сбоев
 
 ---
 
-### Printer Looks Like It's Trying to Re-Start the Last Print After Power-On
+### Неверное состояние принтера {#wrong-printer-status}
 
-**Symptoms:** Every time you power the printer on, the touchscreen shows the last printed file's name, and it looks as though Bambuddy or the printer is about to start that print again.
+**Признаки:** во время печати отображается состояние ожидания или наоборот.
 
-**This is the printer's firmware, not Bambuddy.** The Bambu Lab firmware (A1, A1 mini, P1, X1, H2D) keeps the **last** `gcode_file` and `subtask_name` in its MQTT status payload after a print finishes. Those fields persist across power cycles and are echoed in every status push, even when the printer is sitting idle. The touchscreen displays them too.
+**Решения:**
 
-Bambuddy only acts on a real **state transition** (`IDLE → PREPARE / RUNNING`). It never sends a print command just because the last filename is still visible. You can confirm this in your support bundle log — a queued auto-start always shows up as a `print_scheduler` "Queue check" → "Starting queue item N" → `PRINT COMMAND` line. If you don't see those lines around the power-on time, Bambuddy isn't starting anything.
+1. **Дождитесь синхронизации**
+   - Состояние обновляется каждые несколько секунд
+   - Обновите страницу
 
-**What to check on the printer:**
+2. **Проверьте отладку MQTT**
+   - Включите отладочное журналирование MQTT
+   - Убедитесь, что сообщения поступают
 
-1. **Touchscreen prompt** — if a "Resume last print?" or "Start print?" dialog is open, dismiss it on the printer itself.
-2. **HMS errors** — codes like `0500_C010` (MicroSD card read/write exception) can leave the printer in a state where the touchscreen still shows a print as "ready". Reseat or replace the MicroSD card; if the error persists, contact Bambu Lab Support.
-3. **Saved task on the printer** — the printer may keep the file in its own queue/history. Clear it from the printer's storage UI directly.
+3. **Пересоздайте подключение**
+   - Удалите принтер из Bambuddy
+   - Добавьте его снова с правильными данными
 
-If you have **already** deleted the queue item in Bambuddy and removed the file from the printer's backup/cache folder and it still happens, the issue is with the printer firmware or hardware, not with Bambuddy.
+### Принтер принимает задания, но не запускает их {#the-printer-accepts-every-job-and-starts-none-of-them}
 
----
+**Признаки:** файл 3MF успешно загружается, задание очереди переходит в состояние *Печать*, но принтер простаивает. Через несколько минут задание завершается с ошибкой. Управление температурой и филаментом сообщает об успехе, но принтер игнорирует команды. Прямая печать того же файла из Bambu Studio или OrcaSlicer работает.
 
-## :material-sd: SD Card Issues
+**Причина:** принтер отклонил команду, поскольку не смог её проверить: HMS **0500-0500-0001-0007**, *MQTT command verification failed*. Прошивка Bambu Lab начиная с `01.08.03.00beta` / `01.08.05.00` проверяет подлинность команд управления. Документированный способ отключить проверку для управления по локальной сети — **режим разработчика**.
 
-### Prints Won't Start / File Transfer Fails
+Проблему сложно диагностировать, поскольку принтер продолжает нормально отвечать на *запросы*. Состояние, содержимое AMS, RFID-метки и камера работают, поэтому соединение выглядит исправным — отбрасываются только команды.
 
-**Symptoms:** Cannot start prints from Bambuddy, file transfers fail, or "No SD card" errors
+**Решение:**
 
-**Solutions:**
+1. На принтере откройте **Настройки > Сеть**, включите **Только локальная сеть**, затем **Режим разработчика** (он появляется после включения локального режима).
+2. **Перезапустите принтер.** Настройка не применяется до перезагрузки.
+3. Ещё раз проверьте код доступа: он меняется при переключении режима.
+4. Запустите задание снова.
 
-1. **Ensure SD card is inserted**
-   - An SD card is **required** for Bambuddy to work with your printer
-   - Check that the SD card is properly inserted in your printer
-   - The printer should recognize the SD card in its file browser
-
-2. **Check SD card health**
-   - Try a different SD card if transfers fail frequently
-   - Format the SD card using the printer's built-in format function
-   - Use a high-quality SD card (Class 10 or better recommended)
-
-3. **SD card full**
-   - Check available space on the SD card
-   - Delete old files from the printer's storage
-   - Use Bambuddy's File Manager to clean up files
-
-!!! tip "Queued jobs wait for the card"
-    When a printer refuses to store a queued job's file (553), the job stays in the queue and shows *"refused to store the file — check its SD card or USB drive"*. Once the card or drive is fixed, the job is sent again at the next retry, within an hour at most. See [Background Print Dispatch](../features/print-queue.md#background-print-dispatch).
-
-!!! warning "SD Card Required"
-    Bambuddy requires an SD card in your printer for:
-
-    - Starting prints from Bambuddy or the print queue
-    - Transferring files to/from the printer
-    - Archiving completed prints (downloading 3MF files)
-    - Firmware updates for LAN-only printers
+!!! note "Bambuddy 1.2.6 и новее"
+    Bambuddy показывает эту ошибку и решение на карточке принтера и сразу завершает задание очереди с ошибкой вместо ещё двух загрузок файла. В старых версиях ошибка не отображалась: задание завершалось сообщением о SD-карте, а диагностика показывала, что режим разработчика *прошёл проверку*, поскольку используемый запрос не отличает молчаливый отказ этой прошивки от обычного ответа.
 
 ---
 
-## :material-archive: Archiving Issues
+### После включения принтер как будто пытается повторить последнюю печать {#printer-looks-like-its-trying-to-re-start-the-last-print-after-power-on}
 
-### Prints Not Being Archived
+**Признаки:** каждый раз при включении сенсорный экран показывает имя последнего напечатанного файла, и кажется, что Bambuddy или принтер собирается запустить его снова.
 
-**Symptoms:** Prints complete but don't appear in archives
+**Это поведение прошивки принтера.** Прошивка Bambu Lab (A1, A1 mini, P1, X1, H2D) сохраняет последние значения `gcode_file` и `subtask_name` в сообщении состояния MQTT после завершения печати. Эти поля сохраняются при выключении и передаются в каждом обновлении состояния, даже когда принтер простаивает. Сенсорный экран также их отображает.
 
-**Solutions:**
+Bambuddy реагирует только на реальный **переход состояния** (`IDLE → PREPARE / RUNNING`). Она никогда не отправляет команду печати только потому, что имя последнего файла всё ещё видно. Это можно проверить в журнале пакета поддержки: автоматический запуск очереди всегда сопровождается строками `print_scheduler` «Queue check» → «Starting queue item N» → `PRINT COMMAND`. Если около времени включения таких строк нет, Bambuddy ничего не запускает.
 
-1. **Check SD card is inserted**
-   - An SD card is required for archiving to work
-   - Verify the SD card is properly inserted and recognized
+**Что проверить на принтере:**
 
-2. **Check printer connection**
-   - Must be connected during and after print
-   - Verify green connection indicator
+1. **Запрос на сенсорном экране** — если открыто окно «Возобновить последнюю печать?» или «Начать печать?», закройте его на самом принтере.
+2. **Ошибки HMS** — коды вроде `0500_C010` (ошибка чтения или записи карты MicroSD) могут оставить принтер в состоянии, при котором экран показывает печать как готовую. Переустановите или замените карту MicroSD; если ошибка сохраняется, обратитесь в поддержку Bambu Lab.
+3. **Сохранённое задание на принтере** — принтер может хранить файл в собственной очереди или истории. Удалите его непосредственно через интерфейс хранилища принтера.
 
-3. **Check FTP access**
-   - Port 990 must be accessible
-   - Try downloading a file manually
+Если вы **уже** удалили задание очереди в Bambuddy и файл из папки резервных копий или кэша принтера, но проблема сохраняется, она связана с прошивкой или оборудованием принтера.
 
-4. **Check disk space**
-   - Ensure enough space for 3MF files
-   - Clear old files if needed
+---
 
-5. **Enable FTP retry for weak WiFi**
-   - P1S, X1C, A1, and other printers often have weak WiFi
-   - Go to Settings > General > FTP Retry
-   - Enable retry with 3-5 attempts and 2-3 second delay
-   - Increase connection timeout to 60-120s for A1/A1 Mini
-   - This helps when FTP transfers fail intermittently
+## :material-sd: Проблемы с SD-картой {#sd-card-issues}
 
-6. **Check logs for errors**
+### Печать не запускается / передача файлов завершается ошибкой {#prints-wont-start-file-transfer-fails}
+
+**Признаки:** не удаётся запустить печать из Bambuddy, передача файлов завершается ошибкой или появляются сообщения «No SD card».
+
+**Решения:**
+
+1. **Убедитесь, что SD-карта вставлена**
+   - Для работы Bambuddy с принтером SD-карта **необходима**
+   - Проверьте, правильно ли карта вставлена в принтер
+   - Принтер должен распознавать карту в файловом браузере
+
+2. **Проверьте исправность SD-карты**
+   - Если передача часто завершается ошибкой, попробуйте другую карту
+   - Отформатируйте карту встроенной функцией принтера
+   - Используйте качественную SD-карту (рекомендуется Class 10 или выше)
+
+3. **SD-карта заполнена**
+   - Проверьте свободное место на карте
+   - Удалите старые файлы из хранилища принтера
+   - Используйте файловый менеджер Bambuddy для очистки
+
+!!! tip "Задания очереди ожидают карту"
+    Если принтер отказывается сохранить файл задания очереди (553), задание остаётся в очереди с сообщением «не удалось сохранить файл — проверьте SD-карту или USB-накопитель». После устранения проблемы файл отправляется при следующей попытке, не позднее чем через час. См. [Фоновая отправка на печать](../features/print-queue.md#background-print-dispatch).
+
+!!! warning "Необходима SD-карта"
+    SD-карта в принтере необходима Bambuddy для:
+
+    - Запуска печати из Bambuddy или очереди
+    - Передачи файлов на принтер и с него
+    - Архивации завершённых печатей (загрузки файлов 3MF)
+    - Обновления прошивки принтеров, работающих только в локальной сети
+
+---
+## :material-archive: Проблемы с архивацией {#archiving-issues}
+
+### Печати не архивируются {#prints-not-being-archived}
+
+**Признаки:** печать завершается, но не появляется в архиве.
+
+**Решения:**
+
+1. **Убедитесь, что SD-карта вставлена**
+   - Для архивации необходима SD-карта
+   - Проверьте, правильно ли она вставлена и распознана
+
+2. **Проверьте подключение принтера**
+   - Он должен быть подключён во время и после печати
+   - Убедитесь, что индикатор подключения зелёный
+
+3. **Проверьте доступ по FTP**
+   - Порт 990 должен быть доступен
+   - Попробуйте загрузить файл вручную
+
+4. **Проверьте место на диске**
+   - Убедитесь, что достаточно места для файлов 3MF
+   - При необходимости удалите старые файлы
+
+5. **Включите повтор FTP при слабом Wi-Fi**
+   - У P1S, X1C, A1 и других принтеров сигнал Wi-Fi часто слабый
+   - Откройте Настройки > Общие > Повтор FTP
+   - Включите повтор с 3–5 попытками и задержкой 2–3 секунды
+   - Для A1/A1 Mini увеличьте тайм-аут подключения до 60–120 секунд
+   - Это помогает при периодических ошибках передачи FTP
+
+6. **Проверьте журнал на наличие ошибок**
    ```bash
    grep -i "archive\|error" logs/bambuddy.log
    ```
 
 ---
 
-### Archive Card Has Only a Name
+### В карточке архива есть только название {#archive-card-has-only-a-name}
 
-**Symptoms:** The print is archived with its name and timing, but there is no thumbnail, no filament total, no layer count, and the Reprint button is greyed out. Other printers on the same Bambuddy install archive normally.
+**Признаки:** печать архивируется с названием и временем, но без миниатюры, общего расхода филамента и числа слоёв; кнопка повторной печати недоступна. Другие принтеры в той же установке Bambuddy архивируют печати нормально.
 
-**Background:**
+**Причина:**
 
-Bambuddy reads a print's 3MF and its cover over FTPS on port 990. On every Bambu model that port serves **external storage only** — the SD card or USB stick. It is not a view of the printer's whole filesystem.
+Bambuddy считывает 3MF и обложку печати по FTPS через порт 990. На всех моделях Bambu этот порт предоставляет доступ **только к внешнему накопителю** — SD-карте или USB-накопителю, а не ко всей файловой системе принтера.
 
-On H2-series, P2S and X2D, **Bambu Studio** puts the sliced file on the printer's **internal storage** instead, uploading over a separate service on port 6000.
+На серии H2, P2S и X2D **Bambu Studio** вместо этого помещает нарезанный файл во **внутреннее хранилище** принтера, загружая его через отдельную службу на порту 6000.
 
-That is where the printer *put* it, which is not always the same as where FTPS can *read* it. Some H2D firmware keeps a copy of the same file under `/cache` on the card and hands it over on request, and those prints archive in full. So Bambuddy looks before it gives up: the printer names the exact file, and checking for it costs one connection. Where no copy exists — an H2C or P2S with the file only on internal storage — there is nothing to fetch at any path, and the archive holds only what the printer reported over MQTT.
+Место, куда принтер *поместил* файл, не всегда совпадает с местом, откуда FTPS может его *прочитать*. Некоторые версии прошивки H2D сохраняют копию файла на карте в `/cache` и отдают её по запросу; такие печати архивируются полностью. Поэтому Bambuddy сначала проверяет наличие файла: принтер сообщает точное имя, а проверка требует одного соединения. Если копии нет — например, на H2C или P2S файл находится только во внутреннем хранилище — получить её ни по какому пути нельзя, и архив содержит только сведения, сообщённые принтером по MQTT.
 
-What decides it is the slicer, not the printer and not your settings. Measured on an H2C, an H2D and an X1C — same Bambu Studio, same model, one minute apart, all three reporting "Store sent files on external storage" as **on**:
+Это зависит от слайсера, а не от принтера или ваших настроек. Проверка на H2C, H2D и X1C с одной и той же Bambu Studio и моделью с интервалом в минуту, когда все три принтера сообщали, что настройка «Сохранять отправленные файлы на внешнем накопителе» **включена**, дала следующий результат:
 
-| Printer | Where Bambu Studio put it | Archive |
+| Принтер | Куда Bambu Studio поместила файл | Архив |
 | --- | --- | --- |
-| H2C | internal storage | name and timing only |
-| H2D | internal storage | name and timing only |
-| X1C | external storage | complete |
+| H2C | внутреннее хранилище | только название и время |
+| H2D | внутреннее хранилище | только название и время |
+| X1C | внешний накопитель | полный |
 
-Treat the last column as "what those printers did on that day", not a rule: a later H2D report ([#2856](https://github.com/maziggy/bambuddy/issues/2856)) had the same `brtc://emmc` dispatch with a perfectly readable copy on the card, which is why Bambuddy now checks each print rather than reading the answer off the URL.
+Последний столбец показывает результат конкретной проверки, а не правило. В более позднем сообщении о H2D ([#2856](https://github.com/maziggy/bambuddy/issues/2856)) отправка также использовала `brtc://emmc`, но на карте была полностью читаемая копия. Поэтому теперь Bambuddy проверяет каждую печать, а не определяет результат по URL.
 
-The **X2D** behaves like the H2 series. That one is not from the run above but from a user report ([#3126](https://github.com/maziggy/bambuddy/issues/3126)), whose log carries the same `brtc://emmc` dispatch with a card in the slot and OrcaSlicer archiving the same project in full on the same printer.
+**X2D** ведёт себя как серия H2. Это известно не из указанной проверки, а из сообщения пользователя ([#3126](https://github.com/maziggy/bambuddy/issues/3126)): журнал содержит такую же отправку `brtc://emmc` при вставленной карте, а OrcaSlicer полностью архивирует тот же проект на том же принтере.
 
-The same H2C and H2D sliced in **OrcaSlicer** put the file on the card and archived in full, and turning "Store sent files on external storage" *off* made no difference to that — OrcaSlicer always uploads over FTPS. So the toggle does not control this on H2-series, P2S or X2D, in either direction.
+Те же H2C и H2D при нарезке в **OrcaSlicer** сохраняли файл на карту и архивировали его полностью; выключение настройки «Сохранять отправленные файлы на внешнем накопителе» этого не изменило — OrcaSlicer всегда загружает файлы по FTPS. Таким образом, на серии H2, P2S и X2D этот переключатель не управляет поведением ни в одну из сторон.
 
-Bambu Studio's **Send** dialog does offer a storage picker — **Cache** (the printer's internal memory) or **External** — and choosing External puts the file on the card where Bambuddy can read it. Its **Print** button offers no such choice (tested on an H2D) and goes to Cache every time. So staying in Bambu Studio means sending first and starting the print as a second step. [BambuStudio#10481](https://github.com/bambulab/BambuStudio/issues/10481) tracks the default.
+В диалоге **Отправить** Bambu Studio можно выбрать **Кэш** (внутреннюю память принтера) или **Внешний накопитель**. При выборе внешнего накопителя файл попадает на карту, откуда Bambuddy может его прочитать. Кнопка **Печать** такого выбора не предлагает (проверено на H2D) и всегда использует кэш. Поэтому в Bambu Studio сначала отправьте файл, а затем отдельным действием запустите печать. В [BambuStudio#10481](https://github.com/bambulab/BambuStudio/issues/10481) обсуждается значение по умолчанию.
 
-You can tell which storage a print used from the log:
+Узнать использованный накопитель можно по журналу:
 
 ```bash
 grep '"url"' logs/bambuddy.log
 ```
 
-`"url": "ftp://<name>"` means the card, and the archive will be complete. `"url": "brtc://emmc/<name>"` means internal storage — then the next lines say how it ended: `Downloaded: /cache/<name>` if the printer kept a readable copy after all, or `Skipping the 3MF lookup` if it did not.
+`"url": "ftp://<name>"` означает карту и полный архив. `"url": "brtc://emmc/<name>"` означает внутреннее хранилище; следующие строки показывают результат: `Downloaded: /cache/<name>`, если читаемая копия всё же сохранилась, или `Skipping the 3MF lookup`, если её нет.
 
-**Solutions:**
+**Решения:**
 
-All the routes below need a card or stick in the printer. On X1 and P1 series, where Bambu Studio already uses external storage, only the first point applies.
+Для всех вариантов ниже в принтере нужна карта или USB-накопитель. На сериях X1 и P1, где Bambu Studio уже использует внешний накопитель, применим только первый пункт.
 
-1. **Insert a card or stick**
-      - Check Settings > Printers > Connection Diagnostic: `Store sent files on external storage` reports `no_media` when the slot is empty
-      - The setting itself lives in the printer's own Print Settings on current firmware, and in Bambu Studio / OrcaSlicer's Device tab on older versions. It is worth having on, but on H2-series, P2S and X2D it will not change where Bambu Studio sends the file
+1. **Вставьте карту или накопитель**
+      - Проверьте Настройки > Принтеры > Диагностика подключения: при пустом слоте проверка `Store sent files on external storage` сообщает `no_media`
+      - В текущих прошивках сама настройка находится в настройках печати принтера, а в старых версиях — на вкладке устройства Bambu Studio / OrcaSlicer. Её полезно включить, но на H2, P2S и X2D она не меняет место отправки файла Bambu Studio
 
-2. **Start the print from Bambuddy instead of the slicer**
-      - Bambuddy uploads over FTPS itself, so the file lands on external storage and the archive is complete, on every model
+2. **Запускайте печать из Bambuddy, а не слайсера**
+      - Bambuddy сама загружает файл по FTPS, поэтому он попадает на внешний накопитель и архив получается полным на всех моделях
 
-3. **Slice in OrcaSlicer**
-      - OrcaSlicer always uploads over FTPS, so its prints archive in full on H2-series too
-      - It will refuse to send with an empty slot — "storage needs to be inserted before printing via lan" — rather than silently falling back to internal storage
+3. **Нарезайте в OrcaSlicer**
+      - OrcaSlicer всегда загружает по FTPS, поэтому и на серии H2 печати архивируются полностью
+      - При пустом слоте она откажется отправлять файл с сообщением «storage needs to be inserted before printing via lan» вместо незаметного перехода на внутреннюю память
 
-4. **Send from Bambu Studio with External picked, then start the print**
-      - The picker is in the **Send** dialog only; **Print** always uses Cache
-      - Start it from the printer's own screen, from Handy, or from Studio's device page — all three archive in full
-      - Two steps rather than one, but it keeps you in Bambu Studio
+4. **Отправьте файл из Bambu Studio с выбранным внешним накопителем, затем запустите печать**
+      - Выбор есть только в диалоге **Отправить**; **Печать** всегда использует кэш
+      - Запустите печать с экрана принтера, из Handy или со страницы устройства в Studio — во всех трёх случаях архив будет полным
+      - Действий два вместо одного, но можно продолжать пользоваться Bambu Studio
 
-5. **Accept the partial archive**
-      - Name, timing, status, and the finish photo still work; only the slicer-derived data is missing
+5. **Используйте неполный архив**
+      - Название, время, состояние и фото по завершении остаются доступными; отсутствуют только данные слайсера
 
-!!! info "Files already on internal storage cannot be recovered"
+!!! info "Файлы, уже находящиеся во внутреннем хранилище, восстановить нельзя"
 
-    Bambuddy can list what is on a printer's internal storage over the port-6000 tunnel, but the firmware refuses to serve those files back, so a print already sent there by Bambu Studio cannot be archived after the fact. [Issue #2762](https://github.com/maziggy/bambuddy/issues/2762) tracks uploading over that tunnel, which would remove the card requirement from route 2 — it would not change what Bambu Studio does.
+    Bambuddy может получить список файлов внутреннего хранилища принтера через туннель на порту 6000, но прошивка отказывается отдавать эти файлы обратно. Поэтому ранее отправленную туда из Bambu Studio печать нельзя архивировать задним числом. В [#2762](https://github.com/maziggy/bambuddy/issues/2762) рассматривается загрузка через этот туннель, которая убрала бы необходимость карты для варианта 2, но не изменила бы поведение Bambu Studio.
 
 ---
 
-### "Print Again" From the Printer's Screen { #print-again-from-the-printer }
+### «Напечатать снова» на экране принтера {#print-again-from-the-printer}
 
-**Symptoms:** A print archived in full the first time. Started again with **Print again** on the printer's screen, the new run's archive has a name and timing but no thumbnail, filament or 3MF. The log shows `Could not find 3MF file for print`, often after `Skipping the 3MF lookup for printer 1: internal_history`.
+**Признаки:** первая печать архивировалась полностью. При повторном запуске через **Напечатать снова** на экране принтера новый архив содержит название и время, но не содержит миниатюру, филамент или 3MF. В журнале отображается `Could not find 3MF file for print`, часто после `Skipping the 3MF lookup for printer 1: internal_history`.
 
-**Background:**
+**Причина:**
 
-On a reprint from its screen, the printer does not say which file on the card it is printing. It reports its own internal copy under a generic name (`file:///userdata/project_file.gcode.3mf`), which FTPS cannot serve. It also reports the model's title from inside the 3MF and the plate (`plate_3.gcode`). When the title differs from the file name on the card, nothing Bambuddy can build from those names finds the file.
+При повторной печати с экрана принтер не сообщает, какой файл на карте печатается. Он указывает собственную внутреннюю копию под общим именем (`file:///userdata/project_file.gcode.3mf`), которую FTPS не отдаёт. Также он сообщает название модели из 3MF и пластину (`plate_3.gcode`). Если название отличается от имени файла на карте, сочетания этих имён не позволяют Bambuddy найти файл.
 
-Bambuddy recognises the reprint instead. It looks for an earlier run of the same job on the same printer that was archived with its 3MF: same title, same plate, and the same layer count when the printer has already reported one. The earlier run must have been sent from the slicer or started on the printer. If one is found, the new run's archive uses that 3MF, and the log says so:
+Вместо этого Bambuddy распознаёт повторную печать. Она ищет предыдущий запуск того же задания на том же принтере, сохранённый вместе с 3MF: с тем же названием, пластиной и числом слоёв, если принтер уже его сообщил. Предыдущий запуск должен был быть отправлен из слайсера или запущен на принтере. Если такой архив найден, новый использует его 3MF, о чём сообщается в журнале:
 
 ```
 No 3MF on printer 1 for <title> (/data/Metadata/plate_3.gcode); using the 3MF of archive 14, an earlier run of the same job
 ```
 
-Without such an earlier archive, the new run gets the name-and-timing archive as before. The printer gives no other way to tell which file it is printing.
+Без подходящего предыдущего архива новая печать, как и раньше, архивируется только с названием и временем. Принтер не предоставляет другого способа определить файл.
 
 ---
 
-### Archive Card Is Empty After a Slow Transfer { #ftp-transfer-timed-out }
+### Пустая карточка архива после медленной передачи {#ftp-transfer-timed-out}
 
-**Symptoms:** The archive holds a name and timing but no thumbnail and no slicer data, on a printer whose other prints archive fine. It happens on big files, on prints started while the printer was busy, or on a worn SD card. The log says the download timed out rather than that the file was missing:
+**Признаки:** архив содержит название и время, но не содержит миниатюру или данные слайсера, хотя другие печати этого принтера архивируются нормально. Это происходит с большими файлами, при запуске на занятом принтере или с изношенной SD-картой. Журнал сообщает об истечении времени загрузки, а не об отсутствии файла:
 
 ```
 FTP download timed out after 30.0s (plus 30.0s grace) for /<print>.gcode.3mf
@@ -414,216 +361,210 @@ Download 3MF from /<print>.gcode.3mf failed after 4 attempts
 Could not find 3MF file for print: <print>.gcode.3mf
 ```
 
-**Background:**
+**Причина:**
 
-The file is on the card and the printer is serving it. What ran out was time. Bambuddy fetches a print's 3MF at the moment the print starts, which is the busiest moment the printer has: it is streaming its camera, publishing status over MQTT, and often still finishing the upload of the job itself. A large 3MF against all of that does not reliably finish inside the transfer budget, and the same file downloads in seconds once the printer settles.
+Файл находится на карте, и принтер его отдаёт. Не хватило времени на передачу. Bambuddy получает 3MF при запуске печати — в момент наибольшей нагрузки на принтер: он передаёт видео с камеры, публикует состояние по MQTT и часто ещё заканчивает загрузку задания. На этом фоне передача большого 3MF не всегда укладывается в отведённое время, хотя после снижения нагрузки тот же файл загружается за секунды.
 
-This is the one empty-archive cause where the card was never the problem, so the usual advice — check "Store sent files on external storage", check the slot — does not apply. You can tell it apart from a genuinely missing file by the log lines above: a file that is not on the card is answered with `550` and Bambuddy moves straight to the next path, without a timeout.
+В этой ситуации сама карта не является причиной пустого архива, поэтому обычные советы проверить настройку внешнего накопителя и слот не подходят. Отличить случай от отсутствующего файла можно по строкам журнала выше: если файла на карте нет, принтер отвечает `550`, и Bambuddy сразу проверяет следующий путь без ожидания тайм-аута.
 
-**What Bambuddy does about it on its own:**
+**Что Bambuddy делает автоматически:**
 
-From 1.2.6, a print that ends this way is not given up on. Bambuddy goes back for the file after one minute, four minutes and ten minutes, and fills the archive in where one of those lands — the thumbnail, the filament totals and the layer count all appear on the existing card, and the empty-archive banner stops counting it. Opening the print's card in the meantime does the same thing sooner, because the cover has to fetch the file anyway.
+Начиная с 1.2.6 Bambuddy не прекращает попытки: она снова запрашивает файл через одну, четыре и десять минут. Если одна из попыток успешна, существующая карточка дополняется миниатюрой, расходом филамента и числом слоёв, а предупреждение о пустом архиве перестаёт её учитывать. Открытие карточки до этого также ускоряет получение файла, поскольку он нужен для обложки.
 
-So a card that is still empty an hour later is one where every attempt also ran out of time.
+Если через час карточка всё ещё пуста, значит все попытки также завершились по тайм-ауту.
 
-**Solutions:**
+**Решения:**
 
-1. **Raise the transfer timeout**
-      - **Settings > Network > FTP Retry > Connection Timeout**, up to 300 seconds
-      - It is a database setting and takes effect immediately — no restart, no rebuild
-      - Worth doing on any install that prints files over ~15 MB, and on A1 and P1 series generally
+1. **Увеличьте тайм-аут передачи**
+      - **Настройки > Сеть > Повтор FTP > Тайм-аут подключения**, до 300 секунд
+      - Настройка хранится в базе данных и применяется сразу, без перезапуска или пересборки
+      - Это полезно для файлов больше примерно 15 МБ и в целом для серий A1 и P1
 
-2. **Check the card**
-      - A worn card is the usual reason a transfer that used to fit no longer does: the same 5.4 MB file measured 45 s off a worn P1S card and 25 s off a new one
-      - Cards are consumables; replacing one is cheaper than the time spent on this
+2. **Проверьте карту**
+      - Изношенная карта часто становится причиной того, что передача больше не укладывается в прежнее время: один и тот же файл 5,4 МБ загружался 45 секунд со старой карты P1S и 25 секунд с новой
+      - Карты — расходный материал; замена дешевле потраченного времени
 
-3. **Give the printer less to do at print start**
-      - Closing the camera stream on the Dashboard while a print starts leaves more of the printer's link for the transfer
-      - Starting the print from Bambuddy rather than the slicer avoids Bambuddy and the slicer competing for the same connection
+3. **Уменьшите нагрузку на принтер при запуске печати**
+      - Закройте трансляцию камеры на панели, пока начинается печать, чтобы освободить канал для передачи
+      - Запуск из Bambuddy, а не из слайсера, предотвращает конкуренцию между ними за соединение
 
 ---
 
-### Print Started on the Printer Has No Thumbnail
+### У печати, запущенной на принтере, нет миниатюры {#print-started-on-the-printer-has-no-thumbnail}
 
-**Symptoms:** The archive holds a name and timing but no thumbnail, no filament total and no layer count — and it happens only for prints you started from the printer's own screen, from Handy, or by picking a file the printer already had. Prints sent from a slicer on the same machine archive in full.
+**Признаки:** архив содержит название и время, но без миниатюры, общего расхода филамента и числа слоёв. Это происходит только с печатями, запущенными с экрана принтера, из Handy или из уже имеющегося на принтере файла. Печати, отправленные слайсером с того же компьютера, архивируются полностью.
 
-**Background:**
+**Причина:**
 
-This is the section above with the slicer taken out of it. Nothing was sent for these prints: the file was already on the printer, in its own model library, and starting it from the screen only tells the firmware which one to run.
+Ситуация похожа на описанную выше, но без участия слайсера. Для этих печатей ничего не отправлялось: файл уже находился в собственной библиотеке моделей принтера, а запуск с экрана только сообщает прошивке, какой файл выполнить.
 
-That library lives on the printer's internal storage under `/userdata/model/history/`, and port 990 does not serve it. So there is no `.gcode.3mf` for Bambuddy to read, and no slicer setting changes that — "Store sent files on external storage" governs where a slicer *puts* a file it is sending, and nothing was sent.
+Библиотека находится во внутреннем хранилище принтера в `/userdata/model/history/`, к которому порт 990 доступа не даёт. Поэтому Bambuddy не может прочитать `.gcode.3mf`, и настройки слайсера этого не изменят: настройка сохранения отправленных файлов на внешнем накопителе определяет, куда слайсер *записывает отправляемый* файл, а здесь ничего не отправлялось.
 
-The printer announces where the file lives when the print begins, and Bambuddy reads it:
+В начале печати принтер сообщает путь к файлу, а Bambuddy считывает его:
 
 ```bash
 grep 'Print destination from the report topic' logs/bambuddy.log
 ```
 
-`file:///userdata/model/history/<name>.gcode.3mf` is this case. Bambuddy still checks before giving up, because some printers keep a copy of recently used jobs under `/cache` and hand it over — those prints archive in full, thumbnail included. The copy is what rotates out: on an H2S `/cache` holds about eight files, so the same job archives completely today and partially next month.
+`file:///userdata/model/history/<name>.gcode.3mf` обозначает именно этот случай. Bambuddy всё же проверяет наличие копии: некоторые принтеры сохраняют недавно использованные задания в `/cache` и отдают их. Такие печати архивируются полностью, включая миниатюру. Именно эта копия со временем удаляется: например, H2S хранит в `/cache` около восьми файлов, поэтому сегодня задание может архивироваться полностью, а в следующем месяце — частично.
 
-**Solutions:**
+**Решения:**
 
-1. **Fill in what the printer knows**
-      - The printer's own file browser lists the sliced weight and print time for each job in its library
-      - Open the archive, choose **Edit Archive**, and enter it under **Filament used (g)** — the cost follows from it, and the Projects and statistics totals pick it up
+1. **Укажите известные принтеру данные**
+      - Файловый браузер принтера показывает для каждого задания в библиотеке вес нарезанной модели и время печати
+      - Откройте архив, выберите **Редактировать архив** и введите данные в поле **Использовано филамента (г)**. Стоимость будет вычислена на их основе, а проекты и статистика учтут расход
 
-2. **Start the print from Bambuddy**
-      - Bambuddy uploads over FTPS itself, so the file lands where it can be read back and the archive is complete
+2. **Запускайте печать из Bambuddy**
+      - Bambuddy загружает файл по FTPS туда, откуда его можно прочитать обратно, поэтому архив будет полным
 
-3. **Re-send from the slicer instead of re-printing from the library**
-      - A re-print of a job you still have in the slicer archives in full when it is sent again, on any model where the slicer uploads over FTPS
+3. **Отправьте файл из слайсера заново вместо повторной печати из библиотеки**
+      - Если задание сохранилось в слайсере, повторная отправка даст полный архив на любой модели, на которую слайсер загружает файл по FTPS
 
-!!! note "The blank archive is not a failed lookup"
+!!! note "Пустой архив не означает пропущенный поиск"
 
-    Before Bambuddy read that URL, these prints spent ~110 FTPS connections over six seconds asking every path in turn, then archived blank with no stated reason. It now goes straight to the handful of paths a copy could be at. A shorter gap in the log for these prints is the fix working, not a lookup being skipped.
-
----
-
-### Wrong Timelapse Attached to Archive
-
-**Symptoms:** After a print, the archive shows a timelapse from a previous print
-
-**Background:**
-
-In LAN-only mode (no cloud connection), Bambu printers don't sync their clock via NTP, so file modification times are unreliable. Bambuddy v0.1.9b+ uses a snapshot-diff approach instead of relying on mtime: it records which timelapse files exist before the print completes, then detects the new file that appears after encoding. If no new file is detected after retries, it falls back to matching the print name against filenames.
-
-**Solutions:**
-
-1. **Update to latest Bambuddy version**
-   - Version 0.1.9b+ fixes the timelapse detection logic
-   - No manual configuration required
-
-2. **Manual scan if auto-detection missed**
-   - Open the archive
-   - Click **Scan for Timelapse** button
-   - This uses print-name matching and timestamp proximity
-
-3. **Check printer storage**
-   - Ensure the SD card has enough free space
-   - Old timelapse files may fill up the timelapse directory
+    До того как Bambuddy начала считывать этот URL, она тратила около 110 соединений FTPS за шесть секунд на последовательную проверку всех путей, а затем создавала пустой архив без указания причины. Теперь сразу проверяется лишь несколько путей, в которых может находиться копия. Поэтому более короткий интервал в журнале означает, что исправление работает, а не то, что поиск пропущен.
 
 ---
 
-### Calibration Prints Being Archived
+### К архиву прикреплён неверный таймлапс {#wrong-timelapse-attached-to-archive}
 
-**Symptoms:** Calibration prints (flow rate, vibration compensation, bed leveling) appear in archives
+**Признаки:** после печати в архиве отображается таймлапс предыдущей печати.
 
-**Background:**
+**Причина:**
 
-Bambu printers announce their own calibration routines over MQTT through the
-same print-start event a real print uses, so Bambuddy has to recognise them by
-name. Four shapes exist and all of them are filtered:
+В режиме только локальной сети без облака принтеры Bambu не синхронизируют часы через NTP, поэтому время изменения файлов ненадёжно. Начиная с v0.1.9b Bambuddy сравнивает снимки списка файлов вместо использования mtime: запоминает существующие таймлапсы до завершения печати и обнаруживает новый файл после кодирования. Если после повторных попыток новый файл не обнаружен, используется сопоставление имени печати с именами файлов.
 
-| Routine | How the printer reports it | Filtered since |
+**Решения:**
+
+1. **Обновите Bambuddy до последней версии**
+   - Версия 0.1.9b и новее исправляет обнаружение таймлапсов
+   - Ручная настройка не требуется
+
+2. **Запустите сканирование вручную, если автоопределение не сработало**
+   - Откройте архив
+   - Нажмите **Искать таймлапс**
+   - Используются совпадение имени печати и близость временных меток
+
+3. **Проверьте хранилище принтера**
+   - Убедитесь, что на SD-карте достаточно свободного места
+   - Старые таймлапсы могут заполнить каталог
+
+---
+
+### Калибровочные печати попадают в архив {#calibration-prints-being-archived}
+
+**Признаки:** калибровочные печати (поток, компенсация вибраций, выравнивание стола) отображаются в архиве.
+
+**Причина:**
+
+Принтеры Bambu сообщают о собственных процедурах калибровки по MQTT тем же событием начала печати, которое используется для обычной печати. Поэтому Bambuddy распознаёт их по имени. Существуют четыре варианта, и все они отфильтровываются:
+
+| Процедура | Как её сообщает принтер | Фильтруется с версии |
 |---------|---------------------------|----------------|
-| Bed levelling, vibration compensation | An internal gcode path under `/usr/`, e.g. `/usr/etc/print/auto_cali_for_user.gcode` | v0.1.9b |
-| Auto pressure-advance (K profile) line, run before a print when flow dynamics calibration is on | The subtask name `auto_pa_line_calib_mode`, with no path at all | v1.2.6 |
-| Manual pressure-advance (K profile) line, started by hand from the printer or the slicer | The subtask name `pa_line_calib_mode`, with no path at all | v1.2.6 |
-| Manual pressure-advance (K profile) pattern, started by hand from the printer or the slicer | The subtask name `pa_pattern_calib_mode`, with no path at all | v1.2.6 |
+| Выравнивание стола, компенсация вибраций | Внутренний путь gcode в `/usr/`, например `/usr/etc/print/auto_cali_for_user.gcode` | v0.1.9b |
+| Автоматическая линия опережения давления (K-профиль) перед печатью при включённой калибровке динамики потока | Имя подзадачи `auto_pa_line_calib_mode` без пути | v1.2.6 |
+| Ручная линия опережения давления (K-профиль), запущенная с принтера или слайсера | Имя подзадачи `pa_line_calib_mode` без пути | v1.2.6 |
+| Ручной шаблон опережения давления (K-профиль), запущенный с принтера или слайсера | Имя подзадачи `pa_pattern_calib_mode` без пути | v1.2.6 |
 
-Filtered runs create no archive and send no print-started or print-completed
-notification.
+Для отфильтрованных процедур архив не создаётся и уведомления о начале или завершении печати не отправляются.
 
-The match is exact, so a file you have deliberately named after a calibration -
-`auto_pa_line_calib_mode_v2.3mf`, or your own calibration cube - is still
-archived as the print it is.
+Сопоставление точное, поэтому файл, намеренно названный в честь калибровки, например `auto_pa_line_calib_mode_v2.3mf`, или собственный калибровочный куб всё равно будут архивироваться как обычная печать.
 
-**Solutions:**
+**Решения:**
 
-1. **Update to latest Bambuddy version**
-   - v1.2.6+ filters every routine above
+1. **Обновите Bambuddy до последней версии**
+   - v1.2.6 и новее фильтрует все перечисленные процедуры
 
-2. **Delete unwanted calibration archives**
-   - Search the archives for `auto_cali` or `auto_pa_line` to find rows created before the upgrade
-   - Select and delete any you don't want
+2. **Удалите ненужные архивы калибровки**
+   - Найдите в архиве `auto_cali` или `auto_pa_line`, чтобы увидеть записи, созданные до обновления
+   - Выберите и удалите ненужные
 
 ---
 
-### Duplicate Archives
+### Дубликаты архивов {#duplicate-archives}
 
-**Symptoms:** Same print appears multiple times
+**Признаки:** одна и та же печать появляется несколько раз.
 
-**Solutions:**
+**Решения:**
 
-1. **Enable duplicate detection**
-   - Go to Settings > General
-   - Enable duplicate detection
+1. **Включите обнаружение дубликатов**
+   - Откройте Настройки > Общие
+   - Включите обнаружение дубликатов
 
-2. **Clean up duplicates**
-   - Filter archives by name
-   - Delete unwanted duplicates
-
----
-
-### Missing Thumbnails
-
-**Symptoms:** Archive cards show placeholder instead of thumbnail
-
-**Solutions:**
-
-1. **Check 3MF file**
-   - Some files don't include thumbnails
-   - Re-slice with thumbnail enabled
-
-2. **Regenerate thumbnails**
-   - Bambuddy can regenerate from 3MF
-   - Check Settings > Maintenance
+2. **Удалите дубликаты**
+   - Отфильтруйте архивы по названию
+   - Удалите ненужные копии
 
 ---
 
-### Wrong Plate Thumbnail on Printer Card During a Multi-Plate Print
+### Отсутствуют миниатюры {#missing-thumbnails}
 
-**Symptoms:** The printer card shows a thumbnail from a different plate than the one currently printing.
+**Признаки:** на карточках архива вместо миниатюры отображается заглушка.
 
-**Cause:** Some firmware versions (e.g. P1S 01.10.00.00) only put the bare `.3mf` filename in the MQTT `gcode_file` field, omitting the `Metadata/plate_N.gcode` path. Without the plate path the cover route used to default to plate 1's thumbnail.
+**Решения:**
 
-**Resolution:** Fixed in 0.2.4b2. Bambuddy now records the plate it dispatched at publish time and prefers that record over parsing the gcode path. For prints started outside Bambuddy (e.g. Bambu Studio direct), the cover route additionally scans the downloaded 3MF for a unique `Metadata/plate_*.gcode` to identify the active plate. If you still see the wrong thumbnail on 0.2.4b2 or later, ensure the print was dispatched from Bambuddy and capture a support package — the resolved plate is logged at INFO level (`Cover: resolved plate N`).
+1. **Проверьте файл 3MF**
+   - Некоторые файлы не содержат миниатюр
+   - Повторите нарезку с включёнными миниатюрами
 
----
-
-### Cover Thumbnail Stuck Loading During an Active Print
-
-**Symptoms:** Printer card shows a loading state instead of a thumbnail; logs show `FTP connection timed out` to the printer.
-
-**Cause:** Bambu printers run a single-socket FTP server that prioritises the active print. While a print is running, concurrent FTP reads (for the cover thumbnail) sometimes time out — especially on large 3MF files (50 MB+) where the read window is tight. An aborted upload to the printer can also wedge the FTP session until the printer is restarted.
-
-**Resolution:** As of 0.2.4b2, Bambuddy registers the local archive 3MF in the cover-cache at dispatch time, so the cover route reads the file straight from disk rather than refetching it over FTP. This applies to any print dispatched **from Bambuddy** (archive card, file manager, queue). If you see this on a Studio-direct print:
-
-- Wait — the cover route caches successful downloads, so once it makes it through once subsequent loads are instant.
-- If FTP repeatedly times out, restart the printer to clear any stuck FTP session from a previous aborted upload.
+2. **Создайте миниатюры повторно**
+   - Bambuddy может создать их из 3MF
+   - Проверьте Настройки > Обслуживание
 
 ---
 
-## :material-camera: Camera Issues
+### При печати проекта с несколькими пластинами на карточке принтера неверная миниатюра {#wrong-plate-thumbnail-on-printer-card-during-a-multi-plate-print}
 
-### Every camera stopped after updating to 1.2.5.4 { #cameras-uvloop }
+**Признаки:** карточка принтера показывает миниатюру другой пластины.
 
-**Symptoms:** live view shows "Connection lost" on every RTSP printer (X1, H2, P2) at once, and the in-app Camera Diagnostic reports `capture_exception` at **0 ms** while network reachability passes. A1 and P1 are unaffected.
+**Причина:** некоторые версии прошивки (например, P1S 01.10.00.00) помещают в поле MQTT `gcode_file` только имя файла `.3mf`, опуская путь `Metadata/plate_N.gcode`. Без него маршрут обложки раньше выбирал миниатюру первой пластины.
 
-That 0 ms is the tell — the failure happens before a socket is opened. Bambuddy is running on **uvloop**, which it is not shipped on. Fixed in 1.2.5.5, but the underlying misconfiguration is worth correcting because it also risks silently truncated Virtual Printer uploads — see [Uploads to the VP arrive corrupt](#uploads-to-the-vp-arrive-corrupt-the-real-printer-cant-start-the-job).
+**Решение:** исправлено в 0.2.4b2. Теперь Bambuddy при отправке запоминает выбранную пластину и предпочитает эту запись разбору пути gcode. Для печатей, запущенных вне Bambuddy (например, напрямую из Bambu Studio), маршрут обложки дополнительно ищет в загруженном 3MF единственный `Metadata/plate_*.gcode`, чтобы определить активную пластину. Если в 0.2.4b2 или новее миниатюра всё ещё неверна, убедитесь, что печать отправлена из Bambuddy, и создайте пакет поддержки — определённая пластина записывается на уровне INFO (`Cover: resolved plate N`).
 
-Check which loop your service uses:
+---
+
+### Миниатюра обложки бесконечно загружается во время печати {#cover-thumbnail-stuck-loading-during-an-active-print}
+
+**Признаки:** вместо миниатюры карточка принтера показывает загрузку; в журнале есть `FTP connection timed out` при обращении к принтеру.
+
+**Причина:** FTP-сервер принтеров Bambu поддерживает один сокет и отдаёт приоритет активной печати. Во время печати параллельное чтение FTP для миниатюры иногда заканчивается по тайм-ауту, особенно для крупных 3MF (от 50 МБ), когда времени на чтение мало. Прерванная загрузка на принтер также может заблокировать FTP-сессию до его перезапуска.
+
+**Решение:** начиная с 0.2.4b2 Bambuddy при отправке регистрирует локальный 3MF архива в кэше обложек, поэтому маршрут читает файл прямо с диска без повторной загрузки по FTP. Это касается любой печати, отправленной **из Bambuddy** (карточка архива, файловый менеджер, очередь). Если проблема возникает при прямой печати из Studio:
+
+- Подождите: маршрут обложки кэширует успешные загрузки, поэтому после одного успешного чтения последующие будут мгновенными.
+- Если FTP многократно завершается по тайм-ауту, перезапустите принтер, чтобы очистить зависшую сессию FTP после ранее прерванной загрузки.
+
+---
+## :material-camera: Проблемы с камерой {#camera-issues}
+
+### После обновления до 1.2.5.4 перестали работать все камеры {#cameras-uvloop}
+
+**Признаки:** трансляция одновременно показывает «Соединение потеряно» на всех принтерах RTSP (X1, H2, P2), а диагностика камеры в приложении сообщает `capture_exception` через **0 мс**, хотя сетевая доступность подтверждена. A1 и P1 не затронуты.
+
+Именно 0 мс указывает на причину: сбой происходит до открытия сокета. Bambuddy работает с **uvloop**, который не используется в её поставке. Ошибка исправлена в 1.2.5.5, но лежащую в её основе неправильную настройку стоит устранить, поскольку она также может приводить к незаметному обрезанию загружаемых на виртуальный принтер файлов — см. [Файлы на виртуальный принтер поступают повреждёнными](#uploads-to-the-vp-arrive-corrupt-the-real-printer-cant-start-the-job).
+
+Проверьте, какой цикл использует служба:
 
 ```bash
 systemctl show bambuddy --property=ExecStart --value | grep -o -- '--loop [a-z]*'
 ```
 
-No output means no loop is pinned, so uvicorn picks uvloop. Running `install/update.sh` (or `update_macos.sh`) from 1.2.5.5 onwards adds the flag for you and backs the file up first. To do it by hand, add `--loop asyncio` to the uvicorn command in your service file and restart.
+Отсутствие вывода означает, что цикл не задан и uvicorn выбирает uvloop. Запуск `install/update.sh` (или `update_macos.sh`) из версии 1.2.5.5 или новее добавляет параметр автоматически, предварительно сохраняя резервную копию файла. Чтобы сделать это вручную, добавьте `--loop asyncio` в команду uvicorn файла службы и перезапустите её.
 
-This affects installs whose service file Bambuddy's own installer did not write — the Proxmox VE Helper-Scripts LXC composes its own — and native installs created before 2026-07-05, since updating has never rewritten an existing service file. Docker is unaffected: the image pins the flag itself.
+Проблема затрагивает установки, файл службы которых создан не установщиком Bambuddy (например, LXC из Proxmox VE Helper-Scripts создаёт собственный файл), а также нативные установки до 2026-07-05, поскольку обновление никогда не перезаписывало существующий файл службы. Docker не затронут: параметр задан в самом образе.
 
-### Camera Won't Stream
+### Камера не транслирует видео {#camera-wont-stream}
 
-**Symptoms:** Camera page shows error or black screen
+**Признаки:** страница камеры показывает ошибку или чёрный экран.
 
-**Solutions:**
+**Решения:**
 
-1. **Check ffmpeg installation**
+1. **Проверьте установку ffmpeg**
    ```bash
    ffmpeg -version
    ```
 
-   Install if missing:
+   Если он отсутствует, установите его:
    ```bash
    # Ubuntu/Debian
    sudo apt install ffmpeg
@@ -632,33 +573,25 @@ This affects installs whose service file Bambuddy's own installer did not write 
    brew install ffmpeg
    ```
 
-2. **Verify camera is enabled**
-   - Check printer settings
-   - Camera must be enabled in printer settings
+2. **Убедитесь, что камера включена**
+   - Проверьте настройки принтера
+   - Камера должна быть включена в настройках принтера
 
-3. **Check connection**
-   - Camera requires active printer connection
-   - Verify printer shows as connected
+3. **Проверьте подключение**
+   - Для камеры нужно активное подключение принтера
+   - Убедитесь, что принтер отображается как подключённый
 
-4. **Try snapshot mode**
-   - Click "Snapshot" instead of "Live"
-   - May work when streaming doesn't
+4. **Попробуйте режим снимков**
+   - Выберите «Снимок» вместо «Прямой эфир»
+   - Он может работать, когда трансляция не работает
 
-5. **Check for a second connection to the camera**
+5. **Проверьте наличие второго подключения к камере**
 
-    Most Bambu printers accept **exactly one** camera connection at a time —
-    the chamber-image socket on port 6000 (A1 / P1), or the RTSP socket on
-    port 322 (X1 / H2 / P2). Bambuddy therefore opens one connection per
-    printer and fans it out to every viewer (camera page, cam-wall tile,
-    embedded viewer, popup) rather than one per viewer.
+    Большинство принтеров Bambu допускают **ровно одно** подключение к камере: сокет изображения камеры на порту 6000 (A1 / P1) или RTSP-сокет на порту 322 (X1 / H2 / P2). Поэтому Bambuddy открывает одно соединение на принтер и распределяет поток всем зрителям (странице камеры, плитке стены камер, встроенному и всплывающему окну), а не создаёт отдельное соединение для каждого.
 
-    If a second connection ever overlaps, the printer keeps feeding the first
-    one and the newcomer receives nothing — the page goes black and stays
-    black until the printer's TCP keepalive reaps the orphan, which takes
-    **around 20 minutes**. A black stream that recovers on its own after
-    roughly that long is the signature.
+    Если второе соединение всё же пересекается с первым, принтер продолжает передавать данные первому, а новое ничего не получает: экран чернеет и остаётся чёрным, пока TCP keepalive принтера не закроет потерянное соединение. Это занимает **около 20 минут**. Если чёрный поток восстанавливается сам примерно через это время, причина, скорее всего, в этом.
 
-    While the screen is black, check how many connections the printer has:
+    Пока экран чёрный, проверьте количество подключений к принтеру:
 
     ```bash
     # A1 / P1 (chamber image)
@@ -668,270 +601,267 @@ This affects installs whose service file Bambuddy's own installer did not write 
     ss -tn | grep :322
     ```
 
-    More than one line means something is holding an extra socket open —
-    another tool talking to the same printer (Bambu Studio, Home Assistant,
-    a second Bambuddy instance) is the usual cause. Close it and reload the
-    camera page.
+    Более одной строки означает, что кто-то удерживает дополнительный сокет. Обычно это другая программа, подключённая к тому же принтеру (Bambu Studio, Home Assistant, второй экземпляр Bambuddy). Закройте её и обновите страницу камеры.
 
 ---
 
-### Stream Freezes
+### Трансляция зависает {#stream-freezes}
 
-**Symptoms:** Video starts but freezes
+**Признаки:** видео начинается, но зависает.
 
-**Solutions:**
+**Решения:**
 
-1. **Network bandwidth**
-   - Lower FPS setting
-   - Check network congestion
+1. **Пропускная способность сети**
+   - Уменьшите FPS
+   - Проверьте загруженность сети
 
-2. **Check ffmpeg processes**
+2. **Проверьте процессы ffmpeg**
    ```bash
    ps aux | grep ffmpeg
    ```
 
-   Kill orphaned processes:
+   Завершите потерянные процессы:
    ```bash
    killall ffmpeg
    ```
 
-3. **Refresh the stream**
-   - Click refresh button
-   - Close and reopen camera page
+3. **Обновите трансляцию**
+   - Нажмите кнопку обновления
+   - Закройте и снова откройте страницу камеры
 
 ---
 
-### Server CPU Pinned While Cameras Are Open
+### Процессор сервера полностью загружен при открытых камерах {#server-cpu-pinned-while-cameras-are-open}
 
-**Symptoms:** CPU (and often RAM) maxed out on a multi-printer setup; `ffmpeg` processes at the top of `top` or `docker stats`
+**Признаки:** в установке с несколькими принтерами полностью загружены процессор и часто оперативная память; процессы `ffmpeg` находятся наверху списка `top` или `docker stats`.
 
-**Background:**
+**Причина:**
 
-On X1, X2, H2 and P2 printers the camera arrives as H.264 over RTSP, which a browser cannot display directly, so Bambuddy transcodes it to MJPEG in software. Budget roughly **one CPU core per open 1080p stream**. A1 and P1 printers use a different protocol with no transcode and are close to free.
+На принтерах X1, X2, H2 и P2 видео камеры поступает в формате H.264 по RTSP, который браузер не может показывать напрямую, поэтому Bambuddy программно перекодирует его в MJPEG. Рассчитывайте примерно на **одно ядро процессора на каждую открытую трансляцию 1080p**. Принтеры A1 и P1 используют другой протокол без перекодирования и почти не нагружают процессор.
 
-This is a limit of the transcode, not a misconfiguration — and it is reached by the number of cameras open at once, not by the number of printers you own.
+Это ограничение перекодирования, а не ошибка настройки. Нагрузка зависит от числа одновременно открытых камер, а не от количества принтеров.
 
-**Solutions:**
+**Решения:**
 
-1. **Confirm it is cameras** — close every camera window and kiosk tab, switch the Printers page to card view, and see whether the load drops. Bambuddy never streams a camera that nobody is watching.
-2. **Lower the Cam Wall live-stream count and raise the snapshot interval**, on every browser and kiosk showing a wall.
-3. **Check AI failure detection** is off, or scoped to specific printers — **Monitor all connected printers** is selected by default, so both providers can capture camera frames whenever a monitored printer is actively printing.
+1. **Убедитесь, что причина в камерах:** закройте все окна камер и вкладки киоска, переключите страницу принтеров в режим карточек и проверьте, снизилась ли нагрузка. Bambuddy не транслирует камеру, которую никто не смотрит.
+2. **Уменьшите число прямых трансляций стены камер и увеличьте интервал снимков** во всех браузерах и киосках, где открыта стена.
+3. **Проверьте обнаружение ошибок с помощью ИИ:** отключите его или ограничьте определёнными принтерами. По умолчанию выбрано **Отслеживать все подключённые принтеры**, поэтому оба поставщика могут получать кадры камеры во время активной печати отслеживаемого принтера.
 
-See [Running a Large Farm](farm-sizing.md) for the measured numbers, the full set of knobs, and the work under way to remove the transcode.
-
----
-
-## :material-bell: Notification Issues
-
-### Notifications Not Sending
-
-**Symptoms:** No notifications received
-
-**Solutions:**
-
-1. **Test the provider**
-   - Go to Settings > Notifications
-   - Click "Send Test"
-   - Check for errors
-
-2. **Verify configuration**
-   - Double-check API keys/tokens
-   - Verify phone numbers include country code
-
-3. **Check quiet hours**
-   - Notifications suppressed during quiet hours
-   - Verify current time vs quiet hours setting
-
-4. **Check event triggers**
-   - Ensure desired events are enabled
-   - Check printer filter settings
-   - **Obico or OctoEverywhere detections**: enable the dedicated **AI Failure Detection** toggle, not "Printer Error", and check that the notification provider's printer filters include the monitored printers (see [Failure Detection](../features/failure-detection.md))
+Результаты измерений, полный список настроек и сведения о работе над устранением перекодирования см. в разделе [Работа с большой фермой](farm-sizing.md).
 
 ---
 
-### Notification Variables Empty
+## :material-bell: Проблемы с уведомлениями {#notification-issues}
 
-**Symptoms:** Messages show "Unknown" or blank for variables
+### Уведомления не отправляются {#notifications-not-sending}
 
-**Solutions:**
+**Признаки:** уведомления не приходят.
 
-1. **Update to latest version**
-   - Variable handling improved in recent versions
+**Решения:**
 
-2. **Check print data**
-   - Some variables require specific print data
-   - May show "Unknown" for incomplete prints
+1. **Проверьте поставщика**
+   - Откройте Настройки > Уведомления
+   - Нажмите «Отправить тест»
+   - Проверьте наличие ошибок
+
+2. **Проверьте конфигурацию**
+   - Ещё раз проверьте ключи API и токены
+   - Убедитесь, что номера телефонов содержат код страны
+
+3. **Проверьте тихие часы**
+   - В тихие часы уведомления не отправляются
+   - Сравните текущее время с настройкой тихих часов
+
+4. **Проверьте события**
+   - Убедитесь, что нужные события включены
+   - Проверьте фильтры принтеров
+   - **Обнаружение Obico или OctoEverywhere:** включите отдельный переключатель **Обнаружение ошибок с помощью ИИ**, а не «Ошибка принтера», и убедитесь, что фильтры принтеров поставщика уведомлений включают отслеживаемые принтеры (см. [Обнаружение ошибок](../features/failure-detection.md))
 
 ---
 
-## :material-database: Database Issues
+### Переменные уведомлений пусты {#notification-variables-empty}
 
-### Database Errors
+**Признаки:** вместо переменных в сообщениях отображается «Неизвестно» или пустое значение.
 
-**Symptoms:** 500 errors, data not saving
+**Решения:**
 
-**Solutions:**
+1. **Обновите приложение до последней версии**
+   - В последних версиях обработка переменных улучшена
 
-1. **Check disk space**
+2. **Проверьте данные печати**
+   - Некоторым переменным нужны определённые данные печати
+   - Для незавершённых печатей может отображаться «Неизвестно»
+
+---
+
+## :material-database: Проблемы с базой данных {#database-issues}
+
+### Ошибки базы данных {#database-errors}
+
+**Признаки:** ошибки 500, данные не сохраняются.
+
+**Решения:**
+
+1. **Проверьте свободное место**
    ```bash
    df -h
    ```
 
-2. **Verify database integrity**
+2. **Проверьте целостность базы данных**
    ```bash
    sqlite3 bambuddy.db "PRAGMA integrity_check;"
    ```
 
-3. **Restore from backup**
-   - If corrupted, restore from backup
-   - See Backup & Restore guide
+3. **Восстановите из резервной копии**
+   - При повреждении восстановите базу из резервной копии
+   - См. руководство по резервному копированию и восстановлению
 
-### "Database is locked" Errors
+### Ошибки «Database is locked» {#database-is-locked-errors}
 
-**Symptoms:** Intermittent "database is locked" errors, especially with multiple printers
+**Признаки:** периодические ошибки «database is locked», особенно при нескольких принтерах.
 
-**Background:**
+**Причина:**
 
-Bambuddy v0.2.0b+ uses SQLite WAL (Write-Ahead Logging) mode, which significantly reduces lock contention by allowing simultaneous reads during writes. WAL mode is automatically enabled on startup along with a 5-second busy timeout.
+Bambuddy версии v0.2.0b и новее использует режим SQLite WAL (журналирование с упреждающей записью), который значительно уменьшает конкуренцию за блокировки, разрешая одновременное чтение во время записи. WAL автоматически включается при запуске вместе с тайм-аутом ожидания занятости в 5 секунд.
 
-**Solutions:**
+**Решения:**
 
-1. **Update to latest Bambuddy version**
-   - WAL mode is automatically enabled on startup — no configuration needed
+1. **Обновите Bambuddy до последней версии**
+   - WAL автоматически включается при запуске, настройка не нужна
 
-2. **Check for WAL files**
-   - SQLite WAL mode creates `bambuddy.db-wal` and `bambuddy.db-shm` files next to the database
-   - These are normal runtime files and should not be deleted while Bambuddy is running
-   - They are cleaned up automatically when the database is closed properly
+2. **Проверьте файлы WAL**
+   - В режиме WAL SQLite создаёт файлы `bambuddy.db-wal` и `bambuddy.db-shm` рядом с базой данных
+   - Это обычные рабочие файлы; не удаляйте их во время работы Bambuddy
+   - При корректном закрытии базы они очищаются автоматически
 
-3. **Docker volume mounts**
-   - Ensure the data directory volume has sufficient write permissions
-   - WAL files must be on the same filesystem as the database
+3. **Монтирование томов Docker**
+   - Убедитесь, что том каталога данных имеет необходимые права записи
+   - Файлы WAL должны находиться в той же файловой системе, что и база данных
 
-4. **Move to PostgreSQL if you run more than ~10 printers**
-   - SQLite allows only one writer at a time across the whole database, and WAL plus the busy timeout only absorb short collisions. On a large farm, dispatch and completion writes overlap constantly and some of them are not retried
-   - See [PostgreSQL Support](../features/postgresql.md#migrating-from-sqlite) and [Running a Large Farm](farm-sizing.md)
-
----
-
-### Search Not Working
-
-**Symptoms:** Search returns no results or wrong results
-
-**Solutions:**
-
-1. **Rebuild FTS index**
-   - Go to Settings > System Info
-   - Click "Rebuild Search Index"
-
-2. **Check search syntax**
-   - Use quotes for exact phrases
-   - Check for typos
+4. **Перейдите на PostgreSQL при использовании более примерно 10 принтеров**
+   - SQLite разрешает только одну запись во всей базе одновременно, а WAL и тайм-аут занятости сглаживают лишь короткие конфликты. На большой ферме записи при отправке и завершении печатей постоянно пересекаются, а некоторые из них не повторяются
+   - См. [Поддержка PostgreSQL](../features/postgresql.md#migrating-from-sqlite) и [Работа с большой фермой](farm-sizing.md)
 
 ---
 
-## :material-power-plug: Smart Plug Issues
+### Поиск не работает {#search-not-working}
 
-### Tasmota Plug Not Responding
+**Признаки:** поиск ничего не находит или возвращает неверные результаты.
 
-**Symptoms:** Can't control Tasmota smart plug
+**Решения:**
 
-**Solutions:**
+1. **Перестройте индекс FTS**
+   - Откройте Настройки > Информация о системе
+   - Нажмите «Перестроить поисковый индекс»
 
-1. **Verify IP address**
-   - Check plug still has same IP
-   - Use static IP or DHCP reservation
+2. **Проверьте синтаксис поиска**
+   - Для точных фраз используйте кавычки
+   - Проверьте опечатки
 
-2. **Test Tasmota interface**
-   - Open `http://PLUG_IP` in browser
-   - Verify Tasmota web interface loads
+---
 
-3. **Check network access**
+## :material-power-plug: Проблемы с умными розетками {#smart-plug-issues}
+
+### Розетка Tasmota не отвечает {#tasmota-plug-not-responding}
+
+**Признаки:** не удаётся управлять умной розеткой Tasmota.
+
+**Решения:**
+
+1. **Проверьте IP-адрес**
+   - Убедитесь, что адрес розетки не изменился
+   - Используйте статический IP или резервирование DHCP
+
+2. **Проверьте интерфейс Tasmota**
+   - Откройте `http://PLUG_IP` в браузере
+   - Убедитесь, что веб-интерфейс Tasmota загружается
+
+3. **Проверьте доступ к сети**
    ```bash
    curl "http://PLUG_IP/cm?cmnd=Status%200"
    ```
 
 ---
 
-### REST/Webhook Plug Not Responding
+### Розетка REST/Webhook не отвечает {#restwebhook-plug-not-responding}
 
-**Symptoms:** Can't control REST/Webhook smart plug
+**Признаки:** не удаётся управлять умной розеткой REST/Webhook.
 
-**Solutions:**
+**Решения:**
 
-1. **Test the URL with curl**
+1. **Проверьте URL с помощью curl**
    ```bash
    curl -X POST "http://your-device:8080/api/endpoint" -d "ON"
    ```
 
-2. **Verify network access**
-   - Ensure the target service is reachable from Bambuddy's network
+2. **Проверьте сетевой доступ**
+   - Убедитесь, что целевая служба доступна из сети Bambuddy
 
-3. **Check headers**
-   - Custom headers must be valid JSON (e.g., `{"Authorization": "Bearer token"}`)
+3. **Проверьте заголовки**
+   - Пользовательские заголовки должны быть корректным JSON (например, `{"Authorization": "Bearer token"}`)
 
-4. **Check HTTP method**
-   - Ensure the method (GET/POST/PUT/PATCH) matches what the target API expects
+4. **Проверьте HTTP-метод**
+   - Метод (GET/POST/PUT/PATCH) должен соответствовать ожидаемому целевым API
 
-5. **Check the target service's logs**
-   - Look for authentication errors or invalid request formats
-
----
-
-### Auto Power-Off Not Working
-
-**Symptoms:** Printer doesn't turn off after print
-
-**Solutions:**
-
-1. **Check feature is enabled**
-   - Settings > Smart Plugs > Auto Power Off
-
-2. **Verify cooldown settings**
-   - Check temperature threshold
-   - Check cooldown time
-
-3. **Check for queued prints**
-   - Won't power off if more prints queued
+5. **Проверьте журналы целевой службы**
+   - Найдите ошибки аутентификации или неверного формата запросов
 
 ---
 
-## :material-printer-3d-nozzle: Virtual Printer Issues
+### Автоматическое отключение питания не работает {#auto-power-off-not-working}
 
-### Slicer shows no AMS / no filament slots / no temperatures
+**Признаки:** принтер не выключается после печати.
 
-If your VP **has a target printer configured**, the slicer should show live AMS slots, FTS / dual-extruder routing, k-profiles, temperatures, and the camera stream — same view as a direct slicer connection. If the panel is empty, check:
+**Решения:**
 
-1. **Target printer set?** Settings → Virtual Printer → check the VP has a target printer selected. The mirror only runs when this is set.
-2. **Target printer connected?** Bambuddy must be online with the real printer (Settings → Printers shows green status). The bridge has nothing to mirror if Bambuddy itself isn't talking to the printer.
-3. **Restart Bambuddy** after setting the target — the bridge attaches at VP startup.
+1. **Убедитесь, что функция включена**
+   - Настройки > Умные розетки > Автоматическое выключение
 
-If your VP has **no target printer set**, the slicer sees synthetic stub state by design — the VP is a pure file receiver. Set filaments manually, hit Send, then dispatch to a real printer from Bambuddy's UI later. To enable live mirror, set a target printer in Settings → Virtual Printer.
+2. **Проверьте настройки охлаждения**
+   - Проверьте температурный порог
+   - Проверьте время охлаждения
 
-See the [Virtual Printer guide](../features/virtual-printer.md#live-target-printer-mirror) for the full explanation.
+3. **Проверьте очередь печати**
+   - При наличии других заданий принтер не выключится
 
-### Slicer camera shows "LAN connection failed"
+---
 
-Camera streaming requires the VP's **access code to match the target printer's** LAN access code. The slicer authenticates the camera RTSPS stream with the access code stored in its profile, and that auth happens against the real printer. Fix:
+## :material-printer-3d-nozzle: Проблемы виртуального принтера {#virtual-printer-issues}
 
-1. Settings → Virtual Printer → set the VP's access code equal to the target printer's LAN access code (Settings → Printers shows the printer's code)
-2. Re-add the VP in Bambu Studio / Orca Slicer so it picks up the new code
+### Слайсер не показывает AMS, слоты филамента или температуру {#slicer-shows-no-ams-no-filament-slots-no-temperatures}
 
-MQTT and FTP work either way — only the camera path needs the access codes to match.
+Если для виртуального принтера **настроен целевой принтер**, слайсер должен показывать текущие слоты AMS, маршрутизацию FTS / двух экструдеров, K-профили, температуры и трансляцию камеры — как при прямом подключении. Если панель пуста, проверьте следующее:
 
-### Slicer can't find the Virtual Printer
+1. **Задан ли целевой принтер?** В Настройки → Виртуальный принтер проверьте выбор целевого принтера. Зеркалирование работает только при его наличии.
+2. **Подключён ли целевой принтер?** Bambuddy должна быть подключена к настоящему принтеру (зелёный статус в Настройки → Принтеры). Если связи нет, мосту нечего зеркалировать.
+3. **Перезапустите Bambuddy** после выбора целевого принтера: мост подключается при запуске виртуального принтера.
 
-See [Slicer Can't Find or Connect to Virtual Printer](../features/virtual-printer.md#slicer-cant-find-or-connect-to-virtual-printer) in the Virtual Printer guide — covers SSDP, bind ports (3000/3002), TLS certificate, and cross-subnet setups.
+Если целевой принтер **не задан**, слайсер намеренно видит искусственное состояние-заглушку: виртуальный принтер только принимает файлы. Задайте филамент вручную, нажмите «Отправить», а затем отправьте задание на настоящий принтер из интерфейса Bambuddy. Для зеркалирования в реальном времени выберите целевой принтер в Настройки → Виртуальный принтер.
 
-### Print uploads fail at ~10% ("Failed to send") in Docker bridge mode
+Подробности см. в [руководстве по виртуальному принтеру](../features/virtual-printer.md#live-target-printer-mirror).
 
-**Symptoms:** The VP is added manually by the Docker host's IP. Detection, MQTT, status, and camera all work, but sending a print job fails around 10% with **"Failed to send"**. A tcpdump shows the bind/detect exchange (port 3002) succeed and then the session close — with no connection ever attempted to FTPS port 990 or the passive-data ports.
+### Камера слайсера показывает «LAN connection failed» {#slicer-camera-shows-lan-connection-failed}
 
-**Cause:** The upload is the one flow where the printer advertises its own IP to the slicer as the FTP target. Inside a default-bridge container the only address that exists is the NAT IP (e.g. `172.17.0.10`), so that's what gets advertised — and your LAN client has no route to it, so the FTP connection never leaves the machine. The container cannot discover the host's real LAN IP on its own, and `VIRTUAL_PRINTER_PASV_ADDRESS` only overrides the FTP passive-data address, not the advertised identity (and the slicer never reaches the FTP stage to use it).
+Для трансляции **код доступа виртуального принтера должен совпадать** с кодом доступа целевого принтера для локальной сети. Слайсер аутентифицирует поток RTSPS камеры кодом из своего профиля, а проверка проходит на реальном принтере. Решение:
 
-**Resolution:** Either tell the container which address to advertise, or give it a LAN-routable one of its own.
+1. В Настройки → Виртуальный принтер задайте код доступа виртуального принтера равным локальному коду целевого принтера (код принтера указан в Настройки → Принтеры)
+2. Заново добавьте виртуальный принтер в Bambu Studio / OrcaSlicer, чтобы применился новый код
 
-Quickest fix, if you need to stay on bridge networking ([#2930](https://github.com/maziggy/bambuddy/issues/2930)) — set both to your Docker host's LAN IP and restart the container:
+MQTT и FTP работают в обоих случаях; совпадение кодов требуется только для камеры.
+
+### Слайсер не находит виртуальный принтер {#slicer-cant-find-the-virtual-printer}
+
+См. [Слайсер не находит виртуальный принтер или не может подключиться](../features/virtual-printer.md#slicer-cant-find-or-connect-to-virtual-printer) в руководстве по виртуальному принтеру: там описаны SSDP, порты привязки (3000/3002), сертификат TLS и подключение между подсетями.
+
+### Загрузка печати в сетевом мосту Docker завершается ошибкой примерно на 10% («Failed to send») {#print-uploads-fail-at-10-failed-to-send-in-docker-bridge-mode}
+
+**Признаки:** виртуальный принтер добавлен вручную по IP-адресу хоста Docker. Обнаружение, MQTT, состояние и камера работают, но отправка задания завершается ошибкой **«Failed to send»** примерно на 10%. tcpdump показывает успешный обмен привязки и обнаружения (порт 3002), после которого сессия закрывается: попыток подключения к FTPS-порту 990 или пассивным портам данных нет.
+
+**Причина:** загрузка — единственный процесс, в котором принтер сообщает слайсеру собственный IP как целевой адрес FTP. В контейнере с мостом по умолчанию существует только NAT-адрес (например, `172.17.0.10`), поэтому сообщается он. У клиента локальной сети нет маршрута к нему, и соединение FTP не покидает компьютер. Контейнер не может самостоятельно определить реальный локальный IP хоста, а `VIRTUAL_PRINTER_PASV_ADDRESS` переопределяет только адрес пассивных данных FTP, но не объявляемый адрес принтера (и слайсер даже не доходит до стадии FTP, чтобы его использовать).
+
+**Решение:** укажите контейнеру объявляемый адрес или предоставьте ему собственный адрес, доступный из локальной сети.
+
+Самый быстрый способ при необходимости сохранить мост ([#2930](https://github.com/maziggy/bambuddy/issues/2930)) — задать обоим параметрам локальный IP хоста Docker и перезапустить контейнер:
 
 ```yaml
 environment:
@@ -939,113 +869,106 @@ environment:
   - VIRTUAL_PRINTER_PASV_ADDRESS=192.168.1.100
 ```
 
-`VIRTUAL_PRINTER_ADVERTISE_ADDRESS` replaces the advertised identity, which is the part that was sending your slicer to `172.17.0.10`. Check the log for the line confirming which address the VP is handing out:
+`VIRTUAL_PRINTER_ADVERTISE_ADDRESS` заменяет объявляемый адрес, из-за которого слайсер обращался к `172.17.0.10`. Найдите в журнале строку, подтверждающую адрес, который сообщает виртуальный принтер:
 
 ```
 MQTT bridge IP encoding armed: target=192.168.1.42 vp=192.168.1.100 (VIRTUAL_PRINTER_ADVERTISE_ADDRESS)
 ```
 
-If it says `(bind_address)` or `(auto-resolved)` instead, the variable didn't reach the container. A malformed value is ignored with a warning naming it, and the VP falls back to the address it would have used before.
+Если вместо этого указано `(bind_address)` или `(auto-resolved)`, переменная не попала в контейнер. Некорректное значение игнорируется с предупреждением, в котором оно названо, а виртуальный принтер возвращается к прежнему адресу.
 
-Better fix, and the mode Virtual Printer is developed against — give the Virtual Printer a LAN-routable identity, so nothing needs overriding:
+Более подходящее решение, для которого разрабатывается виртуальный принтер, — предоставить ему адрес, доступный из локальной сети, без переопределений:
 
-- **`network_mode: host`** (recommended, Linux) — the container uses the host's LAN IP directly.
-- **macvlan** — the container gets its own real LAN IP, so it stays reachable from your other Docker services (behind Caddy/Authentik, etc.) while also being routable for uploads.
+- **`network_mode: host`** (рекомендуется в Linux) — контейнер напрямую использует локальный IP хоста.
+- **macvlan** — контейнер получает собственный реальный локальный IP и остаётся доступным другим службам Docker (за Caddy/Authentik и т. п.), а также доступен для загрузок.
 
-See [Docker (macOS / Windows)](../features/virtual-printer.md#docker-macos-windows) in the Virtual Printer guide for the bridge-mode warning and the host/macvlan setups.
+Предупреждение о режиме моста и настройку host/macvlan см. в разделе [Docker (macOS / Windows)](../features/virtual-printer.md#docker-macos-windows) руководства по виртуальному принтеру.
 
 ---
 
-### Uploads to the VP arrive corrupt / the real printer can't start the job
+### Файлы поступают на виртуальный принтер повреждёнными / реальный принтер не запускает задание {#uploads-to-the-vp-arrive-corrupt-the-real-printer-cant-start-the-job}
 
-If files sent to a Virtual Printer are archived and queued but the physical printer then fails to parse or start them — and the received `.gcode.3mf` is smaller than what the slicer exported (often ending at an exact multiple of 4096 bytes) — your server is likely running under **uvloop**, whose SSL layer can silently drop the tail of an upload on slow storage (e.g. a microSD / eMMC on an SBC).
+Если файлы, отправленные виртуальному принтеру, архивируются и попадают в очередь, но физический принтер не может их разобрать или запустить, а полученный `.gcode.3mf` меньше экспортированного слайсером (часто его размер кратен 4096 байтам), сервер, вероятно, работает с **uvloop**. Его слой SSL может незаметно отбросить конец загружаемого файла на медленном накопителе (например, microSD / eMMC на одноплатном компьютере).
 
-**Fix:** launch uvicorn with `--loop asyncio`. The Docker image already does this; native installs must add it to the run command / service unit:
+**Решение:** запускайте uvicorn с `--loop asyncio`. Образ Docker уже делает это; при нативной установке параметр нужно добавить в команду запуска или файл службы:
 
 ```bash
 uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --loop asyncio
 ```
 
-From 1.2.5.5, running `install/update.sh` (or `update_macos.sh`) adds the flag to an existing service file for you, backing it up first; Bambuddy also logs a warning at startup whenever it finds itself on uvloop. Otherwise re-run the installer or edit your systemd unit / launchd plist / NSSM service to include `--loop asyncio`, then restart Bambuddy. Bambuddy 0.2.5b2+ also validates every received `.3mf` is a complete ZIP before accepting it — a truncated upload is now rejected with an FTP `426` (an immediate send error in the slicer) instead of being archived and forwarded to the printer.
+Начиная с 1.2.5.5 запуск `install/update.sh` (или `update_macos.sh`) добавляет параметр в существующий файл службы, предварительно сохраняя резервную копию. Bambuddy также пишет предупреждение при запуске с uvloop. В противном случае запустите установщик повторно или добавьте `--loop asyncio` в systemd unit, plist launchd или службу NSSM и перезапустите Bambuddy. Начиная с 0.2.5b2 Bambuddy также проверяет полноту ZIP каждого принятого `.3mf`: обрезанный файл отклоняется с ошибкой FTP `426` (слайсер сразу сообщает об ошибке отправки), а не архивируется и не передаётся принтеру.
+
+---
+## :material-refresh-auto: Проблемы с очередью печати {#print-queue-issues}
+
+### Следующая печать запустилась без подтверждения очистки стола {#next-queued-print-auto-started-without-clear-plate-confirmation}
+
+**Признаки:** включено автоматическое выключение и есть очередь печати. По завершении задания умная розетка отключает питание, затем сразу включает принтер из-за следующего задания в очереди, после чего новая печать начинается без запроса **Очистить стол и начать следующую печать**.
+
+**Причина:**
+
+До Bambuddy v0.2.3b4 ожидание подтверждения очистки хранилось только в памяти и зависело от состояния, сообщаемого принтером (`FINISH` / `FAILED`). После повторного включения принтер загружался в `IDLE` без сведений о предыдущем завершении, поэтому проверка планировщика считала его свободным и сразу отправляла следующее задание в обход подтверждения (#961).
+
+**Решения:**
+
+1. **Обновите Bambuddy до v0.2.3b4 или новее.** Ожидание теперь хранится в базе и привязано к явному флагу ожидания подтверждения, а не к сообщаемому состоянию. Запрос сохраняется при циклах питания, перезапусках Bambuddy и загрузке принтера в `IDLE`.
+2. **Если запрос всё ещё не появляется**, убедитесь, что в **Настройки → Рабочий процесс → Очередь и отправка** включено **Требовать подтверждение очистки стола**.
+3. **Как закрыть устаревший запрос:** если Bambuddy считает стол неочищенным, но вы уже сняли модель (например, после сбоя), нажмите **Очистить стол и начать следующую печать**. Планировщик отправит следующее задание, если оно есть; при пустой очереди флаг просто сбросится.
 
 ---
 
-## :material-refresh-auto: Print Queue Issues
+### Печать завершается ошибкой таблицы AMS или диаметра сопла {#nozzle-size-mismatch}
 
-### Next queued print auto-started without "Clear Plate" confirmation
+**Признаки:** после нарезки в Bambuddy и отправки файла принтер сразу отклоняет его с ошибкой HMS, например **«Failed to get AMS mapping table; please select 'Resume' to retry»** (код `0700_8012`) или **«The nozzle diameter in the sliced file is not consistent with the current nozzle setting»** (код `0500_4038`). Другой признак: при настройке слота AMS выбор профиля филамента предлагает только профили **0,4 мм**, хотя установлено другое сопло, например 0,6 мм.
 
-**Symptoms:** You have Auto Off enabled and a queue of prints. When one print finishes, the smart plug cuts power; the plug immediately re-powers the printer because the next job is queued; the next print then starts without showing the **Clear Plate & Start Next** prompt.
+**Причина:**
 
-**Background:**
+Файл нарезан для диаметра сопла, отличающегося от физически установленного. До Bambuddy v0.2.5b2 этому способствовали две причины:
 
-Before Bambuddy v0.2.3b4, the plate-clear gate lived only in memory and was tied to the printer's reported state (`FINISH` / `FAILED`). When the plug re-powered the printer, it booted fresh into `IDLE` with no memory of the previous finish, so the scheduler's idle check saw a normal idle printer and dispatched the next job immediately — bypassing the confirmation (#961).
+- Выбор в окне **Настройка слота AMS** предполагал сопло 0,4 мм независимо от оборудования, поэтому отфильтровывал нужные профили филамента для 0,6 мм (или 0,2 / 0,8 мм); назначить слотам профиль, соответствующий нарезке, было нельзя (#1899).
+- Bambuddy не сравнивала диаметр сопла в нарезанном файле с установленным перед отправкой, поэтому несовпадение обнаруживалось позже по малопонятной ошибке HMS.
 
-**Solutions:**
+**Решения:**
 
-1. **Update to Bambuddy v0.2.3b4 or later** — the gate is now persisted to the database and keyed off an explicit "awaiting acknowledgment" flag instead of the reported state. The prompt survives Auto Off power cycles, Bambuddy restarts, and the printer booting back into `IDLE`.
-
-2. **If the prompt still doesn't appear after the update**, confirm **Require plate-clear confirmation** is enabled in **Settings → Workflow → Queue & Dispatch**.
-
-3. **Dismissing a stale prompt** — if Bambuddy thinks the plate is still uncleared but you've already removed the print (e.g. after a crash), just tap **Clear Plate & Start Next**. The scheduler will dispatch the next job if one is queued; if the queue is empty the flag is simply cleared.
-
----
-
-### Print fails with "Failed to get AMS mapping table" or a nozzle-size error { #nozzle-size-mismatch }
-
-**Symptoms:** You slice a file in Bambuddy and send it to the printer, and the printer immediately rejects it with an HMS error such as **"Failed to get AMS mapping table; please select 'Resume' to retry"** (code `0700_8012`) or **"The nozzle diameter in the sliced file is not consistent with the current nozzle setting"** (code `0500_4038`). A related giveaway: when configuring an AMS slot, the filament-profile picker only offers **0.4 mm** profiles even though a different nozzle (e.g. 0.6 mm) is installed.
-
-**Background:**
-
-These errors mean the file was sliced for a different nozzle diameter than the one physically installed on the printer. Two things contributed before Bambuddy v0.2.5b2:
-
-- The **Configure AMS Slot** picker assumed a 0.4 mm nozzle regardless of the hardware, so it filtered out the 0.6 mm (or 0.2 / 0.8 mm) filament profiles you needed — you couldn't set your trays to the profile that matched the slice (#1899).
-- Bambuddy did not check the sliced nozzle size against the installed nozzle before dispatch, so a mismatch only surfaced later as the printer's cryptic HMS error.
-
-**Solutions:**
-
-1. **Update to Bambuddy v0.2.5b2 or later.** The AMS Slot picker now reads the nozzle actually installed on the printer (per-nozzle on dual-nozzle H2D) and offers the matching profiles. Bambuddy also validates the sliced nozzle size before sending the job and, on a mismatch, fails the queue item with a clear message — *"File sliced for a 0.6mm nozzle, but the printer has 0.4mm installed"* — instead of letting the printer throw the HMS error.
-
-2. **Make the nozzle sizes agree.** Either re-slice the file for the nozzle that's installed, or install the nozzle the file was sliced for. Bambuddy filters filament and process profiles by the selected printer preset's nozzle size, so pick a printer preset whose name matches your installed nozzle (e.g. `… 0.6 nozzle`) when slicing.
-
-3. **Confirm the printer reports the right nozzle.** The printer card shows the detected nozzle diameter (e.g. "• 0.6mm") next to the model in expanded view. If it's wrong or missing after a nozzle swap, the printer firmware may not have re-detected it yet — power-cycle or re-home the printer so it re-reads the installed nozzle, then reconnect in Bambuddy.
+1. **Обновите Bambuddy до v0.2.5b2 или новее.** Выбор слота AMS теперь считывает фактически установленное сопло (для каждого сопла отдельно на двухсопловом H2D) и предлагает соответствующие профили. Bambuddy также проверяет диаметр нарезки перед отправкой и при несовпадении завершает задание очереди с понятным сообщением, например «Файл нарезан для сопла 0,6 мм, но на принтере установлено 0,4 мм», не дожидаясь ошибки HMS.
+2. **Приведите диаметры к одному значению.** Нарежьте файл заново для установленного сопла или установите сопло, для которого файл нарезан. Bambuddy фильтрует профили филамента и процесса по диаметру сопла выбранного профиля принтера, поэтому при нарезке выбирайте профиль с названием, соответствующим установленному соплу (например, `… 0.6 nozzle`).
+3. **Убедитесь, что принтер сообщает правильное сопло.** В развёрнутом виде карточка принтера показывает обнаруженный диаметр рядом с моделью (например, «• 0.6mm»). Если после замены он неверный или отсутствует, прошивка могла ещё не определить сопло повторно: выключите и включите принтер или запустите возврат в исходное положение, затем переподключите его в Bambuddy.
 
 ---
 
-## :material-tray-full: AMS & Filament Issues
+## :material-tray-full: Проблемы AMS и филамента {#ams-filament-issues}
 
-### AMS slot shows my custom filament, the printer shows Generic { #custom-filament-generic }
+### В слоте AMS отображается пользовательский филамент, а на принтере — Generic {#custom-filament-generic}
 
-**Symptoms:** You assign a custom filament preset to an AMS slot with **Configure Slot**. Bambuddy's slot card shows the custom name correctly, but the printer's own screen and Bambu Studio's Device tab both show a generic filament &mdash; *Generic PLA*, *Generic ABS* &mdash; instead.
+**Признаки:** вы назначаете пользовательский пресет филамента слоту AMS через **Настроить слот**. Карточка слота в Bambuddy показывает пользовательское название, но экран принтера и вкладка устройства Bambu Studio показывают общий филамент — *Generic PLA*, *Generic ABS*.
 
-**Background:**
+**Причина:**
 
-The three surfaces are not reading the same thing. Bambuddy shows the preset you picked, stored next to the slot. The printer and the slicer show what the printer resolved from the slot's eight-character *filament ID*. Two things stop a custom preset reaching that field as itself:
+Три интерфейса считывают разные данные. Bambuddy показывает выбранный пресет, сохранённый рядом со слотом. Принтер и слайсер показывают то, что принтер определил по восьмизначному *ID филамента* слота. Передаче пользовательского пресета как такового препятствуют две причины:
 
-1. **The preset has no filament ID of its own.** A preset that only overrides fields of a generic base has none, and neither does an OrcaSlicer preset synced to Bambu Cloud. There is nothing custom to send, so the slot stays on a filament ID that does resolve &mdash; and the printer names *that* filament.
-2. **The printer has never fetched your filament list from Bambu Cloud.** Developer Mode is LAN-only by Bambu's design, so a printer that has never been cloud-connected holds no custom-filament data to resolve a name against.
+1. **У пресета нет собственного ID филамента.** Его нет у пресета, который только переопределяет поля общего базового профиля, или у пресета OrcaSlicer, синхронизированного в Bambu Cloud. Передавать собственный ID нечего, поэтому слот сохраняет ID, который может быть разрешён, а принтер показывает название *этого* филамента.
+2. **Принтер ни разу не загрузил ваш список филамента из Bambu Cloud.** По замыслу Bambu режим разработчика работает только в локальной сети, поэтому принтер, который никогда не подключался к облаку, не имеет данных пользовательского филамента для определения названия.
 
-**Solutions:**
+**Решения:**
 
-1. **Work out which of the two it is.** Open the preset in Bambu Studio. Created as a genuinely new filament? It has its own ID, so you are in case 2. Only editing a generic base? Case 1 &mdash; there is nothing custom to send, and no setting will change that.
+1. **Определите, какая из причин относится к вам.** Откройте пресет в Bambu Studio. Он создан как новый филамент? У него есть свой ID, значит это случай 2. Вы лишь изменили общую основу? Случай 1: передавать собственный ID нечего, никакая настройка этого не изменит.
+2. **Для случая 2 позвольте принтеру один раз кэшировать пресет.** Переведите принтер в облачный режим, откройте на нём настройки филамента, чтобы загрузить пресеты, затем вернитесь в режим только локальной сети и режим разработчика. См. [Почему принтер всё ещё может показывать общий филамент](../features/ams.md#custom-preset-display).
+3. **Обновите до 1.2.6b1 или новее.** До этого выпуска полный ID облачного пресета отправлялся в восьмизначное поле и обрезался: слот указывал на неразрешимое значение и также терял запись калибровки.
 
-2. **For case 2, let the printer cache the preset once.** Put the printer in cloud mode, open its filament settings screen so it pulls your presets down, then switch back to LAN Only + Developer Mode. See [Why the printer may still show a generic filament](../features/ams.md#custom-preset-display).
-
-3. **Update to 1.2.6b1 or later.** Before that release the full cloud preset ID was sent into the eight-character field, so it arrived truncated: the slot pointed at nothing resolvable and lost its calibration entry too.
-
-!!! info "Bambuddy is not showing a stale value"
-    The slot card deliberately shows the assignment Bambuddy stored rather than reading the name back from the printer, because a custom filament ID is not resolvable through the printer's public filament info. A mismatch here is the printer's view being less specific, not Bambuddy's being out of date.
+!!! info "Bambuddy не показывает устаревшее значение"
+    Карточка слота намеренно показывает назначение, сохранённое Bambuddy, вместо чтения названия с принтера: пользовательский ID нельзя разрешить через публичную информацию принтера о филаменте. При несовпадении принтер показывает менее конкретное значение; данные Bambuddy не устарели.
 
 ---
 
-## :material-folder-lock: Backup Issues
+## :material-folder-lock: Проблемы с резервными копиями {#backup-issues}
 
-### Backups fail with "Read-only file system" { #backup-read-only-filesystem }
+### Ошибка резервного копирования «Read-only file system» {#backup-read-only-filesystem}
 
-**Symptoms:** Scheduled or manual backups to a NAS share, USB drive or any path outside the Bambuddy install fail with `[Errno 30] Read-only file system`. Your own shell can write to that directory, the permissions look correct, and existing backups in the folder still show up in the list.
+**Признаки:** резервное копирование по расписанию или вручную на сетевой ресурс NAS, USB-накопитель или любой путь вне установки Bambuddy завершается ошибкой `[Errno 30] Read-only file system`. Ваша оболочка может писать в этот каталог, права выглядят правильными, а существующие копии по-прежнему отображаются в списке.
 
-**Cause:** This is not a permission problem -- errno 30 is `EROFS`, a permission problem would be errno 13. On a systemd install, Bambuddy runs with `ProtectSystem=strict`, which makes every directory outside the install, data and log directories read-only **for the service**, no matter what its owner and mode say. Reads are unaffected, which is why the backup list still works.
+**Причина:** это не проблема прав доступа: errno 30 — `EROFS`, а ошибка прав имела бы errno 13. При установке через systemd Bambuddy работает с `ProtectSystem=strict`, из-за чего все каталоги за пределами каталогов установки, данных и журналов доступны **службе** только для чтения, независимо от владельца и режима доступа. Чтение не ограничено, поэтому список копий работает.
 
-**Solution (systemd):** allow the path in a drop-in, which survives reinstalls and upgrades.
+**Решение для systemd:** разрешите запись в путь через дополнительный файл конфигурации, который сохранится при переустановке и обновлении.
 
 ```bash
 sudo systemctl edit bambuddy
@@ -1061,25 +984,25 @@ sudo systemctl restart bambuddy
 systemctl show bambuddy -p ReadWritePaths   # confirm
 ```
 
-**Solution (Docker):** bind-mount the path into the container -- see [Backup & Restore](../features/backup.md#docker-setup).
+**Решение для Docker:** примонтируйте путь в контейнер — см. [Резервное копирование и восстановление](../features/backup.md#docker-setup).
 
-Bambuddy now checks the output directory when you save it and reports exactly this, with the command to fix it. If the share itself is genuinely mounted read-only (a stale CIFS/NFS mount after a network blip does this), remount it -- `findmnt -no OPTIONS /mnt/nasbackup` will show `ro`.
+Теперь Bambuddy проверяет выходной каталог при сохранении и сообщает именно об этой ситуации вместе с командой для исправления. Если сам сетевой ресурс действительно смонтирован только для чтения (так бывает с устаревшим монтированием CIFS/NFS после сбоя сети), перемонтируйте его. Команда `findmnt -no OPTIONS /mnt/nasbackup` покажет `ro`.
 
 ---
 
-## :material-cog: General Issues
+## :material-cog: Общие проблемы {#general-issues}
 
-### Bambuddy needs Python 3.11 or newer
+### Bambuddy требуется Python 3.11 или новее {#bambuddy-needs-python-311-or-newer}
 
-A native install whose environment was created with Python 3.10 or older stops starting from v0.2.4.8, and the update script refuses to update it until it has been moved to Python 3.11 or newer. Docker and the Windows installer are not affected.
+Нативная установка с окружением на Python 3.10 или старее перестаёт запускаться начиная с v0.2.4.8; скрипт обновления отказывается её обновлять до перехода на Python 3.11 или новее. Docker и установщик Windows не затронуты.
 
-The steps below assume the installer's defaults: install path `/opt/bambuddy`, service user and service `bambuddy`. Adjust them if you chose others.
+Шаги ниже предполагают значения установщика по умолчанию: путь `/opt/bambuddy`, пользователь службы и служба `bambuddy`. Если выбраны другие значения, скорректируйте команды.
 
-1. **Install Python 3.11 or newer** with its `venv` module:
+1. **Установите Python 3.11 или новее** с модулем `venv`:
     - Ubuntu 22.04: `sudo apt install python3.11 python3.11-venv`
-    - Debian 12, Ubuntu 24.04, Raspberry Pi OS bookworm and newer already have it (`python3`).
-    - Debian 11 / Raspberry Pi OS bullseye have no Python 3.11 package: upgrade the system, or use Docker.
-2. **Rebuild the environment** with it (Bambuddy's data and settings are not in it):
+    - Debian 12, Ubuntu 24.04, Raspberry Pi OS bookworm и новее уже содержат его (`python3`).
+    - Для Debian 11 / Raspberry Pi OS bullseye пакета Python 3.11 нет: обновите систему или используйте Docker.
+2. **Пересоздайте окружение** с его помощью (данные и настройки Bambuddy находятся вне окружения):
    ```bash
    sudo systemctl stop bambuddy
    cd /opt/bambuddy
@@ -1088,237 +1011,169 @@ The steps below assume the installer's defaults: install path `/opt/bambuddy`, s
    sudo -u bambuddy venv/bin/pip install -r requirements.txt
    sudo systemctl start bambuddy
    ```
-   Use `python3` instead of `python3.11` where that is already 3.11 or newer. On macOS run the same commands in your install folder without `sudo -u bambuddy`, with Homebrew's `python3`.
-3. **Run the update again.**
+   Используйте `python3` вместо `python3.11`, если эта команда уже указывает на 3.11 или новее. На macOS выполните те же команды в каталоге установки без `sudo -u bambuddy`, используя `python3` из Homebrew.
+3. **Запустите обновление снова.**
 
-### Bambuddy Won't Start
+### Bambuddy не запускается {#bambuddy-wont-start}
 
-**Solutions:**
+**Решения:**
 
-1. **Check the Python version of Bambuddy's environment** (not the system's `python3`, which may be older)
+1. **Проверьте версию Python окружения Bambuddy** (а не системного `python3`, который может быть старее)
    ```bash
    /opt/bambuddy/venv/bin/python --version  # Need 3.11+
    ```
-   If it is older, see [Bambuddy needs Python 3.11 or newer](#bambuddy-needs-python-311-or-newer).
+   Если версия старее, см. [Bambuddy требуется Python 3.11 или новее](#bambuddy-needs-python-311-or-newer).
 
-2. **Check dependencies**
+2. **Проверьте зависимости**
    ```bash
    pip install -r requirements.lock
    ```
 
-3. **Check port availability**
+3. **Проверьте доступность порта**
    ```bash
    lsof -i :8000
    ```
 
-4. **Check logs**
+4. **Проверьте журналы**
    ```bash
    cat logs/bambuddy.log
    ```
 
 ---
 
-### Slow Performance
+### Низкая производительность {#slow-performance}
 
-**Solutions:**
+**Решения:**
 
-1. **Check system resources**
+1. **Проверьте ресурсы системы**
    ```bash
    htop
    ```
 
-2. **Vacuum database**
-   - Settings > System Info > Vacuum Database
+2. **Выполните очистку базы данных**
+   - Настройки > Информация о системе > Очистить базу данных
 
-3. **Clear old logs**
-   - Logs rotate automatically
-   - Delete very old log files if needed
+3. **Очистите старые журналы**
+   - Журналы ротируются автоматически
+   - При необходимости удалите очень старые файлы журналов
 
-4. **Check for runaway processes**
+4. **Проверьте зависшие процессы**
    ```bash
    ps aux | grep -E "ffmpeg|python"
    ```
 
 ---
 
-## :material-heart-pulse: System Health Checks
+## :material-heart-pulse: Проверки состояния системы {#system-health-checks}
 
-Bambuddy scans its own recent log against a catalog of known issues and surfaces
-what it finds on the **System page → System Health** section and inside the
-in-app bug reporter. Each finding links here. The checks below cover the issues
-that catalog can detect — most are setup problems you can fix yourself.
+Bambuddy проверяет собственный недавний журнал по каталогу известных проблем и показывает результаты в разделе **Страница «Система» → Состояние системы**, а также во встроенной форме сообщения об ошибке. Каждая находка ссылается на этот раздел. Проверки ниже охватывают проблемы, которые каталог способен обнаружить; большинство из них связано с настройкой, которую можно исправить самостоятельно.
 
-### Printer rejected the access code { #wrong-access-code }
+### Принтер отклонил код доступа {#wrong-access-code}
 
-Bambuddy's file-transfer login was refused by the printer. The access code is
-wrong, or it changed — the printer generates a **new** access code every time
-LAN Developer Mode is toggled.
+Принтер отклонил вход Bambuddy для передачи файлов. Код доступа неверен или изменился: принтер генерирует **новый** код при каждом переключении локального режима разработчика.
 
-Re-copy the access code from the printer screen (**Settings → LAN**) and update
-it under the printer's settings in Bambuddy. See also [Printer Won't Connect](#printer-wont-connect).
+Снова скопируйте код с экрана принтера (**Настройки → LAN**) и обновите его в настройках принтера в Bambuddy. См. также [Принтер не подключается](#printer-wont-connect).
 
-### File-transfer connection timed out { #ftps-port-990-blocked }
+### Истекло время подключения для передачи файлов {#ftps-port-990-blocked}
 
-Bambuddy could not reach the printer's file-transfer port (**FTPS 990**). The
-port is blocked by a firewall, or the printer is powered off or on a different
-subnet.
+Bambuddy не смогла подключиться к порту передачи файлов принтера (**FTPS 990**). Порт заблокирован межсетевым экраном, принтер выключен или находится в другой подсети.
 
-Make sure nothing blocks port 990 between Bambuddy and the printer, and that
-both are on the same network. See also [Prints Won't Start / File Transfer Fails](#prints-wont-start-file-transfer-fails).
+Убедитесь, что ничто не блокирует порт 990 между Bambuddy и принтером и оба находятся в одной сети. См. также [Печать не запускается / передача файлов завершается ошибкой](#prints-wont-start-file-transfer-fails).
 
-### Secure file-transfer handshake failed { #ftps-tls-failure }
+### Не удалось установить защищённое соединение для передачи файлов {#ftps-tls-failure}
 
-Bambuddy opened a connection to the printer's file-transfer port (**FTPS 990**)
-and the printer answered with something that is not TLS. The log entry looks
-like this:
+Bambuddy подключилась к порту передачи файлов принтера (**FTPS 990**), но принтер ответил данными, которые не являются TLS. Запись журнала выглядит так:
 
 ```
 FTP SSL error connecting to 192.168.1.50: [SSL: WRONG_VERSION_NUMBER] wrong version number
 ```
 
-**What this is not.** It is not the printer model, the firmware version, a TLS
-version mismatch, or a Bambuddy setting. The same models and firmware run
-normally on other installs; on one 9-printer farm three P2S units failed while
-three more of the same model on the same switch and the same access point never
-did. Probed directly on port 990, every Bambu printer measured so far -- six
-P2S, two X1C, an H2D -- refuses TLS 1.3 and completes on 1.2, so the negotiated
-version was already 1.2 and there is no version to fall back from. A genuine
-version mismatch reports itself as `TLSV1_ALERT_PROTOCOL_VERSION`;
-`WRONG_VERSION_NUMBER` is what you get when the first bytes back are not a TLS
-record at all.
+**Чем это не является.** Причина не в модели принтера, версии прошивки, несовпадении версий TLS или настройке Bambuddy. Те же модели и прошивки нормально работают в других установках; на одной ферме из девяти принтеров три P2S давали сбой, а ещё три той же модели на том же коммутаторе и точке доступа — нет. При прямой проверке порта 990 все измеренные принтеры Bambu — шесть P2S, два X1C, один H2D — отклоняли TLS 1.3 и завершали согласование на 1.2, поэтому согласованной версией уже была 1.2 и переходить на более старую было неоткуда. Реальное несовпадение версий сообщает `TLSV1_ALERT_PROTOCOL_VERSION`; `WRONG_VERSION_NUMBER` появляется, когда первые полученные байты вообще не являются записью TLS.
 
-**We do not know what triggers it, and there is no fix to apply yet.** Earlier
-revisions of this page said to power-cycle the printer. That advice has been
-withdrawn: the reporter who prompted it did a full power-off on both affected
-printers and the failure continued unchanged. The port still accepts
-connections -- so the Connection Diagnostic's port check and any firewall test
-look fine -- and a manual `openssl s_client` to the same printer a second later
-completes a clean handshake and returns a valid certificate. Restarting is
-harmless if you want to try it, but do not expect it to help, and please do not
-conclude from a restart that the problem is gone.
+**Причина пока неизвестна, готового исправления нет.** В прежней версии этой страницы рекомендовалось выключить и включить принтер. Этот совет отозван: автор сообщения полностью выключил оба затронутых принтера, но сбой остался. Порт продолжает принимать соединения, поэтому проверка порта в диагностике и проверка межсетевого экрана выглядят успешными. При этом ручной `openssl s_client` к тому же принтеру секунду спустя корректно устанавливает соединение и получает действительный сертификат. Перезапуск не навредит, если вы захотите попробовать, но не стоит ожидать, что он поможет, или считать проблему решённой только по факту перезапуска.
 
-**What would help is a capture.** From 1.2.5.4, when a handshake fails this way
-Bambuddy opens one plain connection to port 990 and logs whatever the printer
-actually said, marked as the line to quote in a report:
+**Помочь может запись ответа.** Начиная с 1.2.5.4 при таком сбое Bambuddy открывает одно незащищённое соединение с портом 990 и записывает фактический ответ принтера, отмечая строку, которую нужно привести в сообщении:
 
 ```
 Printer 192.168.1.50 answered port 990 in cleartext with: 421 Too many connections
 ```
 
-If your log has that line, it is the single most useful thing you can post. If
-it says the printer sent nothing readable, the refusal was momentary and had
-already cleared. To capture one, turn on **Debug Logging** on the **System**
-page, wait for a print to archive with only a name, then download the **Support
-Bundle** from the same page and attach it to your report.
+Если эта строка есть в журнале, она наиболее полезна для сообщения о проблеме. Если указано, что принтер не прислал читаемых данных, отказ был кратковременным и уже прекратился. Чтобы получить запись, включите **Отладочное журналирование** на странице **Система**, дождитесь печати, архивированной только с названием, затем скачайте **Пакет поддержки** на той же странице и приложите к сообщению.
 
-While a printer is in this state, anything that reads a file from it fails:
+Пока принтер находится в этом состоянии, любое чтение файлов с него завершается ошибкой:
 
-- print archives arrive with only a filename -- no filament totals, no layer
-  count, no MakerWorld link
-- cover thumbnails do not load
-- timelapse scanning finds nothing
+- архивы печати содержат только имя файла — без расхода филамента, числа слоёв и ссылки MakerWorld
+- миниатюры обложек не загружаются
+- поиск таймлапсов ничего не находит
 
-Bambuddy pauses file transfers to that printer for five minutes after a failed
-handshake rather than retrying every candidate path, so the log shows a handful
-of these entries rather than thousands. Printing itself is unaffected -- the
-control connection (MQTT 8883) is a separate service.
+После неудачного установления соединения Bambuddy приостанавливает передачу файлов к этому принтеру на пять минут вместо повторной проверки всех путей. Поэтому журнал содержит несколько таких записей вместо тысяч. Сама печать не затрагивается: управляющее соединение (MQTT 8883) использует отдельную службу.
 
-**An archive caught by this recovers on its own.** From 1.2.6, a print that
-started while the pause was running is not written off. Bambuddy re-attempts the
-download once the pause clears, and if anything else fetches the file first --
-opening the printer card downloads it to draw the thumbnail -- the archive is
-filled in from that copy with no second transfer. The card gains its thumbnail,
-file size, filament totals and layer count while the print is still running.
-Recovery only applies to this pause: a print the printer kept on internal
-storage has no FTPS copy to come back for, and that archive stays as it is.
+**Такой архив восстанавливается автоматически.** Начиная с 1.2.6 печать, начатая во время паузы, не считается безнадёжной. После окончания паузы Bambuddy повторно загружает файл. Если что-то другое получит его раньше — открытие карточки принтера загружает файл для миниатюры, — архив дополняется из этой копии без повторной передачи. На карточке появятся миниатюра, размер файла, расход филамента и число слоёв ещё во время печати. Восстановление относится только к этой паузе: если принтер сохранил печать во внутренней памяти, копии FTPS для повторной загрузки нет, и архив останется неполным.
 
-Also check that no firewall or TLS-inspecting proxy sits between Bambuddy and
-the printer, and see [A1/A1 Mini FTP Issues](#a1a1-mini-ftp-issues) if the
-printer is an A1 or A1 Mini.
+Также убедитесь, что между Bambuddy и принтером нет межсетевого экрана или прокси с проверкой TLS. Для A1 и A1 Mini см. [Проблемы FTP на A1/A1 Mini](#a1a1-mini-ftp-issues).
 
-### Printer connection keeps dropping { #mqtt-connection-unstable }
+### Подключение принтера постоянно обрывается {#mqtt-connection-unstable}
 
-The control connection (**MQTT 8883**) repeatedly disconnects and reconnects.
-This is usually a weak Wi-Fi path to the printer or a partially blocked port.
+Управляющее соединение (**MQTT 8883**) неоднократно отключается и восстанавливается. Обычно причина — слабый Wi-Fi принтера или частично заблокированный порт.
 
-Check the Wi-Fi signal at the printer, prefer a wired connection, and make sure
-port 8883 is reliably reachable. See also [Connection Drops Frequently](#connection-drops-frequently).
+Проверьте сигнал Wi-Fi у принтера, по возможности используйте проводное соединение и убедитесь, что порт 8883 стабильно доступен. См. также [Подключение часто обрывается](#connection-drops-frequently).
 
-### Camera stream unreachable { #camera-rtsps-port-322 }
+### Трансляция камеры недоступна {#camera-rtsps-port-322}
 
-The live camera could not be reached on **RTSPS 322**. The port is blocked, or
-the camera or LAN liveview is disabled on the printer. This does not affect
-printing.
+Не удалось подключиться к трансляции через **RTSPS 322**. Порт заблокирован либо на принтере отключена камера или просмотр по локальной сети. На печать это не влияет.
 
-Enable the camera and LAN liveview on the printer and make sure port 322 is not
-blocked. See also [Camera Won't Stream](#camera-wont-stream).
+Включите камеру и просмотр по локальной сети на принтере и убедитесь, что порт 322 не заблокирован. См. также [Камера не транслирует видео](#camera-wont-stream).
 
-### Bambu Cloud is asking for a CAPTCHA { #bambu-cloud-captcha }
+### Bambu Cloud запрашивает CAPTCHA {#bambu-cloud-captcha}
 
-Signing in to Bambu Cloud fails with a message about confirming you are not a
-robot, and no CAPTCHA is shown anywhere. There is nothing to click because there
-is nowhere to click it: Bambu's anti-abuse layer is challenging your network,
-and answering a CAPTCHA needs a real browser.
+Вход в Bambu Cloud завершается ошибкой с просьбой подтвердить, что вы не робот, но CAPTCHA нигде не отображается. Нажимать нечего: защита Bambu от злоупотреблений проверяет вашу сеть, а для ответа на CAPTCHA нужен настоящий браузер.
 
-Bambu answers the sign-in with `HTTP 418` and a challenge body:
+Bambu отвечает на вход кодом `HTTP 418` и запросом проверки:
 
 ```
 {"captchaId": "...", "error": "We need you to confirm you are not a robot"}
 ```
 
-**Your email and password are not the problem, and neither is your Bambuddy
-install.** The challenge is keyed to your public IP address, so it applies to
-every account and every app behind that address, and it normally clears by
-itself within a few hours. Repeated sign-in attempts extend it -- Bambuddy stops
-sending sign-in requests for five minutes after seeing a challenge for exactly
-that reason, so a retry inside that window is refused locally without touching
-Bambu.
+**Дело не в вашей почте, пароле или установке Bambuddy.** Проверка привязана к публичному IP-адресу, поэтому затрагивает все аккаунты и приложения за этим адресом и обычно проходит сама в течение нескольких часов. Повторные попытки входа продлевают её: именно поэтому Bambuddy на пять минут прекращает отправку запросов после обнаружения проверки, а повтор внутри этого интервала отклоняется локально без обращения к Bambu.
 
-What makes it more likely:
+Вероятность повышают:
 
-- a VPN, Tailscale exit node, or mobile/CGNAT connection that shares one public
-  address with many users
-- a hosting provider or datacenter IP range
-- a burst of Bambu Cloud or MakerWorld requests from the same address
+- VPN, выходной узел Tailscale или мобильное подключение / CGNAT, где один публичный адрес используется многими пользователями
+- IP-диапазон хостинг-провайдера или дата-центра
+- Всплеск запросов Bambu Cloud или MakerWorld с одного адреса
 
-To sign in while it lasts, use an access token instead. On the **Profiles →
-Cloud Profiles** login form, choose **Use access token instead** and paste a
-token from a browser session — the token path does not go through the
-challenged sign-in endpoint. The same challenge also blocks MakerWorld imports;
-use **Open on MakerWorld** and import the 3MF manually until it clears.
+Чтобы войти, пока действует ограничение, используйте токен доступа. В форме входа **Профили → Облачные профили** выберите **Использовать токен доступа** и вставьте токен из сеанса браузера: этот способ не проходит через проверяемую конечную точку входа. Та же проверка блокирует импорт MakerWorld; используйте **Открыть в MakerWorld** и импортируйте 3MF вручную, пока ограничение не исчезнет.
 
-### Database write contention { #database-is-locked }
+### Конкуренция записей в базу данных {#database-is-locked}
 
-The SQLite database is hitting `database is locked` errors under load — common
-when running several printers at once.
+Под нагрузкой в SQLite возникают ошибки `database is locked`, часто при одновременной работе нескольких принтеров.
 
-Switch Bambuddy to an external PostgreSQL database. See ["Database is locked" Errors](#database-is-locked-errors)
-and the [PostgreSQL guide](../features/postgresql.md).
+Переведите Bambuddy на внешнюю базу PostgreSQL. См. [Ошибки «Database is locked»](#database-is-locked-errors) и [руководство по PostgreSQL](../features/postgresql.md).
 
 ---
 
-## :material-help-circle: Getting More Help
+## :material-help-circle: Дополнительная помощь {#getting-more-help}
 
-### Information to Gather
+### Какие сведения собрать {#information-to-gather}
 
-When reporting issues, include:
+При сообщении о проблеме укажите:
 
-1. **Bambuddy version** - Settings > About
-2. **Printer model** - X1C, P1S, etc.
-3. **Operating system** - Linux, macOS, Windows
-4. **Installation method** - Docker, manual
-5. **Steps to reproduce** - What you did
-6. **Error messages** - Exact text
-7. **Logs** - Relevant log entries
+1. **Версию Bambuddy** — Настройки > О программе
+2. **Модель принтера** — X1C, P1S и т. д.
+3. **Операционную систему** — Linux, macOS, Windows
+4. **Способ установки** — Docker, вручную
+5. **Шаги воспроизведения** — что вы сделали
+6. **Сообщения об ошибках** — точный текст
+7. **Журналы** — соответствующие записи
 
-### Where to Get Help
+### Где получить помощь {#where-to-get-help}
 
 - [GitHub Issues](https://github.com/maziggy/bambuddy/issues)
 - [GitHub Discussions](https://github.com/maziggy/bambuddy/discussions)
 
-### Debugging Mode
+### Режим отладки {#debugging-mode}
 
-Enable debug logging for more details:
+Включите отладочное журналирование для получения подробностей:
 
 ```bash
 # In .env file
