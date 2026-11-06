@@ -1,25 +1,25 @@
 ---
-title: Installation
-description: Setting up SpoolBuddy on your Raspberry Pi
+title: Установка
+description: Установка SpoolBuddy на Raspberry Pi
 ---
 
-# Installation
-
----
-
-## :material-check-all: Prerequisites
-
-Before running the installer:
-
-- Raspberry Pi with Raspberry Pi OS 64-Bit with PI Desktop (Debian-based), internet access, and `sudo`.
-- Hardware wired (or ready to wire): PN5180 NFC + NAU7802 scale + display
-- Existing Bambuddy server URL + API key (for SpoolBuddy-only mode), or plan to run full mode on the Pi
+# Установка {#installation}
 
 ---
 
-## :material-rocket: Recommended Install Method
+## :material-check-all: Перед началом работы {#prerequisites}
 
-Use the install script from the Bambuddy repository:
+Перед запуском установщика подготовьте:
+
+- Raspberry Pi с Raspberry Pi OS 64-Bit с Pi Desktop (на базе Debian), доступом к интернету и `sudo`.
+- Подключённое или готовое к подключению оборудование: NFC-считыватель PN5180, весы NAU7802 и дисплей.
+- URL существующего сервера Bambuddy и ключ API (для режима только SpoolBuddy) либо план запуска полной установки на Pi.
+
+---
+
+## :material-rocket: Рекомендуемый способ установки {#recommended-install-method}
+
+Используйте скрипт установки из репозитория Bambuddy:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/maziggy/bambuddy/refs/heads/dev/spoolbuddy/install/install.sh -o install.sh
@@ -27,21 +27,21 @@ chmod +x install.sh
 sudo ./install.sh
 ```
 
-The installer configures:
+Установщик настраивает:
 
-- SPI + I2C and required boot overlays
-- System packages and Python venv
-- SpoolBuddy daemon service (`spoolbuddy.service`)
-- Touch kiosk environment (labwc + Chromium autostart + splash setup)
-- Optional local Bambuddy service (full mode)
+- SPI, I2C и необходимые загрузочные оверлеи
+- Системные пакеты и виртуальное окружение Python
+- Службу демона SpoolBuddy (`spoolbuddy.service`)
+- Среду сенсорного киоска (labwc, автозапуск Chromium и заставку)
+- При необходимости локальную службу Bambuddy (полный режим)
 
 ---
 
-## :material-form-select: Installation Modes
+## :material-form-select: Режимы установки {#installation-modes}
 
-For mode selection details and tradeoffs, see [Deployment Modes](deployment-modes.md).
+Подробности выбора режима и их особенности см. на странице [Режимы развёртывания](deployment-modes.md).
 
-### Unattended Examples
+### Примеры автоматической установки {#unattended-examples}
 
 ```bash
 # SpoolBuddy-only mode
@@ -53,13 +53,13 @@ sudo ./install.sh --mode full --port 8000 --yes
 
 ---
 
-## :material-restart: First Boot After Install
+## :material-restart: Первая загрузка после установки {#first-boot-after-install}
 
-A reboot is required after installation for:
+После установки необходима перезагрузка, чтобы применить:
 
-- SPI/I2C and boot config changes
-- kiosk auto-login/session startup
-- splash/initramfs changes
+- Изменения SPI/I2C и загрузочной конфигурации
+- Автоматический вход и запуск сеанса киоска
+- Изменения заставки и initramfs
 
 ```bash
 sudo reboot
@@ -67,9 +67,9 @@ sudo reboot
 
 ---
 
-## :material-flask-outline: Hardware Validation
+## :material-flask-outline: Проверка оборудования {#hardware-validation}
 
-After rebooting, confirm your hardware is wired and detected correctly:
+После перезагрузки убедитесь, что оборудование подключено и определяется правильно:
 
 ```bash
 # SPI devices present
@@ -82,7 +82,7 @@ ls /dev/i2c-1
 sudo i2cdetect -y 1
 ```
 
-Then run SpoolBuddy diagnostics:
+Затем запустите диагностику SpoolBuddy:
 
 ```bash
 sudo /opt/bambuddy/spoolbuddy/venv/bin/python /opt/bambuddy/spoolbuddy/scripts/pn5180_diag.py
@@ -91,11 +91,11 @@ sudo /opt/bambuddy/spoolbuddy/venv/bin/python /opt/bambuddy/spoolbuddy/scripts/s
 
 ---
 
-If you installed full mode, create an API key in **Bambuddy → Settings → [API Keys](../features/api-keys.md)**, then update `/opt/bambuddy/spoolbuddy/.env` with `SPOOLBUDDY_API_KEY=bb_xxx` and restart the service (`sudo systemctl restart spoolbuddy`).
+При установке в полном режиме создайте ключ API в **Bambuddy → Настройки → [Ключи API](../features/api-keys.md)**, добавьте `SPOOLBUDDY_API_KEY=bb_xxx` в `/opt/bambuddy/spoolbuddy/.env` и перезапустите службу (`sudo systemctl restart spoolbuddy`).
 
 ---
 
-## :material-application-cog: Service Management
+## :material-application-cog: Управление службами {#service-management}
 
 ```bash
 # SpoolBuddy service status
@@ -105,7 +105,7 @@ sudo systemctl status spoolbuddy
 sudo journalctl -u spoolbuddy -f
 ```
 
-If you installed full mode:
+При установке в полном режиме:
 
 ```bash
 sudo systemctl status bambuddy
@@ -114,25 +114,25 @@ sudo journalctl -u bambuddy -f
 
 ---
 
-## :material-clipboard-check: Verify the Setup
+## :material-clipboard-check: Проверка установки {#verify-the-setup}
 
-1. Open Bambuddy in a browser.
-2. Open the kiosk route on the Pi: `/spoolbuddy`.
-3. Confirm the device appears online in SpoolBuddy.
-4. Place a known tag on the reader and confirm detection.
-5. Check live scale value changes.
+1. Откройте Bambuddy в браузере.
+2. Откройте путь киоска на Pi: `/spoolbuddy`.
+3. Убедитесь, что устройство отображается в SpoolBuddy как подключённое.
+4. Приложите известную метку к считывателю и убедитесь, что она обнаружена.
+5. Проверьте, изменяются ли текущие показания весов.
 
-If hardware appears offline, run the [hardware diagnostics](#hardware-validation) above.
+Если оборудование отображается как отключённое, выполните описанную выше [диагностику оборудования](#hardware-validation).
 
 ---
 
-## :material-alert-circle: Common Pitfalls
+## :material-alert-circle: Частые проблемы {#common-pitfalls}
 
-- Wrong raw script URL path (use `.../bambuddy/main/install/install.sh`)
-- Missing API key in SpoolBuddy-only mode
-- I2C bus 0 not enabled (`dtparam=i2c_vc=on`)
-- SPI CS overlay missing (`dtoverlay=spi0-0cs`)
-- NFC/scale permissions not applied because reboot was skipped
+- Неверный URL исходного скрипта (используйте `.../bambuddy/main/install/install.sh`)
+- Отсутствует ключ API в режиме только SpoolBuddy
+- Не включена шина I2C 0 (`dtparam=i2c_vc=on`)
+- Отсутствует оверлей SPI CS (`dtoverlay=spi0-0cs`)
+- Разрешения для NFC или весов не применились, поскольку перезагрузка была пропущена
 
-!!! note "\"Can't reach Bambuddy. Retrying…\" on the kiosk"
-    The kiosk shows this when it can't check its API key because Bambuddy, or Bambuddy's database, isn't answering, for example while the database is out of connections or failing over. The key is kept and the kiosk keeps trying, starting after 2 seconds and backing off to once a minute. It shows SpoolBuddy again as soon as Bambuddy answers, with no reboot needed. Only an answer from Bambuddy sends the kiosk to the login page: a key that is invalid or expired, or whose owner has been deactivated. In the last case the key is kept, so reactivating the owner and rebooting the kiosk brings it back.
+!!! note "На киоске отображается «Can't reach Bambuddy. Retrying…»"
+    Это сообщение появляется, когда киоск не может проверить свой ключ API, потому что Bambuddy или его база данных не отвечает, например при исчерпании соединений с базой или переключении на резервный узел. Ключ сохраняется, а киоск продолжает попытки: первая выполняется через 2 секунды, затем интервал увеличивается до минуты. Как только Bambuddy отвечает, SpoolBuddy снова появляется без перезагрузки. На страницу входа киоск переходит только после ответа Bambuddy о том, что ключ недействителен или срок его действия истёк либо его владелец деактивирован. В последнем случае ключ сохраняется: повторная активация владельца и перезагрузка киоска восстановят работу.
