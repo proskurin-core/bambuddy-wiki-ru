@@ -1,17 +1,17 @@
 ---
-title: Installation
-description: Install Bambuddy on your system
+title: Установка
+description: Установите Bambuddy в своей системе
 ---
 
-# Installation
+# Установка {#installation}
 
-> Get Bambuddy running in about a minute. One command, one browser tab — you're done.
+> Запустите Bambuddy примерно за минуту: одна команда, одна вкладка браузера — и всё готово.
 
 ---
 
-## :material-youtube: Video Walkthrough
+## :material-youtube: Видеоруководство {#video-walkthrough}
 
-Prefer to watch instead of read? **[@Help3d](https://www.youtube.com/@Help3d)** walks through the entire setup from a fresh Raspberry Pi to printing through virtual printers — Tailscale HTTPS, SSH, install, virtual printers, and certificate import all in one go.
+Предпочитаете смотреть, а не читать? **[@Help3d](https://www.youtube.com/@Help3d)** показывает весь процесс: от первоначальной настройки Raspberry Pi до печати через виртуальные принтеры, включая HTTPS через Tailscale, SSH, установку и импорт сертификата.
 
 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3); max-width: 900px; margin: 1rem auto;">
   <iframe
@@ -23,13 +23,13 @@ Prefer to watch instead of read? **[@Help3d](https://www.youtube.com/@Help3d)** 
     loading="lazy"></iframe>
 </div>
 
-<p style="text-align: center; font-size: 0.9rem; opacity: 0.8;">Video by <a href="https://www.youtube.com/@Help3d" target="_blank" rel="noopener">@Help3d</a> — covers Pi setup, SSH, install, Tailscale HTTPS, virtual printers, and certificate import.</p>
+<p style="text-align: center; font-size: 0.9rem; opacity: 0.8;">Видео <a href="https://www.youtube.com/@Help3d" target="_blank" rel="noopener">@Help3d</a>: настройка Pi, SSH, установка, HTTPS через Tailscale, виртуальные принтеры и импорт сертификата.</p>
 
 ---
 
-## :material-rocket: Quick Install (Recommended)
+## :material-rocket: Быстрая установка (рекомендуется) {#quick-install-recommended}
 
-The easiest way to install Bambuddy. Interactive scripts that handle everything for you.
+Самый простой способ установки Bambuddy: интерактивные скрипты выполнят все действия за вас.
 
 === ":material-linux: Linux"
 
@@ -43,81 +43,73 @@ The easiest way to install Bambuddy. Interactive scripts that handle everything 
     curl -fsSL https://raw.githubusercontent.com/maziggy/bambuddy/main/install/install.sh -o install.sh && chmod +x install.sh && ./install.sh
     ```
 
-    !!! warning "Don't use `sudo` on macOS"
-        Run the script as your normal user — **not** with `sudo`. Homebrew refuses
-        to run as root, and a virtual environment created by root can't be managed
-        by the launchd agent (which runs as you). The installer elevates on its own
-        only for the few steps that genuinely need it. On macOS Bambuddy installs to
-        `~/bambuddy` by default (no `/opt` write, so no root needed).
+    !!! warning "Не используйте `sudo` в macOS"
+        Запустите скрипт от своего обычного пользователя, **без** `sudo`. Homebrew не работает от root, а агент launchd, работающий от вашего имени, не сможет управлять виртуальным окружением, созданным root. Установщик самостоятельно повышает права только там, где это необходимо. По умолчанию в macOS Bambuddy устанавливается в `~/bambuddy`, не записывая файлы в `/opt` и не требуя прав root.
 
 === ":material-microsoft-windows: Windows"
 
-    Download the self-contained installer — no Python, Node, Docker, or Git
-    needed on the target machine:
+    Скачайте автономный установщик: Python, Node, Docker и Git на целевом компьютере не нужны:
 
     [:material-download: bambuddy-windows-x64-setup.exe](https://github.com/maziggy/bambuddy/releases/latest/download/bambuddy-windows-x64-setup.exe){ .md-button .md-button--primary }
 
-    Run it (one-time UAC prompt — admin install). Bambuddy is registered as
-    a Windows service running on `http://localhost:8000` and the browser
-    opens automatically when install completes.
+    Запустите его и подтвердите однократный запрос UAC для установки с правами администратора. Bambuddy регистрируется как служба Windows, доступная на `http://localhost:8000`; по завершении установки браузер откроется автоматически.
 
-    Updates: run the newer installer over the existing install — your
-    database and archives in `C:\ProgramData\Bambuddy\` are preserved.
+    Для обновления запустите новый установщик поверх существующей установки. База данных и архивы в `C:\ProgramData\Bambuddy\` сохранятся.
 
-    [:material-arrow-right: Full Windows Installer Guide](windows-installer.md)
+    [:material-arrow-right: Полное руководство по установщику Windows](windows-installer.md)
 
-The script will:
+Скрипт выполнит следующее:
 
-- Prompt for install path, port, bind address, timezone, and more
-- Detect your package manager and install dependencies
-- Set up Python virtual environment
-- Build the frontend (Node.js 22)
-- Create a systemd/launchd service
-- Start Bambuddy automatically
+- Запросит путь установки, порт, адрес привязки, часовой пояс и другие параметры
+- Определит менеджер пакетов и установит зависимости
+- Настроит виртуальное окружение Python
+- Соберёт фронтенд (Node.js 22)
+- Создаст службу systemd/launchd
+- Автоматически запустит Bambuddy
 
-!!! info "Supported Systems"
-    - **Debian/Ubuntu** (apt) with Python 3.11 or newer available: Debian 12+, Ubuntu 22.04+ (the installer adds `python3.11` on 22.04), Raspberry Pi OS bookworm+. Debian 11 / Raspberry Pi OS bullseye have no Python 3.11: use Docker.
+!!! info "Поддерживаемые системы"
+    - **Debian/Ubuntu** (apt) с доступным Python 3.11 или новее: Debian 12+, Ubuntu 22.04+ (на 22.04 установщик добавляет `python3.11`), Raspberry Pi OS bookworm+. В Debian 11 / Raspberry Pi OS bullseye нет Python 3.11: используйте Docker.
     - **RHEL/Fedora/CentOS** (dnf/yum)
     - **Arch Linux** (pacman)
     - **openSUSE** (zypper)
     - **macOS** (Homebrew)
     - **Windows 10/11** (PowerShell 5.1+, Git/Python via `winget`)
 
-!!! tip "Unattended Mode"
-    For automation or CI, use the `--yes` flag to accept all defaults:
+!!! tip "Автоматическая установка"
+    Для автоматизации или CI используйте флаг `--yes`, чтобы принять все значения по умолчанию:
     ```bash
     curl -fsSL https://raw.githubusercontent.com/maziggy/bambuddy/main/install/install.sh | bash -s -- --yes
     ```
 
-    Or customize with flags:
+    Также можно указать параметры с помощью флагов:
     ```bash
     curl -fsSL https://raw.githubusercontent.com/maziggy/bambuddy/main/install/install.sh | bash -s -- --path /srv/bambuddy --port 3000 --yes
     ```
 
 ---
 
-## :material-check-all: Requirements
+## :material-check-all: Требования {#requirements}
 
-Before you begin, make sure you have:
+Перед началом убедитесь, что выполнены следующие требования:
 
-| Requirement | Details |
+| Требование | Описание |
 |------------|---------|
-| **Python** | 3.11+ (3.12 or 3.13 recommended) — only needed for manual/native install; Docker doesn't need Python on the host |
-| **Network** | Same LAN as your Bambu Lab printer |
-| **Printer** | Developer Mode enabled ([see guide](index.md#enabling-developer-mode)) |
-| **SD Card** | Inserted in the printer (required for file transfers) |
+| **Python** | 3.11+ (рекомендуется 3.12 или 3.13) — нужен только для ручной или нативной установки; Docker не требует Python на хосте |
+| **Сеть** | Та же локальная сеть, что и у принтера Bambu Lab |
+| **Принтер** | Включён режим разработчика ([см. руководство](index.md#enabling-developer-mode)) |
+| **SD-карта** | Вставлена в принтер (необходима для передачи файлов) |
 
-!!! warning "SD Card Required"
-    An SD card must be inserted in your printer for Bambuddy to function properly. File transfers, print uploads, and archiving all require the SD card.
+!!! warning "Необходима SD-карта"
+    Для правильной работы Bambuddy в принтер должна быть вставлена SD-карта. Она необходима для передачи файлов, загрузки заданий на печать и архивации.
 
-!!! tip "Docker Alternative"
-    If you prefer containers, check out the [Docker installation guide](docker.md) - it's even simpler!
+!!! tip "Установка через Docker"
+    Если вы предпочитаете контейнеры, ознакомьтесь с [руководством по установке Docker](docker.md) — это ещё проще!
 
 ---
 
-## :material-download: Manual Install
+## :material-download: Ручная установка {#manual-install}
 
-Prefer to do it yourself? Follow these steps.
+Хотите выполнить установку самостоятельно? Следуйте этим инструкциям.
 
 === ":material-apple: macOS"
 
@@ -157,23 +149,23 @@ Prefer to do it yourself? Follow these steps.
     uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --loop asyncio
     ```
 
-Open `http://localhost:8000` in your browser (substitute your server's hostname or IP if Bambuddy isn't running on the same machine you're browsing from). :tada:
+Откройте в браузере `http://localhost:8000`. Если Bambuddy работает на другом компьютере, замените `localhost` именем или IP-адресом сервера. :tada:
 
 ---
 
-## :material-cog: Running as a Service
+## :material-cog: Запуск в качестве службы {#running-as-a-service}
 
-For production use, run Bambuddy as a system service that starts automatically.
+Для рабочего использования запускайте Bambuddy как системную службу с автоматическим запуском.
 
 === ":material-linux: systemd (Linux)"
 
-    Create the service file:
+    Создайте файл службы:
 
     ```bash
     sudo nano /etc/systemd/system/bambuddy.service
     ```
 
-    Add this content (adjust paths for your system):
+    Добавьте следующее содержимое, указав пути для своей системы:
 
     ```ini
     [Unit]
@@ -211,15 +203,15 @@ For production use, run Bambuddy as a system service that starts automatically.
     WantedBy=multi-user.target
     ```
 
-    !!! warning "Do not drop the `AmbientCapabilities` line"
-        The Virtual Printer binds ports 990 (FTPS) and 322 (RTSP), both below 1024, which a service running as a normal user is not allowed to do without this capability. Leave it out and Bambuddy itself works fine — but the Virtual Printer's sockets never open, so the slicer never sees the printer, with nothing obvious to point at. The bind failure is a single line in `journalctl -u bambuddy`.
+    !!! warning "Не удаляйте строку `AmbientCapabilities`"
+        Виртуальный принтер открывает порты 990 (FTPS) и 322 (RTSP), оба ниже 1024. Служба обычного пользователя не может сделать это без данного разрешения. Без него Bambuddy работает, но сокеты виртуального принтера не открываются и слайсер не видит принтер; явной причины при этом не видно. Ошибка привязки записывается одной строкой в `journalctl -u bambuddy`.
 
-        If you already have a service without it, add the line, then `sudo systemctl daemon-reload && sudo systemctl restart bambuddy`.
+        Если у существующей службы этой строки нет, добавьте её и выполните `sudo systemctl daemon-reload && sudo systemctl restart bambuddy`.
 
-    !!! tip "Why kill ffmpeg?"
-        BamBuddy uses ffmpeg for camera streaming. Sometimes ffmpeg processes can become orphaned when the service restarts. The `ExecStartPre` and `ExecStopPost` commands ensure clean restarts.
+    !!! tip "Зачем завершать ffmpeg?"
+        Bambuddy использует ffmpeg для трансляции с камеры. При перезапуске службы процессы ffmpeg иногда остаются без родительского процесса. Команды `ExecStartPre` и `ExecStopPost` обеспечивают корректный перезапуск.
 
-    Enable and start:
+    Включите и запустите службу:
 
     ```bash
     sudo systemctl daemon-reload
@@ -227,13 +219,13 @@ For production use, run Bambuddy as a system service that starts automatically.
     sudo systemctl start bambuddy
     ```
 
-    Check status:
+    Проверьте состояние:
 
     ```bash
     sudo systemctl status bambuddy
     ```
 
-    View logs:
+    Просмотрите журнал:
 
     ```bash
     sudo journalctl -u bambuddy -f
@@ -241,13 +233,13 @@ For production use, run Bambuddy as a system service that starts automatically.
 
 === ":material-apple: launchd (macOS)"
 
-    Create the plist file:
+    Создайте файл plist:
 
     ```bash
     nano ~/Library/LaunchAgents/com.bambuddy.plist
     ```
 
-    Add this content:
+    Добавьте следующее содержимое:
 
     ```xml
     <?xml version="1.0" encoding="UTF-8"?>
@@ -278,25 +270,17 @@ For production use, run Bambuddy as a system service that starts automatically.
     </plist>
     ```
 
-    Load and start:
+    Загрузите и запустите службу:
 
     ```bash
     launchctl load ~/Library/LaunchAgents/com.bambuddy.plist
     ```
 
-    !!! warning "If the printer is unreachable only when launchd starts Bambuddy"
+    !!! warning "Если принтер недоступен только при запуске Bambuddy через launchd"
 
-        macOS grants Local Network permission to a code signature, and a process
-        started by launchd is judged on its own rather than inheriting the grant
-        of the Terminal that would otherwise lend it one. Homebrew ships Python
-        unsigned on Intel Macs, which leaves nothing for the grant to attach to:
-        connections to the printer are dropped with no error and no permission
-        prompt. The web interface works, the printer stays disconnected, and the
-        connection diagnostic reports every port unreachable while the subnet
-        check passes.
+        macOS привязывает разрешение на доступ к локальной сети к подписи кода. Процесс launchd проверяется самостоятельно и не наследует разрешение Терминала. На компьютерах Intel Homebrew распространяет Python без подписи, поэтому привязать разрешение не к чему: соединения с принтером обрываются без ошибки и запроса разрешения. Веб-интерфейс работает, принтер остаётся отключённым, а диагностика сообщает о недоступности всех портов при успешной проверке подсети.
 
-        The tell is that running the same command from a Terminal connects
-        immediately. To confirm and repair it:
+        Признак проблемы — немедленное подключение при запуске той же команды из Терминала. Чтобы проверить и исправить это:
 
         ```bash
         # Which interpreter macOS actually judges
@@ -307,87 +291,79 @@ For production use, run Bambuddy as a system service that starts automatically.
         launchctl load ~/Library/LaunchAgents/com.bambuddy.plist
         ```
 
-        `install.sh` and `install/update_macos.sh` do this for you, and the
-        updater re-checks it on every run because `brew upgrade python` installs
-        a fresh unsigned binary under a new versioned path. Sign only what is
-        unsigned. On Apple Silicon every binary already carries an ad-hoc
-        signature whose identity is a hash of the file itself, so re-signing one
-        rotates that hash and revokes a permission that was working.
+        `install.sh` и `install/update_macos.sh` выполняют это автоматически. Программа обновления проверяет подпись при каждом запуске, поскольку `brew upgrade python` устанавливает новый неподписанный двоичный файл по новому пути с версией. Подписывайте только неподписанные файлы. На Apple Silicon каждый двоичный файл уже имеет ad-hoc подпись, идентификатор которой является хешем файла; повторная подпись меняет его и отзывает работавшее разрешение.
 
-        On Apple Silicon the same symptom has a different cause and a different
-        fix: the signature is present but its identity changed with the Python
-        upgrade, so macOS sees a new application. Enable it under **System
-        Settings > Privacy & Security > Local Network**.
+        На Apple Silicon у того же симптома другая причина и другое решение: подпись существует, но после обновления Python её идентификатор изменился, поэтому macOS видит новое приложение. Разрешите ему доступ в **Системные настройки > Конфиденциальность и безопасность > Локальная сеть**.
 
 ---
 
-## :material-tune: Configuration
+## :material-tune: Настройка {#configuration}
 
-Configure Bambuddy using environment variables or a `.env` file:
+Настройте Bambuddy с помощью переменных окружения или файла `.env`:
 
 ```bash
 cp .env.example .env
 nano .env
 ```
 
-### Environment Variables
+### Переменные окружения {#environment-variables}
 
-| Variable | Default | Description |
+| Переменная | По умолчанию | Описание |
 |----------|---------|-------------|
-| `DEBUG` | `false` | Enable debug mode (verbose logging) |
-| `LOG_LEVEL` | `INFO` | Log level: `DEBUG`, `INFO`, `WARNING`, `ERROR` |
-| `LOG_TO_FILE` | `true` | Write logs to `logs/bambuddy.log` |
+| `DEBUG` | `false` | Включить режим отладки (подробный журнал) |
+| `LOG_LEVEL` | `INFO` | Уровень журнала: `DEBUG`, `INFO`, `WARNING`, `ERROR` |
+| `LOG_TO_FILE` | `true` | Записывать журнал в `logs/bambuddy.log` |
 
-### Production Settings (default)
+### Настройки для рабочего использования (по умолчанию) {#production-settings-default}
 
-- INFO level logging
-- SQLAlchemy and HTTP library noise suppressed
-- Logs written to `logs/bambuddy.log` (5MB rotating, 3 backups)
+- Журналирование уровня INFO
+- Подавлены лишние сообщения библиотек SQLAlchemy и HTTP
+- Журналы записываются в `logs/bambuddy.log` (ротация при 5 МБ, 3 резервные копии)
 
-### Development Settings
+### Настройки для разработки {#development-settings}
 
-For debugging, create a `.env` file:
+Для отладки создайте файл `.env`:
 
 ```bash
 DEBUG=true
 LOG_TO_FILE=true
 ```
 
-This enables:
+Это включает:
 
-- DEBUG level logging (very verbose)
-- All SQL queries logged
-- Useful for troubleshooting printer connections
+- Журналирование уровня DEBUG (очень подробное)
+- Запись всех SQL-запросов
+- Возможность диагностики подключения принтера
 
 ---
 
-## :material-network: Network Requirements
+## :material-network: Требования к сети {#network-requirements}
 
-Ensure your firewall allows these connections:
+Убедитесь, что межсетевой экран разрешает следующие соединения:
 
-| Port | Protocol | Direction | Purpose |
+| Порт | Протокол | Направление | Назначение |
 |------|----------|-----------|---------|
-| 8000 | HTTP | Inbound | Bambuddy web interface |
-| 8883 | MQTT/TLS | Outbound | Printer communication |
-| 990 | FTPS | Outbound | File transfers from printer |
-| 2024-2026 | TCP | Outbound | Proprietary slicer ports (A1/P1S) |
+| 8000 | HTTP | Входящее | Веб-интерфейс Bambuddy |
+| 8883 | MQTT/TLS | Исходящее | Связь с принтером |
+| 990 | FTPS | Исходящее | Передача файлов с принтера |
+| 2024-2026 | TCP | Исходящее | Проприетарные порты слайсера (A1/P1S) |
 
-!!! tip "Accessing from Other Devices"
-    To access Bambuddy from other devices on your network, use your server's IP address instead of `localhost`. For example: `http://192.168.1.100:8000`
+!!! tip "Доступ с других устройств"
+    Для доступа к Bambuddy с других устройств сети используйте IP-адрес сервера вместо `localhost`. Например: `http://192.168.1.100:8000`
 
 ---
 
-## :material-shield-lock: Reverse Proxy
+## :material-shield-lock: Обратный прокси {#reverse-proxy}
 
-Bambuddy serves plain HTTP on port 8000. Put a reverse proxy in front of it to add HTTPS, a friendly hostname, or to expose it over the internet. This applies equally to the quick-install, manual, and Docker deployments — only the upstream target changes (`localhost:8000` for host installs, the container name for Docker Compose).
+Bambuddy обслуживает обычный HTTP на порту 8000. Используйте перед ним обратный прокси для HTTPS, удобного имени хоста или доступа через интернет. Это относится к быстрой, ручной установке и Docker; меняется только адрес назначения (`localhost:8000` для установки на хосте и имя контейнера для Docker Compose).
 
-!!! warning "WebSocket support is required"
-    Real-time printer updates use WebSockets. Any proxy you choose must forward the `Upgrade`/`Connection` headers and allow long-lived connections.
+!!! warning "Необходима поддержка WebSocket"
+    Обновления состояния принтера в реальном времени используют WebSocket. Прокси должен передавать заголовки `Upgrade`/`Connection` и разрешать длительные соединения.
 
-!!! warning "Do not proxy FTP, MQTT, SSDP, or bind ports"
-    Nginx and Caddy proxy HTTP(S) only. Virtual Printer's FTP/MQTT/SSDP/bind ports must remain directly reachable on the LAN — see [Virtual Printer → Required Ports](../features/virtual-printer.md#required-ports).
+!!! warning "Не проксируйте порты FTP, MQTT, SSDP и привязки"
+    Nginx и Caddy проксируют только HTTP(S). Порты FTP/MQTT/SSDP и привязки виртуального принтера должны оставаться напрямую доступными в локальной сети — см. [Виртуальный принтер → Необходимые порты](../features/virtual-printer.md#required-ports).
 
-### Nginx
+### Nginx {#nginx}
 
 ```nginx
 server {
@@ -413,11 +389,11 @@ server {
 }
 ```
 
-### Caddy
+### Caddy {#caddy}
 
-Caddy is a simpler alternative with automatic HTTPS via Let's Encrypt. WebSockets and the correct forwarding headers (`X-Forwarded-For`, `X-Forwarded-Proto`, `Host`) work out of the box — no extra directives required.
+Caddy — более простой вариант с автоматическим HTTPS через Let's Encrypt. WebSocket и необходимые заголовки (`X-Forwarded-For`, `X-Forwarded-Proto`, `Host`) работают без дополнительной настройки.
 
-=== "Public domain (automatic HTTPS)"
+=== "Публичный домен (автоматический HTTPS)"
 
     `/etc/caddy/Caddyfile`:
 
@@ -427,9 +403,9 @@ Caddy is a simpler alternative with automatic HTTPS via Let's Encrypt. WebSocket
     }
     ```
 
-    Caddy obtains and renews a Let's Encrypt certificate automatically, provided ports 80 and 443 are reachable from the internet and DNS points at your server.
+    Caddy автоматически получает и обновляет сертификат Let's Encrypt, если порты 80 и 443 доступны из интернета, а DNS указывает на ваш сервер.
 
-=== "Local network (self-signed)"
+=== "Локальная сеть (самоподписанный сертификат)"
 
     `/etc/caddy/Caddyfile`:
 
@@ -440,7 +416,7 @@ Caddy is a simpler alternative with automatic HTTPS via Let's Encrypt. WebSocket
     }
     ```
 
-    `tls internal` makes Caddy mint a certificate from its own local CA. Install Caddy's root cert on your clients (`caddy trust` on the same machine, or copy `/var/lib/caddy/.local/share/caddy/pki/authorities/local/root.crt` to other devices) to avoid browser warnings.
+    `tls internal` заставляет Caddy выпустить сертификат собственного локального центра сертификации. Установите корневой сертификат Caddy на клиентах (`caddy trust` на том же компьютере или скопируйте `/var/lib/caddy/.local/share/caddy/pki/authorities/local/root.crt` на другие устройства), чтобы избежать предупреждений браузера.
 
 === "Docker Compose"
 
@@ -464,7 +440,7 @@ Caddy is a simpler alternative with automatic HTTPS via Let's Encrypt. WebSocket
       caddy_config:
     ```
 
-    In the Caddyfile, reference the Bambuddy service by its compose name instead of localhost:
+    В Caddyfile укажите имя службы Bambuddy в Compose вместо localhost:
 
     ```caddy
     bambuddy.yourdomain.com {
@@ -472,7 +448,7 @@ Caddy is a simpler alternative with automatic HTTPS via Let's Encrypt. WebSocket
     }
     ```
 
-After editing the Caddyfile, reload without downtime:
+После изменения Caddyfile перезагрузите конфигурацию без простоя:
 
 ```bash
 sudo systemctl reload caddy
@@ -480,33 +456,27 @@ sudo systemctl reload caddy
 docker compose exec caddy caddy reload --config /etc/caddy/Caddyfile
 ```
 
-!!! tip "Large file uploads"
-    If 3MF/G-code uploads time out on slow connections, raise Caddy's request-body limit by adding `request_body { max_size 500MB }` inside the site block.
+!!! tip "Загрузка больших файлов"
+    Если загрузка 3MF/G-code по медленному соединению прерывается по тайм-ауту, увеличьте ограничение тела запроса Caddy, добавив `request_body { max_size 500MB }` в блок сайта.
 
 ---
 
-## :material-update: Updating
+## :material-update: Обновление {#updating}
 
-!!! warning "One-time note for 0.2.2.x → 0.2.3"
-    The in-app **Update** button does not reliably perform this specific
-    migration. Do this one upgrade from the command line using the paths
-    below. Once you're on 0.2.3, the in-app Update button works normally
-    again for all future releases.
+!!! warning "Однократное замечание для перехода с 0.2.2.x на 0.2.3"
+    Кнопка **Обновить** в приложении не всегда надёжно выполняет именно эту миграцию. Выполните это обновление из командной строки по приведённым ниже путям. После перехода на 0.2.3 кнопка обновления снова будет работать для последующих версий.
 
-### Recommended: `update.sh`
+### Рекомендуется: `update.sh` {#recommended-updatesh}
 
 ```bash
 sudo /opt/bambuddy/install/update.sh
 ```
 
-`update.sh` stops the service, snapshots the database via the built-in backup
-API, fast-forwards to `origin/main`, installs Python dependencies, rebuilds
-the frontend, and restarts the service. It rolls back automatically if any
-step fails.
+`update.sh` останавливает службу, создаёт снимок базы через встроенный API резервного копирования, обновляет код до `origin/main`, устанавливает зависимости Python, пересобирает фронтенд и перезапускает службу. При ошибке на любом этапе выполняется автоматический откат.
 
-### Manual update
+### Ручное обновление {#manual-update}
 
-If you prefer to run the steps yourself:
+Если вы хотите выполнить шаги самостоятельно:
 
 ```bash
 cd /opt/bambuddy
@@ -517,19 +487,16 @@ sudo -u bambuddy venv/bin/pip install -r requirements.lock
 sudo systemctl start bambuddy
 ```
 
-Replace `/opt/bambuddy` with your install directory if different. Database
-schema migrations run automatically on startup.
+Если каталог установки отличается, замените `/opt/bambuddy` своим путём. Миграции схемы базы данных запускаются автоматически при старте.
 
-!!! tip "Installed from a GitHub ZIP download?"
-    Those installs have no `.git` directory and can't use either path above.
-    See [UPDATING.md](https://github.com/maziggy/bambuddy/blob/main/UPDATING.md#installed-from-a-github-zip-or-tarball-download)
-    for the backup-and-reinstall procedure.
+!!! tip "Установлено из ZIP-архива GitHub?"
+    В такой установке нет каталога `.git`, поэтому оба описанных способа недоступны. Порядок резервного копирования и переустановки см. в [UPDATING.md](https://github.com/maziggy/bambuddy/blob/main/UPDATING.md#installed-from-a-github-zip-or-tarball-download).
 
 ---
 
-## :material-folder-cog: Build Frontend from Source
+## :material-folder-cog: Сборка фронтенда из исходного кода {#build-frontend-from-source}
 
-The repository includes pre-built frontend files. To build from source:
+Репозиторий включает готовые файлы фронтенда. Для сборки из исходного кода:
 
 ```bash
 # Install Node.js 18+ first
@@ -541,16 +508,16 @@ cd ..
 
 ---
 
-## :checkered_flag: Next Steps
+## :checkered_flag: Следующие шаги {#next-steps}
 
-Now that Bambuddy is installed:
+Теперь, когда Bambuddy установлен:
 
 <div class="quick-start" markdown>
 
-[:material-printer-3d: **Add Your Printer**<br><small>Connect your first printer</small>](first-printer.md)
+[:material-printer-3d: **Добавить принтер**<br><small>Подключите первый принтер</small>](first-printer.md)
 
-[:material-docker: **Try Docker Instead**<br><small>Even simpler setup</small>](docker.md)
+[:material-docker: **Попробовать Docker**<br><small>Ещё более простая установка</small>](docker.md)
 
-[:material-help-circle: **Troubleshooting**<br><small>Installation issues?</small>](../reference/troubleshooting.md)
+[:material-help-circle: **Устранение неполадок**<br><small>Проблемы с установкой?</small>](../reference/troubleshooting.md)
 
 </div>
