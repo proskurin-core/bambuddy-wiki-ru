@@ -1,13 +1,13 @@
 ---
-title: Usage Guide
-description: Day-to-day guide to using the SpoolBuddy touch interface
+title: Руководство пользователя
+description: Ежедневная работа с сенсорным интерфейсом SpoolBuddy
 ---
 
-# :material-book-open: SpoolBuddy Usage Guide
+# :material-book-open: Руководство пользователя SpoolBuddy {#spoolbuddy-usage-guide}
 
-This page covers day-to-day use of the SpoolBuddy interface — scanning spools, managing AMS slots, writing NFC tags, browsing inventory, calibrating the scale, and adjusting device settings.
+На этой странице описана повседневная работа с интерфейсом SpoolBuddy: сканирование катушек, управление слотами AMS, запись NFC-меток, просмотр филамента, калибровка весов и настройка устройства.
 
-The SpoolBuddy UI runs at `/spoolbuddy` on your Bambuddy backend:
+Интерфейс SpoolBuddy доступен на сервере Bambuddy по пути `/spoolbuddy`:
 
 ```
 http://<your-bambuddy-ip>:<port>/spoolbuddy
@@ -15,497 +15,494 @@ http://<your-bambuddy-ip>:<port>/spoolbuddy
 
 ---
 
-## :material-navigation: Navigation
+## :material-navigation: Навигация {#navigation}
 
-The interface has a fixed top bar and bottom navigation visible on every screen.
+На каждом экране видны закреплённая верхняя панель и нижняя панель навигации.
 
-### Top Bar
+### Верхняя панель {#top-bar}
 
-| Element | Position | Description |
+| Элемент | Расположение | Описание |
 |---------|----------|-------------|
-| **SpoolBuddy logo** | Left | Branding |
-| **Printer selector** | Center | Dropdown to pick the active printer. Auto-selects the first online printer. Shows "No printers online" when none are connected. |
-| **Connection indicator** | Right | WiFi-style signal bars (white = connected, red = offline) and a green LED dot when the backend is reachable. |
-| **Clock** | Far right | Live clock, updated every second. Respects your configured time format. |
+| **Логотип SpoolBuddy** | Слева | Логотип |
+| **Выбор принтера** | По центру | Список активных принтеров. Первый подключённый принтер выбирается автоматически. Если подключённых принтеров нет, отображается соответствующее сообщение. |
+| **Индикатор подключения** | Справа | Полоски сигнала в стиле Wi-Fi (белый — подключён, красный — отключён) и зелёная точка при доступности сервера. |
+| **Часы** | Крайняя правая часть | Текущее время, обновляемое каждую секунду, в настроенном формате. |
 
-### Bottom Navigation
+### Нижняя навигация {#bottom-navigation}
 
-Five tabs along the bottom of the screen:
+Внизу экрана расположены пять вкладок:
 
-| Tab | Icon | Route | Purpose |
+| Вкладка | Значок | Путь | Назначение |
 |-----|------|-------|---------|
-| **Dashboard** | Home | `/spoolbuddy` | Live spool scanning and device status |
-| **AMS** | Grid | `/spoolbuddy/ams` | AMS slot overview and management |
-| **Write Tag** | NFC | `/spoolbuddy/write-tag` | Write NFC tags to spools |
-| **Inventory** | Box | `/spoolbuddy/inventory` | Browse and search your spool catalog |
-| **Settings** | Gear | `/spoolbuddy/settings` | Device config, display, scale, updates, system info |
+| **Главная** | Дом | `/spoolbuddy` | Сканирование катушек и состояние устройства |
+| **AMS** | Сетка | `/spoolbuddy/ams` | Обзор слотов AMS и управление ими |
+| **Записать метку** | NFC | `/spoolbuddy/write-tag` | Запись NFC-меток для катушек |
+| **Филамент** | Коробка | `/spoolbuddy/inventory` | Просмотр и поиск катушек в каталоге |
+| **Настройки** | Шестерёнка | `/spoolbuddy/settings` | Настройка устройства, дисплея и весов, обновления и сведения о системе |
 
-The active tab is highlighted in green.
-
----
-
-## :material-home-analytics: Dashboard
-
-The Dashboard is the main screen and where you spend most of your time. It has two columns: device status on the left and the current spool card on the right.
-
-### Stats Bar
-
-A compact row at the top showing:
-
-- **Spools** — total spools in your inventory
-- **Materials** — number of distinct material types
-- **Brands** — number of distinct brands
-
-### Device Panel (Left Column)
-
-**Device Card** — shows live status of your SpoolBuddy hardware:
-
-- Connection status (green dot = online, red = disconnected)
-- Live scale weight in grams (or "—" when no reading)
-- NFC status: "Tag detected" (green) or "No tag" (gray)
-
-**Printer Badges** — one badge per configured printer showing its name and online/offline status (green/gray dot).
-
-**Plate-Ready Pills** — when a print finishes and the plate is still occupied, an amber pill with a warning icon appears under the printer badges (e.g. `⚠ H2D-1 · Clear`). Tap the pill to mark the plate as cleared so the next queued job can dispatch. Multiple pills wrap inline when several printers finish around the same time. The pill disappears immediately on tap (optimistic update) and the action is also visible from the main Bambuddy app on any other tab — they share the same printer state.
-
-!!! note "Toasts on the kiosk"
-    The kiosk display intentionally suppresses the global toast viewport (background-print-dispatch overlays from main-app actions, login flows, etc.) so the screen stays focused on spool scanning. Confirmation of plate-clear is given by the pill vanishing rather than a toast.
-
-### Current Spool (Right Column)
-
-This area changes based on what's happening:
-
-#### Idle — Ready to Scan
-
-When no tag is on the reader, you see an animated spool icon that cycles through colors with the message:
-
-> **Ready to scan**
-> Place a spool on the scale to identify it.
-> NFC tag will be read automatically.
-
-#### Known Spool Detected
-
-When you place a tagged spool that matches your inventory, the **Spool Info Card** appears:
-
-- **Spool color** and **fill percentage badge** (green >50%, yellow 20–50%, red <20%)
-- **Color name**, **brand**, and **material** (with subtype if set)
-- **Remaining filament** — large display showing remaining grams out of label weight
-- **Fill bar** — color-coded horizontal bar
-- **Details grid**:
-    - Gross weight (from the scale)
-    - Core weight (empty spool weight, default 250 g)
-    - Spool size (label weight)
-    - Scale weight — shows a green checkmark if the scale matches the expected weight (±50 g), or a yellow alert with a sync button if there is a mismatch
-    - Tag ID (last 8 characters)
-
-**Buttons:**
-
-| Button | Action |
-|--------|--------|
-| **Sync Weight** | Saves the current scale reading to the spool record and locks its weight, so the automatic AMS remain% sync does not overwrite the measurement (with the built-in inventory). Shows "Synced!" for 3 seconds on success. Prints still deduct their usage from it. |
-| **Assign to AMS** | Opens the AMS assignment modal (see below). |
-| **Close** (X) | Dismisses the card. The same tag won't re-trigger until removed and placed again. |
-
-#### Unknown Tag Detected
-
-When you place a tag that doesn't match any spool in your inventory:
-
-- **"New Tag Detected"** header
-- Tag UID displayed in monospace
-- Weight on the scale and estimated filament remaining
-
-**Buttons:**
-
-| Button | Action |
-|--------|--------|
-| **Link to Spool** | Opens a modal to link this tag to an existing untagged spool in your inventory. Only appears if you have untagged spools. |
-| **Add to Inventory** | For a genuine Bambu Lab tag, adds the spool described by the tag itself (see below). For any other tag, creates a basic PLA spool entry with this tag, and a hint recommends creating the spool in the Bambuddy web interface instead for a more complete record. |
-| **Close** (X) | Dismisses the card. |
-
-##### Adding a Bambu Lab spool from its tag
-
-When SpoolBuddy reads a genuine Bambu Lab tag, it sends the tag's data along with the scan, and Bambuddy decodes it the same way it decodes a spool the AMS reports. **Add to Inventory** then shows the spool it is about to add (for example *Bambu Lab PLA Basic*, *Cyan · 1000 g · 1.75 mm*) and creates it with:
-
-- material, subtype, colour and colour name (from the colour catalogue)
-- Bambu Lab as the brand, the label weight and the slicer profile (e.g. *Bambu PLA Basic*)
-- the nozzle temperature range
-- the tag's tray UUID, so scanning the spool's other tag or loading it into an AMS finds the same spool
-- the empty spool weight (tare) from the tag, or 250 g if the tag doesn't give one
-- the current scale reading as its last weighing; the spool starts out full, nothing is subtracted from the scale
-
-In Spoolman mode the spool is created in Spoolman the same way, without a spool weight, so it inherits the filament type's.
-
-If the tag couldn't be read completely, lift the spool off the reader and place it again: a good read fills in the card. A failed read of the same tag never drops what an earlier good read gave. If the tag can't be read at all, or it isn't a Bambu Lab tag, **Add to Inventory** falls back to the basic PLA entry described above. This needs a SpoolBuddy daemon that sends tag data; an older daemon always gets the basic entry.
-
-#### Device Offline
-
-When SpoolBuddy is not connected to the backend:
-
-> **Device Offline**
-> Connect the SpoolBuddy display to scan spools.
-
-### Link Tag to Spool Modal
-
-Opened from the "Link to Spool" button on unknown tags:
-
-1. The tag UID is shown at the top.
-2. A scrollable list of all untagged spools appears, each showing its color, name, brand, material, and estimated remaining weight.
-3. Tap a spool to select it (green highlight).
-4. Press **Link Tag** to confirm, or **Cancel** to close.
-
-### Assign to AMS Modal
-
-Opened from the "Assign to AMS" button on known spools. This is a full-screen overlay showing all AMS units on the selected printer:
-
-- **Regular AMS units** (4-slot) are shown in a grid with color previews, fill levels, temperature, and humidity readings.
-- **Single-slot units** (AMS-HT, external) appear in a separate row below.
-- Tap a slot to assign the spool.
-
-If no printer is selected in SpoolBuddy, the modal first shows a printer picker. Choose the printer, tap a slot, then press **Assign Spool** to confirm.
-
-**Material mismatch warning** — if the spool's material doesn't match what's configured on the slot, a confirmation dialog appears explaining the mismatch before proceeding.
-
-Status messages appear at the top: blue while configuring, green on success ("Assigned!"), red on error.
+Активная вкладка выделена зелёным.
 
 ---
 
-## :material-tray-full: AMS Management
+## :material-home-analytics: Главная {#dashboard}
 
-The AMS page shows all AMS units connected to the currently selected printer.
+Главная страница — основной экран, на котором вы проводите большую часть времени. На нём две колонки: слева состояние устройства, справа карточка текущей катушки.
 
-### States
+### Панель статистики {#stats-bar}
 
-| State | Display |
+В компактной строке сверху показаны:
+
+- **Катушки** — общее количество катушек в учёте
+- **Материалы** — количество разных типов материала
+- **Бренды** — количество разных брендов
+
+### Панель устройства (левая колонка) {#device-panel-left-column}
+
+**Карточка устройства** показывает текущее состояние оборудования SpoolBuddy:
+
+- Состояние подключения (зелёная точка — подключено, красная — отключено)
+- Текущий вес в граммах (или «—», если показаний нет)
+- Состояние NFC: «Метка обнаружена» (зелёный) или «Нет метки» (серый)
+
+**Индикаторы принтеров** показывают название и состояние каждого настроенного принтера (зелёная или серая точка).
+
+**Индикаторы готовности стола** — после завершения печати, когда стол ещё занят, под индикатором принтера появляется жёлтая кнопка с предупреждением (например, `⚠ H2D-1 · Clear`). Нажмите её, чтобы отметить стол как очищенный и разрешить отправку следующего задания из очереди. Если почти одновременно завершилось несколько печатей, кнопки располагаются в несколько строк. Кнопка исчезает сразу после нажатия (оптимистичное обновление); действие видно и в основном приложении Bambuddy на других вкладках, поскольку они используют общее состояние принтера.
+
+!!! note "Всплывающие уведомления киоска"
+    Глобальные всплывающие уведомления (о фоновой отправке заданий из основного приложения, входе и т. п.) намеренно скрыты, чтобы не мешать сканированию катушек. Очистка стола подтверждается исчезновением кнопки, а не уведомлением.
+
+### Текущая катушка (правая колонка) {#current-spool-right-column}
+
+Содержимое области зависит от ситуации:
+
+#### Ожидание — готовность к сканированию {#idle-ready-to-scan}
+
+Если на считывателе нет метки, отображается анимированный значок катушки, меняющий цвет, и сообщение:
+
+> **Готово к сканированию**
+> Положите катушку на весы для идентификации.
+> NFC-метка будет считана автоматически.
+
+#### Известная катушка обнаружена {#known-spool-detected}
+
+Когда метка на катушке совпадает с записью учёта, появляется **карточка информации о катушке**:
+
+- **Цвет катушки** и **индикатор заполнения** (зелёный >50%, жёлтый 20–50%, красный <20%)
+- **Название цвета**, **бренд** и **материал** (с подтипом, если задан)
+- **Оставшийся филамент** — крупным шрифтом оставшийся вес в граммах из указанного на этикетке
+- **Полоса заполнения** с цветовой индикацией
+- **Сведения**:
+    - Общий вес (с весов)
+    - Вес сердечника (пустой катушки, по умолчанию 250 г)
+    - Размер катушки (вес на этикетке)
+    - Вес с весов: зелёная отметка, если значение соответствует ожидаемому (±50 г), или жёлтое предупреждение с кнопкой синхронизации при расхождении
+    - ID метки (последние 8 символов)
+
+**Кнопки:**
+
+| Кнопка | Действие |
+|--------|--------|
+| **Синхронизировать вес** | Сохраняет текущие показания весов в запись катушки и блокирует вес, чтобы автоматическая синхронизация оставшегося процента AMS не перезаписала измерение (во встроенном учёте). После успеха на 3 секунды появляется сообщение об успешной синхронизации. При печати расход по-прежнему вычитается. |
+| **Назначить в AMS** | Открывает окно назначения AMS (см. ниже). |
+| **Закрыть** (X) | Закрывает карточку. Та же метка снова сработает только после снятия и повторного размещения. |
+
+#### Неизвестная метка обнаружена {#unknown-tag-detected}
+
+Когда метка не соответствует ни одной катушке в учёте, отображаются:
+
+- Заголовок **«Обнаружена новая метка»**
+- UID метки моноширинным шрифтом
+- Вес на весах и расчётный остаток филамента
+
+**Кнопки:**
+
+| Кнопка | Действие |
+|--------|--------|
+| **Привязать к катушке** | Открывает окно привязки метки к существующей катушке без метки. Доступна, только если такие катушки есть. |
+| **Добавить в учёт** | Для оригинальной метки Bambu Lab добавляет описанную ею катушку (см. ниже). Для любой другой метки создаёт простую запись катушки PLA с этой меткой и предлагает вместо этого создать более полную запись в веб-интерфейсе Bambuddy. |
+| **Закрыть** (X) | Закрывает карточку. |
+
+##### Добавление катушки Bambu Lab по её метке {#adding-a-bambu-lab-spool-from-its-tag}
+
+Когда SpoolBuddy считывает оригинальную метку Bambu Lab, он отправляет её данные вместе со сканированием, а Bambuddy декодирует их так же, как данные катушки от AMS. Кнопка **Добавить в учёт** показывает будущую запись (например, *Bambu Lab PLA Basic*, *Cyan · 1000 g · 1.75 mm*) и создаёт её со следующими данными:
+
+- материал, подтип, цвет и название цвета (из каталога цветов)
+- бренд Bambu Lab, вес с этикетки и профиль слайсера (например, *Bambu PLA Basic*)
+- диапазон температуры сопла
+- UUID лотка из метки, чтобы сканирование второй метки катушки или загрузка в AMS находили ту же катушку
+- вес пустой катушки (тара) из метки или 250 г, если он не указан
+- текущее показание весов как последнее взвешивание; катушка изначально считается полной, из показания весов ничего не вычитается
+
+В режиме Spoolman катушка аналогично создаётся в Spoolman без собственного веса пустой катушки, поэтому он наследуется от типа филамента.
+
+Если метка считана не полностью, снимите и снова положите катушку: при успешном чтении карточка заполнится. Неудачное чтение той же метки не удаляет данные предыдущего успешного чтения. Если метку совсем не удалось прочитать или она не от Bambu Lab, **Добавить в учёт** создаёт простую запись PLA, как описано выше. Для этого нужен демон SpoolBuddy, передающий данные меток; старый демон всегда создаёт простую запись.
+
+#### Устройство отключено {#device-offline}
+
+Если SpoolBuddy не подключён к серверу:
+
+> **Устройство отключено**
+> Подключите дисплей SpoolBuddy для сканирования катушек.
+
+### Окно привязки метки к катушке {#link-tag-to-spool-modal}
+
+Открывается кнопкой «Привязать к катушке» для неизвестной метки:
+
+1. Сверху показан UID метки.
+2. Появляется прокручиваемый список катушек без меток с цветом, названием, брендом, материалом и расчётным остатком каждой.
+3. Нажмите катушку, чтобы выбрать её (зелёное выделение).
+4. Нажмите **Привязать метку** для подтверждения или **Отмена**, чтобы закрыть окно.
+
+### Окно назначения в AMS {#assign-to-ams-modal}
+
+Открывается кнопкой «Назначить в AMS» для известной катушки. Полноэкранное окно показывает все блоки AMS выбранного принтера:
+
+- **Обычные блоки AMS** на четыре слота показаны сеткой с цветами, уровнем заполнения, температурой и влажностью.
+- **Однослотовые устройства** (AMS-HT, внешняя катушка) отображаются отдельной строкой ниже.
+- Нажмите слот, чтобы назначить катушку.
+
+Если принтер в SpoolBuddy не выбран, сначала появится окно его выбора. Выберите принтер, нажмите слот, затем **Назначить катушку** для подтверждения.
+
+**Предупреждение о несовпадении материала**: если материал катушки не соответствует настройкам слота, перед продолжением появится запрос подтверждения с объяснением различия.
+
+Сообщения состояния отображаются сверху: синим во время настройки, зелёным при успехе и красным при ошибке.
+
+---
+
+## :material-tray-full: Управление AMS {#ams-management}
+
+На странице AMS отображаются все блоки AMS, подключённые к выбранному принтеру.
+
+### Состояния {#states}
+
+| Состояние | Сообщение |
 |-------|---------|
-| No printer selected | "No printer selected — Select a printer from the top bar" |
-| Printer disconnected | "Printer disconnected" |
-| No AMS detected | "No AMS detected — Connect an AMS to see filament slots" |
+| Принтер не выбран | «Принтер не выбран — выберите принтер на верхней панели» |
+| Принтер отключён | «Принтер отключён» |
+| AMS не обнаружен | «AMS не обнаружен — подключите AMS для просмотра слотов филамента» |
 
-### AMS Unit Cards
+### Карточки блоков AMS {#ams-unit-cards}
 
-Each regular AMS unit (A, B, C, D) shows a card with 4 slots. Each slot displays:
+Каждый обычный блок AMS (A, B, C, D) показан карточкой с четырьмя слотами. Каждый слот содержит:
 
-- **Spool color** indicator
-- **Active dot** (green) if that slot is currently printing
-- **Slot name** (e.g., "Slot 1")
-- **Material type** or "Empty"
-- **Temperature** — color-coded thermometer icon (green/amber/red)
-- **Humidity** — color-coded water drop icon (green/amber/red)
-- **Fill level bar** — color-coded (green >15%, amber 10–15%, red <10%)
-- **Nozzle badge** ("L" or "R") on dual-nozzle printers
+- Индикатор **цвета катушки**
+- Зелёную **точку активности**, если сейчас печатается материал из этого слота
+- **Название слота** (например, «Слот 1»)
+- **Тип материала** или «Пусто»
+- **Температуру** — значок термометра зелёного, жёлтого или красного цвета
+- **Влажность** — значок капли зелёного, жёлтого или красного цвета
+- **Полосу заполнения**: зелёная >15%, жёлтая 10–15%, красная <10%
+- **Индикатор сопла** («L» или «R») на принтерах с двумя соплами
 
-Single-slot items (AMS-HT, External) appear in a horizontal row below the regular units.
+Однослотовые устройства (AMS-HT, внешняя катушка) показаны горизонтальным рядом ниже обычных блоков.
 
-### Slot Action Picker
+### Выбор действия для слота {#slot-action-picker}
 
-Tap any slot to open the action picker. It shows the current slot contents and offers these actions:
+Нажмите слот, чтобы открыть меню действий. Оно показывает содержимое слота и предлагает:
 
-| Action | Icon | Description |
+| Действие | Значок | Описание |
 |--------|------|-------------|
-| **Configure** | Settings (blue) | Set the filament preset, K-profile, and color for this slot. |
-| **Assign** / **Unassign** | Package (green) / Unlink (amber) | Track an inventory spool in this slot, or remove the current assignment. |
-| **Assign Spool** / **Unassign** (Spoolman link) | Link (green) / Unlink (amber) | Link a Spoolman spool to this slot by its tag, or remove that link. Labelled *Link a Spoolman spool to this slot* / *Remove Spoolman link from this slot*. Only appears when Spoolman integration is enabled. |
+| **Настроить** | Настройки (синий) | Установить пресет филамента, K-профиль и цвет слота. |
+| **Назначить** / **Снять назначение** | Упаковка (зелёный) / разрыв ссылки (жёлтый) | Отслеживать в слоте катушку из учёта или удалить текущее назначение. |
+| **Назначить катушку** / **Снять назначение** (связь со Spoolman) | Ссылка (зелёный) / разрыв ссылки (жёлтый) | Привязать катушку Spoolman к слоту по метке или удалить связь. Подписи: «Привязать катушку Spoolman к этому слоту» / «Удалить связь Spoolman с этим слотом». Доступно только при включённой интеграции Spoolman. |
 
-Each action opens its own configuration modal.
+Каждое действие открывает отдельное окно настройки.
 
-### Fill Level Priority
+### Приоритет уровня заполнения {#fill-level-priority}
 
-Fill levels are resolved in this order:
+Уровень определяется в следующем порядке:
 
-1. Spoolman fill level (if Spoolman integration is enabled)
-2. Inventory assignment fill level (if a spool is assigned)
-3. AMS remaining percentage (from the printer firmware)
+1. Уровень Spoolman (если интеграция включена)
+2. Уровень назначенной катушки из учёта (если катушка назначена)
+3. Оставшийся процент AMS из прошивки принтера
 
 ---
 
-## :material-nfc: Write Tag
+## :material-nfc: Запись метки {#write-tag}
 
-The Write Tag page lets you write spool data to NFC tags. It has a two-column layout: spool selection on the left, NFC status panel on the right.
+Страница записи метки позволяет записывать данные катушек на NFC-метки. Слева расположено поле выбора катушки, справа — панель состояния NFC.
 
-### Tabs
+### Вкладки {#tabs}
 
-Three tabs across the top control which spools are shown:
+Три вкладки сверху определяют отображаемые катушки:
 
-| Tab | Shows | Use Case |
+| Вкладка | Что показывается | Назначение |
 |-----|-------|----------|
-| **Existing Spool** | Spools without a tag assigned (a Bambu spool linked by its RFID tag counts as tagged) | Writing a tag for a spool already in your inventory |
-| **New Spool** | A form to create a new spool | Creating a brand-new spool and writing its tag in one step |
-| **Replace Tag** | Spools that already have a tag | Re-writing or replacing a damaged/lost tag |
+| **Существующая катушка** | Катушки без назначенной метки (катушка Bambu, привязанная по RFID, считается имеющей метку) | Записать метку для уже внесённой катушки |
+| **Новая катушка** | Форма создания катушки | Создать новую катушку и записать её метку за один шаг |
+| **Заменить метку** | Катушки, у которых уже есть метка | Перезаписать или заменить повреждённую либо утерянную метку |
 
-Switching tabs clears the current selection and any write status.
+При переключении вкладки текущий выбор и состояние записи сбрасываются.
 
-!!! note "Bambu spools in Spoolman"
-    With Spoolman before 0.27, a Bambu spool that was created from the AMS is linked by its RFID tag in the spool's tag field. Writing a sticker would replace that link, and the next AMS sync would create a duplicate spool, so Bambuddy refuses the write for such a spool. Spoolman 0.27 and later keeps the RFID tag on its own, and the sticker is written as usual.
+!!! note "Катушки Bambu в Spoolman"
+    В версиях Spoolman до 0.27 катушка Bambu, созданная из AMS, привязывается по RFID в поле метки катушки. Запись наклейки заменила бы эту связь, а следующая синхронизация AMS создала бы дубликат, поэтому Bambuddy отказывает в записи для такой катушки. В Spoolman 0.27 и новее RFID хранится отдельно, и наклейка записывается обычным образом.
 
-### Existing Spool / Replace Tag
+### Существующая катушка / замена метки {#existing-spool-replace-tag}
 
-- **Search bar** at the top filters by material, color, brand, and subtype.
-- Each spool in the list shows its color dot, brand, material, color name, remaining weight, and (on Replace tab) the current tag UID.
-- Tap a spool to select it (checkmark appears).
+- **Строка поиска** сверху фильтрует по материалу, цвету, бренду и подтипу.
+- Для каждой катушки показаны цветная точка, бренд, материал, название цвета, остаток и (на вкладке замены) текущий UID метки.
+- Нажмите катушку, чтобы выбрать её; появится отметка.
 
-### New Spool
+### Новая катушка {#new-spool}
 
-Two view modes toggled by **Simple** / **Full** buttons:
+Кнопки **Простой** / **Полный** переключают два вида формы:
 
-**Simple view:**
+**Простой вид:**
 
-- Material dropdown (PLA, PETG, ABS, ASA, TPU, PA, PC, PVA, HIPS)
-- Color name input
-- Color picker
-- Brand input
-- Weight input
-- **Create Spool** button
+- Список материалов (PLA, PETG, ABS, ASA, TPU, PA, PC, PVA, HIPS)
+- Поле названия цвета
+- Выбор цвета
+- Поля бренда и веса
+- Кнопка **Создать катушку**
 
-**Full view:**
+**Полный вид:**
 
-- Two sub-tabs: **Filament** and **PA Profile**
-- Filament tab: material, brand, color, spool weight, weight used, cost per kg, slicer preset, notes, and bulk quantity
-- PA Profile tab: select calibration profiles per printer
-- **Quick Add** toggle hides the PA Profile tab for faster creation
+- Две вкладки: **Филамент** и **Профиль PA**
+- На вкладке филамента: материал, бренд, цвет, вес катушки, израсходованный вес, цена за кг, пресет слайсера, заметки и количество для массового добавления
+- На вкладке профиля PA: выбор калибровочных профилей для каждого принтера
+- Переключатель **Быстрое добавление** скрывает вкладку профиля PA для ускорения создания
 
-After creating the spool, a confirmation card appears: "Spool created! Ready to write."
+После создания катушки появляется подтверждение: «Катушка создана! Готово к записи».
 
-### NFC Status Panel (Right Column)
+### Панель состояния NFC (правая колонка) {#nfc-status-panel-right-column}
 
-The panel shows the current state of the tag writing process:
+Панель показывает текущее состояние записи метки:
 
-| State | Display | Actions |
+| Состояние | Сообщение | Действия |
 |-------|---------|---------|
-| **Device offline** | "SpoolBuddy is offline" | — |
-| **No spool selected** | "Select a spool, then place a blank NTAG on the reader" | — |
-| **Spool selected, no tag** | "Place an NTAG on the reader" (pulsing border) | — |
-| **Spool selected, tag detected** | "Tag detected — ready to write" with tag UID | **Write Tag** (or **Replace Tag** on Replace tab) |
-| **Writing** | "Writing tag..." with animated rings | **Cancel** |
-| **Success** | Green checkmark with success message and spool info | Auto-clears after 5 seconds |
-| **Error** | Red X with error message | **Try Again** |
+| **Устройство отключено** | «SpoolBuddy отключён» | — |
+| **Катушка не выбрана** | «Выберите катушку, затем положите пустую метку NTAG на считыватель» | — |
+| **Катушка выбрана, метки нет** | «Положите NTAG на считыватель» (пульсирующая рамка) | — |
+| **Катушка выбрана, метка обнаружена** | «Метка обнаружена — готово к записи» и UID метки | **Записать метку** или **Заменить метку** на вкладке замены |
+| **Запись** | «Запись метки…» с анимированными кольцами | **Отмена** |
+| **Успешно** | Зелёная отметка, сообщение об успехе и сведения о катушке | Автоматически исчезает через 5 секунд |
+| **Ошибка** | Красный крест с сообщением | **Попробовать снова** |
 
-When the tag was written but could not be linked to the spool, the error says why: Spoolman is not set up, linking in Spoolman failed, or the spool no longer exists. The chip itself holds the data; write it again once the cause is fixed.
+Если метка записана, но не привязана к катушке, сообщение указывает причину: Spoolman не настроен, привязка в Spoolman не удалась или катушка больше не существует. Данные остаются на чипе; повторите запись после устранения причины.
 
-!!! note "Spoolman switched on but unavailable"
-    With Spoolman integration enabled and a URL set, SpoolBuddy uses Spoolman's spools only. If Spoolman cannot be reached, a scanned tag is not looked up and the status bar says so for a few seconds. If Bambuddy refuses the URL itself (for example a cloud metadata address), writing a tag and saving a scale weight are refused as well, with "Spoolman is unavailable". SpoolBuddy does not fall back to the built-in inventory, whose spools are a different set. Enabled without a URL counts as the built-in inventory.
+!!! note "Spoolman включён, но недоступен"
+    Если интеграция Spoolman включена и URL задан, SpoolBuddy использует только катушки Spoolman. Когда Spoolman недоступен, поиск отсканированной метки не выполняется, а строка состояния сообщает об этом несколько секунд. Если Bambuddy отклоняет сам URL (например, адрес метаданных облака), запись метки и сохранение веса также отклоняются с сообщением «Spoolman недоступен». SpoolBuddy не переключается на встроенный учёт, поскольку в нём другой набор катушек. Включение интеграции без URL считается использованием встроенного учёта.
 
-On the **Replace Tag** tab, if the selected spool already has a tag, an additional **Untag Selected Spool** button appears to remove the existing tag without writing a new one. A yellow warning explains that the old tag will be unlinked.
-
----
-
-## :material-package-variant: Inventory
-
-The Inventory page lets you browse your full spool catalog.
-
-!!! tip "Spoolman mode"
-    If Spoolman integration is enabled, this page shows the Spoolman interface in an embedded frame instead of the native inventory view.
-
-### Search and Filtering
-
-- **Search bar** — real-time search across material, subtype, brand, color name, and notes. The color name it matches is the one on screen, which for most Bambu spools is resolved from the [Color Catalog](../features/inventory.md#color-catalog) rather than stored on the spool.
-- **Filter pills** — horizontal scrollable row:
-    - **All Spools** — shows total count
-    - **In AMS** — shows count of spools currently assigned to AMS slots
-    - **Per-material pills** — one pill per unique material type (auto-generated)
-
-Tap a pill to toggle that filter. Active pills are highlighted.
-
-### Spool Grid
-
-Spools are displayed in an auto-fill card grid. Each card shows:
-
-- Circular spool icon with the spool's color
-- Material name (with subtype if set)
-- Color dot and color name
-- Fill bar (color-coded green/yellow/red)
-- Remaining weight in grams and percentage
-- **AMS badge** if assigned (e.g., "AMS A1", "AMS HT A")
-
-### Spool Detail Modal
-
-Tap any spool card to open a detail modal (bottom-sheet style) showing:
-
-- Large spool visual with color
-- Material, brand, and color name in the header
-- **Remaining weight** with a fill bar
-- **AMS location** (if assigned)
-- **Detail grid** (2 columns):
-    - Label weight
-    - Used weight
-    - Core weight
-    - Gross weight
-    - Nozzle temperature range
-    - Cost per kg
-    - Last scale weight
-    - Tag ID (monospace)
-    - Slicer filament preset
-    - PA K-Profiles (with K-values, if any)
-    - Notes (if present)
+На вкладке **Заменить метку**, если у катушки уже есть метка, появляется дополнительная кнопка **Отвязать метку выбранной катушки**: она удаляет существующую метку без записи новой. Жёлтое предупреждение сообщает об отвязке старой метки.
 
 ---
 
-## :material-cog: Settings
+## :material-package-variant: Филамент {#inventory}
 
-The Settings page has five tabs across the top.
+На странице филамента можно просматривать весь каталог катушек.
 
-### Device Tab
+!!! tip "Режим Spoolman"
+    При включённой интеграции Spoolman вместо встроенного учёта на странице отображается интерфейс Spoolman во встроенном фрейме.
 
-**NFC Reader** card (left column):
+### Поиск и фильтрация {#search-and-filtering}
 
-- Reader type (e.g., "PN532")
-- Connection method (e.g., "Serial /dev/ttyUSB0")
-- Status indicator: green "Ready", red "Error", or gray "N/A"
+- **Строка поиска** — поиск в реальном времени по материалу, подтипу, бренду, названию цвета и заметкам. Поиск использует отображаемое название цвета, которое для большинства катушек Bambu берётся из [каталога цветов](../features/inventory.md#color-catalog), а не хранится в записи катушки.
+- **Кнопки фильтров** — прокручиваемый горизонтальный ряд:
+    - **Все катушки** — общее количество
+    - **В AMS** — количество катушек, назначенных слотам AMS
+    - **Фильтры материалов** — автоматически созданная кнопка для каждого типа материала
 
-**Device Info** card (right column):
+Нажмите кнопку, чтобы включить или выключить фильтр. Активные кнопки выделяются.
 
-- Hostname
-- IP address
-- Uptime (formatted as "Xh Ym")
-- Device ID (monospace, truncated)
+### Сетка катушек {#spool-grid}
 
-**Backend & Auth Config** card:
+Катушки отображаются в автоматически заполняемой сетке карточек. Каждая карточка содержит:
 
-- Backend URL input field
-- API Token input field (password masked)
-- **Save** button — saves configuration to the device
-- Status message (green on success, red on error)
-- **Restart Daemon** button after a save — the device keeps using its old
-  backend URL and token until the daemon restarts. The button waits until the
-  device has taken the new config, so the restart cannot replace it.
+- Круглый значок цвета катушки
+- Название материала и подтип, если задан
+- Цветную точку и название цвета
+- Полосу заполнения (зелёную, жёлтую или красную)
+- Остаток в граммах и процентах
+- **Индикатор AMS**, если катушка назначена (например, «AMS A1», «AMS HT A»)
 
-**Diagnostics** — three buttons:
+### Окно сведений о катушке {#spool-detail-modal}
 
-| Button | Color | What It Does |
+Нажмите карточку, чтобы открыть выдвижное снизу окно со сведениями:
+
+- Крупное изображение цвета катушки
+- Материал, бренд и название цвета в заголовке
+- **Оставшийся вес** с полосой заполнения
+- **Расположение AMS**, если назначено
+- **Таблицу сведений** в двух колонках:
+    - Вес с этикетки
+    - Израсходованный вес
+    - Вес пустой катушки
+    - Общий вес
+    - Диапазон температуры сопла
+    - Цена за кг
+    - Последний вес на весах
+    - ID метки моноширинным шрифтом
+    - Пресет филамента слайсера
+    - K-профили PA со значениями K, если есть
+    - Заметки, если есть
+
+---
+
+## :material-cog: Настройки {#settings}
+
+На странице настроек сверху расположены пять вкладок.
+
+### Вкладка устройства {#device-tab}
+
+Карточка **NFC-считыватель** слева показывает:
+
+- Тип считывателя (например, «PN532»)
+- Способ подключения (например, «Serial /dev/ttyUSB0»)
+- Индикатор состояния: зелёный «Готово», красный «Ошибка» или серый «Н/Д»
+
+Карточка **Информация об устройстве** справа показывает:
+
+- Имя хоста
+- IP-адрес
+- Время работы в формате «Xh Ym»
+- ID устройства моноширинным шрифтом, сокращённый при необходимости
+
+Карточка **Настройки сервера и аутентификации** содержит:
+
+- Поле URL сервера
+- Поле токена API с маскированием пароля
+- Кнопку **Сохранить** для сохранения настроек на устройстве
+- Сообщение состояния: зелёное при успехе, красное при ошибке
+- Кнопку **Перезапустить демон** после сохранения: устройство использует старые URL и токен до перезапуска демона. Кнопка ждёт, пока устройство примет новую конфигурацию, поэтому перезапуск не может её перезаписать.
+
+**Диагностика** — три кнопки:
+
+| Кнопка | Цвет | Действие |
 |--------|-------|--------------|
-| **NFC Diagnostic** | Blue | Tests NFC reader connectivity and reports results |
-| **Scale Diagnostic** | Yellow | Tests scale/ADC hardware and reports results |
-| **Read Tag** | Green | Reads raw tag data and displays contents |
+| **Диагностика NFC** | Синий | Проверяет подключение считывателя NFC и показывает результат |
+| **Диагностика весов** | Жёлтый | Проверяет весы и АЦП и показывает результат |
+| **Считать метку** | Зелёный | Считывает необработанные данные метки и показывает содержимое |
 
-Each opens a modal showing live terminal-style output, an exit code, and a **Run Again** button.
+Каждая открывает окно с выводом в стиле терминала в реальном времени, кодом завершения и кнопкой **Запустить снова**.
 
-### Display Tab
+### Вкладка экрана {#display-tab}
 
-**Brightness** card:
+Карточка **Яркость** содержит:
 
-- Slider from 0–100%
-- Live percentage display
-- Changes are applied immediately (software brightness filter)
-- Shows "No DSI backlight detected" if no hardware backlight is available
+- Ползунок от 0 до 100%
+- Текущее значение в процентах
+- Немедленное применение изменений программным фильтром яркости
+- Сообщение «Подсветка DSI не обнаружена», если аппаратная подсветка недоступна
 
-**Screen Blank Timeout** card:
+Карточка **Время до отключения экрана** содержит:
 
-- Description: "Screen turns off after inactivity. Touch to wake."
-- Six preset buttons: **Off**, **1m**, **2m**, **5m**, **10m**, **30m**
-- Active selection highlighted in green
-- Touch anywhere on the screen resets the blank timer
+- Описание: «Экран отключается при бездействии. Коснитесь для пробуждения».
+- Шесть кнопок: **Выключено**, **1 мин**, **2 мин**, **5 мин**, **10 мин**, **30 мин**
+- Текущий выбор выделен зелёным
+- Прикосновение к экрану сбрасывает таймер отключения
 
-### Scale Tab
+### Вкладка весов {#scale-tab}
 
-**Idle view:**
+**Обычный вид:**
 
-- Live weight display with stability indicator (green dot = stable, amber = fluctuating)
-- Current tare offset value
-- Current calibration factor
-- Last calibrated timestamp
-- Two buttons: **Tare** and **Calibrate**
+- Текущий вес с индикатором стабильности (зелёная точка — стабильно, жёлтая — колеблется)
+- Текущее смещение тары
+- Текущий коэффициент калибровки
+- Время последней калибровки
+- Кнопки **Тарировать** и **Калибровать**
 
-**Tare** — quick zero adjustment. Press when the scale is empty to reset the zero point.
+**Тарировать** — быстрая установка нуля. Нажмите при пустых весах, чтобы сбросить нулевую точку.
 
-**Calibrate** — opens a two-step calibration wizard:
+**Калибровать** открывает двухшаговый мастер:
 
-**Step 1 — Set Zero:**
+**Шаг 1 — установить ноль:**
 
-1. Remove all items from the scale.
-2. Press **Set Zero** to record the empty reference point.
+1. Уберите все предметы с весов.
+2. Нажмите **Установить ноль**, чтобы записать показание пустых весов.
 
-**Step 2 — Known Weight:**
+**Шаг 2 — известный вес:**
 
-1. Place an object of known weight on the scale.
-2. Enter the known weight using the on-screen numpad (0–9, decimal point, backspace).
-3. Press **Calibrate** to apply.
+1. Положите на весы предмет известной массы.
+2. Введите вес экранной цифровой клавиатурой (0–9, десятичная точка, удаление).
+3. Нажмите **Калибровать** для применения.
 
-A live weight bar shows the current reading throughout the process. Press **Cancel** at any point to abort.
+На протяжении процедуры полоса веса показывает текущее значение. В любой момент нажмите **Отмена**, чтобы прервать операцию.
 
-### Updates Tab
+### Вкладка обновлений {#updates-tab}
 
-**Version & Status** card:
+Карточка **Версия и состояние** содержит:
 
-- Current version number (or "Waiting for daemon...")
-- Status line showing check results
-- Action buttons:
+- Номер текущей версии или сообщение ожидания демона
+- Строку с результатами проверки
+- Кнопки действий:
 
-| Button | When Shown | Action |
+| Кнопка | Когда доступна | Действие |
 |--------|-----------|--------|
-| **Check for Updates** | No update available | Queries the daemon for new versions |
-| **Force Update** | No update available | Forces a re-install of the current version |
-| **Apply Update** | Update available | Downloads and installs the update. Disabled if device is offline. |
+| **Проверить обновления** | Нет доступного обновления | Запрашивает у демона сведения о новых версиях |
+| **Принудительное обновление** | Нет доступного обновления | Принудительно переустанавливает текущую версию |
+| **Применить обновление** | Доступно обновление | Загружает и устанавливает его. Недоступна, если устройство отключено. |
 
-**SSH Setup** card (collapsible):
+Карточка **Настройка SSH** сворачивается:
 
-- Expand to reveal the device's SSH public key in a pre-formatted box.
-- **Copy** button copies the key to clipboard (shows "Copied!" briefly).
-- Use this key to authorize the SpoolBuddy device for passwordless access if needed.
+- Разверните её, чтобы увидеть публичный ключ SSH устройства в предварительно отформатированном поле.
+- Кнопка **Копировать** помещает ключ в буфер и ненадолго показывает подтверждение.
+- При необходимости используйте ключ для авторизации SpoolBuddy без пароля.
 
-### System Tab
+### Вкладка системы {#system-tab}
 
-Read-only system information displayed when stats are available:
+Доступные сведения о системе показываются только для чтения:
 
-| Card | Fields |
+| Карточка | Поля |
 |------|--------|
-| **CPU** | Cores, load average (1m/5m/15m), temperature (color-coded: green <65°C, amber 65–80°C, red ≥80°C) |
-| **Memory** | Usage bar with percentage, used/total in MB, free in MB |
-| **Disk** | Usage bar with percentage, used/total in GB |
-| **OS** | Distribution name, kernel version, architecture |
-| **Runtime** | Python version, system uptime |
+| **CPU** | Ядра, средняя нагрузка (1/5/15 мин), температура (зелёная <65°C, жёлтая 65–80°C, красная ≥80°C) |
+| **Память** | Полоса использования с процентом, использовано/всего в МБ, свободно в МБ |
+| **Диск** | Полоса использования с процентом, использовано/всего в ГБ |
+| **ОС** | Название дистрибутива, версия ядра, архитектура |
+| **Среда выполнения** | Версия Python, время работы системы |
 
-Shows "Waiting for system stats..." while data is loading.
+Во время загрузки показывается сообщение «Ожидание статистики системы…».
 
 ---
 
-## :material-gesture-swipe-horizontal: Gestures and Shortcuts
+## :material-gesture-swipe-horizontal: Жесты и быстрые действия {#gestures-and-shortcuts}
 
-| Gesture | Action |
+| Жест | Действие |
 |---------|--------|
-| **Swipe left/right** | Switch between online printers (anywhere in the UI) |
-| **Swipe down from top** | Open the Quick Menu (power controls and system commands) |
-| **Touch anywhere** | Reset the screen blank timer |
-| **Escape key** | Close open modals |
+| **Провести влево/вправо** | Переключиться между подключёнными принтерами в любом месте интерфейса |
+| **Провести вниз от верхнего края** | Открыть быстрое меню (питание и системные команды) |
+| **Коснуться в любом месте** | Сбросить таймер отключения экрана |
+| **Клавиша Escape** | Закрыть открытые окна |
 
 ---
 
-## :material-menu: Quick Menu
+## :material-menu: Быстрое меню {#quick-menu}
 
-Swipe down from the top edge of the screen to open the Quick Menu — a slide-down overlay panel for printer power control and system management.
+Проведите вниз от верхнего края экрана, чтобы открыть выдвижную панель быстрого меню для управления питанием принтеров и системой.
 
-### Printer Power
+### Питание принтеров {#printer-power}
 
-If any of your printers have smart plugs configured (Tasmota, Home Assistant, or REST), they appear in the **Printer Power** section:
+Если для принтеров настроены умные розетки (Tasmota, Home Assistant или REST), они отображаются в разделе **Питание принтеров**:
 
-- Each printer is shown with its name, plug name, and current state (**ON** / **OFF**).
-- Tap a printer row to toggle its smart plug on or off.
-- The plug state updates in real-time after toggling.
+- Для каждого принтера показаны его название, название розетки и текущее состояние (**ON** / **OFF**).
+- Нажмите строку принтера, чтобы включить или выключить его розетку.
+- После переключения состояние обновляется в реальном времени.
 
 !!! note
-    Only printers with an enabled, non-MQTT smart plug appear here. MQTT plugs are monitor-only and cannot be toggled. Configure smart plugs in **Settings > Smart Plugs** on the main Bambuddy web interface.
+    Здесь отображаются только принтеры с включённой умной розеткой, отличной от MQTT. Розетки MQTT доступны только для мониторинга и не переключаются. Настраивайте умные розетки в **Настройки > Умные розетки** основного веб-интерфейса Bambuddy.
 
-### System Controls
+### Управление системой {#system-controls}
 
-Four system control buttons are available:
+Доступны четыре системные кнопки:
 
-| Button | Action | Confirmation |
+| Кнопка | Действие | Подтверждение |
 |--------|--------|--------------|
-| **Restart Daemon** | Restarts the SpoolBuddy daemon service. NFC and scale will be temporarily unavailable while the daemon reinitializes. | Yes |
-| **Restart Browser** | Restarts the kiosk browser (labwc + Chromium). The display goes blank briefly during the restart. | Yes |
-| **Reboot** | Reboots the Raspberry Pi. The device will be offline for 30–60 seconds. | Yes |
-| **Shutdown** | Shuts down the Raspberry Pi. You will need physical access to power it back on. | Yes |
+| **Перезапустить демон** | Перезапускает службу демона SpoolBuddy. NFC и весы временно недоступны во время повторной инициализации. | Да |
+| **Перезапустить браузер** | Перезапускает браузер киоска (labwc + Chromium). Экран ненадолго гаснет. | Да |
+| **Перезагрузить** | Перезагружает Raspberry Pi. Устройство будет отключено на 30–60 секунд. | Да |
+| **Выключить** | Выключает Raspberry Pi. Для повторного включения потребуется физический доступ. | Да |
 
-All four actions require a confirmation dialog before executing. The **Shutdown** and **Reboot** buttons are highlighted in red and amber respectively to indicate their destructive nature.
+Все четыре действия требуют подтверждения. Кнопки выключения и перезагрузки выделены красным и жёлтым соответственно, чтобы обозначить их последствия.
 
 !!! warning
-    System controls are disabled when the SpoolBuddy device is offline. The commands are queued via the backend and executed on the next daemon heartbeat (within ~10 seconds).
+    Управление системой недоступно, если SpoolBuddy отключён. Команды ставятся в очередь через сервер и выполняются при следующем сигнале состояния демона (примерно в течение 10 секунд).
 
-To close the Quick Menu, tap the backdrop area behind the panel.
+Чтобы закрыть быстрое меню, коснитесь области за панелью.
 
 ---
 
-## :material-link: Related Pages
+## :material-link: Связанные страницы {#related-pages}
 
-- [Wiring Diagrams](wiring-diagrams.md) — Electrical connections for all hardware
-- [Installation](installation.md) — Software setup and first boot
-- [Configuration](configuration.md) — Environment variables and `.env` settings
-- [Assembly](assembly.md) — Physical case assembly guide
+- [Схемы подключения](wiring-diagrams.md) — электрические соединения оборудования
+- [Установка](installation.md) — установка программ и первая загрузка
+- [Настройка](configuration.md) — переменные окружения и параметры `.env`
+- [Сборка](assembly.md) — сборка корпуса
