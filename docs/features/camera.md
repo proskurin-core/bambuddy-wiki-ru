@@ -1,58 +1,58 @@
 ---
-title: Camera Streaming
-description: Watch your prints in real-time with MJPEG streaming
+title: Трансляция с камеры
+description: Наблюдайте за печатью в реальном времени с помощью трансляции MJPEG
 ---
 
-# Camera Streaming
+# Трансляция с камеры {#camera-streaming}
 
-Monitor your prints visually with live camera streaming directly from your Bambu Lab printer.
-
----
-
-## :material-video: Live Streaming
-
-Bambuddy provides MJPEG video streaming from your printer's built-in camera, or from an external network camera.
+Наблюдайте за печатью через трансляцию непосредственно с камеры принтера Bambu Lab.
 
 ---
 
-## :material-webcam: External Cameras
+## :material-video: Прямая трансляция {#live-streaming}
 
-Connect external network cameras to replace the built-in printer camera. Useful for better angles, higher resolution, or printers in enclosures.
+Bambuddy транслирует видео MJPEG со встроенной камеры принтера или внешней сетевой камеры.
 
-### Supported Camera Types
+---
 
-| Type | Description | Example URL/Path |
+## :material-webcam: Внешние камеры {#external-cameras}
+
+Подключите внешнюю сетевую камеру вместо встроенной камеры принтера. Это полезно, если нужен лучший ракурс или более высокое разрешение, а также для принтеров в закрытом корпусе.
+
+### Поддерживаемые типы камер {#supported-camera-types}
+
+| Тип | Описание | Пример URL или пути |
 |------|-------------|------------------|
-| **MJPEG** | Motion JPEG stream | `http://192.168.1.50/mjpeg` |
+| **MJPEG** | Поток Motion JPEG | `http://192.168.1.50/mjpeg` |
 | **RTSP** | Real-Time Streaming Protocol | `rtsp://192.168.1.50:554/stream` |
-| **Snapshot** | HTTP URL returning JPEG image | `http://192.168.1.50/snapshot.jpg` |
-| **USB (V4L2)** | USB webcam connected to host | `/dev/video0` |
+| **Снимок** | URL HTTP, возвращающий изображение JPEG | `http://192.168.1.50/snapshot.jpg` |
+| **USB (V4L2)** | USB-веб-камера, подключённая к хосту | `/dev/video0` |
 
-### Configuration
+### Настройка {#configuration}
 
-1. Go to **Settings** > **Camera**
-2. Under **External Cameras**, click **Add external camera**, then search for the printer by name or location and pick it. Its camera fields open
-3. Enter the camera URL. For a USB camera, pick the device from the list instead (see **USB Camera Setup** below)
-4. Select the camera type, and the rotation if the camera is mounted turned
-5. Click **Test** to verify connection
+1. Перейдите в **Настройки** > **Камера**
+2. В разделе **Внешние камеры** нажмите **Добавить внешнюю камеру**, найдите принтер по названию или расположению и выберите его. Откроются поля настройки камеры
+3. Введите URL камеры. Для USB-камеры вместо этого выберите устройство из списка (см. **Настройка USB-камеры** ниже)
+4. Выберите тип камеры и поворот, если она установлена под углом
+5. Нажмите **Проверить**, чтобы проверить подключение
 
-The list shows only printers that have an external camera, so it stays short however many printers you run. A closed row shows the camera type and where it points, such as `MJPEG · 192.168.1.61:1984`; click the row to open its fields, and only one printer is open at a time. The bin icon at the end of a row switches that printer back to its built-in camera.
+В списке показаны только принтеры с внешней камерой, поэтому он остаётся коротким при любом количестве принтеров. В свёрнутой строке отображаются тип и адрес камеры, например `MJPEG · 192.168.1.61:1984`; нажмите строку, чтобы открыть поля. Одновременно можно открыть настройки только одного принтера. Значок корзины в конце строки возвращает принтер к встроенной камере.
 
-!!! tip "RTSP Authentication"
-    Include credentials in the URL: `rtsp://user:password@192.168.1.50:554/stream`
-    Only users who may edit printers see the password; everyone else sees the URL with `[REDACTED]` in its place.
+!!! tip "Аутентификация RTSP"
+    Укажите учётные данные в URL: `rtsp://user:password@192.168.1.50:554/stream`.
+    Пароль видят только пользователи с правом редактирования принтеров; остальные видят вместо него `[REDACTED]`.
 
-!!! note "Redirects"
-    Bambuddy does not follow an RTSP camera that redirects to another address: the camera test fails and the server log names the address it was sent to (`RTSP camera redirected to ...`). Enter that address as the camera URL instead. MJPEG and snapshot cameras may redirect to another address the camera URL itself would be allowed to use, but never to the Bambuddy host or a cloud metadata address.
+!!! note "Перенаправления"
+    Bambuddy не следует перенаправлению RTSP-камеры на другой адрес: проверка камеры завершится ошибкой, а в журнале сервера будет указан адрес перенаправления (`RTSP camera redirected to ...`). Введите этот адрес как URL камеры. Камеры MJPEG и снимков могут перенаправлять на другой адрес, разрешённый для URL камеры, но никогда — на хост Bambuddy или адрес метаданных облака.
 
-!!! tip "USB Camera Setup"
-    With the camera type set to **USB Camera (V4L2)**, the **USB device** list shows the video devices the Bambuddy server can see, such as `HD Pro Webcam C920 (/dev/video0)`; pick the camera from it. Click the refresh button next to the list after plugging a camera in. A saved camera that is unplugged stays selected and shows as `/dev/video0 (not found)`.
+!!! tip "Настройка USB-камеры"
+    При выборе типа **USB-камера (V4L2)** список **USB-устройство** показывает видеоустройства, доступные серверу Bambuddy, например `HD Pro Webcam C920 (/dev/video0)`; выберите камеру из списка. После подключения камеры нажмите кнопку обновления рядом со списком. Сохранённая, но отключённая камера остаётся выбранной и отображается как `/dev/video0 (not found)`.
 
-    Device names come from `v4l2-ctl`; without it the list shows `video0` and so on. Install it with `sudo apt install v4l-utils`.
+    Имена устройств предоставляет `v4l2-ctl`; без него в списке будут `video0` и т. д. Установите его командой `sudo apt install v4l-utils`.
 
-    **Enter path manually** switches to a text field for the device path (e.g. `/dev/video0`); **Choose a detected device** goes back to the list. Bambuddy streams from `/dev/video0` to `/dev/video99` only.
+    **Ввести путь вручную** открывает текстовое поле пути устройства (например, `/dev/video0`); **Выбрать обнаруженное устройство** возвращает список. Bambuddy транслирует только с устройств от `/dev/video0` до `/dev/video99`.
 
-    In Docker, the container sees only the devices passed to it. If the list says no video devices are visible, add the camera to your `docker-compose.yml` and recreate the container:
+    В Docker контейнер видит только переданные ему устройства. Если список сообщает, что видеоустройства не обнаружены, добавьте камеру в `docker-compose.yml` и пересоздайте контейнер:
 
     ```yaml
     services:
@@ -61,187 +61,157 @@ The list shows only printers that have an external camera, so it stays short how
           - /dev/video0:/dev/video0
     ```
 
-!!! note "Several viewers, one connection"
-    Bambuddy opens an external camera once per printer, however many people watch it: the Camera page, Cam Wall tiles, embedded viewers and stream overlays all share that one connection. A USB camera can only be read by one program at a time, so a second viewer used to fail with a blank picture. The connection closes a few seconds after the last viewer leaves; a page reload within that time reuses it. The viewer who opens the connection sets its frame rate for everyone: a Cam Wall tile opens it at 8 frames per second, the Camera page at 15.
+!!! note "Несколько зрителей — одно соединение"
+    Bambuddy открывает внешнюю камеру один раз для каждого принтера независимо от числа зрителей: страница камер, плитки стены камер, встроенные окна просмотра и оверлеи трансляции используют одно соединение. USB-камеру одновременно может читать только одна программа, поэтому раньше второй зритель получал пустое изображение. Соединение закрывается через несколько секунд после ухода последнего зрителя; обновление страницы в это время использует его повторно. Зритель, открывший соединение, задаёт частоту кадров для всех: плитка стены камер открывает его с частотой 8 кадров/с, страница камер — 15.
 
-!!! tip "Snapshot URL override (go2rtc, IP cameras with `/frame.jpeg`-style endpoints)"
-    For **MJPEG**, **RTSP** and **USB** stream types, you can optionally provide a separate **Snapshot URL** below the live-stream URL (hover the info icon next to it for a reminder of what it does). When set, Bambuddy fetches single-frame captures (notification thumbnails, finish photos, timelapse, plate detection) from this URL via plain HTTP GET instead of opening the live stream.
+!!! tip "Отдельный URL снимка (go2rtc, IP-камеры с конечными точками вида `/frame.jpeg`)"
+    Для потоков **MJPEG**, **RTSP** и **USB** можно дополнительно указать отдельный **URL снимка** под URL прямой трансляции (наведите курсор на значок информации рядом с полем, чтобы увидеть подсказку). В этом случае Bambuddy получает отдельные кадры — миниатюры уведомлений, финальные снимки, таймлапс и изображения для проверки стола — обычным HTTP GET по этому адресу, не открывая видеопоток.
 
-    Useful when:
+    Это полезно, если:
 
-    - You're using **go2rtc** as a relay for a flaky USB / IP camera. go2rtc exposes both `/api/stream.mjpeg?src=<name>` (live) and `/api/frame.jpeg?src=<name>` (single frame). The frame endpoint reliably returns a clean image; the stream endpoint can emit a stale/black warm-up frame on every fresh connection.
-    - Your IP camera ships a dedicated snapshot endpoint that's faster and more consistent than reading from the MJPEG stream.
+    - Вы используете **go2rtc** как посредник для нестабильной USB- или IP-камеры. go2rtc предоставляет `/api/stream.mjpeg?src=<name>` для трансляции и `/api/frame.jpeg?src=<name>` для отдельного кадра. Конечная точка кадра надёжно возвращает чистое изображение; при каждом новом подключении поток может сначала выдавать устаревший или чёрный кадр прогрева.
+    - У IP-камеры есть отдельная конечная точка снимка, которая работает быстрее и стабильнее чтения кадра из потока MJPEG.
 
-    Click **Test** next to the snapshot URL to verify it returns a valid frame.
+    Нажмите **Проверить** рядом с URL снимка, чтобы убедиться, что он возвращает корректный кадр.
 
-    Leave blank to use the default behaviour: capture from the live stream (with automatic warm-up-frame skip).
+    Оставьте поле пустым для поведения по умолчанию: захвата из видеопотока с автоматическим пропуском кадров прогрева.
 
-### Features with External Cameras
+### Возможности внешних камер {#features-with-external-cameras}
 
-| Feature | Description |
+| Возможность | Описание |
 |---------|-------------|
-| **Live Streaming** | Replaces built-in camera in the viewer |
-| **Finish Photos** | Captures from external camera on print complete |
-| **Layer Timelapse** | Captures a frame on each layer change, stitches to video on completion |
+| **Прямая трансляция** | В окне просмотра заменяет встроенную камеру |
+| **Финальные снимки** | Снимок с внешней камеры после завершения печати |
+| **Таймлапс по слоям** | Кадр при каждой смене слоя; после завершения кадры объединяются в видео |
 
-### Layer-Based Timelapse
+### Таймлапс по слоям {#layer-based-timelapse}
 
-!!! note "External Cameras Only"
-    Layer-based timelapse only works with external cameras (MJPEG, RTSP, Snapshot, or USB). Built-in printer cameras use the printer's own timelapse feature instead.
+!!! note "Только внешние камеры"
+    Таймлапс по слоям работает только с внешними камерами (MJPEG, RTSP, снимок или USB). Для встроенной камеры используйте функцию таймлапса самого принтера.
 
-When an external camera is enabled, Bambuddy automatically:
+Когда внешняя камера включена, Bambuddy автоматически:
 
-1. **Captures a frame** each time the print layer changes
-2. **Stores frames** in a temporary directory during printing
-3. **Stitches video** using ffmpeg when print completes
-4. **Attaches** the timelapse to the print archive
+1. **Снимает кадр** при каждой смене слоя
+2. **Сохраняет кадры** во временном каталоге во время печати
+3. **Объединяет кадры в видео** с помощью ffmpeg по окончании печати
+4. **Прикрепляет** таймлапс к архиву печати
 
-!!! note "With the printer's own timelapse on too"
-    The archive keeps one video, and it is the external camera's: it replaces the printer's video, which usually arrives first, and the printer's file is deleted. A video stitched for a print whose archive is already printing again (the next plate of a shared archive, or a reprint) is not attached to the new print.
+!!! note "При одновременной записи таймлапса принтером"
+    В архиве сохраняется одно видео — с внешней камеры. Оно заменяет видео принтера, которое обычно поступает первым; файл принтера удаляется. Если к моменту сборки видео архив уже используется для новой печати (следующей пластины общего архива или повторной печати), видео к новой печати не прикрепляется.
 
-!!! note "ffmpeg Required"
-    Layer timelapse requires ffmpeg to be installed (included in Docker image).
+!!! note "Требуется ffmpeg"
+    Для таймлапса по слоям необходим ffmpeg (он входит в образ Docker).
 
-    The video is at most 1080p: frames from a larger camera are scaled down, keeping their shape, so a 4K camera gives a 1920 × 1080 video. The encoder is limited to two threads for the stitch, which keeps a 1080p stitch at about 300 MiB of memory. That matters in Docker or Kubernetes, where ffmpeg counts against Bambuddy's own memory limit.
+    Максимальное разрешение видео — 1080p: кадры более высокого разрешения уменьшаются с сохранением пропорций, поэтому камера 4K даст видео 1920 × 1080. Для сборки кодировщик использует не более двух потоков, поэтому видео 1080p требует около 300 МиБ памяти. Это важно в Docker или Kubernetes, где ffmpeg учитывается в ограничении памяти Bambuddy.
 
-!!! note "Long prints and slow hardware"
-    Stitching may take half a second per layer, from 5 minutes up to an hour, so a print with thousands of layers on a Raspberry Pi still gets its video. If ffmpeg fails anyway, or Bambuddy stops while it runs, the frames are not deleted: they stay for about 24 hours in `timelapse_frames/<printer id>/<session>/` under Bambuddy's data folder (`DATA_DIR`, or the install folder when it is not set), and when ffmpeg fails the log names the folder. The folder's `STITCH_FAILED` file holds the ffmpeg command to make the video by hand. Without ffmpeg installed, the frames are deleted as before.
+!!! note "Долгие печати и медленное оборудование"
+    Сборка может занимать полсекунды на слой, от 5 минут до часа, поэтому видео будет создано даже для печати с тысячами слоёв на Raspberry Pi. Если ffmpeg всё же завершится с ошибкой или Bambuddy остановится во время работы, кадры не удаляются: они сохраняются примерно на 24 часа в `timelapse_frames/<printer id>/<session>/` внутри каталога данных Bambuddy (`DATA_DIR`, а если он не задан — в каталоге установки). При ошибке ffmpeg путь записывается в журнал. Файл `STITCH_FAILED` в этом каталоге содержит команду ffmpeg для ручного создания видео. Если ffmpeg не установлен, кадры удаляются как и прежде.
 
-### Opening the Camera
+### Открытие камеры {#opening-the-camera}
 
-1. Click the :material-camera: camera icon on any printer card
-2. The camera opens in whichever view mode you used last (see below)
-3. The stream starts automatically
+1. Нажмите значок камеры :material-camera: на любой карточке принтера
+2. Камера откроется в последнем использованном режиме просмотра (см. ниже)
+3. Трансляция начнётся автоматически
 
-#### From any page
+#### С любой страницы {#from-any-page}
 
-The :material-camera: **Cameras** button opens a printer's camera as an
-embedded overlay without going back to the Printers page, and it stays on
-screen as you move between pages. It sits at the end
-of the **Printers** row in the sidebar (in its corner, on hover, when the
-sidebar is collapsed) and, on narrow screens, in the header beside the
-bug-report button. The **C** key opens it too. It lists the printers you can see. A printer whose camera is
-already open is ticked; pick it again to close that camera. The button only
-appears for users with the `camera:view` and `printers:read` permissions;
-without both, no camera overlay is shown either.
+Кнопка :material-camera: **Камеры** открывает камеру принтера во встроенном плавающем окне без возврата на страницу принтеров; оно остаётся на экране при переходе между страницами. Кнопка находится в конце строки **Принтеры** боковой панели (при свёрнутой панели — в её углу при наведении), а на узком экране — в заголовке рядом с кнопкой сообщения об ошибке. Её также открывает клавиша **C**. В списке показаны доступные вам принтеры. Уже открытая камера отмечена галочкой; выберите принтер ещё раз, чтобы её закрыть. Кнопка и оверлей камеры доступны только пользователям, у которых есть оба разрешения `camera:view` и `printers:read`.
 
-### View Mode
+### Режим просмотра {#view-mode}
 
-The camera button is a split control. The icon opens the camera the way you
-opened the last one; the caret beside it lets you choose:
+Кнопка камеры состоит из двух частей: значок открывает камеру в последнем использованном режиме, а стрелка рядом позволяет выбрать режим:
 
-| Mode | Description |
+| Режим | Описание |
 |------|-------------|
-| **New Window** | Opens camera in a separate browser window (default) |
-| **Embedded Overlay** | Shows camera as a floating overlay on the main screen |
+| **Новое окно** | Камера открывается в отдельном окне браузера (по умолчанию) |
+| **Встроенный оверлей** | Камера показывается в плавающем окне поверх основного экрана |
 
-Picking a mode from the menu opens the camera that way *and* makes it the mode
-the icon uses from then on, so switching costs one click rather than a trip to
-the settings page. A tick marks the mode currently in effect.
+Выбор режима в меню открывает камеру таким способом и делает его режимом для последующих нажатий значка. Текущий режим отмечен галочкой.
 
-The choice is remembered in your own browser, so two people watching the same
-printers can each use the view they prefer. If you have permission to change
-settings, it is also saved as the default that a browser which has never chosen
-starts from - a new machine or a fresh profile opens cameras the same way.
+Выбор запоминается в вашем браузере, поэтому два пользователя могут по-разному просматривать одни и те же принтеры. Если у вас есть право изменять настройки, выбор также сохраняется как значение по умолчанию для браузеров, где режим ещё не выбран: на новом устройстве или в новом профиле камеры откроются таким же способом.
 
-Camera tiles on the [Cam Wall](#cam-wall-on-a-tv-or-kiosk) follow the same
-choice, since a tile has no room for a menu of its own.
+Плитки [стены камер](#cam-wall-on-a-tv-or-kiosk) используют тот же выбор, поскольку для собственного меню на плитке нет места.
 
-!!! note "Moved in 1.2.6"
-    This replaces the **Camera View Mode** dropdown that used to live in
-    **Settings** > **General** > **Camera**. Your existing choice carries over
-    as the starting default.
+!!! note "Изменение в версии 1.2.6"
+    Это заменяет список **Режим просмотра камеры**, ранее находившийся в **Настройки** > **Общие** > **Камера**. Существующий выбор переносится как первоначальное значение по умолчанию.
 
-#### Embedded Viewer Features
+#### Возможности встроенного просмотра {#embedded-viewer-features}
 
-When using embedded mode, the camera appears as a floating window:
+Во встроенном режиме камера отображается в плавающем окне:
 
-- **Draggable**: Click and drag the header to reposition
-- **Resizable**: Drag the bottom-right corner to resize
-- **Persistent**: Position and size are remembered per printer across sessions
-- **Where it shows**: A camera opened with the sidebar's **Cameras** button stays on screen on every page. One opened from a printer card or the Cam Wall belongs to the Printers page: on other pages it is hidden but still open, and it is back when you return. Opening a card's camera from the **Cameras** button too puts it on every page. Open cameras reopen after a reload, where they were.
-- **Minimize**: Click the minimize button to collapse to title bar; the stream stops until you expand it again
-- **Pop out**: :material-open-in-new: opens the camera in its own window and closes the overlay. If the browser blocks the popup, the overlay stays.
-- **Close**: Click X to close the viewer
-- **Multi-Viewer**: Open cameras for multiple printers simultaneously
+- **Перемещение:** перетащите окно за заголовок
+- **Изменение размера:** перетащите правый нижний угол
+- **Сохранение положения:** положение и размер запоминаются отдельно для каждого принтера между сеансами
+- **Где отображается:** камера, открытая кнопкой **Камеры** боковой панели, остаётся на экране на всех страницах. Камера, открытая с карточки принтера или стены камер, принадлежит странице принтеров: на других страницах она скрыта, но остаётся открытой и снова появляется при возвращении. Если дополнительно открыть камеру карточки через кнопку **Камеры**, она будет видна на всех страницах. После обновления открытые камеры появляются на прежних местах.
+- **Свернуть:** кнопка сворачивает окно до строки заголовка; трансляция останавливается до разворачивания
+- **Открыть отдельно:** :material-open-in-new: открывает камеру в собственном окне и закрывает оверлей. Если браузер блокирует всплывающее окно, оверлей остаётся.
+- **Закрыть:** нажмите X
+- **Несколько окон:** одновременно открывайте камеры нескольких принтеров
 
-A camera window has a :material-picture-in-picture-bottom-right: **Show as an
-overlay in Bambuddy** button that does the reverse: the camera opens as an
-overlay in the Bambuddy tab the window was opened from, or in another open
-Bambuddy tab if that one is gone or is signed in as someone who cannot see
-the printer, and the window closes. If no such tab is open, the window stays
-and says so. A camera page you reached any other way (a bookmark, a link, a
-tab you opened yourself) cannot be closed by the page: it goes back to the
-Bambuddy page before it instead, or to the start page, and has a :material-arrow-left: **Back** button next to the
-printer's name for the same reason.
+Кнопка :material-picture-in-picture-bottom-right: **Показать как оверлей в Bambuddy** в окне камеры выполняет обратное действие: камера открывается поверх вкладки Bambuddy, из которой было открыто окно, или другой открытой вкладки Bambuddy, если исходная закрыта либо в ней вошёл пользователь без доступа к принтеру. Затем окно закрывается. Если подходящей вкладки нет, окно остаётся открытым и сообщает об этом. Страница камеры, открытая другим способом (из закладки, ссылки или самостоятельно открытой вкладки), не может сама закрыться: вместо этого она возвращает предыдущую страницу Bambuddy или начальную страницу; по той же причине рядом с названием принтера доступна кнопка :material-arrow-left: **Назад**.
 
-!!! note "iOS home-screen web app"
-    Bambuddy added to the home screen ("Add to Home Screen" on iOS) has no
-    second window to open: iOS would load the camera into the app itself, full
-    screen. There, cameras always open as the embedded overlay, the camera
-    button offers no window mode, and a Cam Wall tile opens the camera page in
-    place, with a **Back** button to return. Bambuddy installed as an app on
-    a desktop or Android keeps both modes: a window opens normally there.
+!!! note "Веб-приложение на главном экране iOS"
+    В Bambuddy, добавленном на главный экран iOS («На экран “Домой”»), нельзя открыть второе окно: iOS загрузила бы камеру в самом приложении на весь экран. Поэтому камеры всегда открываются встроенным оверлеем, кнопка камеры не предлагает отдельное окно, а плитка стены камер открывает страницу камеры на месте с кнопкой **Назад**. В приложении Bambuddy на компьютере или Android оба режима сохраняются: отдельное окно открывается как обычно.
 
-!!! tip "Embedded Mode Benefits"
-    Embedded mode keeps you on the main screen while monitoring prints - no need to switch between browser windows. Open multiple viewers to monitor your entire print farm at once.
+!!! tip "Преимущества встроенного режима"
+    Во время наблюдения вы остаётесь на главном экране и не переключаетесь между окнами браузера. Откройте несколько окон, чтобы одновременно следить за всей фермой.
 
-### Stream Controls
+### Управление трансляцией {#stream-controls}
 
-| Button | Action |
+| Кнопка | Действие |
 |:------:|--------|
-| **Live** | Real-time MJPEG video stream |
-| **Snapshot** | Single still image (lower bandwidth) |
-| :material-refresh: | Restart the stream |
-| :material-fullscreen: | Enter fullscreen mode |
+| **Прямой эфир** | Потоковое видео MJPEG в реальном времени |
+| **Снимок** | Один неподвижный кадр (меньше трафика) |
+| :material-refresh: | Перезапустить трансляцию |
+| :material-fullscreen: | Открыть на весь экран |
 
 ---
 
-## :material-magnify: Zoom & Pan
+## :material-magnify: Масштабирование и перемещение {#zoom-pan}
 
-Zoom in on your camera feed to inspect print details.
+Увеличьте изображение камеры, чтобы рассмотреть детали печати.
 
-### Zoom Controls
+### Управление масштабом {#zoom-controls}
 
-| Method | Action |
+| Способ | Действие |
 |--------|--------|
-| **Mouse wheel** | Scroll up to zoom in, down to zoom out |
-| **+/- buttons** | Click the zoom buttons in the corner |
-| **Zoom indicator** | Click the percentage to reset to 100% |
-| **Pinch gesture** | Two-finger pinch on touch devices |
+| **Колесо мыши** | Вверх — увеличить, вниз — уменьшить |
+| **Кнопки +/-** | Нажмите кнопки масштаба в углу |
+| **Индикатор масштаба** | Нажмите процент, чтобы вернуть 100% |
+| **Жест сведения** | Сведите или разведите два пальца на сенсорном экране |
 
-Zoom range: **100% - 400%**
+Диапазон масштаба: **100%–400%**
 
-### Pan Controls
+### Перемещение изображения {#pan-controls}
 
-When zoomed in (>100%), you can pan around the image:
+При увеличении более 100% изображение можно перемещать:
 
-| Platform | How to Pan |
+| Платформа | Способ |
 |----------|------------|
-| **Desktop** | Click and drag the image |
-| **Mobile** | Drag with one finger when zoomed |
-| **During pinch** | Move both fingers while pinching |
+| **Компьютер** | Нажмите и перетащите изображение |
+| **Мобильное устройство** | Перемещайте увеличенное изображение одним пальцем |
+| **Во время масштабирования жестом** | Перемещайте оба пальца при сведении |
 
-The pan range automatically adjusts based on zoom level - at higher zoom, you can pan further to explore the entire image.
+Диапазон перемещения автоматически зависит от масштаба: чем больше увеличение, тем дальше можно переместиться, чтобы рассмотреть всё изображение.
 
-!!! tip "Reset Zoom"
-    Click the zoom percentage indicator (e.g., "200%") to instantly reset to 100% view.
-
----
-
-## :material-camera: Snapshot Mode
-
-For lower bandwidth usage, use snapshot mode:
-
-- Captures a single frame on demand
-- Click refresh to get a new snapshot
-- Ideal for cellular connections or slow networks
+!!! tip "Сброс масштаба"
+    Нажмите процент масштаба (например, «200%»), чтобы сразу вернуть 100%.
 
 ---
 
-## :material-cog: Technical Details
+## :material-camera: Режим снимков {#snapshot-mode}
 
-### How Streaming Works
+Чтобы уменьшить расход трафика, используйте режим снимков:
+
+- Захват одного кадра по запросу
+- Нажмите обновление, чтобы получить новый снимок
+- Подходит для мобильного интернета и медленных сетей
+
+---
+
+## :material-cog: Технические сведения {#technical-details}
+
+### Как работает трансляция {#how-streaming-works}
 
 ```mermaid
 graph LR
@@ -250,26 +220,26 @@ graph LR
     C -->|HTTP Stream| D[Browser]
 ```
 
-1. Printer exposes camera via **RTSP** (Real Time Streaming Protocol)
-2. **ffmpeg** converts RTSP to MJPEG (Motion JPEG)
-3. Bambuddy serves the **MJPEG stream** to your browser
-4. Browser displays frames in an `<img>` tag
+1. Принтер предоставляет камеру через **RTSP** (Real Time Streaming Protocol)
+2. **ffmpeg** преобразует RTSP в MJPEG (Motion JPEG)
+3. Bambuddy отправляет **поток MJPEG** в браузер
+4. Браузер показывает кадры в теге `<img>`
 
-### Requirements
+### Требования {#requirements}
 
-| Requirement | Details |
+| Требование | Подробности |
 |-------------|---------|
-| **ffmpeg** | Must be installed on Bambuddy server |
-| **Camera enabled** | Must be enabled in printer settings |
-| **Developer Mode** | Camera access requires Developer Mode |
-| **Network access** | Server must be able to reach printer IP |
+| **ffmpeg** | Должен быть установлен на сервере Bambuddy |
+| **Камера включена** | Камера должна быть включена в настройках принтера |
+| **Режим разработчика** | Необходим для доступа к камере |
+| **Доступ к сети** | Сервер должен иметь доступ к IP-адресу принтера |
 
-!!! tip "Docker Users"
-    Camera streaming works with Docker's default bridge networking in most setups (NAT handles routing automatically).
+!!! tip "Пользователям Docker"
+    В большинстве конфигураций трансляция работает со стандартной сетью bridge Docker: NAT автоматически обрабатывает маршрутизацию.
 
-    If you have issues, try `network_mode: host` - see [Docker Installation](../getting-started/docker.md#network-mode-host).
+    При проблемах попробуйте `network_mode: host` — см. [Установка Docker](../getting-started/docker.md#network-mode-host).
 
-### Installing ffmpeg
+### Установка ffmpeg {#installing-ffmpeg}
 
 === ":material-ubuntu: Ubuntu/Debian"
 
@@ -285,374 +255,355 @@ graph LR
 
 === ":material-microsoft-windows: Windows"
 
-    Download from [ffmpeg.org](https://ffmpeg.org/download.html) and add to PATH.
+    Скачайте с [ffmpeg.org](https://ffmpeg.org/download.html) и добавьте в PATH.
 
 === ":material-docker: Docker"
 
-    ffmpeg is included in the Docker image.
+    ffmpeg входит в образ Docker.
 
 ---
 
-## :material-movie-edit: Timelapse Editor
+## :material-movie-edit: Редактор таймлапса {#timelapse-editor}
 
-Edit timelapse videos directly in Bambuddy before downloading or sharing.
+Редактируйте видео таймлапса прямо в Bambuddy перед скачиванием или публикацией.
 
-### Opening the Editor
+### Открытие редактора {#opening-the-editor}
 
-1. Go to **Archives** and select a completed print
-2. Click on the timelapse video thumbnail
-3. Click **Edit** to open the timelapse editor
+1. Перейдите в **Архив** и выберите завершённую печать
+2. Нажмите миниатюру видео таймлапса
+3. Нажмите **Изменить**, чтобы открыть редактор
 
-### Editing Features
+### Возможности редактирования {#editing-features}
 
-| Feature | Description |
+| Возможность | Описание |
 |---------|-------------|
-| **Trim** | Set start and end points to remove unwanted footage |
-| **Speed** | Adjust playback speed from 0.25x to 4x |
-| **Music** | Add your own audio file (MP3, WAV, M4A, AAC, OGG) with a volume slider |
-| **Preview** | Watch your edits before saving |
+| **Обрезка** | Установите начальную и конечную точки, чтобы убрать лишние кадры |
+| **Скорость** | Настройте скорость воспроизведения от 0,25× до 4× |
+| **Музыка** | Добавьте свой аудиофайл (MP3, WAV, M4A, AAC, OGG) и настройте громкость ползунком |
+| **Предпросмотр** | Просмотрите изменения перед сохранением |
 
-### Saving
+### Сохранение {#saving}
 
-1. Make your edits
-2. Click **Save**: the edited video replaces the original timelapse
-3. The **Save** button shows the progress; **Cancel** next to it stops processing and keeps the original
+1. Внесите изменения
+2. Нажмите **Сохранить**: обработанное видео заменит исходный таймлапс
+3. Кнопка **Сохранить** показывает прогресс; расположенная рядом кнопка **Отмена** останавливает обработку и сохраняет оригинал
 
-Processing runs on the server with FFmpeg and carries on if you close the editor. See [Timelapse Editor](archiving.md#timelapse-editor) for details.
-
----
-
-## :material-image-area: Camera Snapshots on Print Complete
-
-Bambuddy can automatically capture a camera snapshot when prints complete:
-
-1. Go to **Settings** > **General**
-2. Enable **Capture snapshot on print complete**
-3. Snapshots are saved to the archive
-
-This creates a visual record of your completed prints!
-
-!!! note "Photo is captured before the bed drops"
-    On most Bambu printers the end-gcode lowers the build plate as soon as the print finishes, which used to leave the snapshot framed on an almost-empty chamber. Bambuddy now sources the photo from a brief timelapse the printer records during the print — the firmware stops recording after the toolhead parks but *before* the bed drops, so the photo frames the finished print correctly. If you enabled timelapse for the print job the file is kept; otherwise Bambuddy deletes the timelapse from the printer's SD card automatically once the photo is captured.
-
-    This currently applies to prints **dispatched through Bambuddy** (queue, reprint, print-now from File Manager). Prints started directly on the printer's touchscreen, via the Bambu Handy app, or via Bambu Studio's "Send" function fall back to a live camera grab at completion — so the bed-down framing limitation still applies in that case. Track this in [#1397](https://github.com/maziggy/bambuddy/issues/1397).
+Обработка выполняется на сервере с помощью FFmpeg и продолжается после закрытия редактора. Подробнее см. [Редактор таймлапса](archiving.md#timelapse-editor).
 
 ---
 
-## :material-lightbulb-on: Chamber Light for the Camera
+## :material-image-area: Снимки камеры после печати {#camera-snapshots-on-print-complete}
 
-If you keep the chamber light off between uses, the live view is black and the photos in your notifications are too. Bambuddy can switch the light on whenever the camera is used:
+Bambuddy может автоматически сохранять снимок с камеры по завершении печати:
 
-1. Go to **Settings** > **Camera**
-2. Under **Turn on chamber light for camera**, choose:
-    - **All printers**, so every printer does it, or
-    - **Selected printers**, then click **Add printer**, search for a printer by name or location and pick it. Each picked printer shows as a chip; click its **×** to take it off the list.
-3. Optionally set **Wait before snapshot** (2 seconds by default, up to 5). It applies to every printer.
+1. Перейдите в **Настройки** > **Общие**
+2. Включите **Сделать снимок по завершении печати**
+3. Снимки сохраняются в архиве
 
-**Off** is the default, so no printer's light changes until you choose otherwise.
+Так вы получите визуальную запись завершённых печатей.
 
-The light then turns on:
+!!! note "Снимок делается до опускания стола"
+    На большинстве принтеров Bambu завершающий G-код опускает стол сразу после печати, поэтому раньше на снимке часто оказывалась почти пустая камера. Теперь Bambuddy получает фотографию из короткого таймлапса, записываемого принтером во время печати: прошивка останавливает запись после парковки головки, но *до* опускания стола, и готовая модель правильно попадает в кадр. Если таймлапс был включён для задания, файл сохраняется; иначе после получения фотографии Bambuddy автоматически удаляет его с SD-карты принтера.
 
-- while anyone watches the live view, including the camera wall and a [streaming overlay](#streaming-overlay-for-obs)
-- for automatic pictures: notification photos, the live finish photo, and the snapshot that Home Assistant and other automations fetch from `/camera/snapshot`
-
-It turns off again 15 seconds after the last use, so a viewer that reconnects or the camera wall's refresh doesn't make it flash.
-
-The [plate check](#build-plate-empty-detection) at print start lights the chamber on every printer, whatever this setting says, because detection needs a lit plate, and switches it back off afterwards. On a printer this setting covers, it shares the light with the uses above: a live view opened during the check keeps it on.
-
-**Wait before snapshot** gives the light, and any room light Home Assistant syncs to it, time to come on before an automatic picture is taken. It only applies when the light was off; the live view never waits.
-
-!!! note "Bambuddy only turns off a light it turned on"
-    If the light was already on, it stays on. If you switch the light by hand on the printer card while the camera is in use, the light is yours again and stays as you set it.
-
-!!! note "What doesn't switch the light"
-    The layer timelapse, the Obico failure check and the frames Bambuddy keeps during a print for the finish photo capture all through a print, so the light would flash with every frame. They use whatever light the printer has. A finish photo taken from the printer's own timelapse video was filmed during the print, so it isn't lit either.
+    Сейчас это относится к печатям, **отправленным через Bambuddy** (из очереди, повторной печати или печати из файлового менеджера). Если печать запущена с экрана принтера, через Bambu Handy или функцию «Отправить» Bambu Studio, после завершения делается обычный снимок с камеры, поэтому ограничение из-за опущенного стола сохраняется. См. [#1397](https://github.com/maziggy/bambuddy/issues/1397).
 
 ---
 
-## :material-scan-helper: Build Plate Empty Detection
+## :material-lightbulb-on: Освещение камеры для просмотра {#chamber-light-for-the-camera}
 
-Automatically detect if objects are left on the build plate before a print starts. If detected, the print is immediately paused and you receive a notification.
+Если между печатями вы выключаете освещение камеры принтера, трансляция и фотографии в уведомлениях будут чёрными. Bambuddy может включать свет при использовании камеры:
 
-### How It Works
+1. Откройте **Настройки** > **Камера**
+2. В разделе **Включать освещение камеры принтера для камеры** выберите:
+    - **Все принтеры**, чтобы включить функцию для всех, или
+    - **Выбранные принтеры**, затем нажмите **Добавить принтер**, найдите принтер по названию или расположению и выберите его. Каждый выбранный принтер появляется как метка; нажмите **×**, чтобы удалить его из списка.
+3. При необходимости задайте **Задержка перед снимком** (по умолчанию 2 секунды, максимум 5). Оно применяется ко всем принтерам.
 
-1. **Calibrate** - Capture reference images of your empty build plate
-2. **Enable** - Toggle plate detection on for the printer
-3. **Auto-Check** - When any print starts, Bambuddy compares the current camera view to your references
-4. **Auto-Pause** - If objects are detected, the print is immediately paused
+По умолчанию выбрано **Выключено**, поэтому освещение принтеров не меняется, пока вы не выберете другой вариант.
 
-### Calibration
+После включения свет загорается:
 
-Store up to **5 reference images** per printer for different plate types (textured, smooth, high-temp, etc.):
+- пока кто-либо смотрит трансляцию, включая стену камер и [оверлей трансляции](#streaming-overlay-for-obs)
+- для автоматических снимков: фотографий уведомлений, финального снимка с камеры и снимка из `/camera/snapshot`, получаемого Home Assistant и другими системами автоматизации
 
-1. Click the **scan icon** on the printer card to open the modal
-2. Ensure the build plate is **completely empty** and **chamber light is ON**
-3. Click **Calibrate Empty Plate**
-4. Optionally add a label (e.g., "Textured PEI", "Cool Plate")
-5. Repeat for other plate types you use
+Свет выключается через 15 секунд после последнего использования, поэтому повторное подключение зрителя или обновление стены камер не вызывает мигания.
 
-!!! tip "Multiple References"
-    The system automatically selects the best-matching reference when checking. Calibrate all your commonly used plates for accurate detection.
+[Проверка стола](#build-plate-empty-detection) перед печатью включает освещение каждого принтера независимо от этой настройки, поскольку для обнаружения стол должен быть освещён, а затем выключает его. Если принтер охвачен этой настройкой, свет используется совместно с перечисленными выше функциями: трансляция, открытая во время проверки, удержит его включённым.
 
-### Enabling Detection
+**Задержка перед снимком** даёт время включиться подсветке и любому освещению комнаты, синхронизированному с ней через Home Assistant. Задержка действует, только если свет был выключен; прямая трансляция никогда не ждёт.
 
-Use the **split button** on the printer card:
+!!! note "Bambuddy выключает только свет, который включил сам"
+    Если свет уже был включён, он останется включённым. Если во время использования камеры вручную изменить свет на карточке принтера, управление снова переходит к вам и свет останется в выбранном состоянии.
 
-| Button Part | Action |
+!!! note "Что не включает свет"
+    Таймлапс по слоям, проверка ошибок Obico и кадры, которые Bambuddy сохраняет во время печати для финальной фотографии, снимаются на протяжении всей печати, поэтому свет мигал бы для каждого кадра. Они используют текущее освещение принтера. Финальная фотография из собственного таймлапса принтера также снимается во время печати и не включает свет дополнительно.
+
+---
+
+## :material-scan-helper: Обнаружение предметов на столе {#build-plate-empty-detection}
+
+Автоматически проверяйте, не остались ли предметы на рабочем столе перед запуском печати. При обнаружении печать немедленно приостанавливается и отправляется уведомление.
+
+### Как это работает {#how-it-works}
+
+1. **Калибровка** — снимите эталонные изображения пустого стола
+2. **Включение** — включите проверку стола для принтера
+3. **Автоматическая проверка** — при запуске любой печати Bambuddy сравнивает изображение камеры с эталонами
+4. **Автоматическая пауза** — если обнаружены предметы, печать сразу приостанавливается
+
+### Калибровка {#calibration}
+
+Для каждого принтера можно сохранить до **5 эталонных изображений** разных типов пластин (текстурированная, гладкая, высокотемпературная и т. д.):
+
+1. Нажмите **значок сканирования** на карточке принтера, чтобы открыть окно
+2. Убедитесь, что стол **полностью пуст**, а **освещение камеры включено**
+3. Нажмите **Калибровать**
+4. При желании добавьте подпись (например, «Textured PEI», «Cool Plate»)
+5. Повторите для других используемых пластин
+
+!!! tip "Несколько эталонов"
+    При проверке система автоматически выбирает наиболее подходящий эталон. Для точного обнаружения откалибруйте все часто используемые пластины.
+
+### Включение проверки {#enabling-detection}
+
+Используйте **разделённую кнопку** на карточке принтера:
+
+| Часть кнопки | Действие |
 |-------------|--------|
-| **Main (scan icon)** | Toggles detection on/off |
-| **Chevron (▼)** | Opens calibration/management modal |
+| **Основная (значок сканирования)** | Включает или выключает проверку |
+| **Стрелка (▼)** | Открывает окно калибровки и управления |
 
-When enabled, the button shows a **green border**.
+Когда проверка включена, кнопка имеет **зелёную рамку**.
 
-### ROI (Region of Interest)
+### ROI (область интереса) {#roi-region-of-interest}
 
-Adjust which part of the camera view is analyzed:
+Настройте часть изображения, которая анализируется:
 
-1. Open the plate detection modal
-2. Scroll to **Detection Area (ROI)**
-3. Click **Edit**
-4. Use the sliders to adjust X, Y, Width, and Height
-5. Click **Save**
+1. Откройте окно проверки стола
+2. Прокрутите до **Область обнаружения (ROI)**
+3. Нажмите **Изменить**
+4. Ползунками настройте X, Y, ширину и высоту
+5. Нажмите **Сохранить**
 
-The green box in the preview shows the detection area. Focus it on just the build plate to avoid false positives from the printer frame or background.
+Зелёная рамка предпросмотра показывает область обнаружения. Ограничьте её самим столом, чтобы избежать ложных срабатываний из-за рамы принтера или фона.
 
-### Managing References
+### Управление эталонами {#managing-references}
 
-In the plate detection modal:
+В окне проверки стола можно:
 
-- View thumbnails of saved references
-- Click label to edit (e.g., "High Temp Plate")
-- Click **X** on thumbnail to delete
-- See timestamps for when each was calibrated
+- Просматривать миниатюры сохранённых эталонов
+- Нажать подпись, чтобы изменить её (например, «High Temp Plate»)
+- Нажать **X** на миниатюре, чтобы удалить эталон
+- Посмотреть время каждой калибровки
 
-### Notifications
+### Уведомления {#notifications}
 
-When objects are detected:
+При обнаружении предметов:
 
-- **Print pauses immediately**
-- **Toast notification** appears in Bambuddy
-- **Push notification** sent (if configured)
-- **WebSocket event** broadcast for integrations
+- **Печать немедленно приостанавливается**
+- В Bambuddy появляется **всплывающее уведомление**
+- Отправляется **push-уведомление**, если оно настроено
+- Для интеграций рассылается **событие WebSocket**
 
-### Requirements
+### Требования {#requirements_1}
 
-| Requirement | Details |
+| Требование | Подробности |
 |-------------|---------|
-| **OpenCV** | `opencv-python-headless` must be installed |
-| **Chamber Light** | Should be ON for reliable detection |
-| **Calibration** | At least one reference image required |
+| **OpenCV** | Должен быть установлен `opencv-python-headless` |
+| **Освещение камеры** | Для надёжного обнаружения должно быть включено |
+| **Калибровка** | Требуется хотя бы одно эталонное изображение |
 
 !!! note "Docker"
-    OpenCV is included in the Docker image.
+    OpenCV входит в образ Docker.
 
-### How Detection Works
+### Принцип обнаружения {#how-detection-works}
 
-1. Captures current camera frame (or uses buffered frame if stream is active)
-2. Applies heavy Gaussian blur to both current and reference images
-3. Normalizes both images for consistent comparison
-4. Extracts the ROI region
-5. Calculates pixel difference percentage
-6. If difference > 1%, plate is considered "not empty"
+1. Захватывается текущий кадр камеры или используется буферизованный кадр, если трансляция активна
+2. К текущему и эталонному изображениям применяется сильное размытие по Гауссу
+3. Оба изображения нормализуются для сопоставимого сравнения
+4. Извлекается область ROI
+5. Вычисляется процент различающихся пикселей
+6. При различии > 1% стол считается непустым
 
-When the check cannot run (no camera image, an image that cannot be read, an analysis error, or no calibration to compare against), the print is not held, but it is not treated as an empty plate either: users who can control printers get a warning saying why, and the log records it. **Check Plate** in the plate detection modal shows the same reason.
+Если проверку выполнить невозможно — нет изображения камеры, оно не читается, произошла ошибка анализа или нет эталона, — печать не задерживается, но и стол не считается пустым. Пользователи с правом управления принтером получают предупреждение с причиной, которая также записывается в журнал. Кнопка **Проверить пластину** в окне проверки показывает ту же причину.
 
-### Troubleshooting
+### Устранение неполадок {#troubleshooting}
 
-**False Positives (detects objects when empty)**
+**Ложные срабатывания (объекты обнаружены на пустом столе)**
 
-- Calibrate with chamber light ON (same as during prints)
-- Adjust ROI to exclude printer frame edges
-- Add multiple calibrations for different lighting conditions
+- Выполните калибровку при включённом освещении камеры, как во время печати
+- Настройте ROI так, чтобы исключить края рамы принтера
+- Добавьте несколько эталонов для разных условий освещения
 
-**False Negatives (doesn't detect objects)**
+**Пропущенные объекты**
 
-- Ensure chamber light is ON
-- Recalibrate - plate surface may have changed
-- Check that objects are within the ROI area
+- Убедитесь, что освещение камеры включено
+- Повторите калибровку: поверхность стола могла измениться
+- Убедитесь, что предметы находятся в области ROI
 
 ---
 
-## :material-tune: Stream Settings
+## :material-tune: Настройки потока {#stream-settings}
 
-### Frame Rate
+### Частота кадров {#frame-rate}
 
-The default frame rate is 15 FPS. You can adjust this in the URL:
+По умолчанию используется 15 кадров/с. Частоту можно изменить в URL:
 
 ```
 /api/v1/printers/{id}/camera/stream?fps=20
 ```
 
-| FPS | Use Case |
+| FPS | Применение |
 |-----|----------|
-| 5 | Low bandwidth / A1/P1 cameras (hardware limit) |
-| 10-15 | Balanced (15 is default) |
-| 20-25 | Smoother video |
-| 30 | Maximum quality (X1/H2/P2 only) |
+| 5 | Низкая пропускная способность / камеры A1/P1 (аппаратное ограничение) |
+| 10–15 | Баланс (15 по умолчанию) |
+| 20–25 | Более плавное видео |
+| 30 | Максимальное качество (только X1/H2/P2) |
 
-!!! note "FPS Limits by Camera Type"
-    - **External cameras**: Max 15 FPS
-    - **A1/P1 printers**: Max 5 FPS (hardware limitation)
-    - **X1/H2/P2 printers**: Max 30 FPS
+!!! note "Ограничения FPS по типу камеры"
+    - **Внешние камеры**: максимум 15 FPS
+    - **Принтеры A1/P1**: максимум 5 FPS (аппаратное ограничение)
+    - **Принтеры X1/H2/P2**: максимум 30 FPS
 
-!!! note "Higher FPS = More Bandwidth"
-    Higher frame rates consume more network bandwidth and server resources.
+!!! note "Выше FPS — больше трафика"
+    Более высокая частота кадров потребляет больше сетевой пропускной способности и ресурсов сервера.
 
-    This applies to the connection between Bambuddy and your browser only. The
-    printer always sends its camera stream at full rate; the FPS setting decides
-    how many of those frames are passed on to the viewer.
+    Это относится только к соединению между Bambuddy и браузером. Принтер всегда отправляет поток с полной частотой; настройка FPS определяет, сколько из этих кадров передаётся зрителю.
 
-### Shared Streams and FPS
+### Общие потоки и FPS {#shared-streams-and-fps}
 
-Most Bambu printers accept only **one** camera connection at a time. To let you
-watch the same printer in several places at once - a cam-wall tile, the embedded
-viewer, a popup window - Bambuddy opens a single stream to the printer and fans
-the frames out to every viewer.
+Большинство принтеров Bambu допускают только **одно** подключение к камере одновременно. Чтобы показывать одну камеру в нескольких местах — плитке стены камер, встроенном окне или отдельном окне — Bambuddy открывает один поток к принтеру и раздаёт кадры всем зрителям.
 
-One consequence is worth knowing about:
+Это имеет следующее последствие:
 
-!!! warning "`?fps=` applies to the viewer that opens the stream"
-    The frame rate is set by whichever viewer starts the shared stream. Viewers
-    that join afterwards receive that same rate, whatever they asked for in
-    `?fps=`, because they attach to the stream that is already running.
+!!! warning "`?fps=` применяется к зрителю, открывшему поток"
+    Частоту кадров задаёт первый зритель, запустивший общий поток. Подключившиеся позже получают ту же частоту независимо от запрошенного ими значения `?fps=`, поскольку присоединяются к уже работающему потоку.
 
-    In practice this means the same action can give you a different frame rate
-    depending on what was already open. Opening the fullscreen camera at 15 FPS
-    while a cam-wall tile is already streaming at 8 FPS gives you 8 FPS.
+    Поэтому результат зависит от того, что уже открыто. Если полноэкранная камера запрошена с 15 FPS, когда плитка стены камер уже транслирует с 8 FPS, вы получите 8 FPS.
 
-The shared stream is torn down a few seconds after the last viewer leaves. The
-next viewer to open the camera starts a fresh stream at its own requested rate,
-so closing every viewer and reopening is what puts a new `?fps=` into effect.
+Общий поток закрывается через несколько секунд после ухода последнего зрителя. Следующий зритель создаёт новый поток с запрошенной им частотой, поэтому для применения нового `?fps=` нужно закрыть все окна просмотра и открыть камеру снова.
 
-!!! tip "Getting a predictable rate"
-    If you drive the stream endpoint from your own client and need a specific
-    frame rate, make sure no other viewer has the camera open first. `POST
-    /api/v1/printers/{id}/camera/stop` tears the shared stream down, but only
-    when no viewer is attached - it deliberately refuses while somebody else is
-    watching, so that one client cannot cut off another.
+!!! tip "Предсказуемая частота"
+    Если вы обращаетесь к конечной точке из собственного клиента и нужна определённая частота кадров, сначала убедитесь, что камера не открыта в другом окне. `POST /api/v1/printers/{id}/camera/stop` закрывает общий поток, только когда к нему не подключены зрители: при активном просмотре запрос намеренно отклоняется, чтобы один клиент не отключил другого.
 
-    External cameras (RTSP, USB) run one stream per viewer. Pass the same
-    `viewer=<id>` on your stream URL and on the stop call: the stop then ends
-    your own stream, plus any that has sent no picture for 10 seconds, and
-    leaves other viewers' streams running. A stop without `viewer` ends every
-    stream of the printer.
+    Для внешних камер (RTSP, USB) используется отдельный поток на каждого зрителя. Передайте одинаковый `viewer=<id>` в URL потока и запросе остановки: остановятся ваш поток и потоки, не присылавшие кадры 10 секунд, а остальные продолжат работу. Остановка без `viewer` завершает все потоки принтера.
 
 ---
 
-## :material-connection: Stream Cleanup
+## :material-connection: Освобождение потоков {#stream-cleanup}
 
-Bambuddy properly cleans up camera streams:
+Bambuddy корректно освобождает потоки камеры:
 
-- **Window close** - Stream stops automatically
-- **Tab hidden** - Stream pauses to save resources
-- **Page unload** - ffmpeg process terminated
-- **Refresh** - Old stream stopped, new one started
+- **Закрытие окна** — поток автоматически останавливается
+- **Вкладка скрыта** — поток приостанавливается для экономии ресурсов
+- **Уход со страницы** — процесс ffmpeg завершается
+- **Обновление** — старый поток останавливается, запускается новый
 
-This prevents orphaned ffmpeg processes from consuming resources.
+Это предотвращает расход ресурсов оставшимися без владельца процессами ffmpeg.
 
-!!! note "USB (V4L2) camera cleanup"
-    External **USB** camera streams are tracked the same way as the built-in RTSP path, so a stream that ends abruptly (browser tab/popup closed, dropped connection) is cleaned up two ways: immediately by the explicit stop call when the viewer closes, and — as a fallback if that's missed — by a background janitor that runs about once a minute and kills any leaked `ffmpeg` still holding `/dev/videoN`. If you ever find a USB camera's LED stuck on after closing the view, reopening the view or waiting for the next janitor pass releases the device; it no longer stays locked indefinitely.
+!!! note "Освобождение USB-камеры (V4L2)"
+    Потоки внешней **USB**-камеры отслеживаются так же, как встроенный RTSP. Если поток неожиданно оборвался из-за закрытия вкладки или окна либо разрыва связи, очистка выполняется двумя способами: сразу явным запросом остановки при закрытии окна и, если он не выполнен, фоновым очистителем примерно раз в минуту. Очиститель завершает оставшиеся процессы `ffmpeg`, удерживающие `/dev/videoN`. Если после закрытия просмотра индикатор USB-камеры продолжает гореть, повторно откройте просмотр или дождитесь следующего прохода очистителя: устройство освободится и не останется заблокированным навсегда.
 
-    The janitor only touches Bambuddy's own `ffmpeg`: one Bambuddy started, or one left over from an earlier run and since handed to the system's init process (as Docker and a crashed service leave them). Other software on the same machine that reads a USB camera with `ffmpeg` (motion, a webcam server) is left alone.
-
----
-
-## :material-refresh: Auto-Reconnect
-
-Bambuddy automatically detects and recovers from stalled camera streams:
-
-### Stall Detection
-
-The browser periodically checks if the stream is still receiving frames:
-
-- **Check interval**: Every 5 seconds
-- **Detection**: Compares last frame timestamp
-- **Threshold**: Stalled if no new frames for >5 seconds
-
-### Automatic Recovery
-
-When a stall is detected:
-
-1. **Detects** that no frames have been received
-2. **Closes** the stalled connection
-3. **Reconnects** automatically
-4. **Resumes** streaming
-
-!!! tip "Network Interruptions"
-    If your network briefly drops, the stream will automatically recover once the connection is restored.
-
-### Frozen Picture
-
-Bambuddy also watches what the camera sends, not only that it sends something. A built-in (RTSP) camera that keeps sending the same frame for 20 seconds counts as frozen. This happens when the connection to the printer has dropped but `ffmpeg` keeps repeating its last frame. Bambuddy then restarts `ffmpeg` and reconnects to the printer, and open viewers stay connected. The log shows `RTSP output frozen … restarting ffmpeg` when this happens.
-
-An external RTSP camera is watched the same way; its log line reads `External RTSP picture frozen … restarting ffmpeg`. Some external cameras legitimately repeat their picture for longer, such as a slow source or a surveillance camera's smart codec on a static night scene. If the picture after a restart turns out to be a new one, Bambuddy waits three times the longest gap it has seen between changes (up to 5 minutes) before the next check, so such a camera is restarted at most once.
-
-A working camera practically never sends two identical frames, because sensor noise changes every one. In a completely dark chamber the picture can come out identical, though. If the picture after a restart is exactly the same as before, Bambuddy treats it as a still picture and only checks again every 5 minutes, until it changes.
+    Очиститель затрагивает только собственные процессы `ffmpeg` Bambuddy: запущенные им или оставшиеся от предыдущего запуска и переданные системному процессу init, как бывает с Docker и аварийно завершённой службой. Другие программы на том же компьютере, использующие USB-камеру через `ffmpeg` (motion, сервер веб-камеры), не затрагиваются.
 
 ---
 
-## :material-stethoscope: Built-in Camera Diagnostic
+## :material-refresh: Автоматическое переподключение {#auto-reconnect}
 
-Before opening a ticket, click **Diagnose** in the camera viewer. The diagnostic runs staged checks against your printer's camera path and tells you exactly which stage failed and what to do about it.
+Bambuddy автоматически обнаруживает зависшие потоки камеры и восстанавливает их:
 
-### How to open it
+### Обнаружение остановки {#stall-detection}
 
-Two entry points, both in the embedded camera viewer:
+Браузер периодически проверяет поступление кадров:
 
-- **Stethoscope icon** in the control bar, between Refresh and Fullscreen &mdash; available any time the camera is open, even when the stream is working. Use this to test before sending a print, after a firmware update, or to confirm the camera link is healthy.
-- **Diagnose button** next to **Retry** in the "Camera unavailable" overlay &mdash; shown when the stream is in an error state.
+- **Интервал проверки**: каждые 5 секунд
+- **Проверка**: сравнивается время последнего кадра
+- **Порог**: поток считается остановившимся, если новых кадров нет более 5 секунд
 
-### What it checks
+### Автоматическое восстановление {#automatic-recovery}
 
-| Stage | What it tests |
+При обнаружении остановки Bambuddy:
+
+1. **Обнаруживает** отсутствие кадров
+2. **Закрывает** зависшее соединение
+3. Автоматически **подключается снова**
+4. **Возобновляет** трансляцию
+
+!!! tip "Перебои в сети"
+    При кратком разрыве сети поток автоматически восстановится после возвращения соединения.
+
+### Застывшее изображение {#frozen-picture}
+
+Bambuddy проверяет не только наличие данных от камеры, но и их содержимое. Если встроенная камера (RTSP) отправляет один и тот же кадр 20 секунд, изображение считается застывшим. Это происходит, когда соединение с принтером потеряно, но `ffmpeg` продолжает повторять последний кадр. Bambuddy перезапускает `ffmpeg` и подключается к принтеру снова, а открытые окна просмотра остаются подключёнными. В журнале появляется `RTSP output frozen … restarting ffmpeg`.
+
+Внешняя RTSP-камера проверяется так же; соответствующая строка журнала — `External RTSP picture frozen … restarting ffmpeg`. Некоторые внешние камеры могут правомерно повторять изображение дольше, например медленный источник или камера наблюдения с интеллектуальным кодеком при неподвижной ночной сцене. Если после перезапуска изображение оказывается новым, Bambuddy перед следующей проверкой ждёт втрое дольше самого большого замеченного интервала между изменениями (до 5 минут), поэтому такая камера перезапускается не более одного раза.
+
+Работающая камера почти никогда не отправляет два одинаковых кадра, поскольку каждый меняется из-за шума датчика. Однако в полностью тёмной камере изображения могут совпадать. Если после перезапуска кадр в точности тот же, Bambuddy считает изображение неподвижным и проверяет снова лишь раз в 5 минут, пока оно не изменится.
+
+---
+
+## :material-stethoscope: Встроенная диагностика камеры {#built-in-camera-diagnostic}
+
+Перед обращением за поддержкой нажмите **Диагностика** в окне камеры. Диагностика последовательно проверяет подключение камеры принтера и сообщает, какой этап завершился ошибкой и что делать.
+
+### Как открыть {#how-to-open-it}
+
+Оба способа доступны во встроенном окне камеры:
+
+- **Значок стетоскопа** на панели управления между обновлением и полноэкранным режимом &mdash; доступен всегда, когда камера открыта, даже при работающей трансляции. Используйте его перед отправкой печати, после обновления прошивки или для проверки состояния подключения.
+- **Кнопка диагностики** рядом с **Повторить** в сообщении «Камера недоступна» &mdash; появляется при ошибке трансляции.
+
+### Что проверяется {#what-it-checks}
+
+| Этап | Проверка |
 |-------|---------------|
-| **Network reachability** | Opens a TCP socket to the printer's camera port (`322` for X1 / X1C / X1E / X2D / P2S / H2 series, `6000` for A1 / A1 Mini / P1P / P1S). Distinguishes timeout from refused so the remediation hint is specific. |
-| **Frame capture** | Captures one JPEG end-to-end via the same pipeline that powers `/camera/snapshot`. Covers authentication, protocol handshake, and the first keyframe in one step. |
+| **Доступность по сети** | Открывается TCP-соединение с портом камеры принтера (`322` для X1 / X1C / X1E / X2D / P2S / серии H2, `6000` для A1 / A1 Mini / P1P / P1S). Тайм-аут отличается от отказа соединения, поэтому подсказка по исправлению точнее. |
+| **Получение кадра** | Через тот же конвейер, что используется для `/camera/snapshot`, получается один JPEG. На одном этапе проверяются аутентификация, согласование протокола и первый ключевой кадр. |
 
-If the camera is currently streaming with a fresh frame, the diagnostic short-circuits with **Live stream active** and reports success without opening a fresh socket &mdash; opening a second socket would kick the live viewer off on most Bambu firmwares.
+Если трансляция уже активна и кадр свежий, диагностика сразу сообщает об успехе **Трансляция активна**, не открывая новое соединение: на большинстве прошивок Bambu второе подключение отключило бы текущего зрителя.
 
-If instead another snapshot is already being taken at that moment (an Obico poll, the printer wall refreshing), the frame capture stage shares that capture rather than opening a competing connection, and is labelled `coalesced_capture` in the stage detail. The pass is still real evidence the camera works &mdash; a JPEG came back &mdash; but the timing shown is mostly time spent waiting for the other capture, so don't read it as a connection speed. Run the diagnostic again a moment later for a clean measurement.
+Если в этот момент уже выполняется другой снимок, например опрос Obico или обновление стены принтеров, этап получения кадра использует тот же захват вместо конкурирующего подключения и отмечается в подробностях как `coalesced_capture`. Успех по-прежнему подтверждает работу камеры — JPEG получен, — но указанное время в основном ушло на ожидание другого захвата, поэтому не считайте его скоростью соединения. Для точного измерения повторите диагностику чуть позже.
 
-### What the result tells you
+### Как понимать результат {#what-the-result-tells-you}
 
-The modal renders each stage with a green check, red X, or grey "skipped" marker, plus a translated remediation message at the bottom. Common outcomes:
+Для каждого этапа окно показывает зелёную галочку, красный крестик или серую отметку «пропущено», а внизу — переведённую рекомендацию. Типичные результаты:
 
-| Summary | What happened | What to do |
+| Результат | Что произошло | Что делать |
 |---------|---------------|------------|
-| **Camera is working** | All stages passed. | Nothing &mdash; the camera path is healthy. |
-| **Live stream active** | Someone is already watching the camera. | Nothing &mdash; real-world proof beats any synthetic test. |
-| **Printer not reachable** | TCP connect timed out or returned "no route to host". | Check the printer's IP address, that it's powered on, and that Bambuddy can reach it on the network. |
-| **Camera port closed** | TCP connect was refused &mdash; printer is up, camera port isn't accepting. | Enable **LAN-only mode** and **Developer Mode** in the printer's settings. |
-| **No frames received** | TCP connect succeeded but no JPEG came back within 15 seconds. | Check that the camera is enabled in the printer's settings. If you just updated firmware, try power-cycling the printer. |
+| **Камера работает** | Все этапы пройдены. | Ничего: подключение камеры исправно. |
+| **Трансляция активна** | Кто-то уже смотрит камеру. | Ничего: работающая трансляция подтверждает подключение. |
+| **Принтер недоступен** | TCP-соединение завершилось по тайм-ауту или ответом «нет маршрута к узлу». | Проверьте IP принтера, его питание и доступность из сети Bambuddy. |
+| **Порт камеры закрыт** | TCP-соединение отклонено: принтер работает, но порт камеры не принимает подключения. | Включите **режим «Только локальная сеть»** и **режим разработчика** в настройках принтера. |
+| **Кадры не получены** | TCP-соединение установлено, но JPEG не поступил за 15 секунд. | Убедитесь, что камера включена в настройках принтера. Если вы только что обновили прошивку, попробуйте выключить и снова включить принтер. |
 
-### Metadata for support tickets
+### Метаданные для обращения в поддержку {#metadata-for-support-tickets}
 
-The bottom row of the modal shows three values used for triage:
+В нижней строке окна показаны три значения для диагностики:
 
-- **Protocol** &mdash; `rtsp` (X1 / H2 / P2 family) or `chamber_image` (A1 / P1 family)
-- **Port** &mdash; `322` or `6000`
-- **Profile** &mdash; `default` (the historical X1/H2 fast-startup tuning) or a model name (e.g. `P2S`) when Bambuddy has model-specific tuning for that camera
+- **Протокол** &mdash; `rtsp` (семейства X1 / H2 / P2) или `chamber_image` (семейства A1 / P1)
+- **Порт** &mdash; `322` или `6000`
+- **Профиль** &mdash; `default` (историческая настройка быстрого запуска X1/H2) или название модели, например `P2S`, если у Bambuddy есть специальные настройки этой камеры
 
-If you do end up opening a ticket, a screenshot of this modal is more useful than a long log paste &mdash; it tells me which stage failed, how long it took, and which tuning profile your printer is on.
+Если потребуется обращение в поддержку, снимок этого окна полезнее длинного журнала: он покажет этап ошибки, затраченное время и профиль настройки принтера.
 
 ---
 
-## :material-help-circle: Troubleshooting
+## :material-help-circle: Устранение неполадок {#troubleshooting_1}
 
-!!! tip "Try the built-in diagnostic first"
-    The [camera diagnostic](#built-in-camera-diagnostic) above will tell you which of the steps below is the actual fix in 5&ndash;15 seconds. Skip to it before working through the checklist.
+!!! tip "Сначала попробуйте встроенную диагностику"
+    [Диагностика камеры](#built-in-camera-diagnostic) выше за 5–15 секунд покажет, какое из приведённых ниже действий поможет. Запустите её прежде, чем проходить список проверок.
 
-### Stream Won't Start
+### Трансляция не запускается {#stream-wont-start}
 
-1. **Is the printer on?** Camera requires power
-2. **Is camera enabled?** Check printer settings
-3. **Is ffmpeg installed?** Required for streaming
-4. **Is Developer Mode enabled?** Required for camera access
-5. **Running in Docker?** Try `network_mode: host` if having issues
+1. **Принтер включён?** Камере необходимо питание
+2. **Камера включена?** Проверьте настройки принтера
+3. **ffmpeg установлен?** Он необходим для трансляции
+4. **Режим разработчика включён?** Он необходим для доступа к камере
+5. **Используется Docker?** При проблемах попробуйте `network_mode: host`
 
-### Docker: Camera Not Working
+### Docker: камера не работает {#docker-camera-not-working}
 
-If camera streaming doesn't work in Docker, try host network mode:
+Если трансляция не работает в Docker, попробуйте сетевой режим host:
 
 ```yaml
 # docker-compose.yml
@@ -663,43 +614,43 @@ services:
     # Remove the ports: section when using host mode
 ```
 
-Note: Docker's default bridge networking with NAT works in most setups. Host mode is only needed if your network configuration prevents NAT'd traffic from reaching the printer.
+Примечание: стандартная сеть bridge Docker с NAT работает в большинстве случаев. Режим host нужен, только если конфигурация сети не позволяет трафику через NAT достичь принтера.
 
-### Stream Freezes
+### Трансляция зависает {#stream-freezes}
 
-- Network congestion or WiFi issues
-- Try lowering the FPS
-- Check printer WiFi signal strength
-- Try snapshot mode instead
+- Перегрузка сети или проблемы Wi-Fi
+- Попробуйте уменьшить FPS
+- Проверьте уровень сигнала Wi-Fi принтера
+- Попробуйте режим снимков
 
-### High Latency
+### Высокая задержка {#high-latency}
 
-MJPEG streaming typically has 1-3 seconds of latency. This is normal and due to:
+Задержка трансляции MJPEG обычно составляет 1–3 секунды. Это нормально и связано с:
 
-- RTSP buffering
-- ffmpeg processing
-- HTTP streaming
+- Буферизацией RTSP
+- Обработкой ffmpeg
+- Передачей по HTTP
 
-### Camera Shows Black
+### Чёрное изображение {#camera-shows-black}
 
-- Camera may be initializing
-- Try refreshing the stream
-- Check if camera works in Bambu Studio
+- Камера может запускаться
+- Попробуйте обновить трансляцию
+- Проверьте работу камеры в Bambu Studio
 
-### Use go2rtc as a relay (workaround)
+### Использование go2rtc как посредника (обходной путь) {#use-go2rtc-as-a-relay-workaround}
 
-When the built-in stream is unreliable for your printer or network — connects then drops, shows black after a few seconds, won't connect at all behind a reverse proxy, or works in Bambu Studio but not in Bambuddy — you can run [go2rtc](https://github.com/AlexxIT/go2rtc) as a relay between the printer and Bambuddy. go2rtc handles the RTSPS handshake, holds the single camera connection the printer allows, and exposes a plain MJPEG URL that Bambuddy consumes via the **External Camera** feature above.
+Если встроенная трансляция ненадёжна в вашей сети или на вашем принтере — подключается и обрывается, чернеет через несколько секунд, не подключается через обратный прокси или работает в Bambu Studio, но не в Bambuddy, — можно запустить [go2rtc](https://github.com/AlexxIT/go2rtc) как посредник между принтером и Bambuddy. go2rtc выполняет согласование RTSPS, удерживает единственное разрешённое принтером соединение и предоставляет обычный URL MJPEG, который Bambuddy использует через функцию **Внешняя камера**.
 
-This bypasses Bambuddy's built-in RTSP / chamber-image stream entirely. Useful for:
+При этом встроенный поток RTSP / chamber-image Bambuddy полностью обходится. Способ полезен для:
 
-- Printers behind firmware quirks that cause the built-in stream to drop after a few seconds
-- Cross-subnet setups where Bambuddy can reach the printer for MQTT/FTP but the camera handshake is flaky
-- Reverse-proxy deployments where the MJPEG response gets buffered upstream
-- Sharing the single allowed camera connection across multiple clients (Frigate, OBS, Home Assistant, Bambuddy) — go2rtc holds one upstream, fans out N downstreams
+- Принтеров с особенностями прошивки, из-за которых встроенная трансляция обрывается через несколько секунд
+- Разных подсетей, когда Bambuddy может связаться с принтером по MQTT/FTP, но согласование камеры работает нестабильно
+- Установок с обратным прокси, где ответ MJPEG буферизуется на промежуточном сервере
+- Совместного использования единственного соединения несколькими клиентами (Frigate, OBS, Home Assistant, Bambuddy): go2rtc удерживает одно входящее соединение и раздаёт поток многим клиентам
 
-#### go2rtc config (P2S example)
+#### Конфигурация go2rtc (пример P2S) {#go2rtc-config-p2s-example}
 
-Add to your `go2rtc.yaml`. Replace `SERIAL#` with your printer's serial number (used as the RTSPS password) and `192.168.101.41` with your printer's IP:
+Добавьте в `go2rtc.yaml`. Замените `SERIAL#` серийным номером принтера (он используется как пароль RTSPS), а `192.168.101.41` — его IP-адресом:
 
 ```yaml
 streams:
@@ -711,188 +662,149 @@ streams:
     - "ffmpeg:http://127.0.0.1:1984/api/stream.mp4?src=p2s_camera#video=mjpeg#args=-r 2"
 ```
 
-The same shape works for any Bambu printer that speaks RTSPS on port `322` — **X1 / X1C / X1E / X2D / P2S / H2C / H2D / H2D Pro / H2S**. A1 / A1 Mini / P1P / P1S use a different proprietary chamber-image protocol on port `6000` and are NOT addressable through go2rtc this way; if your built-in stream fails on one of those, go2rtc isn't the workaround.
+Такой же формат подходит для любого принтера Bambu с RTSPS на порту `322`: **X1 / X1C / X1E / X2D / P2S / H2C / H2D / H2D Pro / H2S**. A1 / A1 Mini / P1P / P1S используют другой закрытый протокол chamber-image на порту `6000`, поэтому таким способом через go2rtc к ним подключиться НЕЛЬЗЯ. Если встроенный поток одной из этих моделей не работает, go2rtc не поможет.
 
-#### Bambuddy setup
+#### Настройка Bambuddy {#bambuddy-setup}
 
-1. Find the MJPEG URL go2rtc is now serving — substitute go2rtc's host IP for `192.168.101.29`:
+1. Найдите URL MJPEG, который теперь предоставляет go2rtc, подставив IP хоста go2rtc вместо `192.168.101.29`:
 
    ```
    http://192.168.101.29:1984/api/stream.mjpeg?src=p2s_mjpeg
    ```
 
-2. In Bambuddy → **Settings** → **Camera** → enable **External Camera** for the affected printer.
-3. Paste the go2rtc URL above into the **Camera URL** field, set type to **MJPEG**, and click **Test**.
-4. Save.
+2. В Bambuddy откройте **Настройки** → **Камера** и включите **Внешнюю камеру** для нужного принтера.
+3. Вставьте URL go2rtc в поле **URL камеры**, задайте тип **MJPEG** и нажмите **Проверить**.
+4. Сохраните настройки.
 
-From here Bambuddy will use the go2rtc stream for live viewing, notification thumbnails, finish photos, and (if you've enabled them) layer timelapse and plate-empty detection — everything that previously hit the built-in camera path.
+После этого Bambuddy будет использовать поток go2rtc для просмотра в реальном времени, миниатюр уведомлений, финальных снимков и, если они включены, таймлапса по слоям и проверки пустого стола — всего, что раньше обращалось ко встроенной камере.
 
-!!! tip "Optional: separate snapshot endpoint"
-    go2rtc also exposes `/api/frame.jpeg?src=<name>` — a fast single-frame endpoint that's more reliable than reading one frame from the MJPEG stream. If your camera notifications or finish photos look slow or come up black, set this URL in the **Snapshot URL** field below the live-stream URL on the same External Camera config screen. See the [Snapshot URL override tip](#external-cameras) above.
+!!! tip "Необязательно: отдельная конечная точка снимка"
+    go2rtc также предоставляет `/api/frame.jpeg?src=<name>` — быструю конечную точку отдельного кадра, более надёжную, чем чтение кадра из потока MJPEG. Если фотографии уведомлений или финальные снимки появляются медленно либо чёрными, задайте этот URL в поле **URL снимка** под URL трансляции на том же экране настройки внешней камеры. См. [подсказку об отдельном URL снимка](#external-cameras) выше.
 
 ---
 
-## :material-api: API Endpoints
+## :material-api: Конечные точки API {#api-endpoints}
 
-For developers and integrations:
+Для разработчиков и интеграций:
 
-| Endpoint | Method | Description |
+| Конечная точка | Метод | Описание |
 |----------|--------|-------------|
-| `/api/v1/printers/{id}/camera/stream` | GET | MJPEG stream |
-| `/api/v1/printers/{id}/camera/snapshot` | GET | Single JPEG frame. While someone watches the live view, this is the live view's frame; while the live view is still starting it answers `503` with `Retry-After: 2` rather than taking the camera from the viewer. An external camera with its own snapshot URL is always fetched from that URL |
-| `/api/v1/printers/{id}/camera/stop` | POST | Stop active streams |
-| `/api/v1/printers/{id}/camera/test` | GET | Test camera connection (returns success/failure only) |
-| `/api/v1/printers/{id}/camera/diagnose` | POST | Run staged diagnostic (returns per-stage results and remediation code) |
+| `/api/v1/printers/{id}/camera/stream` | GET | Поток MJPEG |
+| `/api/v1/printers/{id}/camera/snapshot` | GET | Один кадр JPEG. Во время просмотра прямой трансляции возвращается её кадр; пока трансляция запускается, возвращается `503` с `Retry-After: 2`, чтобы не отбирать камеру у зрителя. Снимок внешней камеры с собственным URL всегда получается по этому URL |
+| `/api/v1/printers/{id}/camera/stop` | POST | Остановить активные потоки |
+| `/api/v1/printers/{id}/camera/test` | GET | Проверить подключение камеры (возвращает только успех или ошибку) |
+| `/api/v1/printers/{id}/camera/diagnose` | POST | Выполнить поэтапную диагностику (возвращает результаты этапов и код рекомендации) |
 
-### Example: Embed in OBS
+### Пример: добавление в OBS {#example-embed-in-obs}
 
-Use the stream URL directly:
+Используйте URL потока напрямую:
 
 ```
 http://your-bambuddy-server:8000/api/v1/printers/1/camera/stream
 ```
 
-Add as a **Browser Source** or **Media Source** in OBS.
+Добавьте его в OBS как **Browser Source** или **Media Source**.
 
 ---
 
-## :material-video-box: Streaming Overlay for OBS
+## :material-video-box: Оверлей трансляции для OBS {#streaming-overlay-for-obs}
 
-Bambuddy includes a dedicated overlay page designed for live streaming. It combines the camera feed with real-time print status in a single embeddable view.
+Bambuddy включает отдельную страницу оверлея для прямых трансляций. Она объединяет изображение камеры и состояние печати в реальном времени в одном встраиваемом представлении.
 
-### Accessing the Overlay
+### Открытие оверлея {#accessing-the-overlay}
 
-Navigate to:
+Перейдите по адресу:
 
 ```
 http://your-bambuddy-server:8000/overlay/{printer_id}
 ```
 
-For example: `http://192.168.1.100:8000/overlay/1`
+Например: `http://192.168.1.100:8000/overlay/1`
 
-!!! note "Authentication depends on your setup"
-    If Bambuddy runs **without login** (no authentication enabled), the overlay
-    works with the plain URL above — nothing more to do.
+!!! note "Аутентификация зависит от настроек"
+    Если Bambuddy работает **без входа** (аутентификация выключена), оверлей работает по указанному URL без дополнительных действий.
 
-    If Bambuddy runs **with login enabled**, the overlay's data (print status and
-    camera feed) is protected just like the rest of the app. It works in a browser
-    where you are already signed in, but **OBS is a fresh browser with no login**,
-    so the plain URL shows a blank overlay. Add a **Streaming Overlay token** to the
-    URL (see below). This is unrelated to how you reach the server — a reverse proxy,
-    Cloudflare Tunnel, or remote domain does not change it; a token is what OBS needs.
+    Если **вход включён**, данные оверлея — состояние печати и изображение камеры — защищены, как и остальная часть приложения. В браузере с активным входом он работает, но **OBS использует новый браузер без входа**, поэтому простой URL покажет пустой оверлей. Добавьте в URL **токен Streaming Overlay** (см. ниже). Способ доступа к серверу — обратный прокси, Cloudflare Tunnel или удалённый домен — на это не влияет; OBS нужен токен.
 
-### Streaming Overlay token (login-enabled deployments)
+### Токен Streaming Overlay (при включённом входе) {#streaming-overlay-token-login-enabled-deployments}
 
-1. Go to **Settings → Camera → Streaming Overlay**.
-2. Choose **Create overlay token**, give it a name and expiry, and create it.
-   The builder uses the token returned at creation. You can also create one in
-   **Camera API Tokens** with the **Streaming Overlay** scope and copy it into
-   **Manual token**.
-3. Choose the printer and appearance settings, then choose **Copy** next to the
-   URL.
-4. Paste the complete URL into OBS and keep it somewhere safe.
+1. Откройте **Настройки → Камера → Streaming Overlay**.
+2. Выберите **Создать токен оверлея**, задайте название и срок действия и создайте токен. Конструктор использует токен, полученный при создании. Можно также создать его в разделе **API-токены камеры** с областью **Streaming Overlay** и вставить в поле **Токен вручную**.
+3. Выберите принтер и параметры оформления, затем нажмите **Копировать** рядом с URL.
+4. Вставьте полный URL в OBS и сохраните его в надёжном месте.
 
-While a token is being created, Cancel, manual entry and import are disabled,
-so the token returned at creation cannot be lost. If creation fails, the
-server's error is shown and those controls become available again. Import is
-also unavailable while a logo upload or removal is running.
+Во время создания токена отмена, ручной ввод и импорт недоступны, чтобы полученный токен не потерялся. Если создание не удалось, показывается ошибка сервера и элементы снова становятся доступны. Импорт также недоступен при загрузке или удалении логотипа.
 
-Tokens are stored as hashes and cannot be retrieved later. The builder holds
-the token only in memory and clears it when you leave or reload the page.
-**Manual token** and the generated URL are masked until you choose **Show
-token**; **Copy** always copies the complete, working URL.
+Токены хранятся в виде хешей, и получить их позже нельзя. Конструктор удерживает токен только в памяти и очищает его при уходе со страницы или её обновлении. **Токен вручную** и созданный URL скрыты до выбора **Показать токен**; кнопка **Копировать** всегда копирует полный рабочий URL.
 
-To edit an existing browser source, paste its complete URL into **Existing
-overlay URL** and choose **Import URL**, or paste its token into **Manual
-token**. Import reads the URL in the browser; it does not contact the server
-in it. It takes the printer, token, layout, fields, text size, FPS, artwork,
-camera, background transparency and branding settings. Like the overlay page,
-it clamps FPS to 1–30 and ignores fields and parameters it doesn't know. A URL
-that isn't an overlay URL, has more than one token, or contains a user name or
-password is rejected without changing the current settings. The generated URL
-uses this Bambuddy installation, so check the selected printer when importing
-from another installation. Copy the updated URL back into OBS after changing
-settings.
+Чтобы изменить существующий источник браузера, вставьте его полный URL в поле **Существующий URL оверлея** и выберите **Импортировать URL** либо вставьте токен в поле **Токен вручную**. Импорт читает URL в браузере и не обращается к указанному в нём серверу. Он извлекает принтер, токен, макет, поля, размер текста, FPS, оформление, камеру, прозрачность фона и настройки брендинга. Как и страница оверлея, он ограничивает FPS диапазоном 1–30 и игнорирует неизвестные поля и параметры. URL, не являющийся URL оверлея, содержащий несколько токенов, имя пользователя или пароль, отклоняется без изменения текущих настроек. Созданный URL использует эту установку Bambuddy, поэтому при импорте из другой установки проверьте выбранный принтер. После изменения настроек скопируйте обновлённый URL обратно в OBS.
 
-!!! note "Lost every copy of a URL?"
-    A token cannot be shown again. Create a new one, update your browser
-    sources, then revoke the old token.
+!!! note "Все копии URL потеряны?"
+    Токен нельзя показать повторно. Создайте новый, обновите источники браузера и отзовите старый токен.
 
-![Streaming Overlay builder with URL import and masked manual token entry](../assets/images/streaming-overlay/token-builder.png)
+![Конструктор оверлея с импортом URL и скрытым полем токена](../assets/images/streaming-overlay/token-builder.png)
 
-The URL then looks like:
+URL будет выглядеть так:
 
 ```
 http://192.168.1.100:8000/overlay/1?token=bblt_xxxxxxxx_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
-!!! warning "Treat the URL like a key"
-    Anyone who can read the URL can watch that printer's stream and see the print
-    filename. It cannot see the printer's address or access code. Revoke the token
-    (same Settings page) to cut the overlay off. A **Streaming Overlay** token only
-    opens the overlay for one printer at a time — it is a narrower grant than a Cam
-    Wall token and cannot enumerate your other printers.
+!!! warning "Обращайтесь с URL как с ключом"
+    Любой, кто может прочитать URL, сможет смотреть поток этого принтера и видеть имя файла печати. Адрес и код доступа принтера при этом недоступны. Чтобы отключить оверлей, отзовите токен на той же странице настроек. Токен **Streaming Overlay** открывает оверлей только одного принтера за раз: его полномочия уже, чем у токена Cam Wall, и он не может перечислять другие принтеры.
 
-### What's Included
+### Что отображается {#whats-included}
 
-The overlay displays:
+Оверлей содержит:
 
-| Element | Description |
+| Элемент | Описание |
 |---------|-------------|
-| **Camera Feed** | Full-screen live camera view |
-| **Bambuddy Logo** | Branding in top-right corner (links to GitHub) |
-| **Printer Name / Model** | Printer name and/or model, e.g. `Big Mumma · H2D` (both off by default — see Show/Hide Elements) |
-| **Filename** | Current print file name |
-| **Status** | Printing, Paused, Idle, etc. |
-| **Progress Bar** | Visual progress with percentage |
-| **Layer Count** | Current layer / Total layers |
-| **Time Remaining** | Estimated time left |
-| **ETA** | Estimated completion time |
-| **Nozzle / Bed / Chamber** | Live temperatures, with the target while the heater is still climbing (off by default — see Show/Hide Elements) |
+| **Изображение камеры** | Полноэкранная трансляция |
+| **Логотип Bambuddy** | Брендинг в правом верхнем углу (ссылка на GitHub) |
+| **Название / модель принтера** | Название и/или модель, например `Big Mumma · H2D` (оба выключены по умолчанию — см. «Показать или скрыть элементы») |
+| **Имя файла** | Имя файла текущей печати |
+| **Состояние** | Печатает, пауза, ожидание и т. д. |
+| **Индикатор прогресса** | Наглядный прогресс в процентах |
+| **Слои** | Текущий слой / общее количество |
+| **Оставшееся время** | Расчётное время до завершения |
+| **Время завершения** | Расчётное время на часах |
+| **Сопло / стол / камера** | Текущие температуры; при нагреве также целевая температура (выключено по умолчанию — см. «Показать или скрыть элементы») |
 
-### OBS Setup
+### Настройка OBS {#obs-setup}
 
-1. In OBS, click **+** under Sources
-2. Select **Browser**
-3. Enter the overlay URL (e.g., `http://192.168.1.100:8000/overlay/1`)
-4. Set width and height to match your scene (e.g., 1920x1080, or 1080x1920 for a portrait URL)
-5. Click **OK**
+1. В OBS нажмите **+** в разделе источников
+2. Выберите **Браузер**
+3. Введите URL оверлея, например `http://192.168.1.100:8000/overlay/1`
+4. Задайте ширину и высоту под сцену, например 1920×1080 или 1080×1920 для вертикального URL
+5. Нажмите **OK**
 
-!!! tip "Single Source"
-    The overlay combines camera and status - you only need one browser source, not separate camera and text sources.
+!!! tip "Один источник"
+    Оверлей объединяет камеру и состояние — достаточно одного источника браузера, отдельные источники камеры и текста не нужны.
 
-### Customization
+### Настройка внешнего вида {#customization}
 
-!!! tip "Build the URL in the UI"
-    **Settings → Camera → Streaming Overlay** has a builder: pick the printer,
-    tick the fields you want, set layout, size, artwork, frame rate and branding,
-    paste in a token if you need one, and copy the finished URL. It also has a preview so you can see
-    the result before pasting it into OBS. The parameters below are what it
-    produces, documented for anyone assembling a URL by hand or scripting one.
+!!! tip "Создайте URL в интерфейсе"
+    В **Настройки → Камера → Streaming Overlay** доступен конструктор: выберите принтер и поля, задайте макет, размер, оформление, частоту кадров и брендинг, при необходимости вставьте токен и скопируйте готовый URL. Предпросмотр позволяет увидеть результат до вставки в OBS. Ниже описаны формируемые параметры для ручного создания URL и скриптов.
 
-    The builder remembers your choices in the browser you used, so it reopens
-    as you left it. The token is never stored: enter or import it again, or
-    create a new one. **Reset choices** at the top puts every choice back to
-    its default and leaves the token and the uploaded logo alone. In another
-    browser, or for another admin, the builder starts from the defaults.
+    Конструктор запоминает выбор в используемом браузере и открывается с прежними настройками. Токен никогда не сохраняется: введите или импортируйте его снова либо создайте новый. Кнопка **Сбросить выбор** вверху возвращает все параметры по умолчанию, не удаляя токен и загруженный логотип. В другом браузере или для другого администратора конструктор начинает со стандартных значений.
 
-Customize the overlay using query parameters:
+Оверлей можно настроить параметрами запроса:
 
-#### Landscape, portrait, or both
+#### Горизонтальный, вертикальный или оба макета {#landscape-portrait-or-both}
 
-Choose **Layout** independently of **Artwork**. Both Classic and Version 2 support all three choices:
+Выбирайте **Макет** независимо от **Оформления**. Classic и Version 2 поддерживают все три варианта:
 
-| Layout | URLs and previews | OBS browser-source dimensions |
+| Макет | URL и предпросмотр | Размеры источника браузера OBS |
 | --- | --- | --- |
-| Landscape, the default | One landscape URL and preview | 1920 × 1080 |
-| Portrait | One portrait URL and preview | 1080 × 1920 |
-| Both | Separate landscape and portrait URLs and simultaneous previews | One source at each size |
+| Горизонтальный, по умолчанию | Один горизонтальный URL и предпросмотр | 1920 × 1080 |
+| Вертикальный | Один вертикальный URL и предпросмотр | 1080 × 1920 |
+| Оба | Отдельные горизонтальный и вертикальный URL и одновременный предпросмотр | По одному источнику каждого размера |
 
-Each URL has its own **Copy** and **Open** actions. In Both mode, add the two URLs as separate browser sources to your landscape and portrait scenes. They share the selected printer, fields, text size, camera visibility, frame rate, branding and token. They can run at the same time.
+У каждого URL свои действия **Копировать** и **Открыть**. В режиме «Оба» добавьте два URL отдельными источниками браузера в горизонтальную и вертикальную сцены. Они используют общие настройки принтера, полей, размера текста, камеры, FPS, брендинга и токена и могут работать одновременно.
 
-**Show preview** starts only the selected previews. **Hide preview** or leaving the settings page removes them and closes their streams. Changes to the settings update both the URLs and visible previews. Previews use the recommended source dimensions, scaled down to fit the settings card.
+**Показать предпросмотр** запускает только выбранные предпросмотры. **Скрыть предпросмотр** или уход со страницы настроек удаляет их и закрывает потоки. Изменение настроек обновляет оба URL и видимые предпросмотры. В предпросмотре используются рекомендуемые размеры источника, уменьшенные до размеров карточки настроек.
 
-Landscape URLs omit the layout parameter to preserve Classic text sizing at any source resolution. Portrait URLs select a fixed composition:
+Горизонтальные URL не содержат параметра макета, чтобы сохранить масштаб текста Classic при любом разрешении источника. Вертикальные URL выбирают фиксированную композицию:
 
 ```text
 /overlay/1
@@ -900,15 +812,15 @@ Landscape URLs omit the layout parameter to preserve Classic text sizing at any 
 /overlay/1?layout=portrait&artwork=2
 ```
 
-Portrait URLs keep their 1080 × 1920 composition when opened in a differently sized browser window, scaled to fit with empty space where needed. OBS makes that space transparent; a normal browser tab shows the page background there. Use the recommended dimensions in OBS to fill the source. `both` is a builder choice, not a URL parameter. Landscape URLs keep their viewport behaviour, including Classic text sizing at 1280 × 720. Existing explicit `layout=landscape` URLs remain supported and use a fixed 1920 × 1080 canvas. Unrecognised layout values follow the viewport.
+Вертикальные URL сохраняют композицию 1080 × 1920 при открытии в окне другого размера: она масштабируется с пустым пространством там, где необходимо. OBS делает это пространство прозрачным; в обычной вкладке браузера виден фон страницы. Чтобы заполнить источник в OBS, используйте рекомендуемые размеры. `both` — вариант конструктора, а не параметр URL. Горизонтальные URL сохраняют поведение относительно области просмотра, включая размер текста Classic при 1280 × 720. Существующие URL с явным `layout=landscape` поддерживаются и используют фиксированный холст 1920 × 1080. Неизвестные значения макета следуют размерам области просмотра.
 
-Classic portrait uses larger, wrapping text and fits the camera without stretching it. Version 2 uses its portrait header, cropped camera and information panel. Both respect camera rotation. For all URLs, disconnected printers hide stale progress and temperatures, and finished prints do not also show an idle message. The Status toggle controls status text, including the offline message.
+Вертикальный Classic использует более крупный текст с переносом и вписывает камеру без растяжения. Version 2 использует вертикальный заголовок, обрезанное изображение камеры и информационную панель. Оба учитывают поворот камеры. Во всех URL при отключении принтера устаревшие прогресс и температуры скрываются, а для завершённой печати сообщение об ожидании не показывается. Переключатель состояния управляет текстом состояния, в том числе сообщением об отключении.
 
-![Both layouts in the overlay builder](../images/stream-overlay/layouts-after.png)
+![Оба макета в конструкторе оверлея](../images/stream-overlay/layouts-after.png)
 
-*Version 2 with both previews. The image uses simulated data and a camera test pattern, not a live printer.*
+*Version 2 с обоими предпросмотрами. На изображении используются имитированные данные и тестовое изображение камеры, а не реальный принтер.*
 
-#### Size
+#### Размер {#size}
 
 ```
 /overlay/1?size=small
@@ -916,152 +828,150 @@ Classic portrait uses larger, wrapping text and fits the camera without stretchi
 /overlay/1?size=large
 ```
 
-| Size | Text | Logo | Best For |
+| Размер | Текст | Логотип | Для чего подходит |
 |------|------|------|----------|
-| `small` | Compact | Small | Picture-in-picture |
-| `medium` | Standard | Medium | Normal streams |
-| `large` | Large | Large | Full-screen focus |
+| `small` | Компактный | Маленький | Картинка в картинке |
+| `medium` | Стандартный | Средний | Обычные трансляции |
+| `large` | Крупный | Большой | Полноэкранный показ |
 
-#### Frame Rate (FPS)
+#### Частота кадров (FPS) {#frame-rate-fps}
 
-Control the camera stream frame rate:
+Управление частотой кадров камеры:
 
 ```
 /overlay/1?fps=30
 ```
 
-| FPS | Description |
+| FPS | Описание |
 |-----|-------------|
-| `1-5` | Low bandwidth, minimal resource usage |
-| `10-15` | Default, balanced quality (15 is default) |
-| `20-25` | Smoother video |
-| `30` | Maximum quality |
+| `1-5` | Низкий трафик, минимальный расход ресурсов |
+| `10-15` | Сбалансированное качество (15 по умолчанию) |
+| `20-25` | Более плавное видео |
+| `30` | Максимальное качество |
 
-FPS is automatically clamped between 1 and 30. The backend may further limit based on camera type (A1/P1 cameras max out at ~5 FPS).
+FPS автоматически ограничивается диапазоном от 1 до 30. Бэкенд может дополнительно ограничить его по типу камеры (A1/P1 — примерно до 5 FPS).
 
-If another viewer already has the printer's camera open, the overlay joins that
-viewer's stream and runs at its frame rate - see
-[Shared Streams and FPS](#shared-streams-and-fps).
+Если камера уже открыта у другого зрителя, оверлей подключается к его потоку и использует его частоту кадров — см. [Общие потоки и FPS](#shared-streams-and-fps).
 
-#### Version 2 artwork (portrait and landscape)
+#### Оформление Version 2 (вертикальное и горизонтальное) {#version-2-artwork-portrait-and-landscape}
 
-In **Settings → Camera → Streaming Overlay**, set **Artwork** to **Version 2**, select the fields to show, and copy the generated URL into your OBS browser source. **Classic** is the default, and existing URLs keep the original layout unless you add `artwork=2`.
+В **Настройки → Камера → Streaming Overlay** выберите **Оформление → Version 2**, отметьте поля и скопируйте созданный URL в источник браузера OBS. По умолчанию используется **Classic**; существующие URL сохраняют исходный макет, пока в них не добавлено `artwork=2`.
 
 ```
 /overlay/1?artwork=2&show=printer,model,filename,status,progress,layers,eta,nozzle,bed,chamber
 ```
 
-Set the browser source dimensions in OBS to the composition you want:
+Установите размеры источника браузера OBS под нужную композицию:
 
-- **Portrait, 1080 × 1920:** printer identity and Bambuddy logo above a cropped camera view, with print information below.
-- **Landscape, 1920 × 1080:** a full-screen camera behind printer identity and a translucent information panel along the bottom.
+- **Вертикальная, 1080 × 1920:** название принтера и логотип Bambuddy над обрезанным изображением камеры, информация о печати ниже.
+- **Горизонтальная, 1920 × 1080:** камера на весь экран за названием принтера и полупрозрачная информационная панель внизу.
 
-Screenshots below show the layouts with simulated print data and a camera test pattern, not a live printer feed.
+На снимках ниже показаны имитированные данные печати и тестовое изображение камеры, а не реальная трансляция.
 
-![Classic landscape overlay](../images/stream-overlay/original-landscape.png)
+![Горизонтальный оверлей Classic](../images/stream-overlay/original-landscape.png)
 
-*Classic, for comparison*
+*Classic для сравнения*
 
-![Version 2 landscape overlay](../images/stream-overlay/updated-landscape.png)
+![Горизонтальный оверлей Version 2](../images/stream-overlay/updated-landscape.png)
 
-*Version 2, landscape*
+*Version 2, горизонтальный*
 
-![Version 2 portrait overlay](../images/stream-overlay/updated-portrait.png){ width="360" }
+![Вертикальный оверлей Version 2](../images/stream-overlay/updated-portrait.png){ width="360" }
 
-*Version 2, portrait*
+*Version 2, вертикальный*
 
-Without a `layout` parameter, Version 2 follows the browser source viewport. The builder omits this parameter for Landscape and adds `layout=portrait` for Portrait, as described above.
+Без параметра `layout` Version 2 следует размерам области просмотра источника браузера. Конструктор опускает параметр для горизонтального и добавляет `layout=portrait` для вертикального макета, как описано выше.
 
-The camera keeps its aspect ratio and fills the available area by cropping. Portrait cropping can hide the sides of the build plate. Camera rotation and the frame-rate setting still apply.
+Камера сохраняет пропорции и заполняет доступную область с обрезкой. В вертикальном режиме обрезка может скрыть края стола. Поворот камеры и настройка FPS продолжают действовать.
 
-All field toggles remain independent. Hidden or unavailable readings leave no empty boxes. Printer name and model appear in the header. The **Text size** setting adjusts the new layout too. `camera=false` hides the camera without starting a stream. A disconnected printer shows **Printer offline** when Status is enabled and hides stale progress and temperature readings. Finished and failed jobs show their status without an idle message.
+Все переключатели полей независимы. Скрытые или недоступные показатели не оставляют пустых блоков. Название и модель принтера появляются в заголовке. Настройка **Размер текста** действует и для нового макета. `camera=false` скрывает камеру, не запуская поток. Если принтер отключён, при включённом состоянии показывается **Принтер не в сети**, а устаревшие прогресс и температуры скрываются. Для завершённых и неудачных заданий показывается их состояние без сообщения об ожидании.
 
-When login is enabled, use the same **Streaming Overlay** token as the Classic overlay. Version 2 does not grant additional access.
+При включённом входе используйте тот же токен **Streaming Overlay**, что и для Classic. Version 2 не предоставляет дополнительного доступа.
 
-Selecting **Version 2** also reveals a **Background transparency** slider. Increase it from 0% to 100% to fade the dark backgrounds while keeping text, logos and the camera fully visible. At 0%, the original backgrounds are preserved; at 100%, the backgrounds are transparent. Hide the camera if you want only the overlay information over another OBS source.
+При выборе **Version 2** появляется ползунок **Прозрачность фона**. Увеличьте её с 0% до 100%, чтобы ослабить тёмный фон, оставив текст, логотипы и камеру полностью видимыми. При 0% сохраняется исходный фон, при 100% он прозрачен. Скрывайте камеру, если нужна только информация оверлея поверх другого источника OBS.
 
-The generated URL includes `backgroundTransparency=65`, for example, when the slider is above zero. Classic ignores this parameter. Missing or invalid values preserve the default; numbers outside 0–100 are clamped to that range. Switching back to Classic hides the slider and omits the parameter without losing the slider selection for Version 2.
+Если ползунок выше нуля, созданный URL содержит, например, `backgroundTransparency=65`. Classic игнорирует параметр. Отсутствующее или некорректное значение сохраняет значение по умолчанию; числа за пределами 0–100 ограничиваются этим диапазоном. При возврате к Classic ползунок скрывается и параметр опускается без потери выбранного значения для Version 2.
 
-![Version 2 background transparency slider](../images/stream-overlay/branding-transparency-slider.png)
+![Ползунок прозрачности фона Version 2](../images/stream-overlay/branding-transparency-slider.png)
 
-At 100%, a background placed behind the overlay remains visible. The checkerboard below illustrates transparent pixels and is not part of the overlay.
+При 100% фон, расположенный за оверлеем, остаётся видимым. Шахматная сетка ниже обозначает прозрачные пиксели и не является частью оверлея.
 
-![Version 2 with fully transparent backgrounds](../images/stream-overlay/branding-transparent.png)
+![Version 2 с полностью прозрачным фоном](../images/stream-overlay/branding-transparent.png)
 
-#### Custom logo and progress colours
+#### Собственный логотип и цвета прогресса {#custom-logo-and-progress-colours}
 
-In **Settings → Camera → Streaming Overlay → Branding**, upload a PNG or WebP logo. Transparency is preserved. Images must be at most 2 MiB and 4 million pixels; animated images are not supported. Bambuddy stores a sanitized PNG on the server, resized to fit within 512 × 512 pixels.
+В **Настройки → Камера → Streaming Overlay → Брендинг** загрузите логотип PNG или WebP. Прозрачность сохраняется. Размер изображения не должен превышать 2 МиБ и 4 млн пикселей; анимация не поддерживается. Bambuddy сохраняет на сервере обработанный PNG, уменьшенный до размеров не более 512 × 512 пикселей.
 
-Enable **Custom logo** to include it in the generated overlay URL. Both Classic and Version 2 place it above the Bambuddy logo, preserving its proportions and limiting its size. The existing Bambuddy mark stays visible.
+Включите **Собственный логотип**, чтобы включить его в создаваемый URL оверлея. Classic и Version 2 размещают его над логотипом Bambuddy с сохранением пропорций и ограничением размера. Исходный знак Bambuddy остаётся видимым.
 
-There is one shared logo per Bambuddy installation. Replacing it changes what every logo-enabled overlay loads next time it opens or refreshes. **Remove** deletes the saved logo and clears the builder's selection. Refresh existing OBS browser sources after replacing or removing the logo. Without a saved logo, the original layout is used. Unchecking **Custom logo** only removes it from the generated URL.
+На установку Bambuddy приходится один общий логотип. Его замена меняет изображение, которое загружают все оверлеи с включённым логотипом при следующем открытии или обновлении. **Удалить** удаляет сохранённый логотип и снимает выбор в конструкторе. После замены или удаления обновите существующие источники браузера OBS. Если сохранённого логотипа нет, используется исходный макет. Снятие отметки **Собственный логотип** лишь удаляет его из создаваемого URL.
 
-Use **From colour** and **To colour**, either their pickers or six-digit hex inputs, to colour the filled part of the progress bar, the Progress label, and the percentage from left to right. Set both to the same value for a solid colour. **Reset colours** restores the artwork's original colours, including its state-dependent styling. Invalid hex input does not replace the last valid selection.
+Используйте поля **Начальный цвет** и **Конечный цвет**, выбрав цвет или введя шестизначное значение hex, чтобы окрашивать заполненную часть индикатора прогресса, подпись прогресса и процент слева направо. Для сплошного цвета задайте одинаковые значения. **Сбросить цвета** восстанавливает исходные цвета оформления, включая стили, зависящие от состояния. Неверное значение hex не заменяет последний корректный выбор.
 
-In Version 2, custom progress colours override the state-dependent colours of the progress bar, Progress label, and percentage. The selected gradient stays in use when the printer state changes. Use **Reset colours** to restore the state-dependent colours.
+В Version 2 собственные цвета прогресса заменяют зависящие от состояния цвета индикатора, подписи и процента. Выбранный градиент сохраняется при изменении состояния принтера. Чтобы вернуть цвета состояния, используйте **Сбросить цвета**.
 
 ```text
 /overlay/1?logo=1&progressFrom=%23ff0088&progressTo=%230088ff
 ```
 
-`logo=1` opts into the saved logo. `progressFrom` and `progressTo` must both be valid `#RRGGBB` colours; URL-encode the `#` as `%23` when writing URLs by hand. Existing URLs without these parameters retain their original appearance. Colours are stored in the URL, while the logo is stored on the server.
+`logo=1` включает сохранённый логотип. Оба параметра `progressFrom` и `progressTo` должны быть корректными цветами `#RRGGBB`; при ручном составлении URL кодируйте `#` как `%23`. Существующие URL без этих параметров сохраняют исходный вид. Цвета хранятся в URL, логотип — на сервере.
 
-When login is enabled, uploading or removing the shared logo requires `settings:update`. The settings preview requires `settings:read`. OBS accesses it with the same **Streaming Overlay** token used for the status feed; camera-only and Cam Wall tokens cannot read it.
+При включённом входе для загрузки и удаления общего логотипа требуется `settings:update`. Для предпросмотра настроек требуется `settings:read`. OBS получает доступ к логотипу с тем же токеном **Streaming Overlay**, что используется для состояния; токены только камеры и Cam Wall читать его не могут.
 
-![Classic overlay with custom logo and gradient](../images/stream-overlay/branding-classic.png)
+![Оверлей Classic с собственным логотипом и градиентом](../images/stream-overlay/branding-classic.png)
 
-![Version 2 with custom logo and gradient](../images/stream-overlay/branding-version2.png)
+![Version 2 с собственным логотипом и градиентом](../images/stream-overlay/branding-version2.png)
 
-#### Status-Only Mode (No Camera)
+#### Только состояние (без камеры) {#status-only-mode-no-camera}
 
-Hide the camera feed and show only the status overlay on a black background:
+Скройте изображение камеры и покажите только оверлей состояния на чёрном фоне:
 
 ```
 /overlay/1?camera=false
 ```
 
-This is useful for:
+Это полезно:
 
-- Streamers who want status info without camera
-- Low-bandwidth scenarios
-- Creating a minimal status display
+- Стримерам, которым нужна информация о состоянии без камеры
+- При низкой пропускной способности
+- Для создания минимального индикатора состояния
 
-Set `camera=false` or `camera=0` to hide the camera. Default is `camera=true`.
+Чтобы скрыть камеру, задайте `camera=false` или `camera=0`. По умолчанию используется `camera=true`.
 
-#### Show/Hide Elements
+#### Показать или скрыть элементы {#showhide-elements}
 
-Control which elements are displayed:
+Выбирайте отображаемые элементы:
 
 ```
 /overlay/1?show=progress,layers,eta,filename,status
 ```
 
-Available elements:
+Доступные элементы:
 
-| Element | Description |
+| Элемент | Описание |
 |---------|-------------|
-| `progress` | Progress bar with percentage |
-| `layers` | Layer count (current/total) |
-| `eta` | Time remaining and ETA |
-| `filename` | Print file name |
-| `status` | Status text (Printing, Paused, etc.), including the offline message |
-| `printer` | Printer name |
-| `model` | Printer model (off by default; omitted if unknown) |
-| `nozzle` | Nozzle temperature (both nozzles on a dual-nozzle printer) |
-| `bed` | Bed temperature |
-| `chamber` | Chamber temperature |
+| `progress` | Индикатор прогресса с процентом |
+| `layers` | Число слоёв (текущий/всего) |
+| `eta` | Оставшееся время и время завершения |
+| `filename` | Имя файла печати |
+| `status` | Текст состояния (печатает, пауза и т. д.), включая сообщение об отключении |
+| `printer` | Название принтера |
+| `model` | Модель принтера (по умолчанию выключено; пропускается, если неизвестна) |
+| `nozzle` | Температура сопла (обоих сопел у принтера с двумя соплами) |
+| `bed` | Температура стола |
+| `chamber` | Температура камеры |
 
-`printer` and `model` are independent and share one line: with both, the overlay shows `Big Mumma · H2D`; with only `model`, just `H2D`. The model comes from the printer's settings in Bambuddy and is left out, separator included, when none is stored. A long name and model is cut off with an ellipsis rather than running past the edge of a narrow OBS source. In the builder, tick **Printer model** under **Fields to show**. It is off by default, so an overlay URL already in OBS looks the same until you replace it with one that includes `model`.
+`printer` и `model` независимы и размещаются в одной строке: если включены оба, оверлей показывает `Big Mumma · H2D`, если только `model` — лишь `H2D`. Модель берётся из настроек принтера Bambuddy и при отсутствии не отображается вместе с разделителем. Длинные название и модель обрезаются многоточием, чтобы не выходить за край узкого источника OBS. В конструкторе отметьте **Модель принтера** в разделе **Показываемые поля**. По умолчанию эта функция выключена, поэтому существующий URL в OBS выглядит как прежде, пока вы не замените его URL с `model`.
 
-Temperatures are shown whether or not a print is running — a preheating printer is exactly when they are worth watching. Each reading appears only when the printer reports it, so `chamber` produces nothing on a P1 or A1: those models publish a chamber value with no real sensor behind it, and Bambuddy leaves it out rather than putting a number on screen that means nothing.
+Температуры показываются независимо от выполнения печати: за предварительным нагревом особенно полезно следить. Каждое значение появляется только при получении от принтера, поэтому `chamber` ничего не выводит на P1 или A1: эти модели сообщают значение камеры без реального датчика, а Bambuddy не показывает бессмысленное число.
 
-They are **not** in the default set, so an overlay URL you are already using looks the same after upgrading. Add them explicitly:
+Эти поля **не входят** в набор по умолчанию, поэтому используемый URL оверлея после обновления выглядит по-прежнему. Добавьте их явно:
 
 ```
 /overlay/1?show=progress,eta,nozzle,bed
 ```
 
-**Examples:**
+**Примеры:**
 
 ```
 # Progress, ETA and the hotend
@@ -1077,7 +987,7 @@ They are **not** in the default set, so an overlay URL you are already using loo
 /overlay/1?show=progress
 ```
 
-#### Combined Parameters
+#### Сочетание параметров {#combined-parameters}
 
 ```
 # Large overlay with max FPS
@@ -1090,118 +1000,95 @@ They are **not** in the default set, so an overlay URL you are already using loo
 /overlay/1?camera=false&size=small&show=progress
 ```
 
-### Features
+### Возможности {#features}
 
-- **Real-Time Updates** - Status updates via WebSocket with polling fallback
-- **Auto-Reconnect** - Camera stream automatically reconnects on errors
-- **Gradient Overlay** - Text appears over a gradient for readability
-- **Responsive** - Adapts to different browser source sizes
-- **Branding** - Bambuddy logo always visible (links to GitHub)
+- **Обновления в реальном времени** — состояние обновляется через WebSocket с переходом на опрос при недоступности
+- **Автоматическое переподключение** — поток камеры восстанавливается при ошибках
+- **Градиентный фон** — текст отображается на градиенте для читаемости
+- **Адаптивность** — оформление подстраивается под размер источника браузера
+- **Брендинг** — логотип Bambuddy всегда виден и ведёт на GitHub
 
-### Idle State
+### Состояние ожидания {#idle-state}
 
-When no print is running, the overlay shows:
+Когда печать не выполняется, оверлей показывает:
 
-- Camera feed (still active)
-- The status line, such as "Idle", "Finished" or "Printer offline", when `status` is in `show=`
-- Bambuddy logo
+- Изображение камеры, которое остаётся активным
+- Строку состояния, например «Ожидание», «Завершено» или «Принтер не в сети», если `status` включён в `show=`
+- Логотип Bambuddy
 
-Progress, layers, time remaining and temperatures are hidden while the printer is offline. Without `status` in `show=`, an idle or offline printer shows no status text.
+Когда принтер не в сети, прогресс, слои, оставшееся время и температуры скрываются. Без `status` в `show=` состояние ожидающего или отключённого принтера не показывается.
 
-### Troubleshooting
+### Устранение неполадок {#troubleshooting_2}
 
-**Overlay not loading in OBS**
+**Оверлей не загружается в OBS**
 
-- If login is enabled, make sure the URL includes a **Streaming Overlay token**
-  (`?token=...`). A blank overlay that works when *you* open it but not in OBS is
-  almost always a missing token — OBS has no login session. See "Streaming Overlay
-  token" above.
-- Verify the URL works in a **private/incognito** browser window (not your normal
-  one, which is signed in). If it fails there, it will fail in OBS for the same
-  reason.
-- Check that OBS can reach your Bambuddy server
-- Try refreshing the browser source in OBS
+- Если вход включён, убедитесь, что URL содержит **токен Streaming Overlay** (`?token=...`). Если оверлей открывается у вас, но пуст в OBS, почти всегда отсутствует токен: OBS не имеет сеанса входа. См. раздел «Токен Streaming Overlay» выше.
+- Проверьте URL в **приватном окне / режиме инкогнито**, а не в обычном браузере с активным входом. Если он не работает там, в OBS причина будет той же.
+- Убедитесь, что OBS может подключиться к серверу Bambuddy
+- Попробуйте обновить источник браузера в OBS
 
-**Camera not showing**
+**Камера не показывается**
 
-- Ensure the printer is connected
-- Check that camera streaming works in Bambuddy directly
-- The overlay uses the same camera stream as the main app
+- Убедитесь, что принтер подключён
+- Проверьте прямую трансляцию камеры в Bambuddy
+- Оверлей использует тот же поток, что и основное приложение
 
-**Camera freezes after running for a while**
+**Камера зависает после некоторого времени работы**
 
-The overlay renews its camera connection every 60 seconds, even if the browser
-reports no image error. Reported image errors retry after three seconds. Each
-new connection starts a fresh 60-second renewal period. The overlay keeps its
-saved URL, token, FPS setting, rotation, and status display during renewal.
-Recovery is disabled in status-only mode (`camera=false`).
+Оверлей обновляет соединение с камерой каждые 60 секунд, даже если браузер не сообщает об ошибке изображения. При сообщённой ошибке повторная попытка выполняется через три секунды. Каждое новое соединение запускает новый 60-секундный период. При обновлении сохраняются URL, токен, FPS, поворот и отображение состояния. В режиме только состояния (`camera=false`) восстановление отключено.
 
-Healthy connections are renewed too. The old connection is closed a moment
-before the new one opens, so the picture blinks briefly; leaving it open would
-pile up one connection per minute in the browser source, and a USB camera
-serves only one reader. A renewal joins the camera stream Bambuddy already has
-open for the printer and shows the latest frame at once. Renewal can't bring back a printer that
-is offline or whose camera has stopped: the overlay picks the picture up again
-once the printer sends frames.
+Исправные соединения также обновляются. Старое соединение закрывается незадолго до открытия нового, поэтому изображение ненадолго мигает. Если этого не делать, в источнике браузера накапливалось бы по соединению в минуту, а USB-камера обслуживает только одного читателя. При обновлении оверлей присоединяется к уже открытому Bambuddy потоку принтера и сразу показывает последний кадр. Обновление не вернёт принтер в сеть и не запустит остановившуюся камеру: изображение появится снова, когда принтер начнёт отправлять кадры.
 
-If the camera remains frozen, check whether it works on Bambuddy's printers
-page, then try refreshing the browser source. When reporting the problem,
-include your Bambuddy version, browser-source application, and approximate time
-until the freeze. Do not share the token or full private overlay URL.
+Если изображение по-прежнему застывает, проверьте его на странице принтеров Bambuddy, затем попробуйте обновить источник браузера. При сообщении о проблеме укажите версию Bambuddy, приложение источника браузера и примерное время до зависания. Не сообщайте токен или полный приватный URL оверлея.
 
-**Status not updating**
+**Состояние не обновляется**
 
-- WebSocket connection may have failed
-- Overlay falls back to polling every 2 seconds
-- Refresh the browser source to reconnect
+- Возможно, соединение WebSocket разорвалось
+- Оверлей переходит на опрос каждые 2 секунды
+- Обновите источник браузера для повторного подключения
 
 ---
 
-## :material-key-chain: Long-Lived Camera Tokens
+## :material-key-chain: Долгосрочные токены камеры {#long-lived-camera-tokens}
 
-For Home Assistant, Frigate, kiosks, or any external integration that needs a stable camera URL, mint a long-lived token instead of refreshing the 60-minute browser tokens on a cron.
+Для Home Assistant, Frigate, киосков и других внешних интеграций со стабильным URL камеры создайте долгосрочный токен вместо обновления 60-минутных токенов браузера по cron.
 
-### Creating a Token
+### Создание токена {#creating-a-token}
 
-1. Go to **Settings** → **Camera**
-2. Scroll to **Camera API Tokens** (below External Cameras)
-3. Enter a descriptive name (e.g., `Home Assistant`, `Kitchen Kiosk`, `Frigate`)
-4. Pick a **scope** (see below)
-5. Pick a lifetime (1–365 days, default 90)
-6. Click **Create**
+1. Откройте **Настройки** → **Камера**
+2. Прокрутите до **API-токены камеры** под разделом внешних камер
+3. Введите понятное название, например `Home Assistant`, `Kitchen Kiosk` или `Frigate`
+4. Выберите **область доступа** (см. ниже)
+5. Выберите срок действия (1–365 дней, по умолчанию 90)
+6. Нажмите **Создать**
 
-For every scope, the plaintext token is returned **exactly once**, at creation. Save it from the copy-to-clipboard modal, or copy the complete URL when creating a token directly in the [overlay builder](#streaming-overlay-token-login-enabled-deployments). It cannot be retrieved again.
+Для каждой области открытый текст токена возвращается **ровно один раз**, при создании. Сохраните его из окна копирования или скопируйте полный URL при создании токена непосредственно в [конструкторе оверлея](#streaming-overlay-token-login-enabled-deployments). Повторно получить токен нельзя.
 
-### Scopes
+### Области доступа {#scopes}
 
-| Scope | Reaches |
+| Область | Доступ |
 |-------|---------|
-| **Camera stream** | The camera stream and snapshot endpoints, nothing else. This is the right choice for Home Assistant, Frigate, or anything embedding a single camera. |
-| **Cam Wall** | The camera streams **plus** the read-only Cam Wall feed, which lists every printer's name, connection state and print progress — but never the print filename. Choose this only for a [Cam Wall display](#cam-wall-on-a-tv-or-kiosk). |
-| **Streaming Overlay** | One printer's camera stream **plus** its live print status for the [streaming overlay](#streaming-overlay-for-obs) — including the filename shown on screen. Choose this for an OBS browser source when login is enabled. |
+| **Camera stream** | Только конечные точки потока камеры и снимка. Подходит для Home Assistant, Frigate и встраивания одной камеры. |
+| **Cam Wall** | Потоки камер **и** доступное только для чтения состояние стены камер с названиями всех принтеров, состоянием подключения и ходом печати, но без имени файла. Выбирайте только для [экрана стены камер](#cam-wall-on-a-tv-or-kiosk). |
+| **Streaming Overlay** | Поток камеры одного принтера **и** его состояние печати для [оверлея трансляции](#streaming-overlay-for-obs), включая имя файла на экране. Выберите для источника браузера OBS при включённом входе. |
 
-The three are separate grants that never widen each other: a Camera stream token
-is refused by both the Cam Wall and overlay feeds; a Cam Wall token is refused by
-the overlay feed (it names the file, which a Cam Wall token is trusted never to
-expose) and vice versa; and creating any one token does not change what an
-existing token can do. None of them can read a printer's IP address, serial
-number or access code, or call any other Bambuddy API.
+Это три отдельных набора разрешений, которые не расширяют друг друга: токен Camera stream отклоняется конечными точками стены камер и оверлея; токен Cam Wall отклоняется оверлеем, поскольку тот показывает имя файла, которое токену Cam Wall запрещено раскрывать, и наоборот. Создание одного токена не меняет права существующих. Ни один из них не может читать IP-адрес, серийный номер или код доступа принтера либо обращаться к другим API Bambuddy.
 
-### Using the Token
+### Использование токена {#using-the-token}
 
-Append the token as a query parameter to any camera-stream URL:
+Добавьте токен как параметр запроса к любому URL потока камеры:
 
 ```
 http://your-bambuddy/api/v1/printers/<printer_id>/camera/stream?token=bblt_<prefix>_<secret>
 ```
 
-The same token works for snapshots:
+Тот же токен работает для снимков:
 
 ```
 http://your-bambuddy/api/v1/printers/<printer_id>/camera/snapshot?token=bblt_<prefix>_<secret>
 ```
 
-### Home Assistant Example
+### Пример Home Assistant {#home-assistant-example}
 
 ```yaml
 camera:
@@ -1211,109 +1098,90 @@ camera:
     still_image_url: http://bambuddy.local:8000/api/v1/printers/1/camera/snapshot?token=bblt_a1b2c3d4_…
 ```
 
-### Cam Wall on a TV or Kiosk
+### Стена камер на телевизоре или киоске {#cam-wall-on-a-tv-or-kiosk}
 
-The Cam Wall has its own URL, so you can bookmark it or point a wall-mounted
-screen at it:
+У стены камер есть собственный URL, который можно добавить в закладки или открыть на настенном экране:
 
 ```
 http://your-bambuddy/camwall
 ```
 
-Opened in a browser you're signed in to, that's the same wall the Printers page
-shows — tiles stay clickable, and the settings popover works as usual.
+В браузере с активным входом открывается та же стена, что и на странице принтеров: плитки остаются доступными для нажатия, а окно настроек работает как обычно.
 
-A TV or a Raspberry Pi in kiosk mode has no login, so it authenticates with a
-**Cam Wall**-scoped token in the URL instead:
+Телевизор или Raspberry Pi в режиме киоска не имеет сеанса входа, поэтому вместо этого использует токен с областью **Cam Wall** в URL:
 
 ```
 http://your-bambuddy/camwall?token=bblt_<prefix>_<secret>
 ```
 
-When you create a Cam Wall token, Bambuddy shows you this URL fully assembled —
-copy it straight into the kiosk browser.
+При создании токена Cam Wall Bambuddy показывает полностью собранный URL — скопируйте его прямо в браузер киоска.
 
-A token wall is deliberately reduced to what a passive display needs:
+Стена по токену намеренно ограничена потребностями пассивного экрана:
 
-- **No settings, no click-through.** There is nobody standing at a TV.
-- **Compact status overlay only.** The state badge is shown; the print filename
-  is not. The feed behind the page does not serve filenames at all, so the part
-  on the bed is never named to a room anyone can walk into.
-- **No printer addresses or access codes**, for the same reason.
+- **Нет настроек и переходов по нажатию.** Рядом с телевизором обычно никого нет.
+- **Только компактное состояние.** Показывается значок состояния, но не имя файла печати. Данные страницы вообще не содержат имён файлов, поэтому название детали на столе не раскрывается в общедоступном помещении.
+- **Нет адресов принтеров и кодов доступа** по той же причине.
 
-Optional URL parameters, if the defaults don't suit the screen:
+Необязательные параметры URL, если значения по умолчанию не подходят для экрана:
 
-| Parameter | Meaning | Range |
+| Параметр | Значение | Диапазон |
 |-----------|---------|-------|
-| `maxLive` | How many tiles stream live at once; the rest poll snapshots | 1–16 |
-| `interval` | Seconds between snapshot refreshes on non-live tiles | 2–60 |
-| `status` | Status overlay: `off` or `compact` (a token wall cannot select `full`) | — |
-| `size` | Tile size: `s`, `m`, `l` or `xl` (one tile across the full width) | — |
+| `maxLive` | Сколько плиток одновременно показывают поток; остальные опрашивают снимки | 1–16 |
+| `interval` | Секунд между обновлениями снимков на плитках без прямой трансляции | 2–60 |
+| `status` | Оверлей состояния: `off` или `compact` (стена по токену не может выбрать `full`) | — |
+| `size` | Размер плитки: `s`, `m`, `l` или `xl` (одна плитка на всю ширину) | — |
 
 ```
 http://your-bambuddy/camwall?token=bblt_…&maxLive=9&interval=10&size=l
 ```
 
-While the page is visible, live tiles reconnect their stream once a minute,
-so a camera that dropped out and came back shows a picture again within a
-minute, with no reload. If the camera stays down, the tile shows **No signal**
-after its reconnect and one retry bring no picture; a printer's built-in camera
-keeps showing its last picture until Bambuddy stops retrying it. A tile showing
-**No signal** stays that way until the page is reloaded or the tile changes
-between live, snapshot and paused.
+Пока страница видна, плитки прямой трансляции переподключаются раз в минуту, поэтому восстановившаяся камера снова покажет изображение в течение минуты без перезагрузки. Если камера остаётся недоступной, плитка покажет **Нет сигнала** после переподключения и одной неудачной повторной попытки; встроенная камера принтера продолжает показывать последний кадр, пока Bambuddy не прекратит попытки. Плитка с **Нет сигнала** остаётся в этом состоянии до обновления страницы или переключения между трансляцией, снимками и паузой.
 
-!!! warning "The URL is the credential"
-    Anyone who can read that URL — off the screen, out of the browser history,
-    out of the kiosk's config file — can watch the wall. Treat it like a key. If
-    a display is retired or compromised, revoke the token: the wall goes dark on
-    its next request.
+!!! warning "URL является учётными данными"
+    Любой, кто прочитает URL с экрана, из истории браузера или файла конфигурации киоска, сможет смотреть стену камер. Обращайтесь с ним как с ключом. Если экран выведен из эксплуатации или скомпрометирован, отзовите токен: стена погаснет при следующем запросе.
 
-### Security & Limits
+### Безопасность и ограничения {#security-limits}
 
-- **Maximum lifetime is 365 days.** Bambuddy explicitly rejects "never expires" because a leaked permanent token would be irrevocable footgun-by-design.
-- **Tokens are stored as a hash.** A DB dump can't be replayed against the camera endpoint, and a token cannot be recovered from its hash. Token lists show names and dates, never the token itself. Treat saved browser-source URLs as credentials.
-- **Browser memory only.** The builder does not save entered, imported or newly created credentials in browser storage. Leaving or reloading clears them.
-- **Scoped, and scopes don't leak into each other.** A Camera stream token reaches only the stream and snapshot endpoints; a Cam Wall token additionally reaches the Cam Wall feed; a Streaming Overlay token additionally reaches one printer's overlay status and the shared overlay logo. None can call any other Bambuddy API, and none exposes an IP address, serial number or access code.
-- **Revocable at any time.** Owners can revoke their own tokens; admins can revoke anyone's from the same panel.
-- **Last-used timestamp** is shown so you can identify dead config and clean up.
+- **Максимальный срок действия — 365 дней.** Bambuddy явно отклоняет вариант «никогда не истекает», поскольку утечка бессрочного токена создавала бы постоянную угрозу.
+- **Токены хранятся как хеши.** Дамп базы нельзя использовать для повторного доступа к камере, а токен нельзя восстановить из хеша. В списках показываются названия и даты, но не сами токены. Считайте сохранённые URL источников браузера учётными данными.
+- **Только память браузера.** Конструктор не сохраняет введённые, импортированные или новые учётные данные в хранилище браузера. При уходе со страницы или её обновлении они очищаются.
+- **Раздельные области доступа.** Токен Camera stream обращается только к потоку и снимкам; Cam Wall дополнительно получает данные стены камер; Streaming Overlay — состояние оверлея одного принтера и общий логотип. Ни один не может вызывать другие API Bambuddy или получать IP-адрес, серийный номер и код доступа.
+- **Отзыв в любой момент.** Владельцы могут отзывать свои токены; администраторы — токены любых пользователей на той же панели.
+- **Время последнего использования** помогает найти и удалить неиспользуемые настройки.
 
-### Permission Requirements
+### Необходимые разрешения {#permission-requirements}
 
-Creating and managing camera tokens requires the `camera:view` permission — the same permission already needed for the existing 60-minute browser-side stream tokens. Default Viewers and Operators groups have it.
+Для создания и управления токенами камеры требуется `camera:view` — то же разрешение, которое необходимо для обычных 60-минутных токенов трансляции браузера. По умолчанию оно есть у групп зрителей и операторов.
 
-To delegate token management to a non-admin user, ensure they're in a group with both `camera:view` and `settings:read` (so they can reach Settings → Camera).
+Чтобы передать управление токенами пользователю без прав администратора, убедитесь, что он входит в группу с обоими разрешениями `camera:view` и `settings:read` (для доступа к **Настройки → Камера**).
 
-### Revoking a Token
+### Отзыв токена {#revoking-a-token}
 
-1. Go to **Settings** → **Camera** → **Camera API Tokens**
-2. Find the token in the list (use the `lookup_prefix` to identify it if you've forgotten the name)
-3. Click **Revoke**, confirm in the modal
+1. Откройте **Настройки** → **Камера** → **API-токены камеры**
+2. Найдите токен в списке (если забыли название, используйте для поиска `lookup_prefix`)
+3. Нажмите **Отозвать** и подтвердите в окне
 
-Any device using that token will lose access on the next request. There's no grace period.
+Любое устройство с этим токеном потеряет доступ при следующем запросе. Льготного периода нет.
 
-### Admin "All Users" View
+### Представление администратора «Все пользователи» {#admin-all-users-view}
 
-Administrators see an additional table titled **All users (admin view)** below their own tokens. It lists every active long-lived token across all users — useful for triage if a token is suspected of being leaked.
+Администраторы видят под своими токенами дополнительную таблицу **Все пользователи (вид администратора)**. Она перечисляет все активные долгосрочные токены всех пользователей и помогает разобраться при подозрении на утечку.
 
 ---
 
-## :material-lightbulb: Tips
+## :material-lightbulb: Советы {#tips}
 
-!!! tip "Timelapse Videos"
-    The printer creates timelapse videos automatically. Bambuddy detects the new timelapse after each print and attaches it to the archive. X1/A1 series save MP4 files; P1 series save AVI files — both are supported. AVI files are automatically converted to MP4 in the background for browser playback. If automatic detection fails (e.g., the printer was slow to encode), use the **Scan for Timelapse** button in the archive to manually trigger a scan. View and edit them using the built-in timelapse editor.
+!!! tip "Видео таймлапса"
+    Принтер автоматически создаёт видео таймлапса. Bambuddy обнаруживает новый таймлапс после каждой печати и прикрепляет к архиву. Серии X1/A1 сохраняют MP4, серия P1 — AVI; поддерживаются оба формата. AVI автоматически преобразуется в MP4 в фоновом режиме для воспроизведения в браузере. Если автоматическое обнаружение не удалось, например принтер медленно кодировал видео, используйте кнопку **Поиск таймлапса** в архиве для запуска проверки вручную. Просматривайте и редактируйте ролики во встроенном редакторе таймлапса.
 
-!!! tip "Multiple Cameras"
-    In embedded mode, open multiple camera viewers simultaneously - each remembers its own position and size. Great for monitoring your entire print farm on one screen.
+!!! tip "Несколько камер"
+    Во встроенном режиме одновременно откройте несколько окон камер: каждое запоминает собственные положение и размер. Это удобно для наблюдения за всей фермой на одном экране.
 
-!!! tip "Mobile Viewing"
-    Camera streaming works on mobile devices with full touch support. Pinch to zoom, drag to pan when zoomed. Access from the printer card camera icon.
+!!! tip "Просмотр на мобильном устройстве"
+    Трансляция работает на мобильных устройствах с полной поддержкой сенсорного управления. Сводите пальцы для масштабирования, перетаскивайте увеличенное изображение. Открывайте камеру значком на карточке принтера.
 
-!!! tip "Bandwidth Conservation"
-    Close camera windows when not actively watching to save server resources and bandwidth.
+!!! tip "Экономия трафика"
+    Закрывайте окна камер, когда не смотрите трансляцию, чтобы экономить ресурсы сервера и пропускную способность.
 
-!!! tip "Running more than a handful of printers?"
-    On X1, X2, H2 and P2 the stream is transcoded in software, which costs roughly a
-    CPU core per open 1080p camera — so a large farm hits a ceiling on *simultaneous
-    streams*, not on printer count. See
-    [Running a Large Farm](../reference/farm-sizing.md) for the measured figures and
-    the settings that matter.
+!!! tip "Больше нескольких принтеров?"
+    На X1, X2, H2 и P2 поток перекодируется программно, что требует примерно одного ядра процессора на каждую открытую камеру 1080p. Поэтому ограничением большой фермы становится число *одновременных потоков*, а не число принтеров. Измерения и важные настройки см. в разделе [Работа с большой фермой](../reference/farm-sizing.md).
