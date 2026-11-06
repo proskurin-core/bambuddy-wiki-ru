@@ -1,433 +1,433 @@
-# Authentication
+# Аутентификация {#authentication}
 
-Bambuddy includes an optional authentication system that allows you to secure your instance with user accounts and group-based permissions. This feature is completely optional and can be enabled or disabled at any time.
+Bambuddy включает необязательную систему аутентификации, которая защищает ваш экземпляр с помощью учётных записей и разрешений групп. Эту функцию можно включить или отключить в любое время.
 
-## Overview
+## Обзор {#overview}
 
-When enabled, authentication provides:
+После включения аутентификация предоставляет:
 
-- **User Accounts**: Create multiple users with unique credentials
-- **Group-Based Permissions**: 80+ granular permissions organized by feature
-- **Printer Access per Group**: Limit a team to its own printers on a shared fleet
-- **Customizable Groups**: Create custom groups or use default system groups
-- **Secure Authentication**: JWT tokens with password hashing using PBKDF2
-- **User Activity Tracking**: See who uploaded archives, library files, queued prints, and started prints
-- **Advanced Auth via Email**: Optional SMTP-based user onboarding and self-service password resets
+- **Учётные записи:** создание нескольких пользователей с отдельными учётными данными
+- **Разрешения групп:** более 80 детальных разрешений по функциям
+- **Доступ групп к принтерам:** ограничение каждой команды её принтерами в общем парке
+- **Настраиваемые группы:** создание собственных групп или использование системных
+- **Безопасную аутентификацию:** токены JWT и хеширование паролей с помощью PBKDF2
+- **Отслеживание действий:** сведения о том, кто загрузил архивы и файлы библиотеки, поставил задания в очередь и запустил печать
+- **Расширенную аутентификацию по электронной почте:** необязательное создание пользователей через SMTP и самостоятельный сброс пароля
 
-## Groups & Permissions
+## Группы и разрешения {#groups-permissions}
 
-### Default Groups
+### Группы по умолчанию {#default-groups}
 
-Bambuddy comes with three default system groups:
+Bambuddy содержит три системные группы:
 
-| Group | Description | Permissions |
+| Группа | Описание | Разрешения |
 |-------|-------------|-------------|
-| **Administrators** | Full access to all features | All permissions |
-| **Operators** | Control printers and manage content | Printer control, queue, archives, projects, library |
-| **Viewers** | Read-only access | View printers, archives, queue, projects |
+| **Администраторы** | Полный доступ ко всем функциям | Все разрешения |
+| **Операторы** | Управление принтерами и содержимым | Управление принтерами, очередь, архивы, проекты, библиотека |
+| **Наблюдатели** | Доступ только для чтения | Просмотр принтеров, архивов, очереди и проектов |
 
-### Permission Categories
+### Категории разрешений {#permission-categories}
 
-Permissions follow a `resource:action` pattern. Categories include:
+Разрешения имеют формат `ресурс:действие` (`resource:action`). Категории включают:
 
-- **Printers**: read, create, update, delete, control, files, ams_rfid, clear_plate
-- **Archives**: read, create, update_own, update_all, delete_own, delete_all, reprint_own, reprint_all
-- **Queue**: read, create, update_own, update_all, delete_own, delete_all, reorder, start_unreviewed
-- **Library**: read, upload, update_own, update_all, delete_own, delete_all
-- **Projects**: read, create, update, delete
-- **Inventory**: read, create, update, delete, view_assignments
-- **Cloud**: auth (login/logout and read/write cloud profiles)
-- **Settings**: read, update, backup, restore
-- **Users/Groups**: read, create, update, delete
-- And many more...
+- **Принтеры:** read, create, update, delete, control, files, ams_rfid, clear_plate
+- **Архивы:** read, create, update_own, update_all, delete_own, delete_all, reprint_own, reprint_all
+- **Очередь:** read, create, update_own, update_all, delete_own, delete_all, reorder, start_unreviewed
+- **Библиотека:** read, upload, update_own, update_all, delete_own, delete_all
+- **Проекты:** read, create, update, delete
+- **Филамент:** read, create, update, delete, view_assignments
+- **Облако:** auth (вход и выход, чтение и изменение облачных профилей)
+- **Настройки:** read, update, backup, restore
+- **Пользователи и группы:** read, create, update, delete
+- И многие другие.
 
-!!! note "Administrators only, whatever a group is granted"
-    Some actions decide who can sign in, so only an administrator can take them, even in a group that holds the matching permission:
+!!! note "Только для администраторов, независимо от разрешений группы"
+    Некоторые действия определяют, кто может входить в систему, поэтому доступны только администратору, даже если группа имеет соответствующее разрешение:
 
-    - managing users and groups, and removing a user's 2FA
-    - LDAP (its settings, the connection test, searching the directory and adding LDAP users), SSO providers, and the mail server and its test mail
-    - local sign-in, the session policy, the External URL (password-reset and welcome links point there) and the Prometheus metrics endpoint
-    - restoring or downloading a full backup, choosing the folder local backups are written to, and resetting all settings
-    - connected apps (adding, changing, rotating the secret, removing)
+    - управление пользователями и группами, отключение 2FA пользователя;
+    - LDAP (настройки, проверка подключения, поиск в каталоге и добавление пользователей LDAP), провайдеры SSO, почтовый сервер и тестовое письмо;
+    - локальный вход, политика сеансов, внешний URL (на него указывают ссылки восстановления пароля и приветственные ссылки) и конечная точка метрик Prometheus;
+    - восстановление или скачивание полной резервной копии, выбор папки для локальных копий и сброс всех настроек;
+    - подключённые приложения (добавление, изменение, ротация секрета и удаление).
 
-    A group with `settings:update` keeps every other setting. A Git backup restore run by a non-administrator leaves the sign-in and mail server settings as they are.
+    Группа с `settings:update` сохраняет доступ ко всем остальным настройкам. При восстановлении резервной копии Git не администратором настройки входа и почтового сервера не меняются.
 
-!!! tip "Printing an Archive Again"
-    Every way of printing an existing archive again needs `archives:reprint_own` (own archives) or `archives:reprint_all` (anyone's): queueing it, adding it to an order, running a slicer pipeline on it, and re-slicing it with the built-in slicer. A user who may see an archive can still download its file, so `archives:read_all` together with `library:upload` lets them upload that file to the library and print it from there. Grant read access with that in mind.
+!!! tip "Повторная печать архива"
+    Для любого способа повторной печати существующего архива требуется `archives:reprint_own` (свои архивы) или `archives:reprint_all` (любые): при постановке в очередь, добавлении в заказ, запуске конвейера слайсера и повторной нарезке встроенным слайсером. Пользователь, который видит архив, всё равно может скачать его файл, поэтому разрешения `archives:read_all` и `library:upload` вместе позволяют загрузить этот файл в библиотеку и напечатать оттуда. Учитывайте это при предоставлении доступа к чтению.
 
-!!! tip "Cloud Profiles Are Per-User"
-    When authentication is enabled, each user has their own independent Bambu Cloud login. User A logging into Cloud does not affect User B's session. To use Cloud Profiles, a user needs the `cloud:auth` permission — this single permission covers login, logout, and all cloud profile operations (reading, creating, editing, deleting presets). The `settings:read` permission is NOT required for cloud profiles.
+!!! tip "Облачные профили принадлежат пользователям"
+    При включённой аутентификации у каждого пользователя отдельный вход в Bambu Cloud. Вход пользователя A в облако не влияет на сеанс пользователя B. Для облачных профилей требуется разрешение `cloud:auth`: оно охватывает вход, выход и все операции с профилями (чтение, создание, изменение и удаление пресетов). Разрешение `settings:read` для облачных профилей НЕ требуется.
 
-!!! tip "Separating Inventory Access from AMS Assignments"
-    The `inventory:view_assignments` permission controls whether spool-to-AMS-slot assignment data is visible on the Printers page. This is separate from `inventory:read`, which controls access to the full Inventory page. Grant only `inventory:view_assignments` to let users see what's loaded in each AMS slot without exposing the full spool inventory.
+!!! tip "Раздельный доступ к филаменту и назначениям AMS"
+    Разрешение `inventory:view_assignments` определяет, видны ли назначения катушек слотам AMS на странице принтеров. Оно отдельно от `inventory:read`, которое управляет доступом ко всей странице филамента. Предоставьте только `inventory:view_assignments`, чтобы пользователи видели содержимое слотов AMS без доступа ко всему учёту катушек.
 
-### Ownership-Based Permissions
+### Разрешения с учётом владельца {#ownership-based-permissions}
 
-For archives, queue items, and library files, permissions are split into "own" and "all" variants:
+Для архивов, заданий очереди и файлов библиотеки разрешения делятся на варианты «свои» и «все»:
 
-| Permission Type | Description |
+| Тип разрешения | Описание |
 |-----------------|-------------|
-| `*_own` | User can only modify items they created |
-| `*_all` | User can modify any item (includes `*_own` capability) |
+| `*_own` | Пользователь может изменять только созданные им записи |
+| `*_all` | Пользователь может изменять любые записи (включает возможности `*_own`) |
 
-**Examples:**
+**Примеры:**
 
-- `archives:delete_own` - Delete only archives you uploaded
-- `archives:delete_all` - Delete any archive
-- `queue:update_own` - Edit only queue items you added
-- `library:update_all` - Rename/move any library file
+- `archives:delete_own` — удаление только загруженных вами архивов
+- `archives:delete_all` — удаление любого архива
+- `queue:update_own` — изменение только добавленных вами заданий очереди
+- `library:update_all` — переименование и перемещение любого файла библиотеки
 
-An archive's cost and its filament weight are what later prints of it are charged from, so `archives:update_own` covers them only partly: it can fill in the weight of an archive that was archived without its 3MF and has none, since such an archive cannot be printed again. Any other change to the weight, and setting the cost through the API, needs `archives:update_all`.
+Стоимость архива и вес его филамента используются для расчёта оплаты последующих печатей. Поэтому `archives:update_own` позволяет менять вес лишь частично: можно заполнить отсутствующий вес архива, сохранённого без 3MF, поскольку такой архив нельзя напечатать повторно. Любое другое изменение веса и установка стоимости через API требуют `archives:update_all`.
 
-**Default Group Assignments:**
+**Разрешения групп по умолчанию:**
 
-| Group | Permissions |
+| Группа | Разрешения |
 |-------|-------------|
-| Administrators | All `*_all` permissions (full access) |
-| Operators | All `*_own` permissions (own items only) |
-| Viewers | No update/delete permissions (read-only) |
+| Администраторы | Все разрешения `*_all` (полный доступ) |
+| Операторы | Все разрешения `*_own` (только свои записи) |
+| Наблюдатели | Нет разрешений на изменение и удаление (только чтение) |
 
-**Ownerless Items:**
+**Записи без владельца:**
 
-Items created before authentication was enabled (or by deleted users) have no owner. These "ownerless" items require `*_all` permission to modify.
+Записи, созданные до включения аутентификации или удалёнными пользователями, не имеют владельца. Для их изменения требуется разрешение `*_all`.
 
-Library **folders** have an owner too, the user who made them. With `library:read_own` a user sees only their own folders, folders an admin shared with everyone, and the folders holding their files; they add files only to their own and shared folders. `library:delete_own` deletes your own folder when everything in it is yours, or an empty folder without an owner. See [File Manager → Folder Ownership & Sharing](file-manager.md#folder-ownership-sharing) and [Deleting Folders](file-manager.md#deleting-folders).
+У **папок** библиотеки тоже есть владелец — пользователь, который их создал. С `library:read_own` пользователь видит только свои папки, папки, открытые администратором для всех, и папки с его файлами; добавлять файлы он может только в свои и общие папки. `library:delete_own` позволяет удалить свою папку, если всё её содержимое принадлежит пользователю, или пустую папку без владельца. См. [Файловый менеджер → Владение папками и общий доступ](file-manager.md#folder-ownership-sharing) и [Удаление папок](file-manager.md#deleting-folders).
 
-### Users in Multiple Groups
+### Пользователи в нескольких группах {#users-in-multiple-groups}
 
-Users can belong to multiple groups. Permissions are **additive** - a user has all permissions from all their groups combined.
+Пользователь может состоять в нескольких группах. Разрешения **суммируются**: пользователь получает все разрешения всех своих групп.
 
-### Jobs That Wait for Review
+### Задания, ожидающие проверки {#jobs-that-wait-for-review}
 
-Use this when staff should look at every job before it prints, for example in a school or FabLab where students submit their own jobs.
+Используйте этот режим, если сотрудники должны проверять каждое задание перед печатью, например в школе или FabLab, где учащиеся отправляют свои задания.
 
-Without **Print Without Review** (`queue:start_unreviewed`), a user can still queue jobs, but every job they queue waits with a **Waiting for review** badge until someone with `queue:update_all` starts it with :material-play: **Play**. The print dialog tells them so. Users with `queue:update_all` are the reviewers, so their own jobs never wait. They can't start their waiting jobs themselves, also not by switching off manual start in the editor, and they can't start jobs from a virtual printer that have no owner yet.
+Без разрешения **Печать без проверки** (`queue:start_unreviewed`) пользователь по-прежнему может добавлять задания в очередь, но каждое из них получает отметку **Ожидает проверки** и ждёт, пока пользователь с `queue:update_all` не запустит его кнопкой :material-play: **Запустить**. Об этом сообщает окно печати. Пользователи с `queue:update_all` являются проверяющими, поэтому их собственные задания не ожидают проверки. Пользователь не может самостоятельно запустить свои ожидающие задания, в том числе отключив ручной запуск в редакторе, или запустить задания виртуального принтера, у которых пока нет владельца.
 
-To set it up, create a group for the students with `queue:create` and the "own" queue permissions, and leave **Print Without Review** off. Give the staff `queue:update_all`. Combined with "own" read permissions, students only see their own jobs and files.
+Для настройки создайте группу учащихся с `queue:create` и разрешениями очереди для своих заданий, оставив **Печать без проверки** выключенной. Сотрудникам предоставьте `queue:update_all`. В сочетании с разрешениями на чтение только своих данных учащиеся будут видеть только свои задания и файлы.
 
-It applies to every way a job is queued: the print dialog, the file manager, more runs of a batch, pipelines, API keys and the webhook. A key queues like its owner, and a key whose owner needs review can't start waiting jobs through the webhook.
+Правило действует при постановке в очередь любым способом: через окно печати, файловый менеджер, дополнительные запуски партии, конвейеры, ключи API и вебхук. Ключ добавляет задание с правами владельца; если задания владельца требуют проверки, ключ не может запустить их через вебхук.
 
-Administrators and the Operators group have the permission. On upgrade, every group that could queue, start or run jobs was given it once, so nothing changes until you take it away from a group. Groups you create afterwards don't have it until you tick it.
+У администраторов и группы операторов это разрешение есть. При обновлении оно однократно выдано всем группам, которые могли ставить задания в очередь, запускать или выполнять их, поэтому ничего не меняется, пока вы не отзовёте его. В группах, созданных позже, разрешение отсутствует до его явного включения.
 
-### Printer Access
+### Доступ к принтерам {#printer-access}
 
-Permissions decide *what* a user may do. **Printer access** decides *on which printers*. Use it when several teams share one Bambuddy, or to keep a printer free for a training session.
+Разрешения определяют, *что* пользователь может делать; **доступ к принтерам** — *на каких принтерах*. Используйте его, если несколько команд работают в одном Bambuddy или нужно зарезервировать принтер для обучения.
 
-Printer access has its own page: **Settings → Authentication → Printer access** (admins only). Pick a group, switch on **Limit members to the printers and locations chosen here**, and choose what the group may use:
+Для доступа к принтерам есть отдельная страница **Настройки → Аутентификация → Доступ к принтерам** (только для администраторов). Выберите группу, включите **Ограничить участников выбранными здесь принтерами и расположениями** и укажите доступные ей устройства:
 
-- **Whole location**: every printer whose location matches, now and later. A printer added to "Lab A" reaches the Lab A team without anyone ticking it.
-- **Single printers**: tick them one by one, on top of any locations.
+- **Всё расположение**: все принтеры с соответствующим расположением сейчас и в будущем. Принтер, добавленный в «Лаборатория A», станет доступен её команде без отдельного выбора.
+- **Отдельные принтеры**: отметьте их по одному в дополнение к расположениям.
 
-Members of that group then see and control only those printers:
+Участники группы будут видеть только выбранные принтеры и управлять только ими:
 
-- The printer list and dashboard, camera streams, the queue and batches, archives, projects, statistics, print log, pipeline runs, maintenance, smart plugs, Home Assistant sensors, library folder links to archives, notification providers and their log, the printers on the System page, virtual printers, spool assignments, scheduled drying, failure detection and firmware leave the other printers out.
-- Live updates for the other printers don't reach them.
-- Notification providers set to all printers are left out too; a limited user creates providers for their own printers.
-- Virtual printers that bridge to one of the other printers are left out, and they can't point one at such a printer. System health findings come without their log lines.
-- Opening one of the other printers, or an archive or job from one, by its address answers as if it didn't exist.
+- Из списка принтеров и панели, трансляций камер, очереди и партий, архивов, проектов, статистики, журнала печати, запусков конвейеров, обслуживания, умных розеток, датчиков Home Assistant, ссылок папок библиотеки на архивы, провайдеров уведомлений и их журнала, принтеров на странице «Система», виртуальных принтеров, назначений катушек, запланированной сушки, обнаружения ошибок и прошивки исключаются остальные принтеры.
+- Обновления в реальном времени для остальных принтеров не поступают.
+- Провайдеры уведомлений для всех принтеров также исключаются; пользователь с ограниченным доступом создаёт провайдеры для своих принтеров.
+- Виртуальные принтеры, связанные с недоступными принтерами, исключаются, и пользователь не может создать такую связь. Сведения о состоянии системы поступают без строк журнала.
+- Открытие недоступного принтера, его архива или задания по адресу возвращает ответ, как будто объект не существует.
 
-How it combines:
+Правила сочетания групп:
 
-| Situation | Printers the user sees |
+| Ситуация | Видимые пользователю принтеры |
 |-----------|------------------------|
-| In no group with printer access switched on | All printers (the default, so nothing changes until you limit a group) |
-| In one limited group | That group's printers |
-| In several limited groups | All of those groups' printers together |
-| In a limited group and in a group without the switch (e.g. Operators) | Only the limited group's printers. A group without the switch never widens access |
-| In a limited group with no printers or locations chosen | None |
-| Administrator | All printers, always |
+| Нет групп с включённым ограничением доступа | Все принтеры (по умолчанию ничего не меняется до ограничения группы) |
+| Одна ограниченная группа | Принтеры этой группы |
+| Несколько ограниченных групп | Принтеры всех этих групп вместе |
+| Ограниченная группа и группа без переключателя (например, «Операторы») | Только принтеры ограниченной группы; группа без переключателя не расширяет доступ |
+| Ограниченная группа без выбранных принтеров и расположений | Ни одного |
+| Администратор | Всегда все принтеры |
 
-A typical setup keeps the permissions in one group (for example **Operators**) and the printers in a second group per team (**Team A**, **Team B**), and puts each user in both.
+Обычно разрешения задают одной группой (например, **Операторы**), а принтеры — отдельной группой для каждой команды (**Команда A**, **Команда B**); каждого пользователя включают в обе группы.
 
-Things that follow the same rule:
+Те же правила применяются к следующему:
 
-- **API keys** reach only the printers of the user who created them, even if the key itself allows more. A key limited to some printers has to queue to a specific printer: "Any <model>" jobs and pipelines aimed at a printer class are refused for it. See [API Keys](api-keys.md).
-- **Camera stream links, Cam Wall and streaming-overlay tokens** show only the printers of whoever created them.
-- **Queued jobs**: a job for "Any <model>" only goes to a printer its owner may use. A job pinned to a printer that was later taken away from its owner waits, showing the reason, until access returns or you move it to another printer. Deleting a limited user while keeping their items stages their "Any <model>" jobs for a manual start, so you decide where they run.
+- **Ключи API** имеют доступ только к принтерам создавшего их пользователя, даже если сам ключ разрешает больше. Ключ с ограничением принтеров должен ставить задания в очередь на конкретный принтер: задания «Любой <model>» и конвейеры, направленные на класс принтеров, отклоняются. См. [Ключи API](api-keys.md).
+- **Ссылки трансляции камеры, Cam Wall и токены оверлея трансляции** показывают только принтеры создавшего их пользователя.
+- **Задания очереди**: задание для «Любой <model>» отправляется только на доступный владельцу принтер. Задание, закреплённое за принтером, к которому владелец потерял доступ, ожидает восстановления доступа или переноса на другой принтер с указанием причины. При удалении ограниченного пользователя с сохранением его данных задания «Любой <model>» переводятся в режим ручного запуска, чтобы вы сами выбрали принтер.
 
-#### Working with many printers and groups
+#### Работа с большим количеством принтеров и групп {#working-with-many-printers-and-groups}
 
-- **By group** lists the groups on the left, with a search and a filter for limited and not limited groups. On the right, the selected group's printers are grouped by location. Each location shows how many of its printers the group reaches and has a **Whole location** box.
-- Search by name, model, serial or location, and filter by location, model, or whether the group has access. **Tick all shown** and **Untick all shown** act only on the printers the filters leave, so "all X1C in Lab B" is one search and one click.
-- **By printer** lists every printer with the limited groups that reach it. A group that reaches it through its location is marked with a pin and is changed under **By group**. A group that has it ticked can be removed there, and **Give access to…** adds one. The page also names the users who are in no limited group, because they see every printer whatever the groups say.
-- **Who has access** in a printer card's menu opens **By printer** on that printer.
-- Changes from either view are collected and saved together, or discarded, from the bar at the bottom.
+- В режиме **По группам** слева перечислены группы с поиском и фильтром ограниченных и неограниченных групп. Справа принтеры выбранной группы сгруппированы по расположениям. Для каждого указано число доступных принтеров и есть флажок **Всё расположение**.
+- Ищите по названию, модели, серийному номеру или расположению и фильтруйте по расположению, модели и наличию доступа группы. **Выбрать все показанные** и **Снять выбор со всех показанных** действуют только на результаты фильтра: для выбора всех X1C в лаборатории B достаточно одного поиска и нажатия.
+- В режиме **По принтерам** каждый принтер отображается с ограниченными группами, которым он доступен. Группа, получившая доступ через расположение, отмечена значком и изменяется в режиме **По группам**. Явно выбранную группу можно удалить здесь же, а **Предоставить доступ…** добавляет группу. На странице также указаны пользователи без ограниченных групп: они видят все принтеры независимо от настроек групп.
+- Пункт **У кого есть доступ** в меню карточки открывает этот принтер в режиме **По принтерам**.
+- Изменения обоих представлений собираются и сохраняются или отменяются вместе с помощью панели внизу.
 
-A location given to a group that no printer has any more (renamed or emptied) stays listed with the group so you can remove it.
+Расположение, назначенное группе, но больше не содержащее принтеров (переименованное или опустевшее), остаётся в списке группы, чтобы его можно было удалить.
 
-#### Moving printers between locations
+#### Перемещение принтеров между расположениями {#moving-printers-between-locations}
 
-With locations given to groups, a printer's location is an access setting. The printer edit dialog names the groups a move affects, and only an admin can move a printer into or out of a location a limited group has. Locations are matched exactly, apart from leading and trailing spaces, which are removed when you save the printer.
+Если расположения назначены группам, расположение принтера влияет на доступ. Окно изменения принтера перечисляет группы, которых затронет перемещение; только администратор может переместить принтер в расположение ограниченной группы или из него. Расположения сопоставляются точно, кроме начальных и конечных пробелов, удаляемых при сохранении.
 
-Printers you add are only reached by limited groups that have the printer's location. Otherwise, tick them for each group that should have them.
+Новые принтеры доступны только ограниченным группам, имеющим доступ к их расположению. Иначе отметьте принтер для каждой группы, которой он нужен.
 
 !!! note
-    Printer access limits what Bambuddy shows and does. It cannot stop someone who has a printer's access code from sending a job to it directly from a slicer on the network.
+    Ограничение доступа управляет тем, что показывает и делает Bambuddy. Оно не может помешать человеку с кодом доступа принтера отправить задание непосредственно из слайсера в сети.
 
-## Enabling Authentication
+## Включение аутентификации {#enabling-authentication}
 
-### First-Time Setup
+### Первоначальная настройка {#first-time-setup}
 
-1. Navigate to any page in Bambuddy
-2. You'll be redirected to the **Setup Page** if authentication is not configured
-3. Choose to **Enable Authentication**
-4. Create your admin account:
-   - Enter a username
-   - Enter a password (minimum 6 characters)
-5. Click **Enable Authentication**
+1. Откройте любую страницу Bambuddy
+2. Если аутентификация ещё не настроена, вы попадёте на **страницу настройки**
+3. Выберите **Включить аутентификацию**
+4. Создайте учётную запись администратора:
+   - Введите имя пользователя
+   - Введите пароль (не менее 6 символов)
+5. Нажмите **Включить аутентификацию**
 
-The first user is automatically added to the **Administrators** group.
+Первый пользователь автоматически добавляется в группу **Администраторы**.
 
-### From Settings (When Already Running)
+### Через настройки работающего приложения {#from-settings-when-already-running}
 
-1. Go to **Settings** → **Users** tab
-2. Click **Activate Authentication**
-3. You'll be redirected to the Setup Page
-4. Complete the setup as described above
+1. Откройте **Настройки** → вкладку **Пользователи**
+2. Нажмите **Включить аутентификацию**
+3. Вы попадёте на страницу настройки
+4. Завершите настройку, как описано выше
 
-## Managing Users
+## Управление пользователями {#managing-users}
 
-### Creating Users
+### Создание пользователей {#creating-users}
 
-#### Standard Mode
+#### Стандартный режим {#standard-mode}
 
-1. Log in as an administrator
-2. Go to **Settings** → **Users** tab
-3. Click **Add User**
-4. Fill in:
-   - Username
-   - Password (minimum 6 characters)
-   - Confirm Password
-   - Groups (select one or more)
-5. Click **Create**
+1. Войдите как администратор
+2. Откройте **Настройки** → **Пользователи**
+3. Нажмите **Добавить пользователя**
+4. Заполните:
+   - Имя пользователя
+   - Пароль (не менее 6 символов)
+   - Подтверждение пароля
+   - Группы (одну или несколько)
+5. Нажмите **Создать**
 
-#### With Advanced Auth (Email)
+#### Расширенная аутентификация по электронной почте {#with-advanced-auth-email}
 
-When [Advanced Auth via Email](#advanced-auth-via-email) is enabled:
+При включённой [расширенной аутентификации по электронной почте](#advanced-auth-via-email):
 
-1. Go to **Settings** → **Users** tab
-2. Click **Add User**
-3. Fill in:
-   - Username
-   - Email address
-   - Groups (select one or more)
-4. Click **Create** — the system generates a secure random password and emails it to the user automatically
+1. Откройте **Настройки** → **Пользователи**
+2. Нажмите **Добавить пользователя**
+3. Заполните:
+   - Имя пользователя
+   - Адрес электронной почты
+   - Группы (одну или несколько)
+4. Нажмите **Создать** — система создаст безопасный случайный пароль и автоматически отправит его пользователю по почте
 
-No one besides the new user sees the password, making this inherently more secure than manually assigning passwords.
+Пароль видит только новый пользователь, что безопаснее ручного назначения.
 
-### Editing Users
+### Изменение пользователей {#editing-users}
 
-1. Go to **Settings** → **Users**
-2. Click the edit icon next to a user
-3. Modify username, password, or group assignments
-4. Click **Save**
+1. Откройте **Настройки** → **Пользователи**
+2. Нажмите значок изменения рядом с пользователем
+3. Измените имя, пароль или назначение групп
+4. Нажмите **Сохранить**
 
-### Deleting Users
+### Удаление пользователей {#deleting-users}
 
-1. Go to **Settings** → **Users**
-2. Click the delete icon next to a user
-3. If the user has created any archives, queue items, or library files, you'll be asked what to do:
-   - **Delete user AND their items** - Removes the user and all content they created
-   - **Delete user, keep items** - Removes the user but keeps their content (items become "ownerless")
-4. Confirm deletion
+1. Откройте **Настройки** → **Пользователи**
+2. Нажмите значок удаления рядом с пользователем
+3. Если пользователь создал архивы, задания очереди или файлы библиотеки, выберите действие:
+   - **Удалить пользователя и его данные** — удаляет пользователя и созданное им содержимое
+   - **Удалить пользователя, сохранить данные** — удаляет пользователя, сохраняя содержимое без владельца
+4. Подтвердите удаление
 
-Note: You cannot delete yourself or the last administrator. Ownerless items require `*_all` permission to modify.
+Примечание: нельзя удалить себя или последнего администратора. Для изменения данных без владельца требуется разрешение `*_all`.
 
-## Managing Groups
+## Управление группами {#managing-groups}
 
-### Viewing Groups
+### Просмотр групп {#viewing-groups}
 
-1. Go to **Settings** → **Users** → **Groups** tab
-2. View all groups with their permission counts
+1. Откройте **Настройки** → **Пользователи** → **Группы**
+2. Просмотрите группы и количество их разрешений
 
-### Creating Custom Groups
+### Создание пользовательских групп {#creating-custom-groups}
 
-1. Go to **Settings** → **Users** → **Groups** tab
-2. Click **Add Group** — this opens the full-page group editor
-3. Enter group name and description
-4. Use the permission grid to select permissions:
-   - **Search**: Filter permissions by name using the search bar
-   - **Select All / Clear All**: Bulk-select or deselect all permissions
-   - **Category checkboxes**: Toggle all permissions in a category at once
-   - Each category card shows a count badge (e.g., "5/7") for selected permissions
-5. Click **Save**
+1. Откройте **Настройки** → **Пользователи** → **Группы**
+2. Нажмите **Добавить группу** — откроется полноэкранный редактор группы
+3. Введите название и описание группы
+4. Выберите разрешения в таблице:
+   - **Поиск**: фильтруйте разрешения по названию
+   - **Выбрать все / Очистить всё**: массово выберите или снимите все разрешения
+   - **Флажки категорий**: включайте и выключайте все разрешения категории сразу
+   - Каждая карточка категории показывает число выбранных разрешений (например, «5/7»)
+5. Нажмите **Сохранить**
 
-### Editing Groups
+### Изменение групп {#editing-groups}
 
-1. Click the edit icon next to a group — this opens the full-page group editor
-2. Modify name, description or permissions. The editor shows a summary of the group's [printer access](#printer-access) with a link to change it
-3. Click **Save**
+1. Нажмите значок изменения рядом с группой — откроется полноэкранный редактор
+2. Измените название, описание или разрешения. Редактор показывает сводку [доступа к принтерам](#printer-access) со ссылкой на его изменение
+3. Нажмите **Сохранить**
 
-Note: System groups (Administrators, Operators, Viewers) cannot be deleted.
+Примечание: системные группы (Администраторы, Операторы, Наблюдатели) удалить нельзя.
 
-### Adding Users to Groups
+### Добавление пользователей в группы {#adding-users-to-groups}
 
-1. Go to **Settings** → **Users** → **Groups** tab
-2. Click on a group to view details
-3. Click **Add User** and select a user
-4. Or edit a user and select their groups
+1. Откройте **Настройки** → **Пользователи** → **Группы**
+2. Нажмите группу для просмотра сведений
+3. Нажмите **Добавить пользователя** и выберите его
+4. Либо измените пользователя и выберите его группы
 
-## When Bambuddy Doesn't Answer
+## Когда Bambuddy не отвечает {#when-bambuddy-doesnt-answer}
 
-If Bambuddy, or its database, isn't answering when a page loads, a browser with a saved sign-in shows "Can't reach Bambuddy. Retrying…" instead of the login page. The saved sign-in is kept, and the page appears by itself once Bambuddy answers. Only an answer from Bambuddy goes to the login page: a sign-in that is invalid or expired, or a deactivated account.
+Если Bambuddy или его база данных не отвечает при загрузке страницы, браузер с сохранённым входом показывает «Can't reach Bambuddy. Retrying…» вместо страницы входа. Данные входа сохраняются, а страница появляется сама, когда Bambuddy отвечает. Переход на страницу входа выполняется только после ответа Bambuddy о недействительном или истёкшем входе либо деактивированном аккаунте.
 
-## Changing Your Password
+## Изменение пароля {#changing-your-password}
 
-Any authenticated user can change their own password:
+Любой вошедший пользователь может изменить свой пароль:
 
-1. Click the **Key icon** in the sidebar (next to logout)
-2. Enter your current password
-3. Enter your new password
-4. Confirm the new password
-5. Click **Change Password**
+1. Нажмите **значок ключа** на боковой панели рядом с выходом
+2. Введите текущий пароль
+3. Введите новый пароль
+4. Подтвердите новый пароль
+5. Нажмите **Изменить пароль**
 
-## Forgot Password
+## Забыли пароль {#forgot-password}
 
-### With Advanced Auth (Email)
+### С расширенной аутентификацией (электронная почта) {#with-advanced-auth-email_1}
 
-If [Advanced Auth via Email](#advanced-auth-via-email) is enabled, users can reset their own password:
+При включённой [расширенной аутентификации по электронной почте](#advanced-auth-via-email) пользователи могут самостоятельно сбросить пароль:
 
-1. Click **"Forgot your password?"** on the login page
-2. Enter your username or email address
-3. A link to set a new password is emailed to you (valid for 1 hour, usable once)
-4. Open the link, enter your new password twice, and log in with it
+1. На странице входа нажмите **«Забыли пароль?»**
+2. Введите имя пользователя или адрес электронной почты
+3. Вы получите ссылку для задания нового пароля (действует один час, используется однократно)
+4. Откройте ссылку, дважды введите новый пароль и войдите с ним
 
-Admins can also trigger a password reset from User Management with a single click — the user is emailed the same link.
+Администратор также может одним нажатием запустить сброс в управлении пользователями — пользователю отправится такая же ссылка.
 
-### Without Advanced Auth
+### Без расширенной аутентификации {#without-advanced-auth}
 
-If email-based auth is not enabled:
+Если аутентификация по почте не включена:
 
-1. Contact your Bambuddy administrator
-2. They can reset your password in User Management
-3. Log in with the temporary password and change it
+1. Обратитесь к администратору Bambuddy
+2. Он может сбросить пароль в управлении пользователями
+3. Войдите с временным паролем и измените его
 
-## Disabling Authentication
+## Отключение аутентификации {#disabling-authentication}
 
-If you need to disable authentication:
+Если требуется отключить аутентификацию:
 
-1. Log in as an administrator
-2. Go to **Settings** → **Users** tab
-3. Click **Disable Authentication**
-4. Confirm the action
+1. Войдите как администратор
+2. Откройте **Настройки** → **Пользователи**
+3. Нажмите **Отключить аутентификацию**
+4. Подтвердите действие
 
-**Warning**: Disabling authentication removes access control. All features become accessible without login.
+**Предупреждение**: отключение аутентификации удаляет контроль доступа. Все функции становятся доступны без входа.
 
-## Advanced Auth via Email
+## Расширенная аутентификация по электронной почте {#advanced-auth-via-email}
 
-Advanced Authentication adds SMTP-based email integration for streamlined user onboarding and self-service password management. This is an optional feature that can be enabled or disabled independently of basic authentication.
+Расширенная аутентификация добавляет интеграцию электронной почты по SMTP для удобного подключения пользователей и самостоятельного управления паролями. Это необязательная функция, включаемая и отключаемая независимо от базовой аутентификации.
 
-### Setting Up SMTP
+### Настройка SMTP {#setting-up-smtp}
 
-1. Go to **Settings** → **Email** tab
-2. Configure your SMTP server:
-   - **SMTP Host** — Your mail server (e.g., `smtp.gmail.com`)
-   - **SMTP Port** — Typically `587` (TLS) or `465` (SSL)
-   - **Username** — SMTP login (if authentication is required)
-   - **Password** — SMTP password or app-specific password
-   - **From Address** — Sender email shown in outgoing messages
-   - **External URL** — Your Bambuddy instance URL (used in email links)
-3. Enable **Advanced Authentication**
-4. Use the **Test Email** button to verify your configuration. It sends with what the form holds, saved or not.
+1. Откройте **Настройки** → **Электронная почта**
+2. Настройте SMTP-сервер:
+   - **SMTP-хост** — почтовый сервер (например, `smtp.gmail.com`)
+   - **SMTP-порт** — обычно `587` (TLS) или `465` (SSL)
+   - **Имя пользователя** — логин SMTP, если нужна аутентификация
+   - **Пароль** — пароль SMTP или пароль приложения
+   - **Адрес отправителя** — адрес в исходящих письмах
+   - **Внешний URL** — адрес вашего экземпляра Bambuddy для ссылок в письмах
+3. Включите **Расширенную аутентификацию**
+4. Проверьте конфигурацию кнопкой **Тестовое письмо**. Используются текущие значения формы, даже если они не сохранены.
 
-!!! note "Saved password"
-    The saved SMTP password is never shown again; leave the field empty to keep it. If you change the host, port or security, enter the password again (without authentication, the saved password is removed instead).
+!!! note "Сохранённый пароль"
+    Сохранённый пароль SMTP больше не показывается; оставьте поле пустым, чтобы сохранить его. При изменении хоста, порта или режима безопасности введите пароль заново; при отключении аутентификации сохранённый пароль удаляется.
 
-### How It Works
+### Как это работает {#how-it-works}
 
-Once enabled:
+После включения:
 
-- **User creation**: Admins enter a username and email address. The system generates a secure random password and emails it directly to the user. No one else sees the password.
-- **Admin password reset**: In User Management, admins can click a reset button to email the user a link to set a new password — one click, no manual entry.
-- **Self-service reset**: Users can click "Forgot your password?" on the login screen to receive a link to set a new password via email without contacting an admin.
-- **Email validation**: The system validates email addresses since email is the sole mechanism for password delivery.
-- **Case-insensitive login**: Usernames and email addresses are not case-sensitive when logging in.
+- **Создание пользователя**: администратор вводит имя и адрес электронной почты. Система создаёт безопасный случайный пароль и отправляет его непосредственно пользователю. Никто другой пароль не видит.
+- **Сброс администратором**: в управлении пользователями администратор одной кнопкой отправляет пользователю ссылку для задания нового пароля, без ручного ввода.
+- **Самостоятельный сброс**: пользователь может нажать «Забыли пароль?» на экране входа и получить ссылку по почте без обращения к администратору.
+- **Проверка адреса**: система проверяет адрес электронной почты, поскольку это единственный способ доставки пароля.
+- **Вход без учёта регистра**: регистр имён пользователей и адресов электронной почты при входе не учитывается.
 
-### Email Templates
+### Шаблоны писем {#email-templates}
 
-Bambuddy includes customizable notification templates for:
+Bambuddy включает настраиваемые шаблоны уведомлений:
 
-- **Welcome Email** — Sent when a new user account is created. Bambuddy adds the login details (username and password) at the end of the text and in a box above the login button; the template cannot place the password itself
-- **Password Reset** — Sent when a password reset is requested (by admin or self-service). Bambuddy adds the reset link at the end of the text and as a button; the template cannot place the link itself
-- **User Print Started Email** — Sent when a user's print job begins
-- **User Print Completed Email** — Sent when a user's print job finishes successfully
-- **User Print Failed Email** — Sent when a user's print job fails
-- **User Print Stopped Email** — Sent when a user's print job is cancelled
+- **Приветственное письмо** — отправляется при создании пользователя. Bambuddy добавляет имя и пароль в конце текста и в блоке над кнопкой входа; шаблон не может размещать пароль самостоятельно
+- **Сброс пароля** — отправляется по запросу администратора или пользователя. Bambuddy добавляет ссылку в конце текста и в виде кнопки; шаблон не может размещать её самостоятельно
+- **Письмо о начале печати пользователя** — при начале задания пользователя
+- **Письмо об успешном завершении печати пользователя** — при успешном завершении
+- **Письмо об ошибке печати пользователя** — при неудаче
+- **Письмо об остановке печати пользователя** — при отмене
 
-Templates can be edited in **Settings** → **Notifications** → **Message Templates**.
+Шаблоны можно изменить в **Настройки** → **Уведомления** → **Шаблоны сообщений**.
 
-!!! note "These are distinct from the provider-level Print Completed / Failed / Stopped templates"
-    The four `User Print … Email` templates are the per-user emails sent **directly to the user who submitted the print** (SMTP only, requires Advanced Auth and the user's opt-in). The provider-level **Print Completed / Failed / Stopped** templates in **Settings → Notifications → Message Templates** are the broadcast events sent through whatever notification providers the admin has configured (ntfy, Pushover, Telegram, Discord, Email, Webhook, Home Assistant). The " Email" suffix on the user templates is how Bambuddy distinguishes the two paths in the Message Templates list (#1792).
+!!! note "Эти шаблоны отличаются от шаблонов провайдеров о завершении, ошибке и остановке печати"
+    Четыре шаблона `User Print … Email` — письма, отправляемые **непосредственно пользователю, отправившему печать** (только SMTP, необходимы расширенная аутентификация и согласие пользователя). Шаблоны провайдеров **Print Completed / Failed / Stopped** в **Настройки → Уведомления → Шаблоны сообщений** — общие события, отправляемые через настроенные администратором провайдеры (ntfy, Pushover, Telegram, Discord, Email, Webhook, Home Assistant). Суффикс « Email» позволяет Bambuddy различать эти два пути в списке шаблонов (#1792).
 
-### Per-User Email Notifications
+### Уведомления по электронной почте для пользователей {#per-user-email-notifications}
 
-When Advanced Auth is enabled, individual users can opt in to email notifications for their own print jobs. This is separate from the global notification system — it only emails the user who submitted the print.
+При включённой расширенной аутентификации пользователи могут подписаться на письма о собственных заданиях. Это отдельная функция от общей системы уведомлений: письмо получает только отправивший печать пользователь.
 
-#### Enabling User Notifications
+#### Включение пользовательских уведомлений {#enabling-user-notifications}
 
-1. Go to **Settings** → **Notifications** tab
-2. Enable **User Notifications**
-3. SMTP must be configured (see [Setting Up SMTP](#setting-up-smtp))
+1. Откройте **Настройки** → **Уведомления**
+2. Включите **Пользовательские уведомления**
+3. SMTP должен быть настроен (см. [Настройка SMTP](#setting-up-smtp))
 
-#### Managing Your Preferences
+#### Управление своими предпочтениями {#managing-your-preferences}
 
-1. Click **Notifications** in the sidebar (visible when User Notifications are enabled)
-2. Toggle notifications for each event type:
-   - **Print Job Starts** — Email when your print begins
-   - **Print Job Finishes** — Email when your print completes successfully
-   - **Print Errors** — Email when your print fails
-   - **Print Job Stops** — Email when your print is cancelled
-3. Click **Save**
+1. Нажмите **Уведомления** на боковой панели (доступно при включённых пользовательских уведомлениях)
+2. Включите уведомления для нужных событий:
+   - **Начало печати** — письмо о начале печати
+   - **Завершение печати** — письмо об успешном завершении
+   - **Ошибки печати** — письмо при неудаче
+   - **Остановка печати** — письмо при отмене
+3. Нажмите **Сохранить**
 
-!!! info "Requires Email Address"
-    Users must have an email address on their account to receive notifications. The email address can be set by an administrator in User Management.
+!!! info "Требуется адрес электронной почты"
+    Для получения уведомлений в аккаунте пользователя должен быть указан адрес электронной почты. Администратор может задать его в управлении пользователями.
 
-!!! tip "Permission Required"
-    The `notifications:user_email` permission is required to access the Notifications page. Administrators and Operators have this by default. Viewers do not.
+!!! tip "Необходимо разрешение"
+    Для доступа к странице уведомлений требуется `notifications:user_email`. По умолчанию оно есть у администраторов и операторов, но не у наблюдателей.
 
-### Enabling/Disabling
+### Включение и отключение {#enablingdisabling}
 
-Advanced Auth can be toggled on or off at any time without affecting basic authentication or existing user accounts. When disabled, user creation and password resets revert to the standard manual workflow.
+Расширенную аутентификацию можно в любой момент включить или выключить, не влияя на базовую аутентификацию и существующие аккаунты. Когда она отключена, создание пользователей и сброс паролей снова выполняются вручную.
 
 ---
 
-## LDAP Authentication
+## Аутентификация LDAP {#ldap-authentication}
 
-Bambuddy supports LDAP/Active Directory authentication, allowing users to log in with their directory credentials. LDAP users coexist with local accounts — the local admin remains as a fallback when the LDAP server is unreachable.
+Bambuddy поддерживает LDAP/Active Directory: пользователи могут входить с учётными данными каталога. Пользователи LDAP сосуществуют с локальными аккаунтами; локальный администратор остаётся резервным вариантом, если сервер LDAP недоступен.
 
-### Setting Up LDAP
+### Настройка LDAP {#setting-up-ldap}
 
-1. Go to **Settings** → **Authentication** → **LDAP** tab
-2. Configure your LDAP server:
-   - **Server URL** — `ldaps://ldap.example.com:636` for LDAPS or `ldap://ldap.example.com:389` for StartTLS
-   - **Security** — StartTLS (upgrades plain connection to TLS) or LDAPS (TLS from the start)
-   - **Bind DN** — Service account DN for searching users (e.g., `cn=admin,dc=example,dc=com`)
-   - **Bind Password** — Service account password
-   - **Search Base** — Where to search for users (e.g., `dc=example,dc=com`)
-   - **User Search Filter** — LDAP filter to find users. `{username}` is replaced with the login name
+1. Откройте **Настройки** → **Аутентификация** → **LDAP**
+2. Настройте сервер LDAP:
+   - **URL сервера** — `ldaps://ldap.example.com:636` для LDAPS или `ldap://ldap.example.com:389` для StartTLS
+   - **Безопасность** — StartTLS (повышает обычное соединение до TLS) или LDAPS (TLS с самого начала)
+   - **Bind DN** — DN сервисной учётной записи для поиска пользователей (например, `cn=admin,dc=example,dc=com`)
+   - **Пароль привязки** — пароль сервисной учётной записи
+   - **База поиска** — область поиска пользователей (например, `dc=example,dc=com`)
+   - **Фильтр поиска пользователей** — фильтр LDAP; `{username}` заменяется именем входа
      - Active Directory: `(sAMAccountName={username})`
      - OpenLDAP: `(uid={username})`
-3. Click **Test Connection** to verify, then **Save**. The test uses what the form holds, so you can try settings before saving them, and it works while LDAP is still disabled. The saved bind password is never shown again; leave the field empty to keep it, but enter it again if you change the server URL or security. If it reports that the server refused StartTLS, the server only offers LDAPS (lldap is one): choose **LDAPS** and use its `ldaps://` URL and port
-4. Click **Enable** to activate LDAP authentication
+3. Нажмите **Проверить подключение**, затем **Сохранить**. Проверка использует текущие значения формы, поэтому можно проверить их до сохранения и пока LDAP выключен. Сохранённый пароль привязки больше не показывается; оставьте поле пустым для его сохранения, но введите его заново при изменении URL или режима безопасности. Если сервер отклоняет StartTLS, он поддерживает только LDAPS (например, lldap): выберите **LDAPS**, его URL с `ldaps://` и порт
+4. Нажмите **Включить**, чтобы активировать LDAP
 
-!!! warning "TLS Required"
-    Plaintext LDAP is not supported. All connections use either StartTLS or LDAPS to encrypt credentials in transit.
+!!! warning "Требуется TLS"
+    LDAP без шифрования не поддерживается. Для защиты учётных данных при передаче все соединения используют StartTLS или LDAPS.
 
-### User Provisioning
+### Создание пользователей {#user-provisioning}
 
-There are two ways to create LDAP users in BamBuddy:
+Пользователей LDAP можно создать в Bambuddy двумя способами:
 
-- **Auto-provision** (toggle in LDAP settings) — When enabled, a BamBuddy account is automatically created on the user's first successful LDAP login. Group mapping (below) runs at provision time.
-- **Manual provision** — Open **Add User** (either from the **Users** page or from **Settings → Authentication**) and switch to the **LDAP** tab. The tab only appears when LDAP is enabled in settings. Type at least 2 characters to search your directory across `sAMAccountName`, `uid`, `mail`, `displayName`, and `cn` — the filter spans both Active Directory and OpenLDAP layouts, so attributes the directory doesn't recognise are silently skipped. Pick a user from the results and click **Provision user** — BamBuddy re-resolves the entry via the service-account bind, creates the account with `auth_source=ldap` and no local password, and applies the same group mapping as the auto-provision path. Users that already exist in BamBuddy are marked **Already provisioned** in the results so you can't accidentally duplicate them.
+- **Автоматическое создание** (переключатель настроек LDAP): при первом успешном входе по LDAP аккаунт Bambuddy создаётся автоматически. Сопоставление групп ниже выполняется при создании.
+- **Ручное создание**: откройте **Добавить пользователя** со страницы **Пользователи** или из **Настройки → Аутентификация** и выберите вкладку **LDAP**. Она доступна только при включённом LDAP. Введите не менее двух символов для поиска по `sAMAccountName`, `uid`, `mail`, `displayName` и `cn`; фильтр охватывает Active Directory и OpenLDAP, поэтому нераспознанные каталогом атрибуты пропускаются без ошибки. Выберите пользователя и нажмите **Создать пользователя** — Bambuddy повторно находит запись через сервисную учётную запись, создаёт аккаунт с `auth_source=ldap` без локального пароля и применяет то же сопоставление групп, что при автоматическом создании. Существующие пользователи отмечены как **Уже создан**, чтобы избежать дубликатов.
 
-Other LDAP-user behaviour:
+Другие особенности пользователей LDAP:
 
-- **Email sync** — The user's email address from LDAP is synced on each login.
-- **Auth source** — LDAP users are tagged with `auth_source=ldap` and shown with an "LDAP" badge in user management.
+- **Синхронизация электронной почты** — адрес из LDAP синхронизируется при каждом входе.
+- **Источник аутентификации** — пользователи отмечаются `auth_source=ldap` и значком «LDAP» в управлении пользователями.
 
-### Group Mapping
+### Сопоставление групп {#group-mapping}
 
-LDAP groups can be mapped to BamBuddy groups for automatic role assignment. The mapping is configured as a JSON object in the LDAP settings:
+Группы LDAP можно сопоставить с группами Bambuddy для автоматического назначения ролей. Сопоставление задаётся объектом JSON в настройках LDAP:
 
 ```json
 {
@@ -437,130 +437,111 @@ LDAP groups can be mapped to BamBuddy groups for automatic role assignment. The 
 }
 ```
 
-- Keys are LDAP group DNs (case-insensitive matching)
-- Values are BamBuddy group names
-- Membership is read from the user's `memberOf` attribute (Active Directory, lldap, OpenLDAP with the memberof overlay, 389-DS), from `groupOfNames` / `groupOfUniqueNames` groups that list the user in `member` / `uniqueMember`, and from POSIX groups (`memberUid`)
-- Groups are found anywhere in the directory, not only under the **Search Base**, so a Search Base of `ou=people,dc=example,dc=com` still finds groups under `ou=groups,dc=example,dc=com`
-- A user's POSIX **primary** group — the one their `gidNumber` points at — counts as full membership, the same as Unix treats it
-- Group membership is synced on every login
-- [Printer access](#printer-access) follows the mapped groups: map a directory group to a group limited to its printers, and its members see only those. A change in the directory takes effect at the user's next login
+- Ключи — DN групп LDAP (сопоставление без учёта регистра)
+- Значения — имена групп Bambuddy
+- Членство читается из атрибута `memberOf` пользователя (Active Directory, lldap, OpenLDAP с оверлеем memberof, 389-DS), групп `groupOfNames` / `groupOfUniqueNames`, перечисляющих пользователя в `member` / `uniqueMember`, и групп POSIX (`memberUid`)
+- Группы ищутся во всём каталоге, не только под **Базой поиска**: при базе `ou=people,dc=example,dc=com` находятся и группы под `ou=groups,dc=example,dc=com`
+- **Основная** группа POSIX пользователя, на которую указывает его `gidNumber`, считается полноправным членством, как в Unix
+- Членство синхронизируется при каждом входе
+- [Доступ к принтерам](#printer-access) следует сопоставленным группам: сопоставьте группу каталога с группой, ограниченной её принтерами, и участники увидят только их. Изменение каталога вступит в силу при следующем входе
 
-!!! tip "No Mapping? No Problem"
-    If no group mapping is configured, LDAP users are created without any group. Admins can manually assign groups in BamBuddy afterward.
+!!! tip "Нет сопоставления?"
+    Без настроенного сопоставления пользователи LDAP создаются без групп. Администратор может назначить группы вручную позже.
 
-!!! info "Directories without POSIX groups"
-    The POSIX lookups above need your directory to define the `posixGroup` object
-    class in its published schema. Some directories do not — lldap is the common
-    one: it marks every account it creates as `posixAccount`, but its groups are
-    only ever `groupOfNames` / `groupOfUniqueNames`. There is nothing to configure. BamBuddy notes the
-    absence in the log and maps groups from `memberOf` and from the groups that
-    list the user, which is where those directories keep membership anyway.
+!!! info "Каталоги без групп POSIX"
+    Для поиска POSIX каталог должен определять в опубликованной схеме класс `posixGroup`. Некоторые каталоги этого не делают, например lldap: он отмечает каждую учётную запись как `posixAccount`, но его группы имеют только тип `groupOfNames` / `groupOfUniqueNames`. Ничего настраивать не нужно. Bambuddy отмечает отсутствие в журнале и сопоставляет группы из `memberOf` и групп, перечисляющих пользователя, где такие каталоги и хранят членство.
 
-!!! info "Why groups are asked as well as `memberOf`"
-    Outside Active Directory, `memberOf` can be incomplete. Plain OpenLDAP has
-    none unless the memberof overlay is loaded, and the overlay tracks only the
-    group class it was set up for and only groups changed after it was loaded.
-    So on every directory except Active Directory, BamBuddy also searches for
-    `groupOfNames` and `groupOfUniqueNames` entries that list the user. The
-    service account (**Bind DN**) needs read access to the groups for this. On
-    lldap, a service account in `lldap_strict_readonly` has it; a plain lldap
-    user can't read other users either, so LDAP login would not work at all.
+!!! info "Почему помимо `memberOf` проверяются группы"
+    За пределами Active Directory атрибут `memberOf` может быть неполным. В обычном OpenLDAP он отсутствует без оверлея memberof; оверлей отслеживает только настроенный класс групп и группы, изменённые после его загрузки. Поэтому во всех каталогах, кроме Active Directory, Bambuddy также ищет записи `groupOfNames` и `groupOfUniqueNames`, содержащие пользователя. Сервисной учётной записи (**Bind DN**) нужен доступ на чтение групп. В lldap им обладает учётная запись из `lldap_strict_readonly`; обычный пользователь lldap не может читать даже других пользователей, поэтому вход LDAP вообще не будет работать.
 
-### Password Management
+### Управление паролями {#password-management}
 
-LDAP users cannot change their password through BamBuddy — passwords are managed by the LDAP server. The following features are automatically disabled for LDAP users:
+Пользователи LDAP не могут изменить пароль через Bambuddy: паролями управляет LDAP-сервер. Для них автоматически отключены:
 
-- Change Password button (hidden in UI)
-- Forgot Password (skipped for LDAP emails)
-- Admin Password Reset (blocked with error message)
+- Кнопка изменения пароля (скрыта в интерфейсе)
+- «Забыли пароль» (адреса LDAP пропускаются)
+- Сброс пароля администратором (блокируется с сообщением об ошибке)
 
-### Local Admin Fallback
+### Резервный доступ локального администратора {#local-admin-fallback}
 
-Local accounts always work regardless of LDAP status. If the LDAP server is unreachable, LDAP authentication fails gracefully and falls back to local authentication. This ensures administrators can always access BamBuddy.
+Локальные аккаунты работают независимо от состояния LDAP. Если LDAP-сервер недоступен, аутентификация LDAP корректно завершается неудачей, а локальная остаётся доступной. Администратор всегда может войти в Bambuddy.
 
-!!! info "Same Username"
-    If a local user and an LDAP user have the same username, the local account takes priority. LDAP will not override an existing local account.
+!!! info "Одинаковое имя пользователя"
+    При совпадении имён локального пользователя и пользователя LDAP приоритет у локального аккаунта. LDAP не перезапишет существующий локальный аккаунт.
 
 ---
 
-## Two-Factor Authentication (2FA)
+## Двухфакторная аутентификация (2FA) {#two-factor-authentication-2fa}
 
-Bambuddy supports per-user opt-in two-factor authentication via either **TOTP** (time-based one-time password, compatible with Google Authenticator, Authy, 2FAS, and any standard TOTP app) or **Email OTP** (a 6-digit code delivered to the user's registered email). Each user independently decides whether to enable 2FA and which method to use.
+Bambuddy поддерживает добровольную двухфакторную аутентификацию для каждого пользователя с помощью **TOTP** (одноразовый пароль по времени, совместимый с Google Authenticator, Authy, 2FAS и любым стандартным приложением TOTP) или **Email OTP** (шестизначный код на зарегистрированный адрес). Каждый пользователь самостоятельно выбирает, включать ли 2FA и какой метод использовать.
 
-2FA is configured from **Settings → Authentication → Two-Factor Auth**. The tab header shows a green bullet when 2FA is active for your account.
+2FA настраивается в **Настройки → Аутентификация → Двухфакторная аутентификация**. Зелёная точка в заголовке вкладки означает, что 2FA активна для вашего аккаунта.
 
-### Enabling TOTP
+### Включение TOTP {#enabling-totp}
 
-1. Settings → Authentication → Two-Factor Auth → **Set up TOTP**
-2. Scan the displayed QR code with your authenticator app, or paste the secret manually
-3. Enter the 6-digit code your app currently shows to confirm
-4. Bambuddy displays **10 single-use backup codes** — save them in a password manager or print them. They are shown **only once**
-5. On next login, after entering username + password, Bambuddy prompts for the TOTP code
+1. Откройте **Настройки → Аутентификация → Двухфакторная аутентификация → Настроить TOTP**
+2. Отсканируйте QR-код приложением аутентификации или введите секрет вручную
+3. Для подтверждения введите текущий шестизначный код из приложения
+4. Bambuddy покажет **10 одноразовых резервных кодов** — сохраните их в менеджере паролей или распечатайте. Они показываются **только один раз**
+5. При следующем входе после имени и пароля Bambuddy запросит код TOTP
 
-### Enabling Email OTP
+### Включение Email OTP {#enabling-email-otp}
 
-1. Settings → Authentication → Two-Factor Auth → **Set up Email OTP**
-2. Bambuddy emails a 6-digit setup code to your registered address
-3. Enter the code to confirm; email 2FA is now active
-4. Requires [Advanced Auth via Email](#advanced-auth-via-email) to be configured (for SMTP delivery)
+1. Откройте **Настройки → Аутентификация → Двухфакторная аутентификация → Настроить Email OTP**
+2. Bambuddy отправит шестизначный код настройки на зарегистрированный адрес
+3. Введите код для подтверждения; 2FA по почте включится
+4. Для доставки по SMTP требуется настроенная [расширенная аутентификация по электронной почте](#advanced-auth-via-email)
 
-### Backup Codes
+### Резервные коды {#backup-codes}
 
-Each enrolled TOTP user receives 10 backup codes. Any backup code can substitute for the TOTP code once — after use it is consumed. Regenerate a fresh set any time from Settings → Two-Factor Auth (invalidates all prior codes).
+Каждый пользователь TOTP получает 10 резервных кодов. Любой из них может один раз заменить код TOTP и после использования расходуется. В любой момент можно создать новый набор в разделе «Настройки → Двухфакторная аутентификация»; все прежние коды станут недействительными.
 
-### Security Properties
+### Свойства безопасности {#security-properties}
 
-- **Brute-force protection** — per-user **and** per-IP rate limits on every verify attempt
-- **Replay protection** — a TOTP code cannot be accepted twice within the same 30-second window, on any of: setup, enable, verify, disable, backup-code regenerate
-- **Single-use challenge** — the pre-auth token issued between password and 2FA verification is a DB-backed single-use token bound to the browser via an HttpOnly cookie. It cannot be replayed on a different browser or reused after a successful verify
-- **Constant-time backup-code check** — all stored hashes are iterated on every attempt so the matching position in the list does not leak through timing
-- **Silent-replacement guard** — replacing an active TOTP requires verifying the current code first
+- **Защита от перебора** — ограничение частоты каждой проверки по пользователю **и** по IP
+- **Защита от повторного использования** — код TOTP нельзя принять дважды в одном 30-секундном интервале при настройке, включении, проверке, отключении или создании новых резервных кодов
+- **Одноразовая проверка** — токен предварительной аутентификации между проверкой пароля и 2FA хранится в базе, используется один раз и привязан к браузеру через cookie HttpOnly. Его нельзя повторить в другом браузере или использовать повторно после успеха
+- **Проверка резервного кода за постоянное время** — при каждой попытке проверяются все сохранённые хеши, поэтому положение совпадения в списке не раскрывается по времени
+- **Защита от незаметной замены** — перед заменой активного TOTP требуется подтвердить текущий код
 
-### Admin Reset
+### Сброс администратором {#admin-reset}
 
-When a user has lost access to their authenticator, an administrator can remove their 2FA (authenticator app, email codes and backup codes):
+Если пользователь потерял доступ к средству аутентификации, администратор может удалить его 2FA (приложение, почтовые и резервные коды):
 
-1. Go to **Settings** → **Users** and click **Edit** on the user
-2. Under **Two-factor authentication**, click **Disable 2FA**
-3. Enter **your own** password and click **Confirm**. Administrators who sign in through LDAP or SSO usually have no password and are not asked; if your SSO account was given one, Bambuddy asks for it after the first **Confirm**
+1. Откройте **Настройки** → **Пользователи** и нажмите **Изменить** у пользователя
+2. В разделе **Двухфакторная аутентификация** нажмите **Отключить 2FA**
+3. Введите **свой** пароль и нажмите **Подтвердить**. У администраторов LDAP или SSO обычно нет пароля, и его не запрашивают; если аккаунту SSO пароль был задан, Bambuddy запросит его после первого нажатия **Подтвердить**
 
-The user is signed out everywhere: sessions issued before the reset stop working. They sign in with their password alone and can set 2FA up again. If the user had no 2FA, Bambuddy says so; they are still signed out.
+Пользователь выходит из системы везде: сеансы, выданные до сброса, перестают работать. Он входит только с паролем и может настроить 2FA снова. Если у пользователя не было 2FA, Bambuddy сообщит об этом, но сеансы всё равно завершатся.
 
-The control is not shown on your own account; use your own 2FA settings there.
+Для собственного аккаунта этот элемент не показывается; используйте собственные настройки 2FA.
 
 ---
 
-## Single Sign-On (OIDC / SSO)
+## Единый вход (OIDC / SSO) {#single-sign-on-oidc-sso}
 
-Bambuddy integrates with any standards-compliant OpenID Connect provider — **PocketID**, **Authentik**, **Keycloak**, **Google Workspace**, **Azure AD**, etc. The login page renders an SSO button for every enabled provider.
+Bambuddy интегрируется с любым соответствующим стандарту провайдером OpenID Connect: **PocketID**, **Authentik**, **Keycloak**, **Google Workspace**, **Azure AD** и другими. На странице входа отображается кнопка SSO каждого включённого провайдера.
 
-OIDC providers are configured from **Settings → Authentication → SSO / OIDC** (admin only). The tab header shows a green bullet when at least one provider is enabled.
+Провайдеры OIDC настраиваются в **Настройки → Аутентификация → SSO / OIDC** (только администратором). Зелёная точка в заголовке вкладки означает, что включён хотя бы один провайдер.
 
-### Adding a Provider
+### Добавление провайдера {#adding-a-provider}
 
-1. Create a client on your identity provider with redirect URI `https://<your-bambuddy>/api/v1/auth/oidc/callback`
-2. Settings → Authentication → SSO / OIDC → **Add Provider**
-3. Fill in:
-    - **Name** — display name shown on the login page
-    - **Issuer URL** — must start with `https://` (HTTP is rejected; private/loopback/link-local IPs are rejected to prevent SSRF)
-    - **Client ID / Client Secret** — from the IdP. The client secret is encrypted at rest
-    - **Scopes** — default `openid email profile` (the `openid` scope is required)
-    - **Icon URL** (optional) — public HTTPS URL of a PNG/JPEG/WebP/GIF (≤ 1 MB). Bambuddy fetches it once and serves it from a same-origin proxy, so the strict Content-Security-Policy doesn't block external icon hosts on the login page
+1. Создайте клиент у провайдера идентификации с URI перенаправления `https://<your-bambuddy>/api/v1/auth/oidc/callback`
+2. Откройте **Настройки → Аутентификация → SSO / OIDC → Добавить провайдера**
+3. Заполните:
+    - **Название** — имя, отображаемое на странице входа
+    - **Issuer URL** — должен начинаться с `https://` (HTTP отклоняется; приватные, loopback и link-local IP-адреса запрещены для защиты от SSRF)
+    - **Client ID / Client Secret** — данные от IdP. Секрет клиента хранится в зашифрованном виде
+    - **Области доступа** — по умолчанию `openid email profile` (область `openid` обязательна)
+    - **URL значка** (необязательно) — публичный HTTPS-адрес PNG/JPEG/WebP/GIF размером не более 1 МБ. Bambuddy загружает его один раз и выдаёт через прокси того же источника, чтобы строгая Content-Security-Policy не блокировала внешние хосты значков на странице входа
 
-4. Toggle **Enabled** — the SSO button appears on the login page immediately
+4. Включите **Включено** — кнопка SSO немедленно появится на странице входа
 
-### Configuring a Provider via Environment Variables
+### Настройка провайдера через переменные окружения {#configuring-a-provider-via-environment-variables}
 
-Deployments managed by a compose file, Helm chart or GitOps repo have no one to
-click through the settings UI. One provider can therefore be defined entirely
-from the environment — it is written to the database on startup and re-applied
-on every boot.
+При развёртывании через Compose, Helm chart или репозиторий GitOps некому нажимать элементы интерфейса. Поэтому одного провайдера можно целиком определить переменными окружения: он записывается в базу при запуске и применяется заново при каждой загрузке.
 
-Set the four required variables; the provider activates only when all four have
-a value (empty, or nothing but whitespace, counts as unset). Surrounding
-whitespace is trimmed from all four — a secret mounted from a Kubernetes
-`stringData` block carries a trailing newline that would otherwise be part of
-the value:
+Задайте четыре обязательные переменные; провайдер активируется только если все четыре содержат значение (пустая строка или одни пробелы считаются отсутствием значения). Начальные и конечные пробелы удаляются из всех четырёх: секрет, смонтированный из блока Kubernetes `stringData`, содержит завершающий перевод строки, который иначе вошёл бы в значение:
 
 ```bash
 BAMBUDDY_OIDC_NAME=Keycloak
@@ -569,165 +550,84 @@ BAMBUDDY_OIDC_CLIENT_ID=bambuddy
 BAMBUDDY_OIDC_CLIENT_SECRET=your-client-secret
 ```
 
-Everything else is optional and shown here with its default:
+Остальные параметры необязательны; показаны значения по умолчанию:
 
-| Variable | Default | Notes |
+| Переменная | По умолчанию | Примечания |
 |---|---|---|
-| `BAMBUDDY_OIDC_SCOPES` | `openid email profile` | `openid` is required |
-| `BAMBUDDY_OIDC_ENABLED` | `true` | Whether the SSO button appears |
-| `BAMBUDDY_OIDC_AUTO_CREATE_USERS` | `false` | Create a local account on first sign-in |
-| `BAMBUDDY_OIDC_AUTO_LINK_EXISTING` | `false` | See the safety rule below |
-| `BAMBUDDY_OIDC_EMAIL_CLAIM` | `email` | Claim to read the address from |
-| `BAMBUDDY_OIDC_REQUIRE_EMAIL_VERIFIED` | `true` | Reject unverified addresses |
-| `BAMBUDDY_OIDC_ICON_URL` | *(none)* | Same rules as the UI icon field |
-| `BAMBUDDY_OIDC_AUTOLOGIN` | `false` | Redirect straight to this provider |
-| `BAMBUDDY_OIDC_DEFAULT_GROUP` | *(none)* | Group new users land in — a group **name**, see below |
-| `BAMBUDDY_OIDC_GROUP_CLAIM` | `groups` | Claim to read IdP groups from — see [Group Sync](#group-sync) |
-| `BAMBUDDY_OIDC_GROUP_MAPPING` | *(none)* | JSON object mapping IdP groups to BamBuddy group **names** |
+| `BAMBUDDY_OIDC_SCOPES` | `openid email profile` | `openid` обязателен |
+| `BAMBUDDY_OIDC_ENABLED` | `true` | Показывать ли кнопку SSO |
+| `BAMBUDDY_OIDC_AUTO_CREATE_USERS` | `false` | Создавать локальный аккаунт при первом входе |
+| `BAMBUDDY_OIDC_AUTO_LINK_EXISTING` | `false` | См. правило безопасности ниже |
+| `BAMBUDDY_OIDC_EMAIL_CLAIM` | `email` | Утверждение, из которого читается адрес |
+| `BAMBUDDY_OIDC_REQUIRE_EMAIL_VERIFIED` | `true` | Отклонять неподтверждённые адреса |
+| `BAMBUDDY_OIDC_ICON_URL` | *(нет)* | Те же правила, что для поля значка в интерфейсе |
+| `BAMBUDDY_OIDC_AUTOLOGIN` | `false` | Сразу перенаправлять к этому провайдеру |
+| `BAMBUDDY_OIDC_DEFAULT_GROUP` | *(нет)* | Группа новых пользователей — **название** группы, см. ниже |
+| `BAMBUDDY_OIDC_GROUP_CLAIM` | `groups` | Утверждение для чтения групп IdP — см. [Синхронизация групп](#group-sync) |
+| `BAMBUDDY_OIDC_GROUP_MAPPING` | *(нет)* | Объект JSON, сопоставляющий группы IdP с **названиями** групп Bambuddy |
 
-Booleans accept `true`, `1` or `yes` for on and `false`, `0` or `no` for off
-(case-insensitive). Leaving a variable out, or setting it to an empty value,
-gives you the default from the table above.
+Логические параметры принимают `true`, `1` или `yes` для включения и `false`, `0` или `no` для выключения без учёта регистра. Отсутствующая или пустая переменная получает значение по умолчанию из таблицы.
 
-Anything else — `on`, `y`, `enabled` — is **rejected** rather than guessed at:
-the whole configuration is skipped, a log line names the variable that could not
-be read, and a provider that was already running is left exactly as it was. The
-alternative would be `BAMBUDDY_OIDC_REQUIRE_EMAIL_VERIFIED=on` quietly meaning
-*off*.
+Любые другие значения, например `on`, `y`, `enabled`, **отклоняются**, а не интерпретируются приблизительно: вся конфигурация пропускается, журнал называет переменную, которую не удалось прочитать, а ранее работающий провайдер остаётся без изменений. Иначе, например, `BAMBUDDY_OIDC_REQUIRE_EMAIL_VERIFIED=on` незаметно означало бы *выключено*.
 
-!!! note "`BAMBUDDY_LOCAL_LOGIN` is deliberately more forgiving"
-    The recovery flag is read on the login request itself, not at startup, so a
-    rejected value there would return an error from the very endpoint the flag
-    exists to keep reachable. An unrecognised value simply counts as off.
+!!! note "`BAMBUDDY_LOCAL_LOGIN` намеренно менее строг"
+    Флаг восстановления читается в запросе входа, а не при запуске. Отклонённое значение вернуло бы ошибку именно из той конечной точки, доступность которой флаг должен обеспечить. Неизвестное значение просто считается выключенным.
 
-`BAMBUDDY_OIDC_ISSUER_URL` is held to the same policy as an issuer entered in
-the UI: `https://` only, with private, loopback, link-local, cloud-metadata,
-numeric-encoded and IPv4-mapped hosts all rejected. An in-cluster address such
-as `http://keycloak:8080` is therefore refused — one log line, no SSO button and
-no other signal — so use the externally reachable HTTPS issuer even when
-Bambuddy and the IdP sit in the same cluster.
+Для `BAMBUDDY_OIDC_ISSUER_URL` действуют те же правила, что при вводе issuer в интерфейсе: только `https://`; приватные, loopback, link-local, облачные адреса метаданных, хосты с числовым кодированием и IPv4-mapped адреса запрещены. Поэтому внутрикластерный адрес вроде `http://keycloak:8080` будет отклонён: появится одна запись журнала, кнопки SSO не будет и других сигналов не появится. Используйте доступный извне HTTPS issuer, даже если Bambuddy и IdP находятся в одном кластере.
 
-#### It is read-only in the UI
+#### В интерфейсе доступен только просмотр {#it-is-read-only-in-the-ui}
 
-The provider appears in **Settings → Authentication → SSO / OIDC** like any
-other, marked *(Environment Managed)* with a lock, but without edit, delete or
-enable controls. Startup rewrites the row from the environment on every boot, so
-a change made here would be reverted at the next restart — the API refuses it
-outright instead of accepting a change that cannot last.
+Провайдер появляется в **Настройки → Аутентификация → SSO / OIDC** как остальные, с пометкой *(Environment Managed)* и замком, но без кнопок изменения, удаления и включения. При каждой загрузке запись перезаписывается из окружения, поэтому изменение здесь отменилось бы при следующем запуске; API сразу отклоняет такое изменение.
 
-Providers you created in the UI are untouched and stay fully editable. Both
-kinds work side by side — with one exception, below.
+Созданные в интерфейсе провайдеры не затрагиваются и остаются редактируемыми. Оба типа работают одновременно, кроме описанного ниже исключения.
 
-#### The provider is identified by its name
+#### Провайдер определяется по имени {#the-provider-is-identified-by-its-name}
 
-!!! warning "The provider is matched by name — a name clash adopts an existing one"
-    On every boot the environment provider is found by its `BAMBUDDY_OIDC_NAME`.
-    If a provider you already created in the UI carries that **exact name**,
-    startup adopts that row instead of creating a second one: its issuer, client
-    ID and secret are overwritten from the environment and it becomes
-    environment-managed and read-only. Accounts already linked to it keep their
-    link, but the provider is otherwise taken over — and unsetting the variables
-    later releases it as a former environment-managed row, not as the provider
-    you originally built. Give the environment provider a name that no UI
-    provider uses, unless you deliberately intend to repoint that one from the
-    environment.
+!!! warning "Совпадение имени приводит к использованию существующего провайдера"
+    При каждой загрузке провайдер окружения ищется по `BAMBUDDY_OIDC_NAME`. Если созданный в интерфейсе провайдер имеет **точно такое же имя**, загрузка использует эту запись вместо создания второй: issuer, ID и секрет клиента перезаписываются из окружения, а провайдер становится управляемым окружением и доступным только для чтения. Привязанные аккаунты сохраняют связь, но сам провайдер перехватывается. Если позже убрать переменные, он станет бывшей записью, управляемой окружением, а не исходным провайдером, созданным вами. Выберите имя, не используемое провайдерами интерфейса, если не намерены переадресовать существующий через окружение.
 
-!!! note "Renaming releases the previous provider"
-    `BAMBUDDY_OIDC_NAME` is the identity, so changing it does not rename the
-    row — it takes over (or creates) the row with the new name and **releases**
-    the previous one: disabled, unlocked, editable in the UI again, and no
-    longer the autologin target. Nothing is deleted, so accounts linked to the
-    old provider keep their link; re-add the old name and it comes back with
-    those links intact.
+!!! note "Переименование освобождает прежнего провайдера"
+    `BAMBUDDY_OIDC_NAME` определяет идентичность, поэтому его изменение не переименовывает запись: используется или создаётся запись с новым именем, а прежняя **освобождается** — отключается, разблокируется, снова становится редактируемой и перестаёт быть целью автоматического входа. Ничего не удаляется, и привязанные аккаунты сохраняют связь; повторное добавление старого имени вернёт провайдера со всеми связями.
 
-#### Groups, autologin and multiple replicas
+#### Группы, автоматический вход и несколько реплик {#groups-autologin-and-multiple-replicas}
 
-!!! note "The default group is named, not numbered"
-    With `BAMBUDDY_OIDC_AUTO_CREATE_USERS=true`, accounts created on first
-    sign-in land in the group named by `BAMBUDDY_OIDC_DEFAULT_GROUP`; without
-    it they get **Viewers**. It matches the group name **exactly**, including
-    case — group IDs are handed out per installation, so an ID in a compose file
-    would point at a different group on the next deployment.
+!!! note "Группа по умолчанию задаётся именем, а не номером"
+    При `BAMBUDDY_OIDC_AUTO_CREATE_USERS=true` аккаунты, созданные при первом входе, попадают в группу из `BAMBUDDY_OIDC_DEFAULT_GROUP`; если параметр не задан — в **Наблюдатели**. Имя группы сопоставляется **точно**, с учётом регистра. ID групп назначаются каждой установкой отдельно, поэтому ID в Compose при следующем развёртывании указал бы на другую группу.
 
-    A name that matches no group is **refused**: the provider is left exactly as
-    it was, the reason is logged, and the app still starts. Silently falling
-    back to Viewers would mint under-privileged accounts for as long as the typo
-    lives — and because the provider is locked, the UI could not correct it.
+    Имя без соответствующей группы **отклоняется**: провайдер остаётся прежним, причина записывается в журнал, приложение запускается. Незаметный переход к группе «Наблюдатели» создавал бы аккаунты с недостаточными правами, пока ошибка не исправлена; поскольку провайдер заблокирован, исправить её в интерфейсе нельзя.
 
-    On a **first** boot there is nothing to leave as it was, so nothing is
-    created and no SSO button appears until the name matches. Create the group
-    first, then set the variable.
+    При **первом** запуске сохранять прежнее состояние нечего, поэтому провайдер не создаётся и кнопка SSO не появляется, пока имя не совпадёт. Сначала создайте группу, затем задайте переменную.
 
-    Removing the variable clears the group again on the next boot: the
-    environment is the whole truth for this row, so a group it no longer names
-    does not linger.
+    Удаление переменной снова очищает группу при следующем запуске: окружение полностью определяет эту запись, поэтому группа, больше не указанная в нём, не сохраняется.
 
-!!! note "Autologin is exclusive"
-    Only one provider can be the autologin target. Setting
-    `BAMBUDDY_OIDC_AUTOLOGIN=true` therefore clears the autologin flag on every
-    other provider on each boot — including one you set in the UI, which will
-    not stay set while the environment claims it.
+!!! note "Автоматический вход доступен только одному провайдеру"
+    Целью автоматического входа может быть только один провайдер. Поэтому `BAMBUDDY_OIDC_AUTOLOGIN=true` при каждой загрузке снимает флаг со всех остальных, включая выбранного в интерфейсе: он не сохранится, пока окружение назначает эту роль своему провайдеру.
 
-    It runs the other way too, but only until the next boot: turning autologin on
-    for another provider in the UI clears it on the environment-managed row as
-    well, and the environment does not take it back until the next restart
-    re-applies the config. Until then the UI choice wins.
+    Обратное тоже работает, но только до следующего запуска: включение автоматического входа для другого провайдера в интерфейсе снимает флаг с управляемого окружением провайдера. Окружение вернёт его лишь при следующем применении конфигурации после перезапуска. До этого действует выбор интерфейса.
 
-!!! note "Running more than one replica"
-    Startup finds the provider by name and inserts it if it is missing. When two
-    replicas boot at the same time they can both find nothing and both attempt
-    the insert; the unique constraint on the name lets the first win and turns
-    the second into a caught error, so no duplicate row is created and nothing
-    breaks. The replica that lost the race logs
-    `BAMBUDDY_OIDC_* could not be applied: IntegrityError` once — it reads more
-    alarming than it is, it is expected on a simultaneous boot, and it needs no
-    action.
+!!! note "Запуск нескольких реплик"
+    При запуске провайдер ищется по имени и добавляется при отсутствии. Когда две реплики запускаются одновременно, обе могут не найти запись и попытаться её создать; ограничение уникальности имени позволяет победить первой, а ошибка второй перехватывается. Дубликата не возникает и работа не нарушается. Проигравшая реплика один раз запишет `BAMBUDDY_OIDC_* could not be applied: IntegrityError` — сообщение выглядит серьёзнее, чем оно есть: при одновременном запуске это ожидаемо и действий не требует.
 
-#### Removing the variables disables, it does not delete
+#### Удаление переменных отключает, но не удаляет провайдера {#removing-the-variables-disables-it-does-not-delete}
 
-Unset the variables and the provider is switched off, not removed. Accounts
-linked to it keep their link, and re-adding the variables brings the provider
-back with those links intact — deleting the row would drop them permanently.
+После удаления переменных провайдер выключается, но не удаляется. Привязанные аккаунты сохраняют связь; повторное добавление переменных возвращает провайдера с этими связями. Удаление записи уничтожило бы связи навсегда.
 
-It also stops being environment-managed: the lock disappears and the provider
-becomes editable in the UI again. A provider the API still refused to touch,
-with no configuration left behind it, would be a dead end reachable only through
-the database.
+Провайдер также перестаёт управляться окружением: замок исчезает и запись снова доступна для изменения в интерфейсе. Провайдер, который API продолжал бы блокировать при отсутствии конфигурации, стал бы тупиком, доступным только через базу данных.
 
-!!! warning "Auto-link needs verified email addresses"
-    `BAMBUDDY_OIDC_AUTO_LINK_EXISTING=true` binds an OIDC identity to an
-    existing local account with the same address. With the default
-    `BAMBUDDY_OIDC_EMAIL_CLAIM=email` this is refused unless
-    `BAMBUDDY_OIDC_REQUIRE_EMAIL_VERIFIED=true` — an identity provider that
-    does not verify addresses would let anyone claim someone else's account.
+!!! warning "Для автоматической привязки требуется подтверждённая почта"
+    `BAMBUDDY_OIDC_AUTO_LINK_EXISTING=true` привязывает идентичность OIDC к существующему локальному аккаунту с тем же адресом. При стандартном `BAMBUDDY_OIDC_EMAIL_CLAIM=email` это отклоняется, если не установлен `BAMBUDDY_OIDC_REQUIRE_EMAIL_VERIFIED=true`: провайдер без проверки адресов позволил бы любому присвоить чужой аккаунт.
 
-    A rejected configuration is logged and skipped; the app still starts and
-    any previously applied provider is left as it was.
+    Отклонённая конфигурация записывается в журнал и пропускается; приложение запускается, а ранее применённый провайдер остаётся прежним.
 
-!!! tip "Locked out?"
-    `BAMBUDDY_LOCAL_LOGIN=true` re-enables username and password sign-in. See
-    [Recovery](#recovery-bambuddy_local_logintrue) below.
+!!! tip "Потеряли доступ?"
+    `BAMBUDDY_LOCAL_LOGIN=true` снова включает вход с именем пользователя и паролем. См. раздел [Восстановление доступа](#recovery-bambuddy_local_logintrue) ниже.
 
-### Group Sync
+### Синхронизация групп {#group-sync}
 
-OIDC providers can sync the user's groups from the identity provider into
-BamBuddy groups on every login — the same behaviour the LDAP group mapping has
-had since the beginning. Two per-provider settings control it:
+Провайдеры OIDC могут при каждом входе синхронизировать группы пользователя из провайдера идентификации с группами Bambuddy — так же, как давно работает сопоставление групп LDAP. Это управляется двумя настройками каждого провайдера:
 
-- **Group Claim** — the JWT claim that carries the user's groups at the IdP.
-  Defaults to `groups`. Providers put groups in different claims (Keycloak:
-  `groups` as an array after a client mapper; Authentik: `groups` as an array;
-  some setups use `roles` or a custom claim), so the claim name is configurable
-  like the Email Claim. Namespaced claims such as `app/roles` are accepted
-  too, for Auth0. The claim value may be a JSON array or a
-  space/comma-separated string — both are accepted. The claim is read from the
-  **ID token** only, not from the userinfo endpoint: make sure your IdP puts the
-  groups into the ID token (in Keycloak, the group mapper's *Add to ID token*
-  switch; elsewhere often a scope such as `groups` that has to be added to
-  **Scopes**).
-- **Group Mapping** — which IdP group maps to which BamBuddy group. The admin
-  picks the pairs; names do not have to match. With no mapping configured the
-  feature is off and the provider behaves exactly as before.
+- **Group Claim** — утверждение JWT, содержащее группы пользователя у IdP. По умолчанию `groups`. Провайдеры помещают группы в разные утверждения (Keycloak: массив `groups` после настройки сопоставления клиента; Authentik: массив `groups`; некоторые используют `roles` или собственное утверждение), поэтому имя настраивается так же, как Email Claim. Для Auth0 также поддерживаются имена с пространством имён, например `app/roles`. Значение может быть массивом JSON или строкой с разделением пробелами или запятыми. Утверждение читается только из **ID token**, а не из конечной точки userinfo: убедитесь, что IdP добавляет группы в ID token (в Keycloak — переключатель *Add to ID token* в сопоставлении групп; в других системах часто нужно добавить область `groups` в **Scopes**).
+- **Group Mapping** — соответствие групп IdP группам Bambuddy. Администратор выбирает пары; имена могут отличаться. Без сопоставления функция выключена, и провайдер работает как прежде.
 
 ```json
 {
@@ -736,385 +636,356 @@ had since the beginning. Two per-provider settings control it:
 }
 ```
 
-The provider form builds the mapping as rows, with the BamBuddy side limited to
-existing groups, so an unknown group cannot be entered by accident. A row with
-only one side filled in, or a second row for an IdP group already mapped above
-(compared ignoring case), is flagged and blocks **Save** until you complete or
-remove it. A row left completely empty is simply skipped:
+Форма провайдера задаёт соответствия строками; со стороны Bambuddy можно выбрать только существующие группы, поэтому случайно ввести неизвестную нельзя. Строка с одной заполненной стороной или повторная строка для уже сопоставленной группы IdP (без учёта регистра) выделяется и блокирует **Сохранить**, пока вы её не заполните или не удалите. Полностью пустая строка пропускается:
 
-![OIDC provider form with Group Claim and Group Mapping rows](../assets/settings-oidc-group-sync.png)
+![Форма провайдера OIDC с полями Group Claim и Group Mapping](../assets/settings-oidc-group-sync.png)
 
-How the sync behaves:
+Поведение синхронизации:
 
-- **Runs on every SSO login**, not just when the account is created.
-- **Only the mapped slice is managed.** Groups named in the mapping follow the
-  IdP; any other group on the user is a manual assignment and survives logins
-  unchanged. Promoting a user into a non-mapped group therefore sticks — the
-  same rule the LDAP sync settled on after #1292.
-- **Revocation propagates.** Losing the IdP group removes the mapped BamBuddy
-  group at the next login.
-- **[Printer access](#printer-access) follows the groups.** An IdP group mapped
-  to a group limited to its printers limits its members the same way, from
-  their next login.
-- **Matching is case-insensitive** on the IdP side, and a missing claim simply
-  means "no mapped groups" — it never blocks a login that already
-  authenticated. Neither does a sync that fails: the error is logged and the
-  user keeps the groups they had.
-- **The Default Group is not re-applied.** It is assigned once, when the
-  account is created; the sync never puts it back, so moving a user out of it
-  sticks.
+- **Выполняется при каждом входе SSO**, а не только при создании аккаунта.
+- **Управляет только сопоставленными группами.** Группы из сопоставления следуют IdP; остальные назначены вручную и не меняются при входе. Поэтому назначение пользователя в несопоставленную группу сохраняется — то же правило используется в LDAP после #1292.
+- **Отзыв доступа распространяется.** Потеря группы IdP удаляет соответствующую группу Bambuddy при следующем входе.
+- **[Доступ к принтерам](#printer-access) следует группам.** Если группа IdP сопоставлена с группой, ограниченной определёнными принтерами, её участники получают те же ограничения со следующего входа.
+- **Сопоставление на стороне IdP не учитывает регистр**; отсутствие утверждения означает «нет сопоставленных групп» и не блокирует успешную аутентификацию. Ошибка синхронизации также не блокирует вход: она записывается в журнал, а пользователь сохраняет прежние группы.
+- **Группа по умолчанию повторно не назначается.** Она назначается один раз при создании аккаунта; если переместить пользователя из неё, синхронизация его не вернёт.
 
-> **Deleting a mapped group:** removing a BamBuddy group does not rewrite any
-> provider's mapping. The mapping row is flagged in the form (red border, the
-> stale name shown as *(deleted)*) until you pick a replacement or remove the
-> row; at sync time a dangling entry is skipped.
+> **Удаление сопоставленной группы:** удаление группы Bambuddy не переписывает сопоставления провайдеров. Строка выделяется в форме красной рамкой, устаревшее имя помечается *(удалено)* до выбора замены или удаления строки; при синхронизации такая запись пропускается.
 
-> **Renaming a mapped group has the same effect.** Mappings store group
-> **names**, so renaming a non-system BamBuddy group turns its mapping row
-> into an orphan just like a deletion does — and users who already hold that
-> group keep it, because the group is no longer in the set the mapping
-> manages. The LDAP group mapping behaves the same way.
+> **Переименование сопоставленной группы действует так же.** Сопоставления хранят **названия** групп, поэтому переименование несистемной группы Bambuddy оставляет строку без соответствия, как и удаление. Пользователи, уже состоящие в этой группе, сохраняют её: она больше не входит в управляемый сопоставлением набор. Сопоставление LDAP работает так же.
 
-Via environment variables, the same two settings are `BAMBUDDY_OIDC_GROUP_CLAIM`
-(default `groups`) and `BAMBUDDY_OIDC_GROUP_MAPPING` (a JSON object whose values
-are BamBuddy group **names**, not IDs):
+Переменные окружения для этих параметров — `BAMBUDDY_OIDC_GROUP_CLAIM` (по умолчанию `groups`) и `BAMBUDDY_OIDC_GROUP_MAPPING` (объект JSON, значения которого — **названия**, а не ID групп Bambuddy):
 
 ```bash
 BAMBUDDY_OIDC_GROUP_MAPPING={"fablab-staff":"Operators","students":"Viewers"}
 ```
 
-Like `BAMBUDDY_OIDC_DEFAULT_GROUP`, a mapping value that matches no group is
-**refused** — the whole provider configuration is skipped, the reason is
-logged, and the app still starts. Invalid JSON, a value that is not a group
-name (such as `null` or a number), and two IdP groups that differ only by case
-are rejected the same way, with the reason in the log.
-Removing the variable clears the mapping on the next boot.
+Как и для `BAMBUDDY_OIDC_DEFAULT_GROUP`, имя без соответствующей группы **отклоняется**: конфигурация всего провайдера пропускается, причина записывается в журнал, приложение запускается. Аналогично отклоняются неверный JSON, значение, не являющееся названием группы (например, `null` или число), и две группы IdP, отличающиеся только регистром. Удаление переменной очищает сопоставление при следующем запуске.
 
-### Provider Icons
+### Значки провайдеров {#provider-icons}
 
-If an **Icon URL** is configured, Bambuddy fetches the image server-side at save time and caches the bytes in the database. The SSO button on the login page then loads the icon from a same-origin proxy at `/api/v1/auth/oidc/providers/{id}/icon` — never from the IdP's host directly.
+Если задан **URL значка**, Bambuddy загружает изображение на сервер при сохранении и кэширует его в базе данных. Затем кнопка SSO загружает значок через прокси того же источника `/api/v1/auth/oidc/providers/{id}/icon`, а не напрямую с хоста IdP.
 
-Why proxy: the SPA's `img-src` Content-Security-Policy is intentionally strict (`'self' data: blob:`), so hot-linking arbitrary IdP icon hosts would be blocked. The proxy keeps the CSP locked down while still letting admins point at any public icon URL, and as a side effect keeps anonymous users' IP addresses out of the IdP's access logs on every login page render.
+Прокси нужен потому, что политика Content-Security-Policy `img-src` одностраничного приложения намеренно строгая (`'self' data: blob:`) и заблокировала бы прямые ссылки на произвольные хосты значков. Прокси сохраняет строгую CSP и позволяет администратору указать любой публичный URL значка; кроме того, IP-адреса неавторизованных пользователей не попадают в журнал доступа IdP при каждом показе страницы входа.
 
-Each provider card in **Settings → Authentication → SSO / OIDC** has two icon-related buttons (visible only when relevant):
+На карточке каждого провайдера в **Настройки → Аутентификация → SSO / OIDC** есть две кнопки значка, показываемые при необходимости:
 
-- **Refresh icon** (🔄) — re-fetches from the stored URL. Use after the IdP has updated its icon, or to retry after a transient fetch failure.
-- **Remove icon** (🚫) — removes the icon entirely. Clears both the URL and the cached bytes; the provider stays enabled and renders the default Shield fallback on the login page. To re-add an icon, edit the provider and enter the URL again.
+- **Обновить значок** (🔄) — повторно загружает его по сохранённому URL. Используйте после обновления значка IdP или временной ошибки загрузки.
+- **Удалить значок** (🚫) — полностью удаляет URL и кэшированное изображение; провайдер остаётся включённым, а страница входа показывает стандартный щит. Для повторного добавления измените провайдера и снова введите URL.
 
-Neither button is offered for an environment-managed provider: its icon comes from `BAMBUDDY_OIDC_ICON_URL` and is re-applied on every boot, so the API refuses both calls. Change the variable instead.
+Для управляемого окружением провайдера кнопки недоступны: его значок берётся из `BAMBUDDY_OIDC_ICON_URL` при каждой загрузке, поэтому API отклоняет оба действия. Измените переменную.
 
-#### What's allowed
+#### Допустимые значения {#whats-allowed}
 
-| Constraint | Detail |
+| Ограничение | Подробности |
 |---|---|
-| Scheme | `https://` only — HTTP and other schemes are rejected |
-| Format | PNG, JPEG, WebP, GIF (SVG is not supported) |
-| Size | 1 MB hard cap — streamed and aborted early past the limit |
-| Redirects | Not followed — the URL must respond with the image directly |
-| Host | Public internet only — private/RFC-1918, loopback, link-local, cloud-metadata, multicast and numeric-encoded IPs are rejected as SSRF risks |
+| Схема | Только `https://`; HTTP и другие схемы отклоняются |
+| Формат | PNG, JPEG, WebP, GIF (SVG не поддерживается) |
+| Размер | Жёсткий предел 1 МБ; поток прерывается при превышении |
+| Перенаправления | Не выполняются; URL должен возвращать изображение напрямую |
+| Хост | Только публичный интернет; приватные/RFC-1918, loopback, link-local, облачные адреса метаданных, multicast и IP с числовым кодированием запрещены из-за риска SSRF |
 
-A failed fetch surfaces as a precise error in the admin UI (e.g. *"Icon URL returned HTTP 404"*, *"Icon URL response is missing a Content-Type header"*) and the provider save is rolled back — there is no half-configured state.
+При ошибке загрузки интерфейс администратора показывает точную причину (например, *«Icon URL returned HTTP 404»* или *«Icon URL response is missing a Content-Type header»*), а сохранение провайдера откатывается — частичной конфигурации не остаётся.
 
-### Account Linking & Auto-Provisioning
+### Привязка аккаунтов и автоматическое создание {#account-linking-auto-provisioning}
 
-Two independent toggles per provider:
+Для каждого провайдера доступны независимые настройки:
 
-| Toggle | Default | Effect |
+| Настройка | По умолчанию | Действие |
 |--------|:-------:|--------|
-| **Auto-create users** | Off | On first successful SSO login, create a new BamBuddy account for the verified email. Off → unknown emails are rejected |
-| **Auto-link existing accounts** | Off | On first successful SSO login where the verified email matches an existing local user, link the two accounts. Off → admins must pre-link manually to prevent silent takeover by an attacker-controlled IdP |
-| **Email Claim** | `email` | JWT claim used as the user's email identity. Set to `preferred_username` or `upn` for Azure Entra ID. Custom claims bypass the `email_verified` check entirely |
-| **Require Email Verified** | On | Only accept the email claim if the provider marks it as verified (`email_verified: true`). Disable only when the provider never sends this flag (e.g. Azure Entra ID) or when using a custom Email Claim |
-| **Group Claim** | `groups` | JWT claim that carries the user's IdP groups — see [Group Sync](#group-sync) |
-| **Group Mapping** | *(empty)* | IdP group → BamBuddy group pairs; empty disables group sync |
+| **Автоматически создавать пользователей** | Выкл. | При первом успешном входе SSO создаёт аккаунт Bambuddy для подтверждённой почты. При выключении неизвестные адреса отклоняются |
+| **Автоматически привязывать существующие аккаунты** | Выкл. | При первом успешном входе SSO связывает подтверждённый адрес с существующим локальным пользователем. При выключении администратор должен привязать аккаунты вручную, чтобы предотвратить незаметный захват через контролируемый злоумышленником IdP |
+| **Email Claim** | `email` | Утверждение JWT для адреса пользователя. Для Azure Entra ID задайте `preferred_username` или `upn`. Пользовательские утверждения полностью обходят проверку `email_verified` |
+| **Require Email Verified** | Вкл. | Принимает адрес, только если провайдер пометил его подтверждённым (`email_verified: true`). Отключайте лишь когда провайдер никогда не отправляет флаг (например, Azure Entra ID) или используется пользовательский Email Claim |
+| **Group Claim** | `groups` | Утверждение JWT с группами пользователя в IdP — см. [Синхронизация групп](#group-sync) |
+| **Group Mapping** | *(пусто)* | Пары групп IdP и Bambuddy; пустое значение отключает синхронизацию |
 
-Auto-link is gated by an additional check: if the target user already has any OIDC link, a second IdP cannot auto-link to the same account.
+Для автоматической привязки действует дополнительная проверка: если у пользователя уже есть любая связь OIDC, второй IdP не может привязаться к тому же аккаунту автоматически.
 
-> **Security constraint:** Auto-link requires both **Require Email Verified** to be on and **Email Claim** set to `email`. Using a custom claim (e.g. `preferred_username`) or disabling the verified-flag check automatically blocks auto-linking — this is enforced at the UI and database level. The reasoning: auto-linking based on an unverified or non-standard claim could allow an attacker-controlled IdP to silently take over a local account.
+> **Ограничение безопасности:** автоматическая привязка требует включённого **Require Email Verified** и значения `email` в **Email Claim**. Пользовательское утверждение (например, `preferred_username`) или отключение проверки подтверждения автоматически блокирует привязку на уровне интерфейса и базы. Причина: привязка по неподтверждённому или нестандартному утверждению позволила бы контролируемому злоумышленником IdP незаметно захватить локальный аккаунт.
 
-### Autologin & disabling local login
+### Автоматический вход и отключение локального входа {#autologin-disabling-local-login}
 
-Two related options for operators who run their own OIDC SSO and want exactly one auth path. Both live under **Settings → Authentication → SSO / OIDC** (admin only).
+Два связанных параметра для операторов, использующих собственный OIDC SSO и желающих оставить ровно один путь аутентификации. Оба находятся в **Настройки → Аутентификация → SSO / OIDC** и доступны только администратору.
 
-#### Disable local username/password login
+#### Отключение локального входа по имени и паролю {#disable-local-usernamepassword-login}
 
-The **Disable local username/password login** toggle (above the provider list) hides the credentials form on the login page and rejects `POST /auth/login` for local accounts. LDAP keeps its own `ldap_enabled` switch and is **not** affected — a delegated directory has its own policy and lockouts and is closer to SSO than to local credentials.
+Переключатель **Отключить локальный вход по имени пользователя и паролю** над списком провайдеров скрывает форму на странице входа и отклоняет `POST /auth/login` для локальных аккаунтов. LDAP имеет собственный переключатель `ldap_enabled` и **не затрагивается**: у делегированного каталога собственные правила и блокировки, и он ближе к SSO, чем к локальным учётным данным.
 
-When the toggle is on:
+Когда переключатель включён:
 
-- `POST /auth/login` rejects username + password with HTTP 401 — the response wording is identical to wrong-password so credential-stuffing tools cannot distinguish "local disabled" from "wrong password" across an install fleet
-- `POST /auth/forgot-password` rejects with HTTP 403 — the reset link wouldn't grant access anyway
-- The login page hides the credentials form, the Remember Me checkbox, and the Forgot Password link, leaving only the OIDC provider buttons
+- `POST /auth/login` отклоняет имя и пароль с HTTP 401; формулировка ответа совпадает с ответом при неверном пароле, чтобы инструменты перебора не могли отличить отключённый локальный вход от неверного пароля на установках
+- `POST /auth/forgot-password` возвращает HTTP 403, поскольку ссылка сброса всё равно не дала бы доступ
+- Страница входа скрывает форму, флажок «Запомнить меня» и ссылку «Забыли пароль», оставляя только кнопки OIDC
 
-**Safety refusals.** Saving the toggle is refused with HTTP 400 in two cases:
+**Защитные отказы.** Сохранение переключателя отклоняется с HTTP 400 в двух случаях:
 
-| Condition | Reason |
+| Условие | Причина |
 |---|---|
-| No OIDC provider is enabled | Nobody could authenticate |
-| The calling admin has no OIDC link | You would lock yourself out |
+| Ни один провайдер OIDC не включён | Никто не сможет войти |
+| У вызывающего администратора нет связи OIDC | Он заблокирует собственный доступ |
 
-#### Autologin
+#### Автоматический вход {#autologin}
 
-The **Autologin** toggle on each provider (in the provider edit form) redirects unauthenticated visitors directly to that provider's authorize URL on mount — no manual click on the provider button. At most one provider can carry this flag at a time; turning it on for one provider clears it on every other.
+Переключатель **Автоматический вход** в форме изменения провайдера сразу перенаправляет неавторизованного посетителя к его URL авторизации при открытии страницы, без нажатия кнопки. Одновременно флаг может быть только у одного провайдера; включение у одного снимает его у остальных.
 
-The login page never gets stuck on a dead IdP:
+Страница входа не зависает при недоступном IdP:
 
-1. The authorize-URL fetch is raced against a 5-second timeout
-2. On timeout or fetch error the redirect is aborted, the page renders normally, and a sticky amber banner explains *"Automatic SSO sign-in failed. Pick a provider below to continue."*
-3. `https://<your-bambuddy>/login?fallback=local` always skips the autologin redirect — bookmark this if you want the option to land on the normal login page
+1. Получение URL авторизации ограничено пятью секундами
+2. При тайм-ауте или ошибке перенаправление отменяется, страница отображается обычно, а постоянный жёлтый баннер сообщает: *«Не удалось выполнить автоматический вход SSO. Выберите провайдера ниже.»*
+3. `https://<your-bambuddy>/login?fallback=local` всегда пропускает перенаправление — сохраните адрес в закладках для доступа к обычной странице входа
 
-Disabling a provider also clears its autologin effect even if the flag stays set on the row.
+Отключение провайдера также отключает автоматический вход, даже если флаг остаётся в записи.
 
-#### Recovery: `BAMBUDDY_LOCAL_LOGIN=true`
+#### Восстановление доступа: `BAMBUDDY_LOCAL_LOGIN=true` {#recovery-bambuddy_local_logintrue}
 
-If your SSO provider becomes unreachable while local login is disabled, set the env var on the server and restart Bambuddy:
+Если провайдер SSO недоступен, а локальный вход отключён, задайте на сервере переменную окружения и перезапустите Bambuddy:
 
 ```sh
 BAMBUDDY_LOCAL_LOGIN=true
 ```
 
-Accepted truthy values: `true`, `1`, `yes` (case-insensitive). The env var:
+Допустимые значения для включения: `true`, `1`, `yes` без учёта регистра. Переменная:
 
-- Bypasses the gate on `/auth/login` so username + password is accepted again
-- Bypasses the gate on `/auth/forgot-password`
-- Flips the reported `local_login_enabled` on `/auth/advanced-auth/status` back to `true` so the login page shows the credentials form (matching what the route will actually accept)
+- Обходит ограничение `/auth/login`, снова разрешая имя и пароль
+- Обходит ограничение `/auth/forgot-password`
+- Возвращает `local_login_enabled` в `/auth/advanced-auth/status` к `true`, чтобы страница входа показывала форму в соответствии с тем, что принимает маршрут
 
-Combined with `/login?fallback=local`, this is the documented "SSO is broken, let me back in" path — no DB editing required. The env var lives in `.env.example`. Unset it and restart once the IdP is healthy again.
+Вместе с `/login?fallback=local` это документированный способ вернуть доступ при неисправности SSO без редактирования базы. Переменная присутствует в `.env.example`. Когда IdP снова заработает, удалите её и перезапустите приложение.
 
-### Security Properties
+### Свойства безопасности {#security-properties_1}
 
-- **PKCE (S256)** on every authorization request — safe for public clients without a secret
-- **`email_verified` enforcement** — the IdP must explicitly mark the email as verified; unverified claims are ignored
-- **Issuer / `aud` / `nonce` validation** on every callback — replayed or cross-client ID tokens are rejected
-- **State single-use** — the OIDC `state` is a DB-backed single-use token that is atomically consumed on callback
-- **Discovery-document SSRF hardening** — every URL pulled from the provider's `/.well-known/openid-configuration` (authorization_endpoint, token_endpoint, jwks_uri) is validated for scheme (http(s) only) **and** for private/loopback/link-local host IPs, so a compromised IdP cannot redirect the server's outbound calls at `169.254.169.254`, RFC1918, or loopback
-- **`/oidc/authorize` rate-limited** per-IP to prevent discovery-document request amplification
-- **OIDC users blocked from local password change / reset** — credentials live at the IdP, not in BamBuddy
+- **PKCE (S256)** в каждом запросе авторизации — безопасно для публичных клиентов без секрета
+- **Проверка `email_verified`** — IdP должен явно подтвердить адрес; неподтверждённые утверждения игнорируются
+- **Проверка issuer / `aud` / `nonce`** при каждом обратном вызове — повторно использованные токены ID или токены другого клиента отклоняются
+- **Одноразовый state** — `state` OIDC хранится в базе и атомарно расходуется при обратном вызове
+- **Защита discovery-документа от SSRF** — каждый URL из `/.well-known/openid-configuration` провайдера (authorization_endpoint, token_endpoint, jwks_uri) проверяется по схеме (только http(s)) **и** по приватным, loopback и link-local IP хоста, чтобы скомпрометированный IdP не направил исходящие запросы сервера на `169.254.169.254`, RFC1918 или loopback
+- Частота **`/oidc/authorize`** ограничена по IP для предотвращения усиления запросов discovery-документа
+- **Пользователям OIDC недоступны локальное изменение и сброс пароля** — учётные данные находятся у IdP, а не в Bambuddy
 
-## Email Claim
+## Email Claim {#email-claim}
 
-Defines which JWT claim from the provider's ID token is used as the user's email identity. Default is `email` (works with most providers). For **Azure Entra ID**, set this to `preferred_username` or `upn` — Entra ID always populates these with the user's UPN (e.g. `user@contoso.com`) but does not send an `email_verified` flag.
+Определяет утверждение JWT из ID token провайдера, используемое как адрес пользователя. По умолчанию `email` подходит для большинства провайдеров. Для **Azure Entra ID** укажите `preferred_username` или `upn`: Entra ID всегда заполняет их UPN пользователя (например, `user@contoso.com`), но не отправляет флаг `email_verified`.
 
-Only use claim names you fully trust. Custom claims bypass the `email_verified` check entirely (see below).
-
----
-
-## Require Email Verified
-
-When enabled (default), BamBuddy only accepts the email claim if the provider explicitly marks it as verified (`email_verified: true` in the ID token). This prevents unverified addresses from being used as identity anchors.
-
-Disable this only when:
-
-- The provider never sends `email_verified` (e.g. Azure Entra ID), **or**
-- You are using a custom **Email Claim** (e.g. `preferred_username`) — in that case the verified-flag check is skipped automatically regardless of this setting.
-
-> **Note:** If **Auto-link existing accounts** is enabled, `Require Email Verified` must be on and **Email Claim** must be `email`. This is enforced at the UI and database level to prevent account takeover.
-
-### Trailing-Slash Tolerance
-
-Both the admin-supplied issuer URL and the `issuer` claim returned by the discovery document are normalised (trailing slashes stripped) before the PyJWT `iss` check, so a provider that disagrees with itself by one byte (e.g. stores `https://idp/` but returns `https://idp` in the discovery doc) still works.
+Используйте только утверждения, которым полностью доверяете. Пользовательские утверждения полностью обходят проверку `email_verified` (см. ниже).
 
 ---
 
-## MFA At-Rest Encryption
+## Require Email Verified {#require-email-verified}
 
-Bambuddy can encrypt sensitive secrets — TOTP authenticator keys and OIDC client secrets — in the database using symmetric [Fernet](https://cryptography.io/en/latest/fernet/) encryption (AES-128-CBC + HMAC-SHA256). Encryption is transparent: existing plaintext rows keep working even after a key is introduced, and users never have to re-enroll unless they choose to migrate legacy rows.
+Если параметр включён (по умолчанию), Bambuddy принимает почтовое утверждение, только если провайдер явно подтверждает его (`email_verified: true` в ID token). Это не позволяет использовать неподтверждённые адреса как основу идентификации.
 
-### Where to find it
+Отключайте параметр только когда:
 
-**Settings → Authentication → Security**
+- Провайдер никогда не отправляет `email_verified` (например, Azure Entra ID), **или**
+- Используется собственный **Email Claim** (например, `preferred_username`): тогда проверка флага автоматически пропускается независимо от настройки.
 
-The **MFA Encryption Status** card is at the top of this sub-tab and refreshes automatically every 30 seconds.
+> **Примечание:** если включена **автоматическая привязка существующих аккаунтов**, необходимо включить `Require Email Verified`, а **Email Claim** должен быть равен `email`. Это проверяется интерфейсом и базой для защиты от захвата аккаунта.
 
-### Status overview
+### Допуск завершающего слеша {#trailing-slash-tolerance}
 
-| Colour | Meaning |
+URL issuer, заданный администратором, и утверждение `issuer` из discovery-документа нормализуются (завершающие слеши удаляются) перед проверкой `iss` библиотекой PyJWT. Поэтому провайдер, который отличается от самого себя на один символ (например, хранит `https://idp/`, а в документе возвращает `https://idp`), продолжает работать.
+
+---
+
+## Шифрование MFA при хранении {#mfa-at-rest-encryption}
+
+Bambuddy может шифровать чувствительные секреты — ключи TOTP и секреты клиентов OIDC — в базе данных с помощью симметричного шифрования [Fernet](https://cryptography.io/en/latest/fernet/) (AES-128-CBC + HMAC-SHA256). Шифрование прозрачно: существующие незашифрованные записи продолжают работать и после добавления ключа; повторная регистрация пользователям нужна только при выбранной ими миграции старых записей.
+
+### Где найти {#where-to-find-it}
+
+**Настройки → Аутентификация → Безопасность**
+
+Карточка **Состояние шифрования MFA** находится вверху вкладки и автоматически обновляется каждые 30 секунд.
+
+### Обзор состояний {#status-overview}
+
+| Цвет | Значение |
 |--------|---------|
-| 🟢 **Green** | Encryption is active and all secrets are encrypted. No action required. |
-| 🟠 **Orange** | Encryption is active with an **auto-generated** key. Back up the key file or set `MFA_ENCRYPTION_KEY` explicitly. |
-| 🟡 **Yellow** | Encryption is active but **legacy plaintext rows** still exist. Re-save the OIDC provider or re-enroll the user's authenticator to migrate them. |
-| 🔴 **Red** | Encrypted records exist but the key is **no longer available**. Recovery required. |
-| ⚪ **Grey** | Encryption is not configured and no encrypted rows exist yet. Secrets are stored in plaintext. |
+| 🟢 **Зелёный** | Шифрование активно, все секреты зашифрованы. Действия не нужны. |
+| 🟠 **Оранжевый** | Шифрование активно с **автоматически созданным** ключом. Сохраните копию файла ключа или явно задайте `MFA_ENCRYPTION_KEY`. |
+| 🟡 **Жёлтый** | Шифрование активно, но остались **старые незашифрованные записи**. Сохраните провайдера OIDC заново или повторно зарегистрируйте аутентификатор пользователя для миграции. |
+| 🔴 **Красный** | Зашифрованные записи существуют, но ключ **больше недоступен**. Требуется восстановление. |
+| ⚪ **Серый** | Шифрование не настроено, зашифрованных записей ещё нет. Секреты хранятся открытым текстом. |
 
-!!! info "Orange + Yellow together"
-    Both can appear at the same time — auto-generated key active **and** legacy plaintext rows still present.
+!!! info "Оранжевый и жёлтый одновременно"
+    Оба состояния могут показываться вместе: активен автоматически созданный ключ **и** остались старые незашифрованные записи.
 
-Below the banner the card shows row counts for **Encrypted rows** and **Legacy plaintext rows**, broken down by OIDC providers and TOTP secrets.
+Под баннером карточка показывает количество **зашифрованных** и **старых незашифрованных записей** отдельно для провайдеров OIDC и секретов TOTP.
 
-### What the user sees
+### Что видит пользователь {#what-the-user-sees}
 
-The card is read-only:
+Карточка доступна только для чтения:
 
-1. A coloured banner with the current state (see table above).
-2. A 2-column row-count grid: encrypted vs. legacy plaintext, for OIDC and TOTP.
+1. Цветной баннер текущего состояния (см. таблицу).
+2. Таблица количества записей в двух столбцах: зашифрованные и старые незашифрованные, отдельно для OIDC и TOTP.
 
-Configuration is done via environment variable or the filesystem — there are no buttons on the card.
+Настройка выполняется через переменную окружения или файловую систему; кнопок на карточке нет.
 
-### How encryption works
+### Как работает шифрование {#how-encryption-works}
 
-On startup the key is resolved in this order:
+При запуске ключ определяется в следующем порядке:
 
-1. **`MFA_ENCRYPTION_KEY` env var** — URL-safe base64, decoding to exactly 32 bytes (Fernet format).
-2. **`DATA_DIR/.mfa_encryption_key`** — read if present and valid. A corrupted file is **not** overwritten — Bambuddy refuses to destroy already-encrypted rows.
-3. **Auto-generate** — if neither exists, a new Fernet key is written to `DATA_DIR/.mfa_encryption_key` with permissions `0600`. Status turns **orange**.
-4. **Plaintext fallback** — if the filesystem is read-only or the file is unreadable, secrets remain in plaintext. Status: **grey** (clean) or **red** (encrypted rows exist but key is gone).
+1. **Переменная `MFA_ENCRYPTION_KEY`** — URL-safe base64, после декодирования ровно 32 байта (формат Fernet).
+2. **`DATA_DIR/.mfa_encryption_key`** — читается, если существует и корректен. Повреждённый файл **не перезаписывается**: Bambuddy не уничтожает уже зашифрованные записи.
+3. **Автоматическое создание** — если ни один вариант не найден, новый ключ Fernet записывается в `DATA_DIR/.mfa_encryption_key` с правами `0600`. Состояние становится **оранжевым**.
+4. **Хранение открытым текстом** — если файловая система доступна только для чтения или файл не читается, секреты остаются незашифрованными. Состояние: **серое** (зашифрованных записей нет) или **красное** (они есть, но ключ утрачен).
 
-#### Generating a key manually
+#### Создание ключа вручную {#generating-a-key-manually}
 
 ```bash
 python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
 ```
 
-Add to `.env`:
+Добавьте в `.env`:
 
 ```env
 MFA_ENCRYPTION_KEY=<your-generated-key>
 ```
 
-Restart Bambuddy. The card turns green once all secrets have been re-saved or re-enrolled.
+Перезапустите Bambuddy. Карточка станет зелёной после повторного сохранения всех секретов или повторной регистрации аутентификаторов.
 
-!!! tip "Production deployments"
-    Setting `MFA_ENCRYPTION_KEY` explicitly is recommended — it separates the key from the backup data.
+!!! tip "Рабочие установки"
+    Рекомендуется явно задавать `MFA_ENCRYPTION_KEY`: это отделяет ключ от данных резервной копии.
 
-#### Migrating legacy plaintext rows
+#### Миграция старых незашифрованных записей {#migrating-legacy-plaintext-rows}
 
-- **OIDC provider** — open the provider, re-enter the client secret, save.
-- **TOTP user** — disable and re-enroll the authenticator app.
+- **Провайдер OIDC** — откройте провайдера, заново введите секрет клиента и сохраните.
+- **Пользователь TOTP** — отключите приложение аутентификации и зарегистрируйте его заново.
 
-### Backups
+### Резервные копии {#backups}
 
-Local backup ZIPs (**Settings → Backup**) automatically include `DATA_DIR/.mfa_encryption_key` so each ZIP is self-contained.
+Локальные ZIP-копии (**Настройки → Резервное копирование**) автоматически включают `DATA_DIR/.mfa_encryption_key`, поэтому каждая копия самодостаточна.
 
-!!! warning "Treat backup ZIPs as sensitive"
-    Anyone with the ZIP can decrypt the OIDC client secrets and TOTP secrets stored inside.
+!!! warning "Защищайте ZIP-копии"
+    Любой, у кого есть ZIP-файл, может расшифровать содержащиеся в нём секреты клиентов OIDC и секреты TOTP.
 
-### Recovery: broken decryption (red status)
+### Восстановление при ошибке расшифровки (красный статус) {#recovery-broken-decryption-red-status}
 
-Red appears when encrypted rows exist but the current key can no longer decrypt them (key file deleted, replaced, or `MFA_ENCRYPTION_KEY` changed).
+Красный статус появляется, когда зашифрованные записи есть, но текущий ключ больше не может их расшифровать: файл ключа удалён, заменён или изменён `MFA_ENCRYPTION_KEY`.
 
-**To recover:**
+**Восстановление:**
 
-1. Restore the original key — either the `.mfa_encryption_key` file or the previous `MFA_ENCRYPTION_KEY` value.
-2. Restart Bambuddy.
-3. The card returns to green (or orange/yellow if legacy rows remain).
+1. Верните исходный ключ — файл `.mfa_encryption_key` или прежнее значение `MFA_ENCRYPTION_KEY`.
+2. Перезапустите Bambuddy.
+3. Карточка снова станет зелёной либо оранжевой/жёлтой, если остались старые записи.
 
-!!! warning "Key rotation is not supported"
-    If the original key is lost, affected users must re-enroll their authenticators and OIDC client secrets must be re-entered manually.
+!!! warning "Ротация ключа не поддерживается"
+    При потере исходного ключа затронутые пользователи должны заново зарегистрировать свои аутентификаторы, а секреты клиентов OIDC необходимо ввести вручную.
 
 ---
 
-## Security Details
+## Сведения о безопасности {#security-details}
 
-### Password Storage
+### Хранение паролей {#password-storage}
 
-Passwords are never stored in plain text. Bambuddy uses PBKDF2-SHA256 hashing with a secure salt for password storage.
+Пароли никогда не хранятся открытым текстом. Bambuddy использует хеширование PBKDF2-SHA256 с безопасной солью.
 
-### Token Authentication
+### Аутентификация по токену {#token-authentication}
 
-- Bambuddy uses JWT (JSON Web Tokens) for authentication
-- Tokens expire after the configured **Session Policy** lifetime — default **24 hours**, configurable up to **30 days** (see [Session Policy](#session-policy) below)
-- Tokens are stored in the browser's localStorage
-- Each API request includes the token for validation
+- Для аутентификации используются JWT (JSON Web Tokens)
+- Срок действия токена определяется **политикой сеанса**: по умолчанию **24 часа**, настраивается до **30 дней** (см. [Политика сеанса](#session-policy))
+- Токены хранятся в localStorage браузера
+- Каждый запрос API содержит токен для проверки
 
-### Session Policy
+### Политика сеанса {#session-policy}
 
-Administrators can extend the default 24-hour session lifetime under **Settings → Users → Session Policy**. This is the right knob if Bambuddy is exposed as a PWA on your phone, on a kiosk you trust, or behind a VPN where the every-24-hour re-login is more friction than security.
+Администратор может увеличить стандартный срок сеанса в 24 часа в **Настройки → Пользователи → Политика сеанса**. Это полезно, если Bambuddy используется как PWA на телефоне, на доверенном киоске или через VPN, где повторный вход каждые 24 часа больше мешает, чем повышает безопасность.
 
-**Choices:**
+**Варианты:**
 
-- **24 hours** *(default)* — Bambuddy's audit baseline. Recommended for any deployment reachable from a network you don't fully control.
-- **7 days** — Reasonable for home-lab LAN setups behind a router/firewall.
-- **30 days** — The hard ceiling. Recommended only for trusted single-user deployments (e.g. local Docker, Tailscale-only access).
-- **Custom** — Any whole number of hours from 1 to 720.
+- **24 часа** *(по умолчанию)* — базовый уровень безопасности Bambuddy. Рекомендуется для установок, доступных из не полностью контролируемой сети.
+- **7 дней** — разумный вариант для домашней лаборатории в сети за маршрутизатором или межсетевым экраном.
+- **30 дней** — максимальный срок. Рекомендуется только для доверенных однопользовательских установок (например, локальный Docker или доступ только через Tailscale).
+- **Свой срок** — целое число часов от 1 до 720.
 
-**Important behaviour:**
+**Важные особенности:**
 
-- The setting applies to **new logins only**. Already-issued tokens keep their original expiry — lowering the value does not retroactively log existing users out, and raising it does not retroactively extend them.
-- Only an administrator can change it.
-- The **"Remember Me"** checkbox on the login screen still only controls whether the token persists across browser restarts (localStorage vs sessionStorage). The Session Policy controls how long the token itself remains valid.
-- API keys, camera-stream tokens, media tokens, WebSocket tokens, and slicer-download tokens have their own independent lifetimes and are **not** affected by this setting.
+- Настройка применяется **только к новым входам**. Выданные токены сохраняют исходный срок: уменьшение не завершает существующие сеансы, увеличение не продлевает их задним числом.
+- Изменять её может только администратор.
+- Флажок **«Запомнить меня»** по-прежнему определяет лишь сохранение токена после перезапуска браузера (localStorage или sessionStorage). Политика сеанса определяет срок действия самого токена.
+- Ключи API, токены камеры, мультимедиа, WebSocket и загрузки слайсера имеют собственные независимые сроки и **не зависят** от этой настройки.
 
-!!! warning "Security tradeoff"
-    Longer sessions mean a stolen token has a longer blast radius. The 24-hour default exists for that reason. Bumping to 7 or 30 days is a per-deployment call — make it only on environments you trust.
+!!! warning "Компромисс безопасности"
+    При более долгом сеансе украденный токен дольше остаётся опасным. Поэтому по умолчанию выбраны 24 часа. Увеличивайте срок до 7 или 30 дней только для доверенного окружения с учётом особенностей установки.
 
-### Best Practices
+### Рекомендации {#best-practices}
 
-1. **Use Strong Passwords**: Choose passwords with at least 8 characters, mixing letters, numbers, and symbols
-2. **Limit Admin Access**: Only add users to Administrators group when necessary
-3. **Create Custom Groups**: Define groups matching your team's needs
-4. **Use Least Privilege**: Give users only the permissions they need
-5. **Regular Password Changes**: Consider changing passwords periodically
-6. **Logout on Shared Devices**: Always log out when using shared computers
+1. **Используйте надёжные пароли**: не менее 8 символов с буквами, цифрами и специальными знаками
+2. **Ограничьте доступ администратора**: добавляйте пользователей в группу администраторов только при необходимости
+3. **Создавайте пользовательские группы**: определяйте группы по потребностям команды
+4. **Предоставляйте минимум прав**: давайте только необходимые разрешения
+5. **Регулярно меняйте пароли**: рассмотрите периодическую смену
+6. **Выходите на общих устройствах**: всегда завершайте сеанс на общедоступных компьютерах
 
-## User Activity Tracking
+## Отслеживание действий пользователей {#user-activity-tracking}
 
-When authentication is enabled, Bambuddy tracks who performs key actions:
+При включённой аутентификации Bambuddy отслеживает, кто выполняет основные действия:
 
-### What's Tracked
+### Что отслеживается {#whats-tracked}
 
-| Activity | Where It Shows |
+| Действие | Где отображается |
 |----------|----------------|
-| **Archive uploads** | Archive cards show "Uploaded by {username}" |
-| **Library file uploads** | File cards show "Uploaded by {username}" |
-| **Queue additions** | Queue items show who added the print job |
-| **Print starts** | Printer cards show "Started by {username}" during active prints |
+| **Загрузка архивов** | Карточки архива показывают «Загрузил: {username}» |
+| **Загрузка файлов библиотеки** | Карточки файлов показывают «Загрузил: {username}» |
+| **Добавление в очередь** | Задания показывают, кто их добавил |
+| **Запуск печати** | Во время печати карточки принтера показывают «Запустил: {username}» |
 
-### How It Works
+### Как это работает {#how-it-works_1}
 
-- User tracking is automatic when logged in
-- Information displays on cards and list items
-- When auth is disabled, tracking fields are hidden
-- Historical data is preserved even if the user is later deleted
+- Отслеживание происходит автоматически при входе
+- Информация показывается на карточках и в списках
+- При отключённой аутентификации поля отслеживания скрываются
+- История сохраняется, даже если пользователь позже удалён
 
-### Privacy Note
+### Конфиденциальность {#privacy-note}
 
-User activity tracking helps teams understand who is using the system. If you prefer anonymous operation, simply disable authentication.
+Отслеживание помогает команде понимать, кто использует систему. Если нужна анонимная работа, отключите аутентификацию.
 
 ---
 
-## Backup & Restore
+## Резервное копирование и восстановление {#backup-restore}
 
-User accounts and groups are included in backups:
+Аккаунты и группы входят в резервные копии:
 
-- Enable **Include Users** and **Include Groups** options when creating a backup
-- Passwords are NOT included in backups for security
-- When restoring users, temporary passwords are generated
-- Administrators must share these temporary passwords with users
-- Users should change their passwords after restoration
-- Group assignments are preserved during restore
+- При создании копии включите **Включить пользователей** и **Включить группы**
+- Пароли из соображений безопасности НЕ включаются
+- При восстановлении пользователей создаются временные пароли
+- Администратор должен передать временные пароли пользователям
+- После восстановления пользователи должны сменить пароли
+- Назначения групп сохраняются при восстановлении
 
-## Troubleshooting
+## Устранение неполадок {#troubleshooting}
 
-### Forgot Admin Password
+### Забыли пароль администратора {#forgot-admin-password}
 
-If you forget your admin password and cannot log in:
+Если вы забыли пароль администратора и не можете войти:
 
-1. Stop the Bambuddy service
-2. Access the database directly
-3. Delete the users table entries
-4. Restart Bambuddy
-5. Re-run the setup process
+1. Остановите службу Bambuddy
+2. Получите прямой доступ к базе данных
+3. Удалите записи из таблицы пользователей
+4. Перезапустите Bambuddy
+5. Повторите первоначальную настройку
 
-### Session Expired
+### Сеанс истёк {#session-expired}
 
-If you see "Session expired" or get redirected to login:
+Если отображается «Сеанс истёк» или происходит переход на страницу входа:
 
-- Your JWT token has expired
-- The default token lifetime is **24 hours**; an administrator can extend it under **Settings → Users → Session Policy** up to 30 days (see [Session Policy](#session-policy))
-- Simply log in again to continue
+- Срок действия JWT истёк
+- По умолчанию токен действует **24 часа**; администратор может увеличить срок до 30 дней в **Настройки → Пользователи → Политика сеанса** (см. [Политика сеанса](#session-policy))
+- Для продолжения снова войдите в систему
 
-### Cannot Access a Feature
+### Нет доступа к функции {#cannot-access-a-feature}
 
-If a button or feature is disabled:
+Если кнопка или функция отключена:
 
-- Hover over it to see what permission is required
-- Ask an administrator to add you to a group with that permission
-- Or create a custom group with the needed permissions
+- Наведите на неё указатель, чтобы узнать необходимое разрешение
+- Попросите администратора добавить вас в группу с этим разрешением
+- Или создайте пользовательскую группу с нужными разрешениями
 
-### Cannot Access Settings
+### Нет доступа к настройкам {#cannot-access-settings}
 
-If you cannot access the Settings page:
+Если страница настроек недоступна:
 
-- You need `settings:read` permission
-- Ask an administrator to add you to a group with settings access
-- Operators group has settings access by default
+- Нужно разрешение `settings:read`
+- Попросите администратора добавить вас в группу с доступом к настройкам
+- Группа операторов имеет доступ к настройкам по умолчанию
