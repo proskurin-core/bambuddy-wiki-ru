@@ -1,45 +1,45 @@
 ---
-title: Docker Installation
-description: Deploy Bambuddy with Docker in one command
+title: Установка через Docker
+description: Разверните Bambuddy с помощью Docker одной командой
 ---
 
-# Docker Installation
+# Установка через Docker {#docker-installation}
 
-Docker is the easiest way to run Bambuddy. One command and you're done!
+Docker — самый простой способ запустить Bambuddy. Достаточно одной команды!
 
 ---
 
-## :rocket: Quick Start
+## :rocket: Быстрый старт {#quick-start}
 
-=== ":material-script: Install Script (Linux / macOS)"
+=== ":material-script: Скрипт установки (Linux / macOS)"
 
-    Interactive script that prompts for configuration and sets everything up. Requires a bash-compatible shell — Linux, macOS, or WSL on Windows. **For native Windows, use the Pre-built Image tab below.**
+    Интерактивный скрипт запросит параметры и выполнит настройку. Требуется совместимая с bash оболочка в Linux, macOS или WSL в Windows. **Для нативной Windows используйте вкладку готового образа ниже.**
 
     ```bash
     curl -fsSL https://raw.githubusercontent.com/maziggy/bambuddy/main/install/docker-install.sh -o docker-install.sh && chmod +x docker-install.sh && ./docker-install.sh
     ```
 
-    The script will:
+    Скрипт выполнит следующие действия:
 
-    - Prompt for install path, port, bind address, timezone
-    - Download docker-compose.yml (or clone repo if building from source)
-    - Create .env file with your settings
-    - Start the container
+    - Запросит путь установки, порт, адрес привязки и часовой пояс
+    - Скачает docker-compose.yml (или клонирует репозиторий при сборке из исходного кода)
+    - Создаст файл .env с вашими настройками
+    - Запустит контейнер
 
-    !!! tip "Unattended Mode"
-        For automation or CI, use the `--yes` flag to accept all defaults:
+    !!! tip "Автоматическая установка"
+        Для автоматизации или CI используйте флаг `--yes`, чтобы принять все значения по умолчанию:
         ```bash
         curl -fsSL https://raw.githubusercontent.com/maziggy/bambuddy/main/install/docker-install.sh | bash -s -- --yes
         ```
 
-        Or customize with flags:
+        Либо задайте параметры флагами:
         ```bash
         curl -fsSL https://raw.githubusercontent.com/maziggy/bambuddy/main/install/docker-install.sh | bash -s -- --path /srv/bambuddy --port 3000 --yes
         ```
 
-=== ":material-download: Pre-built Image (Manual — works on Windows too)"
+=== ":material-download: Готовый образ (вручную, также работает в Windows)"
 
-    The fastest way — no building required. Works on Linux, macOS, and native Windows PowerShell (no WSL needed):
+    Самый быстрый способ — сборка не нужна. Работает в Linux, macOS и нативном PowerShell Windows (WSL не требуется):
 
     ```bash
     # Linux / macOS / WSL
@@ -72,17 +72,17 @@ Docker is the easiest way to run Bambuddy. One command and you're done!
        ghcr.io/maziggy/bambuddy:daily
     ```
 
-    !!! success "Multi-Architecture Support"
-        Pre-built images are available for:
+    !!! success "Поддержка разных архитектур"
+        Готовые образы доступны для:
 
-        - **linux/amd64** - Intel/AMD servers, desktops, most VPS
-        - **linux/arm64** - Raspberry Pi 4/5, Apple Silicon Macs, AWS Graviton
+        - **linux/amd64** — серверы и компьютеры Intel/AMD, большинство VPS
+        - **linux/arm64** — Raspberry Pi 4/5, Mac с Apple Silicon, AWS Graviton
 
-        Docker automatically pulls the correct image for your system.
+        Docker автоматически скачает подходящий образ.
 
-=== ":material-source-branch: Build from Source"
+=== ":material-source-branch: Сборка из исходного кода"
 
-    If you want to build locally or modify the code:
+    Чтобы собрать образ локально или изменить код:
 
     ```bash
     git clone https://github.com/maziggy/bambuddy.git
@@ -90,15 +90,15 @@ Docker is the easiest way to run Bambuddy. One command and you're done!
     docker compose up -d --build
     ```
 
-Open `http://<your-host>:8000` in your browser — replace `<your-host>` with the IP or hostname of the machine running Bambuddy. On Linux with host networking `localhost` works too; on Docker Desktop (macOS/Windows) it does **not** — see the [macOS and Windows](#macos-and-windows-docker-desktop) section below. :tada:
+Откройте в браузере `http://<your-host>:8000`, заменив `<your-host>` IP-адресом или именем компьютера с Bambuddy. В Linux при использовании сети хоста работает и `localhost`; в Docker Desktop (macOS/Windows) он **не работает** — см. раздел [macOS и Windows](#macos-and-windows-docker-desktop) ниже. :tada:
 
 ---
 
-## :material-cog: Configuration
+## :material-cog: Настройка {#configuration}
 
-### docker-compose.yml
+### docker-compose.yml {#docker-composeyml}
 
-The default `docker-compose.yml` works out of the box:
+Стандартный `docker-compose.yml` работает без изменений:
 
 ```yaml
 services:
@@ -126,33 +126,33 @@ volumes:
   bambuddy_logs:
 ```
 
-!!! info "Image vs Build"
-    When both `image` and `build` are specified:
+!!! info "Образ и сборка"
+    Если указаны и `image`, и `build`:
 
-    - `docker compose up -d` pulls the pre-built image from `ghcr.io`
-    - `docker compose up -d --build` builds locally from source
+    - `docker compose up -d` скачивает готовый образ с `ghcr.io`
+    - `docker compose up -d --build` собирает образ локально из исходного кода
 
-### Environment Variables
+### Переменные окружения {#environment-variables}
 
-| Variable | Default | Description |
+| Переменная | По умолчанию | Описание |
 |----------|---------|-------------|
-| `TZ` | `UTC` | Your timezone (e.g., `America/New_York`) |
-| `PORT` | `8000` | Port Bambuddy runs on (with host networking mode) |
-| `DEBUG` | `false` | Enable debug logging |
-| `LOG_LEVEL` | `INFO` | Log level: `DEBUG`, `INFO`, `WARNING`, `ERROR` |
-| `HA_URL` | _(none)_ | Home Assistant URL for automatic integration (e.g., `http://192.168.1.100:8123`) |
-| `HA_TOKEN` | _(none)_ | Home Assistant Long-Lived Access Token for automatic integration |
-| `TRUSTED_FRAME_ORIGINS` | _(none)_ | Comma-separated origins permitted to embed Bambuddy via `<iframe>` (e.g., `http://homeassistant.local:8123`). Required for the HA Webpage dashboard panel. Embedding from **another** origin always needs this; the streaming overlay at `/overlay/{printer}` is additionally embeddable from Bambuddy's own origin without it, which is how the overlay preview in Settings works. |
-| `DATABASE_URL` | _(none)_ | External PostgreSQL connection string (e.g., `postgresql+asyncpg://user:pass@host:5432/bambuddy`). Uses built-in SQLite when not set. |
-| `USE_SYSTEM_TRUST_STORE` | _(none)_ | Enables the use of the System Trust Store for HTTPS requests |
-| `BAMBUDDY_EXTERNAL_ROOTS` | _(none)_ | Colon-separated absolute paths permitted as **external library folders** (see [File Manager → External folders](../features/file-manager.md#external-folders)). Empty default disables the feature; Bambuddy's own data / log / static directories are always rejected even if the operator over-broadens this list. |
+| `TZ` | `UTC` | Ваш часовой пояс (например, `America/New_York`) |
+| `PORT` | `8000` | Порт Bambuddy (при использовании сети хоста) |
+| `DEBUG` | `false` | Включить отладочный журнал |
+| `LOG_LEVEL` | `INFO` | Уровень журнала: `DEBUG`, `INFO`, `WARNING`, `ERROR` |
+| `HA_URL` | _(нет)_ | URL Home Assistant для автоматической интеграции (например, `http://192.168.1.100:8123`) |
+| `HA_TOKEN` | _(нет)_ | Долгосрочный токен доступа Home Assistant для автоматической интеграции |
+| `TRUSTED_FRAME_ORIGINS` | _(нет)_ | Разделённые запятыми источники, которым разрешено встраивать Bambuddy через `<iframe>` (например, `http://homeassistant.local:8123`). Требуется для панели Webpage в HA. Для встраивания с **другого** источника параметр обязателен; оверлей трансляции `/overlay/{printer}` дополнительно можно встроить из собственного источника Bambuddy без него — так работает предпросмотр в настройках. |
+| `DATABASE_URL` | _(нет)_ | Строка подключения внешнего PostgreSQL (например, `postgresql+asyncpg://user:pass@host:5432/bambuddy`). Если не задана, используется встроенный SQLite. |
+| `USE_SYSTEM_TRUST_STORE` | _(нет)_ | Включает системное хранилище доверенных сертификатов для HTTPS-запросов |
+| `BAMBUDDY_EXTERNAL_ROOTS` | _(нет)_ | Разделённые двоеточиями абсолютные пути, разрешённые как **внешние папки библиотеки** (см. [Файловый менеджер → Внешние папки](../features/file-manager.md#external-folders)). Пустое значение по умолчанию отключает функцию; собственные каталоги данных, журналов и статических файлов Bambuddy всегда отклоняются, даже при слишком широком списке. |
 
-!!! info "Home Assistant Integration"
-    When both `HA_URL` and `HA_TOKEN` are set, the Home Assistant integration is automatically enabled and configured. The URL and token fields become read-only in the UI. This is primarily used by the [Home Assistant add-on](https://github.com/hobbypunk90/homeassistant-addon-bambuddy/) for zero-configuration setup.
+!!! info "Интеграция с Home Assistant"
+    Когда заданы оба параметра `HA_URL` и `HA_TOKEN`, интеграция Home Assistant автоматически включается и настраивается. Поля URL и токена в интерфейсе становятся доступными только для чтения. Это в основном используется [дополнением Home Assistant](https://github.com/hobbypunk90/homeassistant-addon-bambuddy/) для настройки без ручных действий.
 
-!!! tip "Self Signed CA Certificate Support"
-    By default Bambuddy uses the built in httpx library trust store for all HTTPS requests. If you have a standalone Home Assistant instance and are using a self signed CA certificate then access to this instance will be denied.
-    To include your own CA certifcate add it to a directory and add the following to your docker compose file:
+!!! tip "Поддержка самоподписанного сертификата CA"
+    По умолчанию Bambuddy использует встроенное хранилище доверия библиотеки httpx для всех HTTPS-запросов. При использовании самостоятельного экземпляра Home Assistant с самоподписанным сертификатом CA доступ к нему будет отклонён.
+    Чтобы добавить собственный сертификат CA, поместите его в каталог и добавьте в файл Docker Compose:
 
     ```yaml
     volume:
@@ -161,57 +161,57 @@ volumes:
       - USE_SYSTEM_TRUST_STORE=true
     ```
 
-    When the `USE_SYSTEM_TRUST_STORE` environment variable is defined Bambuddy will update the CA Certifcates at boot up and enable the httpx library to use the System Trust Store.
-    USE_SYSTEM_TRUST_STORE only takes effect when the container starts as root; remove any explicit `user:` directive if you set this flag.
+    При заданной переменной `USE_SYSTEM_TRUST_STORE` Bambuddy обновит сертификаты CA при запуске и включит использование системного хранилища доверия библиотекой httpx.
+    USE_SYSTEM_TRUST_STORE действует только при запуске контейнера от root; если включаете флаг, удалите явно указанную директиву `user:`.
 
-!!! tip "Embedding Bambuddy in Home Assistant's Webpage panel"
-    By default, Bambuddy emits strict iframe-blocking headers (`X-Frame-Options: SAMEORIGIN` and CSP `frame-ancestors 'none'`) to protect against clickjacking on internet-exposed deployments. This blocks embedding Bambuddy inside Home Assistant's Webpage dashboard panel even on a trusted LAN, because HA on port 8123 and Bambuddy on port 8000 are different origins to the browser.
+!!! tip "Встраивание Bambuddy в панель Webpage Home Assistant"
+    По умолчанию Bambuddy отправляет строгие заголовки, блокирующие iframe (`X-Frame-Options: SAMEORIGIN` и CSP `frame-ancestors 'none'`), для защиты от кликджекинга при доступе из интернета. Это блокирует встраивание Bambuddy в панель Webpage Home Assistant даже в доверенной локальной сети: браузер считает HA на порту 8123 и Bambuddy на порту 8000 разными источниками.
 
-    To allow embedding from your HA instance, set:
+    Чтобы разрешить встраивание из вашего экземпляра HA, задайте:
 
     ```yaml
     environment:
       - TRUSTED_FRAME_ORIGINS=http://homeassistant.local:8123
     ```
 
-    Replace the URL with your actual HA origin (`scheme://host[:port]` only — no paths, no wildcards). Multiple origins can be comma-separated. When set, `X-Frame-Options` is removed and the CSP `frame-ancestors` directive lists `'self'` plus your configured origins. Plain Docker / bare-metal deployments without this variable retain the strict default.
+    Замените URL фактическим источником HA (только `scheme://host[:port]`, без путей и подстановочных символов). Несколько источников разделяются запятыми. При заданном параметре `X-Frame-Options` удаляется, а директива CSP `frame-ancestors` содержит `'self'` и указанные источники. В обычных установках Docker и на физическом сервере без этой переменной сохраняются строгие настройки по умолчанию.
 
-    **HTTPS Home Assistant (Nabu Casa, custom domain, anything with TLS in front):** browsers refuse to embed an HTTP iframe inside an HTTPS page (mixed-content block — Chrome and Firefox enforce this and the user can't override it for individual sites). If your HA instance is HTTPS, Bambuddy must also be reachable over HTTPS.
+    **Home Assistant через HTTPS (Nabu Casa, собственный домен или другой TLS-прокси):** браузеры запрещают встраивать HTTP iframe в страницу HTTPS из-за смешанного содержимого. Chrome и Firefox применяют это ограничение без возможности отключить его для отдельного сайта. Если HA работает по HTTPS, Bambuddy тоже должен быть доступен по HTTPS.
 
-    The simplest recipe for HA users is the **[Nginx Proxy Manager addon](https://github.com/hassio-addons/addon-nginx-proxy-manager)** from the HA addon store. NPM does DNS-01 Let's Encrypt against your own domain, so no port-forwarding is required and Bambuddy never has to be exposed publicly:
+    Самый простой вариант для пользователей HA — **[дополнение Nginx Proxy Manager](https://github.com/hassio-addons/addon-nginx-proxy-manager)** из магазина дополнений HA. NPM использует проверку DNS-01 Let's Encrypt для вашего домена, поэтому перенаправлять порты и открывать Bambuddy в интернет не нужно:
 
-    1. Install and start the Nginx Proxy Manager addon from the HA addon store.
-    2. In NPM, add a **Proxy Host**: domain `bambuddy.<your-domain>`, scheme `http`, forward host `<bambuddy-host-on-LAN>`, forward port `8000`.
-    3. Under **SSL**, request a Let's Encrypt cert via **DNS Challenge** for `bambuddy.<your-domain>` — NPM has dropdowns for Cloudflare, Hetzner, Route53, and many other DNS providers.
-    4. Set `TRUSTED_FRAME_ORIGINS=https://homeassistant.<your-domain>` (or whatever your HA HTTPS origin is) on Bambuddy and restart.
-    5. In HA, add a Webpage dashboard panel with `url: https://bambuddy.<your-domain>`.
+    1. Установите и запустите дополнение Nginx Proxy Manager из магазина HA.
+    2. В NPM добавьте **Proxy Host**: домен `bambuddy.<your-domain>`, схема `http`, целевой хост `<bambuddy-host-on-LAN>`, целевой порт `8000`.
+    3. В разделе **SSL** запросите сертификат Let's Encrypt через **DNS Challenge** для `bambuddy.<your-domain>` — в NPM доступны Cloudflare, Hetzner, Route53 и многие другие провайдеры DNS.
+    4. Установите в Bambuddy `TRUSTED_FRAME_ORIGINS=https://homeassistant.<your-domain>` (или фактический HTTPS-источник HA) и перезапустите его.
+    5. Добавьте в HA панель Webpage с `url: https://bambuddy.<your-domain>`.
 
-    Both ends are HTTPS, the certificate is publicly trusted, and Bambuddy stays on the LAN — DNS-01 only needs API access to your DNS provider, not inbound connectivity. If you don't have a domain, any other reverse proxy works the same way (Caddy, Traefik, plain nginx outside the addon ecosystem) — the only requirement is that Bambuddy ends up behind a trusted HTTPS certificate that matches the URL you embed in the Webpage panel.
+    Оба соединения используют HTTPS, сертификат является общедоверенным, а Bambuddy остаётся в локальной сети. DNS-01 требует только доступа к API провайдера DNS, но не входящих подключений. Если у вас нет домена, аналогично работают и другие обратные прокси (Caddy, Traefik, обычный nginx вне системы дополнений): Bambuddy должен находиться за доверенным HTTPS-сертификатом, соответствующим URL панели Webpage.
 
-    **Path-prefixed reverse proxies** (e.g. `https://example.com/bambuddy/` via Traefik path prefix, nginx `location /bambuddy/`, Cloudflare Tunnel with path routing) are supported as of v0.2.4b2 — assets load correctly under any subpath. API calls still go to the host root, so the proxy must route `/api/v1/*` to the same Bambuddy upstream as `/bambuddy/*` (most users either reverse-proxy Bambuddy at a dedicated subdomain or expose `/api/v1/` at the host root alongside the subpath).
+    **Обратные прокси с префиксом пути** (например, `https://example.com/bambuddy/` через Traefik, nginx `location /bambuddy/` или маршрутизацию Cloudflare Tunnel) поддерживаются с v0.2.4b2: ресурсы загружаются корректно под любым подпутём. Вызовы API по-прежнему идут в корень хоста, поэтому прокси должен направлять `/api/v1/*` в тот же Bambuddy, что и `/bambuddy/*`. Обычно Bambuddy размещают на отдельном поддомене либо открывают `/api/v1/` в корне хоста вместе с подпутём.
 
-!!! warning "HA Ingress / addon-based subpath embedding is not supported"
-    Home Assistant's add-on Ingress system serves the addon at a rotating per-session subpath (`/api/hassio_ingress/<token>/`). Even though the asset-path fix above lets the SPA boot under that prefix, the rest of the SPA still assumes a stable origin: API calls, React Router basename, PWA manifest scope, service-worker scope, and push-notification subscriptions are all anchored at the URL the SPA was first installed under. Making each of those subpath-aware would mean rewriting how the SPA bootstraps and would create new failure modes around PWA installs and deep-link reloads.
+!!! warning "Встраивание через подпуть HA Ingress или дополнения не поддерживается"
+    Система Ingress дополнений Home Assistant предоставляет дополнение по меняющемуся для каждой сессии подпути (`/api/hassio_ingress/<token>/`). Хотя описанное исправление путей позволяет SPA запуститься под этим префиксом, остальная часть SPA рассчитывает на стабильный источник: вызовы API, basename React Router, области действия манифеста PWA и service worker и подписки на push-уведомления привязаны к URL первоначальной установки SPA. Поддержка подпутей для всех этих компонентов потребовала бы переработки запуска SPA и создала бы новые проблемы при установке PWA и перезагрузке прямых ссылок.
 
-    The supported HA embedding path is the Webpage panel + `TRUSTED_FRAME_ORIGINS` flow above. Note that terminating TLS inside an HA addon container with a self-signed certificate is not a viable workaround: modern browsers (Chrome, Edge) block self-signed certificates on raw LAN IPs with no `thisisunsafe`-style override available. If you maintain an HA add-on that wraps Bambuddy, the practical path is to have the user front Bambuddy with the Nginx Proxy Manager addon (or any other reverse proxy that produces a publicly trusted certificate via DNS-01), then embed Bambuddy's HTTPS URL via Webpage panel.
+    Поддерживается описанное выше встраивание через панель Webpage и `TRUSTED_FRAME_ORIGINS`. Завершение TLS внутри контейнера дополнения HA с самоподписанным сертификатом не является решением: современные Chrome и Edge блокируют такие сертификаты на IP-адресах локальной сети без возможности обхода вроде `thisisunsafe`. Если вы сопровождаете дополнение HA для Bambuddy, предложите пользователю разместить Bambuddy за Nginx Proxy Manager или другим прокси с общедоверенным сертификатом через DNS-01, а затем встроить HTTPS-адрес через Webpage.
 
-!!! tip "External PostgreSQL Database"
-    By default, Bambuddy uses a built-in SQLite database that requires zero configuration. For larger setups or when you prefer a dedicated database server, set `DATABASE_URL` to point to an external PostgreSQL instance:
+!!! tip "Внешняя база данных PostgreSQL"
+    По умолчанию Bambuddy использует встроенную базу SQLite без настройки. Для крупных установок или отдельного сервера базы данных задайте `DATABASE_URL` с адресом внешнего PostgreSQL:
 
     ```yaml
     environment:
       - DATABASE_URL=postgresql+asyncpg://bambuddy:yourpassword@db-host:5432/bambuddy
     ```
 
-    Bambuddy will automatically create all tables on first startup. Backup/restore uses `pg_dump`/`pg_restore` instead of file copy. PostgreSQL 13 or newer is required; see [PostgreSQL](../features/postgresql.md).
+    Bambuddy автоматически создаст таблицы при первом запуске. Резервное копирование и восстановление используют `pg_dump`/`pg_restore` вместо копирования файла. Требуется PostgreSQL 13 или новее; см. [PostgreSQL](../features/postgresql.md).
 
-### External library folders (BAMBUDDY_EXTERNAL_ROOTS)
+### Внешние папки библиотеки (BAMBUDDY_EXTERNAL_ROOTS) {#external-library-folders-bambuddy_external_roots}
 
-The **File Manager → Add external folder** feature lets users mount host directories (NAS shares, USB drives, local prints directories) into the library without copying files. As of v0.2.5b1 this is **opt-in for operators** — set `BAMBUDDY_EXTERNAL_ROOTS` to a colon-separated list of host paths (inside the container) that users are permitted to register. Empty (the default) disables the feature.
+Функция **Файловый менеджер → Добавить внешнюю папку** позволяет подключать каталоги хоста (ресурсы NAS, USB-накопители, локальные каталоги печати) к библиотеке без копирования файлов. С v0.2.5b1 оператор должен **явно включить** эту функцию: задайте в `BAMBUDDY_EXTERNAL_ROOTS` разделённый двоеточиями список путей внутри контейнера, которые пользователям разрешено регистрировать. Пустое значение по умолчанию отключает функцию.
 
-Operators must also bind-mount the host directory into the container at the same path declared in `BAMBUDDY_EXTERNAL_ROOTS`. The Bambuddy data / log / static directories cannot appear as external roots even if you list them here — they are always rejected as a hard safeguard against cross-user data exposure.
+Оператор также должен выполнить bind-монтирование каталога хоста в контейнер по тому же пути, что указан в `BAMBUDDY_EXTERNAL_ROOTS`. Каталоги данных, журналов и статических файлов Bambuddy не могут быть внешними корнями даже при включении в список: они всегда отклоняются для защиты данных пользователей.
 
-Example: allow users to mount one NAS share read-only:
+Пример: разрешить подключение одного ресурса NAS только для чтения:
 
 ```yaml
 volumes:
@@ -220,7 +220,7 @@ environment:
   - BAMBUDDY_EXTERNAL_ROOTS=/external/nas
 ```
 
-Example: allow two roots (NAS + local projects), comma-separated host paths but colon-separated in-container:
+Пример: разрешить два корня (NAS и локальные проекты): пути хоста разделены запятыми, а пути внутри контейнера — двоеточиями:
 
 ```yaml
 volumes:
@@ -230,19 +230,19 @@ environment:
   - BAMBUDDY_EXTERNAL_ROOTS=/external/nas:/external/projects
 ```
 
-`:ro` is recommended unless you want users uploading files back into the host share. Why operator-opt-in? See [the security advisory note](../features/file-manager.md#external-folders-security-stance) — pre-v0.2.5b1 versions used a denylist of system paths which left every other host location implicitly mountable. The allowlist makes mounting an explicit, auditable decision per deployment.
+Рекомендуется `:ro`, если пользователям не нужно загружать файлы обратно на ресурс хоста. Почему нужно явное разрешение оператора? См. [замечание о безопасности](../features/file-manager.md#external-folders-security-stance): до v0.2.5b1 использовался список запрещённых системных путей, а все остальные пути хоста неявно разрешались. Список разрешённых путей делает монтирование явным и проверяемым решением для каждой установки.
 
-### Custom Port
+### Пользовательский порт {#custom-port}
 
-=== ":material-linux: Linux (Host Mode)"
+=== ":material-linux: Linux (режим сети хоста)"
 
-    With `network_mode: host`, set the PORT environment variable:
+    При `network_mode: host` задайте переменную окружения PORT:
 
     ```bash
     PORT=8080 docker compose up -d
     ```
 
-    Or add it to your `docker-compose.yml`:
+    Или добавьте её в `docker-compose.yml`:
 
     ```yaml
     environment:
@@ -252,51 +252,49 @@ environment:
 
 === ":material-apple: macOS / :material-microsoft-windows: Windows"
 
-    With port mapping, modify the ports section:
+    При сопоставлении портов измените раздел ports:
 
     ```yaml
     ports:
       - "8080:8000"  # Access on port 8080
     ```
 
-!!! note "Linux Users: Permission Denied?"
-    If you get "permission denied" errors, either prefix commands with `sudo` (e.g., `sudo docker compose up -d`) or [add your user to the docker group](https://docs.docker.com/engine/install/linux-postinstall/).
+!!! note "Linux: отказано в доступе?"
+    При ошибке «отказано в доступе» добавляйте `sudo` перед командами (например, `sudo docker compose up -d`) или [добавьте пользователя в группу docker](https://docs.docker.com/engine/install/linux-postinstall/).
 
 ---
 
-## :material-database: Data Persistence
+## :material-database: Сохранение данных {#data-persistence}
 
-Three volumes store your data:
+Данные хранятся в трёх томах:
 
-| Volume | Purpose |
+| Том | Назначение |
 |--------|---------|
-| `bambuddy.db` | SQLite database with all your print data |
-| `archive/` | Archived 3MF files and thumbnails |
-| `logs/` | Application logs |
+| `bambuddy.db` | База SQLite со всеми данными печати |
+| `archive/` | Архивированные файлы 3MF и миниатюры |
+| `logs/` | Журналы приложения |
 
-!!! tip "Backup"
-    To backup your data, simply copy these files/directories. See [Backup & Restore](../features/backup.md) for the built-in backup feature.
+!!! tip "Резервное копирование"
+    Для резервного копирования просто скопируйте эти файлы и каталоги. О встроенной функции см. [Резервное копирование и восстановление](../features/backup.md).
 
 ---
 
-## :material-update: Updating
+## :material-update: Обновление {#updating}
 
-!!! info "In-App Updates Not Available"
-    Docker installations cannot use the in-app update feature — upgrade from the command line.
+!!! info "Обновление из приложения недоступно"
+    Установки Docker нельзя обновить из приложения — используйте командную строку.
 
-!!! warning "Check your `image:` line first"
-    If your `docker-compose.yml` pins a specific tag (e.g. `ghcr.io/maziggy/bambuddy:0.2.2.2`),
-    `docker compose pull` will just re-fetch that same tag. Edit the line to
-    `:latest` or the target version (e.g. `:0.2.3`) before pulling.
+!!! warning "Сначала проверьте строку `image:`"
+    Если в `docker-compose.yml` указан конкретный тег (например, `ghcr.io/maziggy/bambuddy:0.2.2.2`), команда `docker compose pull` снова скачает тот же тег. Перед загрузкой измените его на `:latest` или нужную версию (например, `:0.2.3`).
 
-=== ":material-download: Pre-built Image"
+=== ":material-download: Готовый образ"
 
     ```bash
     docker compose pull
     docker compose up -d
     ```
 
-=== ":material-source-branch: Built from Source"
+=== ":material-source-branch: Сборка из исходного кода"
 
     ```bash
     cd bambuddy
@@ -305,52 +303,37 @@ Three volumes store your data:
     docker compose up -d
     ```
 
-    The `--pull` flag ensures you get the latest base image with security updates.
+    Флаг `--pull` обеспечивает получение последнего базового образа с обновлениями безопасности.
 
-### Copying the command from the UI
+### Копирование команды из интерфейса {#copying-the-command-from-the-ui}
 
-**Settings → Updates** prints the exact command when an update is available,
-with a copy button next to it.
+При наличии обновления раздел **Настройки → Обновления** показывает точную команду и кнопку копирования.
 
-Both `docker compose` subcommands only work from the directory holding your
-compose file, so the printed command includes a `cd` when Bambuddy knows where
-that is:
+Обе подкоманды `docker compose` работают только из каталога с файлом Compose. Если Bambuddy знает этот каталог, показанная команда включает `cd`:
 
 ```bash
 cd /opt/bambuddy && docker compose pull && docker compose up -d
 ```
 
-Bambuddy can only work the directory out on its own if you bind-mount a
-subdirectory of it — `./data:/app/data` gives it away, the default named
-volumes do not. Everywhere else, fill in **Compose directory** in the same
-panel; it is saved with the rest of your settings and used from then on. Leave
-it blank and the command is printed without the `cd`.
+Bambuddy может определить каталог самостоятельно, только если подключён его подкаталог: `./data:/app/data` позволяет это сделать, а именованные тома по умолчанию — нет. В остальных случаях заполните поле **Каталог Compose** на той же панели; оно сохраняется вместе с настройками. Если оставить его пустым, команда будет показана без `cd`.
 
-You can also set it from the compose file itself, which survives a settings
-reset:
+Можно также задать его в самом файле Compose; это значение сохраняется после сброса настроек:
 
 ```yaml
 environment:
   - BAMBUDDY_COMPOSE_DIR=${PWD}
 ```
 
-Compose fills `${PWD}` in from the shell you run `docker compose` in, so run it
-from the directory holding the compose file for that to be right. A saved
-**Compose directory** setting takes precedence over this variable.
+Compose подставляет `${PWD}` из оболочки, в которой запущен `docker compose`, поэтому запускайте команду из каталога с файлом Compose. Сохранённый параметр **Каталог Compose** имеет приоритет над переменной.
 
-!!! tip "Stale `docker-compose.yml`?"
-    Releases since 0.2.2 added `cap_add: NET_BIND_SERVICE`, extra virtual-printer
-    ports for bridge mode (2024-2026), and an optional PostgreSQL block. If
-    your compose file is older, bridge-mode users (macOS/Windows) may silently
-    lose FTP and RTSP proxies. Compare yours against
-    [the current file](https://github.com/maziggy/bambuddy/blob/main/docker-compose.yml)
-    and merge by hand.
+!!! tip "Устаревший `docker-compose.yml`?"
+    Начиная с 0.2.2 добавлены `cap_add: NET_BIND_SERVICE`, дополнительные порты виртуального принтера для bridge (2024–2026) и необязательный блок PostgreSQL. При более старом файле пользователи bridge (macOS/Windows) могут незаметно потерять прокси FTP и RTSP. Сравните свой файл с [текущим](https://github.com/maziggy/bambuddy/blob/main/docker-compose.yml) и внесите изменения вручную.
 
 ---
 
-## :material-console: Useful Commands
+## :material-console: Полезные команды {#useful-commands}
 
-### View Logs
+### Просмотр журналов {#view-logs}
 
 ```bash
 # Follow logs
@@ -360,7 +343,7 @@ docker compose logs -f
 docker compose logs --tail 100
 ```
 
-### Stop/Start
+### Остановка и запуск {#stopstart}
 
 ```bash
 # Stop
@@ -370,13 +353,13 @@ docker compose down
 docker compose up -d
 ```
 
-### Rebuild (after changes)
+### Пересборка после изменений {#rebuild-after-changes}
 
 ```bash
 docker compose up -d --build
 ```
 
-### Shell Access
+### Доступ к оболочке {#shell-access}
 
 ```bash
 docker compose exec bambuddy /bin/bash
@@ -384,15 +367,15 @@ docker compose exec bambuddy /bin/bash
 
 ---
 
-## :material-server: Advanced Setups
+## :material-server: Дополнительные варианты настройки {#advanced-setups}
 
-### Reverse Proxy (Nginx / Caddy)
+### Обратный прокси (Nginx / Caddy) {#reverse-proxy-nginx-caddy}
 
-See [Installation → Reverse Proxy](installation.md#reverse-proxy) — the Nginx and Caddy configs there work the same for Docker deployments. Just point the upstream at the Bambuddy container (`bambuddy:8000` on the same compose network, or `localhost:8000` if the proxy runs on the host).
+См. [Установка → Обратный прокси](installation.md#reverse-proxy): приведённые конфигурации Nginx и Caddy применимы и к Docker. Укажите контейнер Bambuddy как целевой сервер (`bambuddy:8000` в той же сети Compose или `localhost:8000`, если прокси запущен на хосте).
 
-### Traefik Labels
+### Метки Traefik {#traefik-labels}
 
-If you're using Traefik:
+Если используется Traefik:
 
 ```yaml
 services:
@@ -406,9 +389,9 @@ services:
     # ... rest of config
 ```
 
-### Network Mode Host
+### Сетевой режим host {#network-mode-host}
 
-Host network mode is **required** for printer discovery and camera streaming, unless the container has its own address on the LAN through a macvlan network (or ipvlan in L2 mode):
+Для обнаружения принтеров и трансляции камеры **требуется** сетевой режим host, если контейнер не имеет собственного адреса в локальной сети через macvlan (или ipvlan в режиме L2):
 
 ```yaml
 services:
@@ -418,25 +401,25 @@ services:
     # Note: ports mapping not needed with host mode
 ```
 
-!!! warning "Required for Printer Discovery"
-    Docker's default bridge networking cannot receive SSDP multicast packets needed for automatic printer discovery. Use `network_mode: host`, or a macvlan network (ipvlan in L2 mode works too) that gives the container its own address on the LAN.
+!!! warning "Необходимо для обнаружения принтеров"
+    Стандартная сеть bridge Docker не принимает multicast-пакеты SSDP, необходимые для автоматического обнаружения. Используйте `network_mode: host` или сеть macvlan (также подходит ipvlan в режиме L2), которая предоставляет контейнеру собственный адрес в локальной сети.
 
-!!! note "When Using Host Mode"
-    - Remove the `ports:` section (not needed with host mode)
-    - Bambuddy will be accessible on port 8000 directly
-    - All other features work the same
+!!! note "При использовании режима host"
+    - Удалите раздел `ports:` (в режиме host он не нужен)
+    - Bambuddy будет доступен напрямую на порту 8000
+    - Остальные функции работают так же
 
-!!! tip "Host mode not an option? Bridge works too"
-    Host mode is the default because SSDP printer discovery needs L2 multicast — but it's a deliberate trade-off, not a one-size-fits-all default. If you run Bambuddy on a multi-service Linux host (NAS, dedicated Docker VM, Synology DSM, Unraid) where another container already binds a port Bambuddy wants, host mode isn't an option for you. Bridge mode is a fully supported alternative for setups that add printers by IP and skip discovery — read the **[Bridge Mode](#bridge-mode-linux-and-docker-desktop)** section below for the port-exposure rules. Both Linux multi-service hosts and Docker Desktop (macOS / Windows) follow the same configuration there.
+!!! tip "Режим host недоступен? Используйте bridge"
+    Режим host используется по умолчанию, поскольку обнаружение SSDP требует multicast уровня L2, но подходит не всем. На многосервисном хосте Linux (NAS, отдельная виртуальная машина Docker, Synology DSM, Unraid) нужный Bambuddy порт может быть уже занят другим контейнером. Полностью поддерживаемая альтернатива — bridge с добавлением принтеров по IP без автоматического обнаружения. Правила публикации портов см. в разделе **[Режим bridge](#bridge-mode-linux-and-docker-desktop)**. Настройка одинакова для многосервисных хостов Linux и Docker Desktop (macOS / Windows).
 
-### Bridge Mode (Linux and Docker Desktop)
+### Режим bridge (Linux и Docker Desktop) {#bridge-mode-linux-and-docker-desktop}
 
-Bridge mode is required on **any** setup that can't use `network_mode: host`. That covers two distinct audiences with the same configuration:
+Режим bridge необходим во **всех** установках, где нельзя использовать `network_mode: host`. Одинаковая конфигурация применяется в двух случаях:
 
-- **Linux multi-service hosts** (NAS, dedicated Docker VM, Synology DSM, Unraid, shared homelab box) where host mode would conflict with ports already bound by other containers.
-- **Docker Desktop on macOS / Windows**, where host mode connects to the Linux VM rather than your computer's network ([more on the macOS/Windows specifics below](#macos-and-windows-docker-desktop)).
+- **Многосервисные хосты Linux** (NAS, отдельная виртуальная машина Docker, Synology DSM, Unraid, общий домашний сервер), где режим host конфликтует с портами других контейнеров.
+- **Docker Desktop в macOS / Windows**, где режим host подключается к виртуальной машине Linux, а не к сети компьютера ([подробнее ниже](#macos-and-windows-docker-desktop)).
 
-Both cases lose automatic SSDP printer discovery — add printers manually by IP instead. The compose snippet for both is the same:
+В обоих случаях автоматическое обнаружение SSDP недоступно; добавляйте принтеры вручную по IP. Фрагмент Compose одинаков:
 
 ```yaml
 services:
@@ -477,91 +460,91 @@ volumes:
   bambuddy_logs:
 ```
 
-!!! info "FTP passive ports are sliced per VP — only expose what you need"
-    Each Virtual Printer is assigned its own non-overlapping 10-port passive-mode slice ([#1646](https://github.com/maziggy/bambuddy/issues/1646)): VP 1 → `50000-50009`, VP 2 → `50010-50019`, VP 3 → `50020-50029`, and so on. **Only expose the range your VPs actually use:**
+!!! info "Пассивные порты FTP выделяются каждому виртуальному принтеру — публикуйте только необходимые"
+    Каждому виртуальному принтеру выделяется собственный непересекающийся диапазон из 10 портов пассивного режима ([#1646](https://github.com/maziggy/bambuddy/issues/1646)): принтер 1 → `50000-50009`, принтер 2 → `50010-50019`, принтер 3 → `50020-50029` и т. д. **Публикуйте только используемый диапазон:**
 
-    - **1 VP** → `50000-50009:50000-50009` (10 ports)
-    - **3 VPs** (default above) → `50000-50029:50000-50029` (30 ports)
-    - **N VPs** → `50000-500{N-1}9:50000-500{N-1}9` (`N × 10` ports)
-    - **Proxy mode** → `50000-50100:50000-50100` is still required for any VP — proxy mode transparently forwards the real printer's full FTP-data range, not Bambuddy's slice.
+    - **1 виртуальный принтер** → `50000-50009:50000-50009` (10 портов)
+    - **3 виртуальных принтера** (по умолчанию выше) → `50000-50029:50000-50029` (30 портов)
+    - **N виртуальных принтеров** → `50000-500{N-1}9:50000-500{N-1}9` (`N × 10` портов)
+    - **Режим прокси** → для любого виртуального принтера по-прежнему требуется `50000-50100:50000-50100`: он прозрачно перенаправляет весь диапазон данных FTP реального принтера, а не часть Bambuddy.
 
-    Why exposing the minimum matters: with Docker's default `"userland-proxy": true`, every exposed port spawns one `docker-proxy` host process per address family (IPv4 + IPv6). A 1001-port range produces ~2000 such processes pinning ~3.5 GB of host RAM that doesn't appear in `docker stats` (host-level, not container-level). The 30-port default above is ~60 processes / ~210 MB — and a single-VP install is ~20 processes / ~70 MB.
+    Почему важно публиковать минимум: при стандартном Docker `"userland-proxy": true` каждый порт создаёт процесс `docker-proxy` на хосте для каждого семейства адресов (IPv4 и IPv6). Диапазон из 1001 порта создаёт около 2000 процессов, занимающих примерно 3,5 ГБ ОЗУ хоста, которые не видны в `docker stats`. Приведённые 30 портов создают около 60 процессов и занимают примерно 210 МБ; установка с одним виртуальным принтером — около 20 процессов и 70 МБ.
 
-    If you can't narrow the exposed range and want a daemon-wide reduction, setting `{ "userland-proxy": false }` in `/etc/docker/daemon.json` removes the `docker-proxy` cost across every container on the host — that's a global trade-off, so the per-VP slicing above is the lower-impact lever.
+    Если сузить диапазон нельзя, параметр `{ "userland-proxy": false }` в `/etc/docker/daemon.json` устраняет затраты `docker-proxy` для всех контейнеров хоста. Это глобальное изменение, поэтому разделение диапазона по принтерам выше имеет меньший эффект на остальную систему.
 
-!!! tip "Telling slicers where to find you (bridge mode only)"
-    A container on a bridge network cannot see the address your slicer uses to reach it, so it has to be told. Two variables, both commented in the snippet above, both set to your Docker host's LAN IP:
+!!! tip "Адрес для слайсеров (только bridge)"
+    Контейнер bridge не видит адрес, по которому слайсер подключается к нему, поэтому его нужно указать. Обе закомментированные выше переменные задаются равными IP-адресу хоста Docker в локальной сети:
 
-    - **`VIRTUAL_PRINTER_ADVERTISE_ADDRESS`** — the address written into the MQTT status the slicer reads its upload destination from. Without it the slicer is handed the container's private IP (e.g. `172.17.0.2`) and the upload has nowhere to go.
-    - **`VIRTUAL_PRINTER_PASV_ADDRESS`** — the address used for the FTP passive data connection.
+    - **`VIRTUAL_PRINTER_ADVERTISE_ADDRESS`** — адрес в состоянии MQTT, откуда слайсер получает адрес загрузки. Без него слайсер получает частный IP контейнера (например, `172.17.0.2`) и загрузка не достигает назначения.
+    - **`VIRTUAL_PRINTER_PASV_ADDRESS`** — адрес пассивного соединения данных FTP.
 
-    Neither is needed on `network_mode: host` or macvlan, where the container already has a LAN-routable address. Those remain the recommended modes — see [Virtual Printer](../features/virtual-printer.md) for what bridge mode still can't do.
+    В `network_mode: host` и macvlan эти переменные не нужны: контейнер уже имеет адрес, маршрутизируемый в локальной сети. Эти режимы остаются рекомендуемыми; ограничения bridge см. на странице [Виртуальный принтер](../features/virtual-printer.md).
 
-### macOS and Windows (Docker Desktop)
+### macOS и Windows (Docker Desktop) {#macos-and-windows-docker-desktop}
 
-Docker Desktop on macOS and Windows runs containers inside a Linux VM, so `network_mode: host` connects to the VM's network, not your computer's network. This means:
+Docker Desktop в macOS и Windows запускает контейнеры внутри виртуальной машины Linux, поэтому `network_mode: host` подключается к сети виртуальной машины, а не компьютера. Это означает:
 
-- **Port 8000 won't be accessible** via localhost
-- **Printer discovery won't work** (the container can't see your LAN)
+- **Порт 8000 недоступен** через localhost
+- **Обнаружение принтеров не работает** (контейнер не видит локальную сеть)
 
-**Solution:** use the **[Bridge Mode](#bridge-mode-linux-and-docker-desktop)** configuration above — the compose snippet, port-mapping rules, and FTP-passive slicing guidance apply identically here.
+**Решение:** используйте настройку **[bridge](#bridge-mode-linux-and-docker-desktop)** выше; фрагмент Compose, правила сопоставления портов и рекомендации по диапазонам пассивного FTP применяются аналогично.
 
-!!! warning "Manual Printer Setup Required"
-    On macOS/Windows, you must add printers manually by IP address. Automatic discovery is not available because Docker Desktop cannot access LAN multicast traffic.
+!!! warning "Необходимо добавить принтер вручную"
+    В macOS/Windows необходимо добавлять принтеры вручную по IP-адресу. Автоматическое обнаружение недоступно, поскольку Docker Desktop не имеет доступа к multicast-трафику локальной сети.
 
-### Printer Discovery in Docker
+### Обнаружение принтеров в Docker {#printer-discovery-in-docker}
 
-!!! note "Virtual Printer SSDP Discovery"
-    SSDP discovery for the **virtual printer** (slicer discovering Bambuddy) also requires host networking or same-LAN connectivity. In Docker bridge mode (macOS/Windows), slicers must add the virtual printer manually by IP address.
+!!! note "Обнаружение виртуального принтера через SSDP"
+    Обнаружение **виртуального принтера** через SSDP (когда слайсер ищет Bambuddy) также требует сети host или подключения к той же локальной сети. В режиме bridge Docker (macOS/Windows) виртуальный принтер нужно добавлять в слайсере вручную по IP.
 
-When running in Docker with `network_mode: host`, Bambuddy uses **subnet scanning** instead of SSDP multicast for printer discovery:
+При запуске Docker с `network_mode: host` Bambuddy использует для обнаружения принтеров **сканирование подсети** вместо multicast SSDP:
 
-1. Click **Add Printer** on the Printers page
-2. Bambuddy detects it's running in Docker and shows a subnet input field
-3. Enter your network range (e.g., `192.168.1.0/24`)
-4. Click **Scan Network** - Bambuddy will probe each IP for Bambu printer ports (8883, 990)
-5. Discovered printers appear in the list with their name and model
+1. Нажмите **Добавить принтер** на странице принтеров
+2. Bambuddy определит запуск в Docker и покажет поле подсети
+3. Введите диапазон сети (например, `192.168.1.0/24`)
+4. Нажмите **Сканировать сеть** — Bambuddy проверит каждый IP на порты принтера Bambu (8883, 990)
+5. Найденные принтеры появятся в списке с названием и моделью
 
-!!! tip "Finding Your Subnet"
-    Your subnet is typically your IP address with the last number replaced by `0/24`. For example:
+!!! tip "Как узнать подсеть"
+    Обычно подсеть — это ваш IP-адрес, последнее число которого заменено на `0/24`. Например:
 
-    - If your computer's IP is `192.168.1.50`, use `192.168.1.0/24`
-    - If your computer's IP is `10.0.0.25`, use `10.0.0.0/24`
+    - Если IP компьютера `192.168.1.50`, используйте `192.168.1.0/24`
+    - Если IP компьютера `10.0.0.25`, используйте `10.0.0.0/24`
 
-!!! info "How It Works"
-    Subnet scanning checks each IP address in the range for open ports 8883 (MQTT) and 990 (FTPS). When both ports are open, it sends an SSDP query to get the printer's name, serial number, and model.
+!!! info "Как это работает"
+    Сканирование проверяет каждый IP-адрес диапазона на открытые порты 8883 (MQTT) и 990 (FTPS). Если оба открыты, отправляется запрос SSDP для получения названия, серийного номера и модели принтера.
 
 ---
 
-## :material-help-circle: Troubleshooting
+## :material-help-circle: Устранение неполадок {#troubleshooting}
 
-### Container Won't Start
+### Контейнер не запускается {#container-wont-start}
 
-Check the logs:
+Проверьте журналы:
 
 ```bash
 docker compose logs bambuddy
 ```
 
-Common issues:
+Распространённые проблемы:
 
-- **Port in use**: Change the port mapping
-- **Permission denied**: Check volume permissions
+- **Порт занят**: измените сопоставление портов
+- **Отказано в доступе**: проверьте разрешения томов
 
-### Can't Connect to Printer
+### Не удаётся подключиться к принтеру {#cant-connect-to-printer}
 
-Ensure your Docker network can reach your printer:
+Убедитесь, что сеть Docker может подключиться к принтеру:
 
 ```bash
 # Test connectivity from inside container
 docker compose exec bambuddy ping YOUR_PRINTER_IP
 ```
 
-If using `bridge` network mode and having issues, try `network_mode: host`.
+При проблемах в режиме сети `bridge` попробуйте `network_mode: host`.
 
-### Database Issues
+### Проблемы с базой данных {#database-issues}
 
-If you need to reset the database:
+Если нужно сбросить базу данных:
 
 ```bash
 docker compose down
@@ -569,19 +552,19 @@ rm bambuddy.db
 docker compose up -d
 ```
 
-!!! danger "Data Loss"
-    This will delete all your print history and settings!
+!!! danger "Потеря данных"
+    Это удалит всю историю печати и настройки!
 
 ---
 
-## :checkered_flag: Next Steps
+## :checkered_flag: Следующие шаги {#next-steps}
 
 <div class="quick-start" markdown>
 
-[:material-printer-3d: **Add Your Printer**<br><small>Connect your first printer</small>](first-printer.md)
+[:material-printer-3d: **Добавить принтер**<br><small>Подключите первый принтер</small>](first-printer.md)
 
-[:material-cellphone: **Mobile Access**<br><small>Access from your phone</small>](mobile.md)
+[:material-cellphone: **Мобильный доступ**<br><small>Работайте с телефона</small>](mobile.md)
 
-[:material-help-circle: **Troubleshooting**<br><small>Having issues?</small>](../reference/troubleshooting.md)
+[:material-help-circle: **Устранение неполадок**<br><small>Возникли проблемы?</small>](../reference/troubleshooting.md)
 
 </div>

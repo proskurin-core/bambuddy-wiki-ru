@@ -1,146 +1,146 @@
 ---
-title: Sidebar Customization
-description: Customize sidebar pages, external links, ordering, visibility, and default navigation
+title: Настройка боковой панели
+description: Настройка страниц, внешних ссылок, порядка, видимости и навигации по умолчанию
 ---
 
-# Sidebar Customization
+# Настройка боковой панели {#sidebar-customization}
 
-Customize the Bambuddy sidebar by showing or hiding built-in pages, reordering navigation items, and adding custom links to external tools and resources.
-
----
-
-## :material-page-layout-sidebar-left: Overview
-
-Sidebar customization lets you:
-
-- Keep your most-used Bambuddy pages near the top
-- Hide built-in pages you do not use often
-- Add one-click links to Spoolman, OctoPrint, Grafana, and other tools
-- Set a default sidebar layout for other users
+Настройте боковую панель Bambuddy: показывайте или скрывайте встроенные страницы, меняйте порядок навигации и добавляйте ссылки на внешние инструменты и ресурсы.
 
 ---
 
-## :material-view-dashboard: Built-in Pages
+## :material-page-layout-sidebar-left: Обзор {#overview}
 
-Built-in Bambuddy pages can be shown, hidden, and reordered from the sidebar settings.
+Настройка боковой панели позволяет:
 
-1. Go to **Settings** > **General**
-2. Open the **Sidebar** pane
-3. Toggle pages on or off
-4. Drag visible pages into your preferred order
-
-Hidden pages are removed from the sidebar navigation. Use this to keep the sidebar focused on the pages you use day to day.
-
-Hidden pages remain accessible by direct URL and from any in-app links that point to them. **Settings** cannot be hidden, so you can always return to the sidebar settings and show pages again.
+- Разместить часто используемые страницы Bambuddy ближе к началу
+- Скрыть редко используемые встроенные страницы
+- Добавить ссылки на Spoolman, OctoPrint, Grafana и другие инструменты
+- Задать расположение боковой панели по умолчанию для других пользователей
 
 ---
 
-## :material-link: External Links
+## :material-view-dashboard: Встроенные страницы {#built-in-pages}
 
-External links add custom sidebar entries for tools and resources outside Bambuddy.
+В настройках боковой панели встроенные страницы Bambuddy можно показывать, скрывать и переставлять.
 
-### Adding a Link
+1. Откройте **Настройки** > **Общие**
+2. Откройте раздел **Боковая панель**
+3. Включите или выключите страницы
+4. Перетащите видимые страницы в нужном порядке
 
-1. Go to **Settings** > **External Links**
-2. Click **Add Link**
-3. Fill in the details:
+Скрытые страницы исчезают из навигации боковой панели. Это позволяет оставить на ней только те страницы, которыми вы пользуетесь ежедневно.
 
-| Field | Description |
+Скрытые страницы остаются доступны по прямому URL и внутренним ссылкам приложения. **Настройки** скрыть нельзя, поэтому вы всегда сможете вернуться к настройкам панели и снова показать страницы.
+
+---
+
+## :material-link: Внешние ссылки {#external-links}
+
+Внешние ссылки добавляют на боковую панель записи для инструментов и ресурсов вне Bambuddy.
+
+### Добавление ссылки {#adding-a-link}
+
+1. Откройте **Настройки** > **Внешние ссылки**
+2. Нажмите **Добавить ссылку**
+3. Заполните поля:
+
+| Поле | Описание |
 |-------|-------------|
-| **Name** | Display name (e.g., "Spoolman") |
-| **URL** | Full URL including protocol |
-| **Icon** | Select an icon |
-| **Open in New Tab** | Open link in new tab |
+| **Название** | Отображаемое название (например, "Spoolman") |
+| **URL** | Полный URL с протоколом |
+| **Значок** | Выберите значок |
+| **Открывать в новой вкладке** | Открывать ссылку в новой вкладке |
 
-4. Click **Save**
+4. Нажмите **Сохранить**
 
-### Editing
+### Изменение {#editing}
 
-1. Click the **edit** icon on a link
-2. Modify any field
-3. Click **Save**
+1. Нажмите значок **изменения** у ссылки
+2. Измените нужные поля
+3. Нажмите **Сохранить**
 
-### Deleting
+### Удаление {#deleting}
 
-1. Click the **delete** icon
-2. Confirm deletion
+1. Нажмите значок **удаления**
+2. Подтвердите удаление
 
-### Icons
+### Значки {#icons}
 
-Choose from Material Design icons:
+Выбирайте значки Material Design:
 
-| Icon | Name | Good For |
+| Значок | Название | Для чего подходит |
 |:----:|------|----------|
-| :material-cylinder: | Spool | Spoolman, filament |
-| :material-printer-3d: | Printer | OctoPrint, Mainsail |
-| :material-chart-line: | Chart | Analytics, Grafana |
-| :material-cog: | Cog | Settings, config |
-| :material-github: | GitHub | Repositories |
-| :material-file-document: | Document | Documentation |
-| :material-home: | Home | Dashboards |
-| :material-link: | Link | Generic links |
+| :material-cylinder: | Катушка | Spoolman, филамент |
+| :material-printer-3d: | Принтер | OctoPrint, Mainsail |
+| :material-chart-line: | График | Аналитика, Grafana |
+| :material-cog: | Шестерёнка | Настройки, конфигурация |
+| :material-github: | GitHub | Репозитории |
+| :material-file-document: | Документ | Документация |
+| :material-home: | Дом | Панели |
+| :material-link: | Ссылка | Общие ссылки |
 
-Additional icons available in the icon picker.
+В окне выбора доступны и другие значки.
 
 ---
 
-## :material-format-list-bulleted: Ordering and Visibility
+## :material-format-list-bulleted: Порядок и видимость {#ordering-and-visibility}
 
-### Reordering
+### Изменение порядка {#reordering}
 
-Built-in pages and external links can be reordered together from the sidebar settings.
+Встроенные страницы и внешние ссылки можно упорядочивать вместе в настройках боковой панели.
 
-1. Go to **Settings** > **General**
-2. Open the **Sidebar** pane
-3. Drag an item to a new position
-4. Release to save the new order
+1. Откройте **Настройки** > **Общие**
+2. Откройте раздел **Боковая панель**
+3. Перетащите элемент на новое место
+4. Отпустите его, чтобы сохранить порядок
 
-### Visibility
+### Видимость {#visibility}
 
-Use sidebar visibility controls to decide what appears in navigation:
+Используйте настройки видимости, чтобы выбрать элементы навигации:
 
-- Built-in pages can be shown or hidden from the sidebar settings
-- **Settings** is always visible and cannot be hidden
-- Hidden built-in pages stay available by direct URL and from in-app links
-- External links cannot be hidden; delete an external link to remove it from the sidebar
+- Встроенные страницы можно показывать и скрывать в настройках панели
+- **Настройки** видны всегда, скрыть их нельзя
+- Скрытые страницы доступны по прямому URL и ссылкам внутри приложения
+- Внешние ссылки скрыть нельзя; чтобы убрать ссылку с панели, удалите её
 
-### External Link Appearance
+### Внешний вид ссылок {#external-link-appearance}
 
-External links display with:
+Внешние ссылки отображаются со следующими элементами:
 
-- Icon (if selected)
-- Name
-- External indicator (if opens new tab)
+- Значок (если выбран)
+- Название
+- Индикатор внешней ссылки (если она открывается в новой вкладке)
 
-### Matching Bambuddy's Theme
+### Соответствие теме Bambuddy {#matching-bambuddys-theme}
 
-A link that opens inside Bambuddy tells the page it shows which theme is active. An app built for the sidebar can use this to switch to light or dark and follow your background, style and accent colour.
+Ссылка, открывающаяся внутри Bambuddy, сообщает отображаемой странице активную тему. Приложение, созданное для боковой панели, может переключаться между светлой и тёмной темами и использовать выбранные фон, стиль и акцентный цвет.
 
-Bambuddy sends the theme with `postMessage`, only to the link's own origin:
+Bambuddy передаёт тему через `postMessage` только источнику самой ссылки:
 
 ```json
 {"type": "bambuddy:theme", "mode": "dark", "style": "vibrant", "background": "cool", "accent": "green", "canNavigate": true}
 ```
 
-It sends it when the page loads, whenever you change the theme, and when the page asks by posting `{"type": "bambuddy:theme-request"}` to its parent. The page should check that the message's origin is your Bambuddy address. Pages that don't listen are unaffected.
+Сообщение отправляется при загрузке страницы, каждом изменении темы и по запросу страницы, которая отправляет родителю `{"type": "bambuddy:theme-request"}`. Страница должна проверять, что источник сообщения — адрес вашего Bambuddy. На страницы, которые не обрабатывают сообщения, это не влияет.
 
-### Opening a Bambuddy Page from the App
+### Открытие страницы Bambuddy из приложения {#opening-a-bambuddy-page-from-the-app}
 
-The frame a link opens in can't navigate the Bambuddy window itself, so a plain link from the app to a Bambuddy page does nothing when clicked. The app can ask Bambuddy instead, by posting this to its parent:
+Фрейм, в котором открывается ссылка, не может сам управлять окном Bambuddy, поэтому обычное нажатие на ссылку приложения к странице Bambuddy ничего не делает. Вместо этого приложение может отправить родителю запрос:
 
 ```json
 {"type": "bambuddy:navigate", "path": "/queue?batch=12"}
 ```
 
-Bambuddy then opens that page, as if you had used its own menu. It accepts the request only from the frame, only from the link's own origin, and only for a path inside Bambuddy (starting with `/`). Anything else, such as another site, is ignored.
+Bambuddy откроет страницу так, как если бы вы воспользовались его меню. Запрос принимается только из фрейма, только от источника самой ссылки и только для пути внутри Bambuddy (начинающегося с `/`). Другие запросы, например к сторонним сайтам, игнорируются.
 
-`canNavigate: true` in the theme message means this Bambuddy takes such requests. Older versions don't send it; an app should open a new tab there instead.
+`canNavigate: true` в сообщении темы означает, что эта версия Bambuddy принимает такие запросы. Старые версии не отправляют этот параметр; там приложение должно открывать новую вкладку.
 
-### A Count on the Link
+### Счётчик на ссылке {#a-count-on-the-link}
 
-An app can show a number on its sidebar link, the way the print queue shows how many jobs wait. Bambuddy Orders uses it for its To do: orders that need you and top-ups to count.
+Приложение может показывать число рядом со своей ссылкой на панели, как очередь печати показывает количество ожидающих заданий. Bambuddy Orders использует его для списка дел: заказов, ожидающих вашего действия, и пополнений, которые нужно пересчитать.
 
-The app sends its own address and the count:
+Приложение отправляет свой адрес и число:
 
 ```http
 PUT /api/v1/external-links/badge
@@ -149,138 +149,138 @@ X-API-Key: bb_...
 {"url": "http://192.168.1.20:8090", "count": 3}
 ```
 
-Bambuddy shows the count on every link pointing at that address (same scheme, host, port and path; a trailing slash, the default port written out, upper case in the host and a login in the link don't matter) and answers `404` when none does. The API key needs **Send notifications**, the same permission an app needs to send messages. The count shows while the app keeps reporting it: one not updated for ten minutes disappears, so an app that stopped doesn't leave an old number behind. `0` shows nothing; above 99 shows `99+`.
+Bambuddy показывает число на каждой ссылке с этим адресом (совпадают схема, хост, порт и путь; конечная косая черта, явно указанный стандартный порт, регистр хоста и логин в ссылке не имеют значения). Если таких ссылок нет, возвращается `404`. Ключу API необходимо разрешение **Отправка уведомлений**, то же, что нужно приложению для отправки сообщений. Число отображается, пока приложение его обновляет: если оно не обновлялось десять минут, оно исчезает, чтобы после остановки приложения не оставалось устаревшее значение. `0` ничего не показывает; значения выше 99 отображаются как `99+`.
 
 ---
 
-## :material-lightbulb: Use Cases
+## :material-lightbulb: Примеры использования {#use-cases}
 
-### Spoolman
+### Spoolman {#spoolman}
 
-Link to your filament inventory:
+Ссылка на учёт филамента:
 
-| Field | Value |
+| Поле | Значение |
 |-------|-------|
-| Name | Spoolman |
+| Название | Spoolman |
 | URL | `http://192.168.1.50:7912` |
-| Icon | :material-database-sync-outline: |
-| Sidebar | Yes |
-| New Tab | Yes |
+| Значок | :material-database-sync-outline: |
+| Боковая панель | Да |
+| Новая вкладка | Да |
 
-### OctoPrint / Mainsail
+### OctoPrint / Mainsail {#octoprint-mainsail}
 
-Link to printer web interfaces:
+Ссылка на веб-интерфейс принтера:
 
-| Field | Value |
+| Поле | Значение |
 |-------|-------|
-| Name | Mainsail |
+| Название | Mainsail |
 | URL | `http://192.168.1.100` |
-| Icon | :material-printer-3d: |
-| Sidebar | Yes |
-| New Tab | Yes |
+| Значок | :material-printer-3d: |
+| Боковая панель | Да |
+| Новая вкладка | Да |
 
-### Grafana Dashboard
+### Панель Grafana {#grafana-dashboard}
 
-Link to monitoring dashboards:
+Ссылка на панели мониторинга:
 
-| Field | Value |
+| Поле | Значение |
 |-------|-------|
-| Name | Grafana |
+| Название | Grafana |
 | URL | `http://grafana:3000/d/printers` |
-| Icon | :material-chart-line: |
-| Sidebar | Yes |
-| New Tab | Yes |
+| Значок | :material-chart-line: |
+| Боковая панель | Да |
+| Новая вкладка | Да |
 
-### Documentation
+### Документация {#documentation}
 
-Link to manuals or wikis:
+Ссылка на руководства или Wiki:
 
-| Field | Value |
+| Поле | Значение |
 |-------|-------|
-| Name | Docs |
+| Название | Docs |
 | URL | `https://github.com/maziggy/bambuddy-wiki` |
-| Icon | :material-file-document: |
-| Sidebar | Yes |
-| New Tab | Yes |
+| Значок | :material-file-document: |
+| Боковая панель | Да |
+| Новая вкладка | Да |
 
-### Printables / Thingiverse
+### Printables / Thingiverse {#printables-thingiverse}
 
-Quick access to model sites:
+Быстрый доступ к сайтам моделей:
 
-| Field | Value |
+| Поле | Значение |
 |-------|-------|
-| Name | Printables |
+| Название | Printables |
 | URL | `https://www.printables.com` |
-| Icon | :material-cube: |
-| Sidebar | Yes |
-| New Tab | Yes |
+| Значок | :material-cube: |
+| Боковая панель | Да |
+| Новая вкладка | Да |
 
 ---
 
-## :material-sort: Admin Default Sidebar Order
+## :material-sort: Порядок панели по умолчанию от администратора {#admin-default-sidebar-order}
 
-Admins can set a default sidebar navigation layout that applies to users who have not customized their own sidebar. The default captures the saved order for built-in pages and external links, plus the visibility state for built-in pages.
+Администраторы могут задать расположение боковой панели по умолчанию для пользователей, которые ещё не настроили свою панель. Сохраняются порядок встроенных страниц и внешних ссылок, а также видимость встроенных страниц.
 
-### Setting a Default
+### Установка по умолчанию {#setting-a-default}
 
-1. Arrange sidebar items in your preferred order
-2. Show or hide the built-in pages you want included
-3. Go to **Settings** > **General** > **Sidebar Order**
-4. Toggle **Set Default** on
+1. Расположите элементы панели в нужном порядке
+2. Покажите или скройте нужные встроенные страницы
+3. Откройте **Настройки** > **Общие** > **Порядок боковой панели**
+4. Включите **Установить по умолчанию**
 
-The current sidebar layout is saved as the default for all users.
+Текущее расположение сохранится как стандартное для всех пользователей.
 
-### How It Works
+### Как это работает {#how-it-works}
 
-| Scenario | Behavior |
+| Сценарий | Поведение |
 |----------|----------|
-| **New user** | Automatically gets the admin-set sidebar layout |
-| **User hasn't customized** | Gets the admin-set layout on next page load |
-| **User has customized** | Keeps their own layout (admin default is not re-applied) |
-| **Admin toggles off** | Default is cleared; existing user layouts are unchanged |
+| **Новый пользователь** | Автоматически получает расположение, заданное администратором |
+| **Пользователь не настраивал панель** | Получает расположение администратора при следующей загрузке страницы |
+| **Пользователь настроил панель** | Сохраняет собственное расположение; стандартное повторно не применяется |
+| **Администратор выключает настройку** | Стандартное расположение сбрасывается, существующие пользовательские настройки не меняются |
 
-!!! note "Permission Required"
-    The Set Default toggle is only visible to users with **Settings: Update** permission (`settings:update`).
+!!! note "Необходимое разрешение"
+    Переключатель установки по умолчанию виден только пользователям с разрешением **Настройки: изменение** (`settings:update`).
 
-!!! tip "One-Time Application"
-    The default layout is applied once per user. If you update the default, users who already received a previous default will not be affected. To re-apply it, users can click **Reset** on their sidebar order first.
-
----
-
-## :material-keyboard: Keyboard Shortcuts
-
-Visible sidebar entries can be accessed via keyboard:
-
-- Sidebar items are assigned number shortcuts
-- Press the assigned number to navigate
-
-!!! note "Shortcut Assignment"
-    Shortcut assignment follows the current sidebar layout. Reordering items or hiding built-in pages updates the number shortcuts automatically.
+!!! tip "Однократное применение"
+    Стандартное расположение применяется для каждого пользователя один раз. При изменении стандарта пользователи, уже получившие предыдущий вариант, не будут затронуты. Чтобы применить новый вариант, пользователь может сначала нажать **Сбросить** в настройках порядка панели.
 
 ---
 
-## :material-backup-restore: Backup Integration
+## :material-keyboard: Сочетания клавиш {#keyboard-shortcuts}
 
-Sidebar customization is included in backups:
+Видимые элементы панели доступны с клавиатуры:
 
-- External links are exported with database backups
-- Sidebar order and built-in page visibility settings are restored when importing a backup
-- No manual re-entry needed after restore
+- Элементам назначаются цифровые клавиши
+- Нажмите назначенную цифру для перехода
 
-[:material-arrow-right: Backup & Restore](backup.md)
+!!! note "Назначение клавиш"
+    Клавиши назначаются в соответствии с текущим расположением панели. При изменении порядка или скрытии встроенных страниц назначения обновляются автоматически.
 
 ---
 
-## :material-lightbulb: Tips
+## :material-backup-restore: Резервное копирование {#backup-integration}
 
-!!! tip "Related Tools"
-    Add links to tools you use alongside Bambuddy for quick switching.
+Настройки панели включаются в резервные копии:
 
-!!! tip "Open in New Tab"
-    Enable "New Tab" to keep Bambuddy open while visiting links.
+- Внешние ссылки экспортируются вместе с резервной копией базы данных
+- Порядок панели и видимость встроенных страниц восстанавливаются при импорте копии
+- После восстановления повторно вводить данные не нужно
 
-!!! tip "Organize by Usage"
-    Put most-used pages and links at the top via drag-and-drop.
+[:material-arrow-right: Резервное копирование и восстановление](backup.md)
 
-!!! tip "Keep It Clean"
-    Hide rarely-used pages and links from the sidebar to reduce clutter.
+---
+
+## :material-lightbulb: Советы {#tips}
+
+!!! tip "Связанные инструменты"
+    Добавьте ссылки на инструменты, которые используете вместе с Bambuddy, для быстрого переключения.
+
+!!! tip "Открытие в новой вкладке"
+    Включите новую вкладку, чтобы Bambuddy оставался открытым при переходе по ссылке.
+
+!!! tip "Порядок по частоте использования"
+    Перетащите наиболее используемые страницы и ссылки наверх.
+
+!!! tip "Поддерживайте порядок"
+    Скрывайте редко используемые страницы и ссылки, чтобы не загромождать панель.

@@ -1,223 +1,103 @@
 ---
-title: MakerWorld Integration
-description: Import and print MakerWorld models directly from Bambuddy — paste a URL, pick a plate, slice and print. No Bambu Handy app, no browser extension, no cookie paste.
+title: Интеграция с MakerWorld
+description: Импортируйте и печатайте модели MakerWorld из Bambuddy — вставьте ссылку, выберите пластину, нарежьте модель и запустите печать. Bambu Handy, расширение браузера и вставка cookie не нужны.
 ---
 
-# MakerWorld Integration
+# Интеграция с MakerWorld {#makerworld-integration}
 
-Paste any MakerWorld model URL into Bambuddy and save or slice the 3MF
-directly — without leaving Bambuddy for the Bambu Handy app, a browser
-extension, or a cookie-paste escape hatch.
+Вставьте URL модели MakerWorld в Bambuddy и сохраните или нарежьте 3MF, не переходя в приложение Bambu Handy и не используя расширение браузера или ручную вставку cookie.
 
-This was the single reason most users kept Handy installed after moving
-their printers to LAN-only mode. With this integration, you can finally
-uninstall it.
+Для многих пользователей это была единственная причина оставить Handy после перевода принтеров в режим локальной сети. С этой интеграцией приложение можно удалить.
 
 ---
 
-## :material-earth: What it does
+## :material-earth: Возможности {#what-it-does}
 
-- **Paste a URL** — any `https://makerworld.com/en/models/…` link
-  (locale prefix, slug, and `#profileId-…` fragment all accepted).
-- **Preview the model** — title, summary, creator, license, download
-  count, full plate list with per-plate filament counts, AMS
-  requirement, and per-plate image gallery with keyboard-navigable
-  lightbox.
-- **Save** — downloads the 3MF and files it in a dedicated
-  **MakerWorld** folder in File Manager (auto-created on first use; you
-  can override per-import via the folder picker).
-- **Save & Slice in Bambu Studio / OrcaSlicer** — same as Save, plus
-  hands the file off to your slicer. Which slicer depends on
-  **Settings → Workflow → Slicer**: with **Use Slicer API** on, the
-  in-app SliceModal opens against the API sidecar (**Preferred
-  Slicer**); with it off, the desktop slicer set under **Open in
-  Slicer** receives the URI handoff. The button label tracks whichever
-  it'll actually dispatch. MakerWorld plates are **unsliced source
-  files**, so they can't be sent straight to the printer — the slicer
-  is the right next step.
-- **Keeps the creator's print settings** — MakerWorld models are often
-  published with deliberate tweaks (five walls, 100% infill, a 0.1 mm
-  first layer). When you slice an imported plate with the
-  [slicer sidecar](slicer-api.md), the slice dialog lists exactly which
-  settings the creator changed and carries the printer-independent ones
-  onto your own printer's profile by default. See
-  [Settings the file's designer changed](slicer-api.md#settings-the-files-designer-changed).
-- **Import all plates** — sequentially imports every plate of a
-  multi-plate model in one click. Progress is shown as "Importing
-  2/5 · Downloading · 12s".
-- **Recent imports sidebar** — the last 10 MakerWorld imports you can
-  open in the File Manager, with one-click jump to File Manager, slicer, or
-  back to MakerWorld.
-- **Per-plate delete** — removes an imported plate from your library
-  (file + row) via the standard Bambuddy confirm modal. The plate
-  can be re-imported from MakerWorld any time.
-- **Duplicate detection** — each plate is stored with a canonical
-  source URL (`…/models/{id}#profileId-{pid}`), so re-importing the
-  same plate is a no-op and Bambuddy surfaces "Already in library" on
-  the row. That counts only copies you can open in the File Manager: if
-  you see only your own files, a plate a colleague imported is imported
-  again as yours.
+- **Вставка URL** — подходит любая ссылка `https://makerworld.com/en/models/…`; поддерживаются языковой префикс, текстовый идентификатор и фрагмент `#profileId-…`.
+- **Предпросмотр модели** — название, описание, автор, лицензия, число загрузок, полный список пластин с количеством филаментов, необходимость AMS и галерея изображений каждой пластины с просмотром и навигацией с клавиатуры.
+- **Сохранить** — загружает 3MF в отдельную папку **MakerWorld** файлового менеджера. Она создаётся при первом использовании; для каждого импорта можно выбрать другую папку.
+- **Сохранить и нарезать в Bambu Studio / OrcaSlicer** — сохраняет файл и передаёт его в слайсер. Выбор зависит от **Настройки → Рабочий процесс → Слайсер**: при включённом **Использовать API слайсера** открывается диалог нарезки приложения с дополнительным контейнером API (**Предпочитаемый слайсер**); иначе URI передаётся настольному слайсеру, указанному в **Открыть в слайсере**. Название кнопки соответствует выбранному варианту. Пластины MakerWorld — **ненарезанные исходные файлы**, поэтому их нельзя отправить принтеру напрямую: сначала их нужно нарезать.
+- **Сохранение настроек автора** — модели MakerWorld часто публикуются с намеренными изменениями (пять стенок, 100% заполнения, первый слой 0,1 мм). При нарезке импортированной пластины с помощью [дополнительного контейнера слайсера](slicer-api.md) диалог перечисляет изменённые автором настройки и по умолчанию переносит не зависящие от принтера значения в профиль вашего принтера. См. [Настройки, изменённые автором файла](slicer-api.md#settings-the-files-designer-changed).
+- **Импорт всех пластин** — последовательно импортирует все пластины модели одним нажатием. Прогресс отображается, например, как «Импорт 2/5 · Загрузка · 12 с».
+- **Боковая панель недавних импортов** — последние 10 импортов MakerWorld, доступных в файловом менеджере, с переходом в менеджер, слайсер или обратно в MakerWorld.
+- **Удаление отдельных пластин** — удаляет импортированную пластину из библиотеки (файл и строку) через стандартное окно подтверждения Bambuddy. Её можно снова импортировать из MakerWorld в любое время.
+- **Обнаружение дубликатов** — каждая пластина сохраняется с каноническим URL источника (`…/models/{id}#profileId-{pid}`). Повторный импорт той же пластины ничего не меняет, а Bambuddy показывает в строке «Уже в библиотеке». Учитываются только копии, доступные вам в файловом менеджере: если вы видите только свои файлы, пластина, импортированная коллегой, будет импортирована снова как ваша.
 
 ---
 
-## :material-login: Prerequisites
+## :material-login: Перед началом работы {#prerequisites}
 
-- A **Bambu Cloud account** linked to Bambuddy on the **Profiles** page
-  (**Cloud Profiles** tab). The same bearer you use for firmware checks
-  and slicer settings is reused for MakerWorld downloads — no separate
-  login, no companion extension, no cookie paste.
-- The **`makerworld:view`** permission (browse / resolve / see recent
-  imports) and/or **`makerworld:import`** permission (Save / Save &
-  Slice / Delete). The default Administrators and Operators groups
-  have both. Viewers get `makerworld:view` only.
+- **Учётная запись Bambu Cloud**, связанная с Bambuddy на странице **Профили** (вкладка **Облачные профили**). Для загрузок MakerWorld используется тот же bearer-токен, что для проверки прошивок и настроек слайсера: отдельный вход, расширение и вставка cookie не требуются.
+- Разрешение **`makerworld:view`** (просмотр, обработка ссылок и недавние импорты) и/или **`makerworld:import`** (сохранение, сохранение с нарезкой и удаление). У групп администраторов и операторов по умолчанию есть оба разрешения. Наблюдатели получают только `makerworld:view`.
 
-Without a Bambu Cloud token you can still paste a URL and read the
-model's public metadata, but downloads require MakerWorld
-authentication — a clear sign-in banner appears on the page when the
-token is missing.
+Без токена Bambu Cloud можно вставить URL и прочитать публичные метаданные модели, но загрузка требует аутентификации MakerWorld. Если токена нет, на странице появится уведомление о необходимости входа.
 
-Bambu Cloud access tokens last around 90 days and cannot be renewed
-without signing in again. Bambuddy detects this for you: when the token
-expires, the MakerWorld page says **Bambu Cloud sign-in expired** and
-disables its import buttons rather than letting a download fail, and the
-Profiles page shows the login form again with the same notice.
-**Sign in again on the Profiles page** and imports resume immediately.
-See [Cloud Profiles](cloud-profiles.md#when-the-sign-in-expires).
+Токены Bambu Cloud действуют около 90 дней; продлить их без повторного входа нельзя. Bambuddy обнаруживает истечение срока: страница MakerWorld сообщает, что **срок входа в Bambu Cloud истёк**, и отключает кнопки импорта, а на странице профилей снова отображается форма входа с тем же уведомлением. **Войдите повторно на странице профилей**, и импорт сразу возобновится. См. [Облачные профили](cloud-profiles.md#when-the-sign-in-expires).
 
 ---
 
-## :material-cursor-default-click: How to use it
+## :material-cursor-default-click: Как пользоваться {#how-to-use-it}
 
-1. Open **Model Sources** from the sidebar and pick the **MakerWorld**
-   tab. (The entry was called *MakerWorld* until the
-   [Manyfold](manyfold.md) tab joined it; old `/makerworld` links still
-   open this tab.)
-2. Paste a MakerWorld URL into the input field and click **Resolve**.
-3. Review the model details — cover image, plate list with filament
-   count, AMS requirement, per-plate images (click the cover for a
-   lightbox).
-4. (Optional) Change the target folder in the **Import to file
-   manager** dropdown; default is the auto-created *MakerWorld* folder.
-5. For each plate, choose:
-   - **Save** — file goes to the library, visible in File Manager.
-   - **Save & Slice in Bambu Studio / OrcaSlicer** — same, plus the
-     slicer opens with the file loaded.
-   - Or click **Import all** to import every plate sequentially.
-6. After import, each plate row gets an inline action strip with
-   **View in File Manager**, **Open in Bambu Studio**, **Open in
-   OrcaSlicer**, and a trash button to delete it again.
+1. Откройте **Источники моделей** в боковой панели и выберите вкладку **MakerWorld**. До появления вкладки [Manyfold](manyfold.md) этот пункт назывался *MakerWorld*; старые ссылки `/makerworld` по-прежнему открывают эту вкладку.
+2. Вставьте URL MakerWorld в поле и нажмите кнопку обработки ссылки.
+3. Просмотрите сведения: обложку, список пластин с количеством филаментов, необходимость AMS и изображения пластин. Нажмите обложку для просмотра.
+4. При необходимости измените целевую папку в списке **Импортировать в файловый менеджер**; по умолчанию используется автоматически созданная папка *MakerWorld*.
+5. Для каждой пластины выберите:
+   - **Сохранить** — файл попадёт в библиотеку и будет виден в файловом менеджере.
+   - **Сохранить и нарезать в Bambu Studio / OrcaSlicer** — файл также откроется в слайсере.
+   - Либо нажмите **Импортировать все**, чтобы последовательно импортировать все пластины.
+6. После импорта в каждой строке пластины появляются действия **Открыть в файловом менеджере**, **Открыть в Bambu Studio**, **Открыть в OrcaSlicer** и кнопка удаления.
 
 ---
 
-## :material-alert-circle-outline: Limitations
+## :material-alert-circle-outline: Ограничения {#limitations}
 
-- **Browse / search is not available.** MakerWorld's public search
-  endpoint returns empty results for server-originated requests
-  (requires browser-specific session state we can't reproduce from a
-  backend). Discovery happens outside Bambuddy — Reddit, YouTube,
-  shared links — and the URL-paste flow catches you at the moment you
-  actually want to print.
-- **Unsliced source files only.** MakerWorld plates are project files;
-  Bambuddy can save them to your library but can't send them to a
-  printer directly. That's why the per-plate action is **Save & Slice
-  in your slicer**, not **Print Now** — the slicer is the correct tool
-  for that step.
-- **Keep the creator's settings when you server-side slice.** By default
-  [server-side slicing](slicer-api.md) applies *your* printer/process/
-  filament presets, which replace the tweaks the model's author baked in
-  (wall count, infill, and so on). To slice it exactly as they set it up,
-  pick the printer the model was designed for and tick **Use the file's
-  built-in settings** in the slice modal — see
-  [Slice as designed](slicer-api.md#slice-as-designed-keep-the-files-embedded-settings).
-- **Download URLs are short-lived.** MakerWorld returns a signed CDN
-  URL valid for ~5 minutes. Bambuddy fetches the 3MF immediately and
-  stores it locally; the signed URL is never cached.
-- **Bambu Cloud token has ~90 day lifetime**, and Bambu offers no way to
-  renew it without a fresh sign-in. Bambuddy notices when it expires and
-  says so; re-authenticate on the **Profiles** page (**Cloud Profiles**
-  tab) and imports resume.
-- **Bambu may challenge your network with a CAPTCHA.** Imports then fail
-  with a message about confirming you are not a robot, which cannot be
-  answered from a backend. It is keyed to your public IP address and
-  normally clears within a few hours; use **Open on MakerWorld** and
-  import the 3MF manually meanwhile. See
-  [Bambu Cloud is asking for a CAPTCHA](../reference/troubleshooting.md#bambu-cloud-captcha).
+- **Просмотр каталога и поиск недоступны.** Публичная конечная точка поиска MakerWorld возвращает пустые результаты на запросы с сервера: ей требуется состояние сеанса браузера, которое нельзя воспроизвести на сервере. Ищите модели вне Bambuddy — на Reddit, YouTube или по общим ссылкам — и вставляйте URL, когда будете готовы печатать.
+- **Только ненарезанные исходные файлы.** Пластины MakerWorld — файлы проекта. Bambuddy может сохранить их в библиотеку, но не может отправить принтеру напрямую. Поэтому действие называется **Сохранить и нарезать в слайсере**, а не **Печатать сейчас**: сначала нужна нарезка.
+- **Сохранение настроек автора при нарезке на сервере.** По умолчанию [нарезка на сервере](slicer-api.md) применяет *ваши* пресеты принтера, процесса и филамента, заменяя настройки автора модели (число стенок, заполнение и т. д.). Чтобы нарезать модель точно по настройкам автора, выберите принтер, для которого она создана, и отметьте **Использовать встроенные настройки файла** в диалоге нарезки — см. [Нарезка по замыслу автора](slicer-api.md#slice-as-designed-keep-the-files-embedded-settings).
+- **Срок действия ссылок загрузки ограничен.** MakerWorld возвращает подписанный CDN URL, действительный около пяти минут. Bambuddy сразу загружает 3MF и сохраняет его локально; подписанный URL не кэшируется.
+- **Токен Bambu Cloud действует около 90 дней**, и Bambu не предоставляет способ продлить его без повторного входа. Bambuddy сообщит об истечении срока; войдите снова на странице **Профили** (вкладка **Облачные профили**), чтобы возобновить импорт.
+- **Bambu может запросить CAPTCHA для вашей сети.** Тогда импорт завершается сообщением с просьбой подтвердить, что вы не робот; с сервера ответить на запрос невозможно. Проверка привязана к публичному IP-адресу и обычно снимается в течение нескольких часов. Пока используйте **Открыть в MakerWorld** и импортируйте 3MF вручную. См. [Bambu Cloud запрашивает CAPTCHA](../reference/troubleshooting.md#bambu-cloud-captcha).
 
 ---
 
-## :material-shield-check: Privacy, security, and compliance
+## :material-shield-check: Конфиденциальность и безопасность {#privacy-security-and-compliance}
 
-- Bambuddy is **not affiliated with or endorsed by** MakerWorld or
-  Bambu Lab.
-- The integration only uses community-documented endpoints
-  (`api.bambulab.com/v1/design-service/*` for metadata,
-  `api.bambulab.com/v1/iot-service/api/user/profile/{pid}` for the
-  download URL). Credit to Pr0zak/YASTL#51 for publishing the
-  iot-service endpoint shape.
-- Thumbnails and MakerWorld CDN images are **proxied through Bambuddy**
-  (`/api/v1/makerworld/thumbnail`) so the user's IP address is never
-  exposed to MakerWorld's CDN on page render. The proxy enforces a
-  host allowlist and does not follow redirects.
-- The MakerWorld description HTML is sanitised with **DOMPurify**
-  before rendering — user-authored content can't inject scripts, event
-  handlers, or javascript: URLs.
-- The Bambu Cloud bearer is used **only** against `api.bambulab.com`;
-  it is never forwarded to the MakerWorld CDN or to S3 presigned
-  fetches.
-- No credentials are scraped or forwarded beyond the existing Bambu
-  Cloud token already stored in your Bambuddy account.
-- Filenames from MakerWorld responses are sanitised (`os.path.basename`
-  strip) before persistence so a malicious response cannot surface
-  path-traversal strings into the UI. On-disk storage uses UUID
-  filenames regardless.
+- Bambuddy **не связан с MakerWorld или Bambu Lab и не одобрен ими**.
+- Интеграция использует только конечные точки, документированные сообществом (`api.bambulab.com/v1/design-service/*` для метаданных и `api.bambulab.com/v1/iot-service/api/user/profile/{pid}` для URL загрузки). Благодарим Pr0zak/YASTL#51 за публикацию формата конечной точки iot-service.
+- Миниатюры и изображения CDN MakerWorld **проксируются через Bambuddy** (`/api/v1/makerworld/thumbnail`), поэтому при отображении страницы IP-адрес пользователя не раскрывается CDN MakerWorld. Прокси использует список разрешённых хостов и не следует перенаправлениям.
+- HTML описания MakerWorld перед отображением очищается с помощью **DOMPurify**: пользовательский контент не может внедрять скрипты, обработчики событий или URL javascript:.
+- Bearer-токен Bambu Cloud используется **только** для `api.bambulab.com`; он никогда не передаётся CDN MakerWorld или при загрузке по предварительно подписанным URL S3.
+- Другие учётные данные не извлекаются и не передаются; используется только токен Bambu Cloud, уже сохранённый в вашей учётной записи Bambuddy.
+- Перед сохранением имена файлов из ответов MakerWorld очищаются через `os.path.basename`, чтобы вредоносный ответ не мог вывести в интерфейс строки обхода каталогов. На диске в любом случае используются имена файлов UUID.
 
 ---
 
-## :material-file-code: Developer reference
+## :material-file-code: Справка для разработчиков {#developer-reference}
 
-### Endpoints
+### Конечные точки {#endpoints}
 
-| Endpoint | Method | Auth | Purpose |
+| Конечная точка | Метод | Разрешение | Назначение |
 |---|---|---|---|
-| `/api/v1/makerworld/status` | GET | `makerworld:view` | Report Bambu Cloud token presence and regional host |
-| `/api/v1/makerworld/resolve` | POST | `makerworld:view` | Resolve URL → design + plate list + already-imported profile IDs |
-| `/api/v1/makerworld/import` | POST | `makerworld:import` | Download a specific plate (`profile_id`) into the library |
-| `/api/v1/makerworld/recent-imports` | GET | `makerworld:view` | Last N MakerWorld library files (default 10, clamped [1, 50]) |
-| `/api/v1/makerworld/thumbnail` | GET | public | Proxy the MakerWorld / public-cdn CDN for `<img>` rendering (host-allowlisted, no redirects) |
+| `/api/v1/makerworld/status` | GET | `makerworld:view` | Наличие токена Bambu Cloud и региональный хост |
+| `/api/v1/makerworld/resolve` | POST | `makerworld:view` | Преобразование URL в модель, список пластин и ID уже импортированных профилей |
+| `/api/v1/makerworld/import` | POST | `makerworld:import` | Загрузка указанной пластины (`profile_id`) в библиотеку |
+| `/api/v1/makerworld/recent-imports` | GET | `makerworld:view` | Последние N файлов MakerWorld в библиотеке (по умолчанию 10, диапазон [1, 50]) |
+| `/api/v1/makerworld/thumbnail` | GET | public | Проксирование CDN MakerWorld / public-cdn для отображения `<img>` (список разрешённых хостов, без перенаправлений) |
 
-### Upstream flow
+### Процесс на стороне сервиса {#upstream-flow}
 
-The actually-working upstream pattern (undocumented by Bambu; reverse
-engineered from Pr0zak/YASTL#51):
+Рабочая последовательность, не документированная Bambu и восстановленная по Pr0zak/YASTL#51:
 
-1. `GET https://api.bambulab.com/v1/design-service/design/{designId}` —
-   public metadata. Returns `{id, modelId, title, coverUrl, instances[], …}`.
-   The `modelId` field is the alphanumeric identifier
-   (e.g. `US2bb73b106683e5`) — **different from** the integer
-   `designId` from the URL.
-2. `GET https://api.bambulab.com/v1/iot-service/api/user/profile/{profileId}?model_id={modelId}`
-   with `Authorization: Bearer {cloud_token}`. Returns
-   `{url, name}` where `url` is a 5-minute-TTL presigned S3 URL
-   (`s3.<region>.amazonaws.com/...?at=…&exp=…&key=…`).
-3. Fetch the presigned URL **without following redirects** and without
-   re-encoding the query string — S3 signatures are computed over the
-   exact query bytes, so httpx / any normalising client breaks them
-   with `SignatureDoesNotMatch`. Bambuddy uses `urllib.request` with a
-   no-op `HTTPRedirectHandler` for this step.
+1. `GET https://api.bambulab.com/v1/design-service/design/{designId}` — публичные метаданные. Возвращает `{id, modelId, title, coverUrl, instances[], …}`. Поле `modelId` — буквенно-цифровой идентификатор (например, `US2bb73b106683e5`), **отличающийся** от целочисленного `designId` из URL.
+2. `GET https://api.bambulab.com/v1/iot-service/api/user/profile/{profileId}?model_id={modelId}` с `Authorization: Bearer {cloud_token}`. Возвращает `{url, name}`, где `url` — предварительно подписанный URL S3 со сроком действия пять минут (`s3.<region>.amazonaws.com/...?at=…&exp=…&key=…`).
+3. Загрузите данные по подписанному URL **без перехода по перенаправлениям** и без повторного кодирования строки запроса: подписи S3 рассчитываются по точным байтам запроса, поэтому httpx или другой нормализующий клиент вызывает ошибку `SignatureDoesNotMatch`. Bambuddy использует для этого `urllib.request` с `HTTPRedirectHandler`, который не выполняет перенаправления.
 
-The older `makerworld.com/api/v1/design-service/instance/{id}/f3mf`
-path that some reverse-engineering projects document is cookie-gated
-at Cloudflare and returns a generic "Please log in to download models"
-regardless of bearer. The `api.bambulab.com` path does not go through
-that gate.
+Старый путь `makerworld.com/api/v1/design-service/instance/{id}/f3mf`, упоминаемый в некоторых проектах обратной разработки, защищён проверкой cookie Cloudflare и независимо от bearer-токена возвращает общее сообщение «Please log in to download models». Путь `api.bambulab.com` эту проверку не проходит.
 
-### Code
+### Код {#code}
 
-- `backend/app/services/makerworld.py` — API client + download logic +
-  thumbnail proxy helpers.
-- `backend/app/api/routes/makerworld.py` — FastAPI routes.
-- `backend/app/schemas/makerworld.py` — Pydantic request/response
-  models.
-- `frontend/src/pages/MakerworldPage.tsx` — entire UI (URL paste,
-  preview, plates, image gallery, recent imports sidebar, confirm
-  modal, in-flight progress labels).
+- `backend/app/services/makerworld.py` — клиент API, логика загрузки и вспомогательные функции прокси миниатюр.
+- `backend/app/api/routes/makerworld.py` — маршруты FastAPI.
+- `backend/app/schemas/makerworld.py` — модели запросов и ответов Pydantic.
+- `frontend/src/pages/MakerworldPage.tsx` — весь интерфейс: вставка URL, предпросмотр, пластины, галерея, панель недавних импортов, окно подтверждения и индикаторы прогресса.

@@ -1,6 +1,6 @@
 ---
-title: API Keys & Webhooks
-description: REST API with granular permissions, per-user ownership, and opt-in cloud access for external integrations
+title: Ключи API и вебхуки
+description: REST API с детальными разрешениями, владельцами ключей и необязательным облачным доступом для внешних интеграций
 keywords:
   - api key
   - api keys
@@ -15,370 +15,231 @@ keywords:
   - automation
 ---
 
-# API Keys & Webhooks
+# Ключи API и вебхуки {#api-keys-webhooks}
 
-Integrate Bambuddy with external tools using API keys and webhooks.
+Интегрируйте Bambuddy с внешними инструментами с помощью ключей API и вебхуков.
 
-!!! tip "New in v0.2.4 — Cloud access for API keys ([#1182](https://github.com/maziggy/bambuddy/issues/1182))"
-    API keys now carry an **owner** (the user who created them) and an opt-in
-    **cloud-access scope**. Tick *Allow cloud access* on a new key to let it
-    read its owner's Bambu Cloud presets, filament catalogue, and device list
-    via `/api/v1/cloud/*` — perfect for headless slicing workflows. Default
-    is **off**, so existing automation never silently gains cloud-read
-    access on upgrade. Jump to [Cloud Access Scope](#cloud-access-scope)
-    below for the details.
+!!! tip "Новое в v0.2.4 — доступ к облаку для ключей API ([#1182](https://github.com/maziggy/bambuddy/issues/1182))"
+    У ключей API теперь есть **владелец** (создавший их пользователь) и необязательная **область доступа к облаку**. Включите *Разрешить доступ к облаку* при создании ключа, чтобы читать пресеты Bambu Cloud, каталог филамента и список устройств владельца через `/api/v1/cloud/*` — это удобно для автоматической нарезки без интерфейса. По умолчанию доступ **выключен**, поэтому после обновления существующие автоматизации не получают его незаметно. Подробности см. в разделе [Область доступа к облаку](#cloud-access-scope).
 
-![API Keys Settings](../assets/settings_api_keys.png){ .screenshot }
+![Настройки ключей API](../assets/settings_api_keys.png){ .screenshot }
 
 ---
 
-## :material-key: API Keys
+## :material-key: Ключи API {#api-keys}
 
-### Overview
+### Обзор {#overview}
 
-API keys allow external applications to:
+Ключи API позволяют внешним приложениям:
 
-- Access Bambuddy data
-- Trigger actions
-- Integrate with automation tools
+- Получать данные Bambuddy
+- Запускать действия
+- Интегрироваться с инструментами автоматизации
 
-### Creating an API Key
+### Создание ключа API {#creating-an-api-key}
 
-1. Go to **Settings** > **API Keys**
-2. Click **Create API Key**
-3. Enter a name (e.g., "Home Assistant")
-4. Select permissions
-5. Click **Create**
-6. **Copy the key immediately** - it won't be shown again!
+1. Откройте **Настройки** > **Ключи API**
+2. Нажмите **Создать ключ API**
+3. Введите название (например, "Home Assistant")
+4. Выберите разрешения
+5. Нажмите **Создать**
+6. **Сразу скопируйте ключ** — повторно он не показывается!
 
-!!! warning "Save Your Key"
-    API keys are shown only once at creation. Store it securely.
+!!! warning "Сохраните ключ"
+    Ключ API показывается только один раз при создании. Храните его в надёжном месте.
 
-### Mobile setup with a QR code
+### Настройка мобильного приложения с помощью QR-кода {#mobile-setup-with-a-qr-code}
 
-The success panel shown right after you create a key has a **QR code** button
-next to **Use in API Browser**:
+На панели успешного создания ключа рядом с кнопкой **Использовать в браузере API** находится кнопка **QR-код**:
 
-![API key QR code button](../assets/settings_api_key_qr_button.png){ .screenshot }
+![Кнопка QR-кода ключа API](../assets/settings_api_key_qr_button.png){ .screenshot }
 
-Click it to display a QR code that encodes the Bambuddy server URL **and** the
-new API key together, so a compatible mobile app (for example, an NFC
-spool-inventory app) can scan once to configure both — no copy-pasting the long
-key by hand.
+Нажмите её, чтобы показать QR-код, содержащий URL сервера Bambuddy **и** новый ключ API. Совместимое мобильное приложение (например, приложение учёта катушек с NFC) сможет настроить оба значения одним сканированием без ручного копирования длинного ключа.
 
-![API key QR code popup](../assets/settings_api_key_qr_popup.png){ .screenshot }
+![Окно QR-кода ключа API](../assets/settings_api_key_qr_popup.png){ .screenshot }
 
-The encoded server URL comes from your configured **Settings → Network →
-External URL**, falling back to the address you're currently viewing Bambuddy on.
-If clients connect from outside your LAN (reverse proxy, Docker host, VPN), set
-the External URL so the scanned address is actually reachable from the phone.
+Адрес сервера берётся из **Настройки → Сеть → Внешний URL**, а если он не задан — из адреса текущей страницы Bambuddy. Если клиенты подключаются извне локальной сети (через обратный прокси, хост Docker или VPN), задайте внешний URL, доступный телефону.
 
-!!! warning "The QR contains your secret key"
-    The QR encodes the raw API key — treat the image like the key itself. Don't
-    share it or screenshot it where others can see, and regenerate the key if it
-    leaks.
+!!! warning "QR-код содержит секретный ключ"
+    В QR-коде записан ключ API в открытом виде. Обращайтесь с изображением как с самим ключом: не делитесь им и не делайте снимки экрана, видимые другим. При утечке создайте новый ключ.
 
-!!! info "Payload format (for app developers)"
-    The QR is a single custom-scheme URI:
+!!! info "Формат данных (для разработчиков приложений)"
+    QR-код содержит один URI с пользовательской схемой:
     ```
     bambuddy://config?v=1&url=<url-encoded base URL>&key=<url-encoded API key>
     ```
-    `v=1` is the schema version (clients should check it), `url` is the Bambuddy
-    base URL, and `key` is the API key — both URL-encoded. The key is only
-    available here, at creation time: Bambuddy stores keys hashed and can never
-    show them again.
+    `v=1` — версия схемы (клиентам следует её проверять), `url` — базовый URL Bambuddy, `key` — ключ API; оба значения закодированы для URL. Ключ доступен здесь только при создании: Bambuddy хранит его хеш и не может показать его снова.
 
 ---
 
-## :material-shield-lock: Permissions
+## :material-shield-lock: Разрешения {#permissions}
 
-### Available Permissions
+### Доступные разрешения {#available-permissions}
 
-API keys are intentionally **scoped narrowly** — they cannot perform
-administrative operations (user management, full settings updates, backup
-restore, firmware installs). The ten toggles you can set on a key are:
+Ключи API намеренно имеют **ограниченную область действия** и не могут выполнять административные операции (управление пользователями, полное изменение настроек, восстановление резервной копии, установку прошивки). Для ключа доступны следующие переключатели:
 
-| Permission | Allows |
+| Разрешение | Доступ |
 |------------|--------|
-| **Read Status** | Read printer state, archives, queue, library listings, projects, filaments, inventory, maintenance, notifications, K-profiles, AMS history, stats, system info, camera, (scrubbed) settings, slicer pipelines and their run history, and the slim user listing (`GET /users/slim`, id + username only — see below) |
-| **Manage Queue** | Add to / remove from / reorder the print queue; reprint archives. Together with **Manage Library**, run a slicer pipeline (see below) |
-| **Control Printer** | Start, pause, resume, stop prints; send files to the printer; AMS RFID re-read; clear-plate confirmation; smart-plug on/off |
-| **Manage Library** | Upload new files; rename and delete library entries; import models from MakerWorld; slice a library file. Together with **Manage Queue**, run a slicer pipeline (see below) |
-| **Manage Inventory** | Create / update / delete spools, the spool/color catalogue, forecast SKU settings. Required for SpoolBuddy kiosks (NFC tag scan, scale readings, kiosk system commands like reboot/update). |
-| **Manage Maintenance** | Log completed maintenance (`POST /maintenance/items/{id}/perform`), reset counters, edit intervals, assign/remove per-printer items, and manage the maintenance-type catalog. Suits Home Assistant automations that record "I cleaned the nozzle" without needing broader printer control. |
-| **Manage Archives** | Edit and delete print archives (`DELETE /archives/{id}`), including the `?purge_stats=true` option on that route which also drops the row from Quick Stats. Suits automations that prune the print history. Reprinting an archive stays under **Manage Queue**; the standalone bulk-purge operation stays admin-only. |
-| **Manage Projects** | Create, update and delete projects, and manage their membership (adding archives to a project). Suits automations that file finished prints into projects. Reading projects comes with **Read Status**. |
-| **Allow Cloud Access** | Read the owner's Bambu Cloud presets/filaments via `/cloud/*` (see below) |
-| **Update Electricity Price** | Push a new per-kWh tariff to `POST /settings/electricity-price` (see [Energy Tracking](energy.md#push-the-price-from-home-assistant)) — narrowly scoped, the only settings field writable via API key |
-| **Send Notifications** | Send a message through the notification channels that have **Messages from connected apps** on (`POST /notifications/app-message`, see [Notifications](notifications.md#messages-from-connected-apps)), and set the count on the sidebar link pointing at the app (`PUT /external-links/badge`, see [External Links](external-links.md#a-count-on-the-link)). For apps like Bambuddy Orders. Nothing else: the key can't read or change the channels or the links. The key's owner needs the **notifications:update** permission. If the owner is limited to certain printers, only channels bound to one of those printers are used |
+| **Чтение состояния** | Чтение состояния принтеров, архивов, очереди, списков библиотеки, проектов, филаментов, запасов, обслуживания, уведомлений, K-профилей, истории AMS, статистики, системных сведений, камеры, очищенных настроек, конвейеров слайсера и истории их запусков, а также сокращённого списка пользователей (`GET /users/slim`, только id и username; см. ниже) |
+| **Управление очередью** | Добавление, удаление и изменение порядка заданий в очереди; повторная печать архивов. Вместе с **Управлением библиотекой** — запуск конвейера слайсера (см. ниже) |
+| **Управление принтером** | Запуск, приостановка, продолжение и остановка печати; отправка файлов принтеру; повторное чтение RFID AMS; подтверждение очистки стола; включение и выключение умной розетки |
+| **Управление библиотекой** | Загрузка файлов, переименование и удаление записей библиотеки, импорт моделей MakerWorld, нарезка файлов библиотеки. Вместе с **Управлением очередью** — запуск конвейера слайсера (см. ниже) |
+| **Управление запасами** | Создание, изменение и удаление катушек, каталога катушек и цветов, настроек прогнозирования SKU. Необходимо киоскам SpoolBuddy для сканирования NFC-меток, показаний весов и системных команд киоска, таких как перезагрузка и обновление. |
+| **Управление обслуживанием** | Запись выполненного обслуживания (`POST /maintenance/items/{id}/perform`), сброс счётчиков, изменение интервалов, назначение и удаление элементов обслуживания принтера и управление каталогом типов обслуживания. Подходит для автоматизаций Home Assistant, фиксирующих, например, очистку сопла без более широких прав на управление принтером. |
+| **Управление архивами** | Изменение и удаление архивов печати (`DELETE /archives/{id}`), включая параметр `?purge_stats=true`, который также удаляет запись из быстрой статистики. Подходит для автоматической очистки истории. Повторная печать архива остаётся в области **Управления очередью**; отдельная массовая очистка доступна только администратору. |
+| **Управление проектами** | Создание, изменение и удаление проектов и управление их составом (добавление архивов). Подходит для автоматической раскладки завершённых печатей по проектам. Чтение проектов доступно с разрешением **Чтение состояния**. |
+| **Разрешить доступ к облаку** | Чтение пресетов и филаментов Bambu Cloud владельца через `/cloud/*` (см. ниже) |
+| **Обновление цены электроэнергии** | Передача нового тарифа за кВт·ч через `POST /settings/electricity-price` (см. [Учёт энергии](energy.md#push-the-price-from-home-assistant)). Это единственное поле настроек, доступное для записи с ключом API. |
+| **Отправка уведомлений** | Отправка сообщений через каналы с включёнными **Сообщениями подключённых приложений** (`POST /notifications/app-message`, см. [Уведомления](notifications.md#messages-from-connected-apps)) и изменение счётчика ссылки боковой панели на приложение (`PUT /external-links/badge`, см. [Внешние ссылки](external-links.md#a-count-on-the-link)). Предназначено для приложений вроде Bambuddy Orders. Читать или менять сами каналы и ссылки ключ не может. Владелец ключа должен иметь разрешение **notifications:update**. Если ему доступны только отдельные принтеры, используются только каналы, привязанные к одному из них. |
 
-!!! warning "Allowlist model since 0.2.4.5 (GHSA-r2qv-8222-hqg3)"
-    Earlier Bambuddy versions gated API keys via a small denylist of
-    administrative permissions. Anything outside that list — including
-    physical printer control, queue writes, library uploads, and inventory
-    writes — was reachable from *any* valid key regardless of which
-    checkboxes you ticked, because the seven toggles were not actually
-    enforced outside the legacy `/webhook/*` endpoints. Starting in
-    0.2.4.5, every Bambuddy endpoint maps to the toggles above — almost
-    always exactly one, occasionally two that must both be held — or is
-    admin-only and rejects all API keys. A key with no
-    toggles ticked can hit no endpoints; a key with only **Read Status**
-    cannot stop a print, edit the queue, upload files, or change a spool.
+!!! warning "Модель разрешённого списка с версии 0.2.4.5 (GHSA-r2qv-8222-hqg3)"
+    В ранних версиях Bambuddy доступ ключей API ограничивался небольшим списком запрещённых административных разрешений. Всё, что в него не входило, включая физическое управление принтером, запись очереди, загрузку в библиотеку и изменение запасов, было доступно **любому** действительному ключу независимо от отмеченных флажков: семь переключателей фактически не применялись за пределами старых конечных точек `/webhook/*`. С версии 0.2.4.5 каждой конечной точке соответствует один из переключателей выше, иногда два сразу, либо она доступна только администратору и отклоняет все ключи API. Ключ без разрешений не может обращаться ни к одной конечной точке; ключ только с **Чтением состояния** не может останавливать печать, изменять очередь, загружать файлы или менять катушки.
 
-!!! info "Slicer pipelines need two toggles"
-    Listing pipelines and reading run history comes with **Read Status**.
-    Starting, cancelling or retrying a run needs **Manage Queue** *and*
-    **Manage Library** together, because a run does both jobs: it slices the source
-    into a new library file, then queues one print per copy. Neither toggle
-    on its own authorises the whole operation, so a key holding only one of
-    them gets a 403 naming the other.
+!!! info "Для конвейеров слайсера нужны два разрешения"
+    Просмотр конвейеров и истории запусков доступен с **Чтением состояния**. Запуск, отмена и повтор запуска требуют одновременно **Управления очередью** и **Управления библиотекой**, поскольку конвейер выполняет обе задачи: нарезает исходный файл в новый файл библиотеки, затем ставит в очередь по одной печати на каждую копию. Ни одно разрешение по отдельности не даёт права на всю операцию, поэтому ключ с одним из них получит ошибку 403 с указанием другого.
 
-    Creating, editing, and deleting pipeline definitions — and clearing run
-    history — stays admin-only. A key can run the recipe; it cannot rewrite
-    it. Use [Slicer Pipelines](slicer-pipelines.md) in the web UI to author
-    them.
+    Создание, изменение и удаление определений конвейеров, а также очистка истории запусков по-прежнему доступны только администратору. Ключ может запускать рецепт, но не изменять его. Для создания используйте [Конвейеры слайсера](slicer-pipelines.md) в веб-интерфейсе.
 
-    One extra toggle applies to pipelines built on **Bambu Cloud or Orca
-    Cloud presets**: resolving those reads the cloud token stored on a user
-    account, and an API-keyed request has no signed-in user. Add **Allow
-    Cloud Access** and the run resolves them as the key's owner, the same
-    way slicing a library file directly does. Pipelines using local or
-    standard presets need nothing extra.
+    Для конвейеров на **пресетах Bambu Cloud или Orca Cloud** нужен ещё один переключатель: их получение требует облачного токена пользователя, а запрос с ключом API не имеет вошедшего пользователя. Включите **Разрешить доступ к облаку**, и пресеты будут получены от имени владельца ключа, как и при прямой нарезке файла библиотеки. Для локальных и стандартных пресетов дополнительных прав не требуется.
 
-!!! info "A key never exceeds the account that owns it"
-    The toggles above are a ceiling, not a grant. A key acts on behalf of the
-    user who created it, and is limited to the permissions **that user** holds
-    through their groups — ticking **Control Printer** on a key created by
-    someone who may not control printers does not give the key that ability.
-    The same goes for printers: a key reaches only printers its owner may see
-    (see [Printer Access](authentication.md#printer-access)), and a printer it
-    can't reach answers `404 Not Found`, as if it didn't exist.
-    A key limited to certain printers loses a printer when it is deleted; a
-    key whose last printer is deleted reaches none.
-    Deactivating or deleting a user disables their keys along with their login.
+!!! info "Ключ не превышает права своего владельца"
+    Переключатели выше задают предел, а не предоставляют права. Ключ действует от имени создавшего его пользователя и ограничен разрешениями, которые **тот пользователь** получил через группы. Если создателю нельзя управлять принтерами, включение **Управления принтером** не даст этого права ключу. То же касается принтеров: ключ видит только принтеры, доступные владельцу (см. [Доступ к принтерам](authentication.md#printer-access)); недоступный принтер отвечает `404 Not Found`, как если бы его не существовало. Если один из разрешённых принтеров удалён, ключ теряет доступ к нему; после удаления последнего разрешённого принтера ключ не видит ни одного. Отключение или удаление пользователя отключает и его ключи.
 
-    Two consequences worth planning around:
+    У этого есть два следствия:
 
-    - **Create keys under an account that will keep its permissions.** A key
-      created by a member of staff who later changes role, or leaves and is
-      deactivated, stops working at that moment. For an integration that has to
-      outlive any one person, create the key under a dedicated service account.
-    - If a key returns `403 API key owner does not have '<permission>'`, the
-      key is asking for something its owner cannot do. Grant the permission to
-      the owner's group, or recreate the key under an account that has it.
+    - **Создавайте ключи под учётной записью, которая сохранит свои разрешения.** Ключ сотрудника перестанет работать, если его роль изменится или учётную запись отключат. Для долговечной интеграции используйте отдельную служебную учётную запись.
+    - Ошибка `403 API key owner does not have '<permission>'` означает, что ключ запрашивает действие, недоступное владельцу. Предоставьте разрешение группе владельца или пересоздайте ключ под подходящей учётной записью.
 
-    Keys created before Bambuddy recorded key ownership have no owner to be
-    measured against and are governed by their toggles alone. Recreate them
-    when convenient so they gain an owner.
+    Ключи, созданные до появления владельцев, не имеют владельца для проверки и ограничиваются только своими переключателями. По возможности пересоздайте их, чтобы назначить владельца.
 
-!!! info "Reading, editing and deleting acts on the owner's rows"
-    Library files, archives and queue items belong to the user who created
-    them, and a key is treated as its owner. Whether the key reaches
-    **anyone's** rows or only its owner's depends on the owner's permission
-    for that action: `library:read_all`, `archives:update_all`,
-    `queue:delete_all` and the other `_all` permissions reach every user's
-    rows, and their `_own` variants only the owner's.
+!!! info "Чтение, изменение и удаление выполняются от имени владельца"
+    Файлы библиотеки, архивы и задания очереди принадлежат создавшему их пользователю; ключ действует как владелец. Доступ к записям **всех** пользователей или только к своим зависит от разрешения владельца: `library:read_all`, `archives:update_all`, `queue:delete_all` и другие разрешения `_all` охватывают все записи, а варианты `_own` — только собственные.
 
-    The built-in **Operators** group holds only the `_own` variants, so a key
-    created by an Operator lists, reads, edits and deletes that person's own
-    files, archives and queue jobs, the same as that person's own session.
-    Another user's row can't be opened (`404 Not Found`) or changed
-    (`403 Forbidden`), and a bulk edit skips it. A row without an owner, such
-    as an upload from before authentication was on, needs an `_all`
-    permission; the one exception, as for the person, is starting a waiting
-    queue job without an owner (a [virtual printer](virtual-printer.md)
-    upload), which makes it the key owner's job. Before Bambuddy 1.2.6 such a
-    key was refused outright with
-    `403 API key owner does not have 'library:delete_all' permission`.
+    Встроенная группа **Операторы** имеет только варианты `_own`, поэтому её ключи перечисляют, читают, изменяют и удаляют только собственные файлы, архивы и задания, как и сеанс самого пользователя. Чужую запись нельзя открыть (`404 Not Found`) или изменить (`403 Forbidden`); массовая операция её пропускает. Для записи без владельца, например загруженной до включения аутентификации, требуется разрешение `_all`. Единственное исключение — запуск ожидающего задания без владельца (загруженного [виртуальным принтером](virtual-printer.md)): оно становится заданием владельца ключа. До Bambuddy 1.2.6 такой ключ вообще получал отказ `403 API key owner does not have 'library:delete_all' permission`.
 
-    A key created by an account with the `_all` permissions, such as an
-    **Administrator**, reaches *every* user's rows within its toggles, not only
-    its owner's, for each action its owner holds the `_all` permission for. So does a key made before keys had owners:
-    it has no owner to act as, and its toggles alone decide.
+    Ключ учётной записи с разрешениями `_all`, например **администратора**, получает доступ к записям *всех* пользователей в пределах своих переключателей для каждого действия, на которое владелец имеет `_all`. То же относится к ключу, созданному до появления владельцев: он не действует от чьего-либо имени и ограничен только переключателями.
 
-!!! info "Queueing runs as the owner"
-    A key that adds to the queue (`POST /queue/`, `POST /webhook/queue/add`,
-    print orders) is checked the way its owner's own session would be. It can
-    queue only archives and library files its owner may read and reprint, and
-    the key needs **Read Status** for ones its owner did not create. With
-    [billing](billing.md#api-keys) on, it can charge only cost centers its
-    owner may print with. The queued item belongs to the owner, so it shows up
-    in their queue.
+!!! info "Постановка в очередь выполняется от имени владельца"
+    Ключ, добавляющий задание в очередь (`POST /queue/`, `POST /webhook/queue/add`, заказы на печать), проверяется так же, как сеанс владельца. Он может ставить в очередь только архивы и файлы библиотеки, которые владелец вправе читать и печатать повторно; для чужих записей ключу нужно **Чтение состояния**. При включённых [расчётах](billing.md#api-keys) он может использовать только доступные владельцу центры затрат. Задание принадлежит владельцу и показывается в его очереди.
 
-    A key created before keys had owners acts for nobody. It is limited to its
-    toggles, owns no files and cannot use any cost center. Recreate it to
-    print on a server with billing on.
+    Ключ, созданный до появления владельцев, не действует ни от чьего имени. Он ограничен переключателями, не владеет файлами и не может использовать центры затрат. Пересоздайте его для печати на сервере с включёнными расчётами.
 
-!!! info "Why no general 'Write Settings' or 'Admin' permission?"
-    The `PATCH /settings` route can rewrite SMTP/LDAP/MQTT credentials, the
-    HA access token, and similar secrets. Allowing those writes from any
-    API key would silently widen attack surface beyond what the documented
-    use cases (Home Assistant tariffs, dashboards, automation) actually
-    need. The narrowly-scoped **Update Electricity Price** toggle exists
-    specifically to unlock the HA dynamic-tariff workflow without opening
-    that door.
+!!! info "Почему нет общего разрешения на запись настроек или администрирование?"
+    Маршрут `PATCH /settings` позволяет менять учётные данные SMTP/LDAP/MQTT, токен Home Assistant и другие секреты. Доступ к нему из любого ключа API незаметно расширил бы поверхность атаки за пределы документированных сценариев (тарифы Home Assistant, панели и автоматизация). Узкое разрешение **Обновление цены электроэнергии** добавлено специально для динамических тарифов HA, не открывая такой доступ.
 
-### Principle of Least Privilege
+### Принцип минимальных привилегий {#principle-of-least-privilege}
 
-Only grant permissions that are needed:
+Предоставляйте только необходимые разрешения:
 
-- **Read-only dashboards**: Read Status only.
-- **Home Assistant queue automation**: Read Status + Manage Queue.
-- **Home Assistant queue + start prints**: + Control Printer.
-- **Headless slicer / library-uploading automation**: + Manage Library.
-- **SpoolBuddy kiosks (bundled installs handle this for you)**: + Manage Inventory.
-- **Home Assistant maintenance-log automation** ("cleaned nozzle every N hours"): Read Status + Manage Maintenance.
-- **Print-history cleanup automation** (prune old archives): Read Status + Manage Archives.
-- **Filing finished prints into projects**: Read Status + Manage Projects.
-- **Trigger a slicer pipeline from an automation**: Read Status + Manage Queue + Manage Library.
-- **HA dynamic-tariff integration**: + Update Electricity Price.
-- **Slicing against Bambu Cloud or Orca Cloud presets** (whether from a [pipeline](slicer-pipelines.md) or a direct slice call): + Allow Cloud Access (requires owner sign-in).
+- **Панели только для чтения**: только чтение состояния.
+- **Автоматизация очереди Home Assistant**: чтение состояния и управление очередью.
+- **Очередь и запуск печати из Home Assistant**: дополнительно управление принтером.
+- **Автоматическая нарезка без интерфейса или загрузка в библиотеку**: дополнительно управление библиотекой.
+- **Киоски SpoolBuddy** (установщик делает это автоматически): дополнительно управление запасами.
+- **Журнал обслуживания из Home Assistant** (например, очистка сопла каждые N часов): чтение состояния и управление обслуживанием.
+- **Автоматическая очистка истории печати**: чтение состояния и управление архивами.
+- **Добавление завершённых печатей в проекты**: чтение состояния и управление проектами.
+- **Запуск конвейера слайсера из автоматизации**: чтение состояния, управление очередью и библиотекой.
+- **Динамические тарифы HA**: дополнительно обновление цены электроэнергии.
+- **Нарезка с пресетами Bambu Cloud или Orca Cloud** (из [конвейера](slicer-pipelines.md) или прямым вызовом): дополнительно доступ к облаку; владелец должен войти в облако.
 
-### Upgrade Notes
+### Примечания к обновлению {#upgrade-notes}
 
-When upgrading from a pre-0.2.4.5 install:
+При обновлении версии до 0.2.4.5:
 
-- Existing keys are backfilled: **Manage Library** and **Manage Inventory**
-  default to whatever **Manage Queue** was set to (so "queue-only" keys keep
-  working for the upload+queue workflow they already used, while hardened
-  "read-only" keys do not silently gain write capabilities).
-- **Manage Maintenance** was carved out of the admin denylist in the #1832
-  follow-up. It was explicitly denied for every API key beforehand, so
-  no existing integration relies on it — existing keys are backfilled to
-  **off**, and new keys default to **on**. Toggle it explicitly if an
-  older key needs to log maintenance events.
-- **Manage Archives** was carved out of the admin denylist in #1888 (archive
-  delete/edit previously returned 403 for every API key). Same shape as
-  Manage Maintenance: explicitly denied beforehand, so existing keys are
-  backfilled to **off** and new keys default to **on**. Toggle it explicitly
-  if an older key needs to delete or edit archives.
-- **Manage Projects** was carved out of the admin denylist in #1893 (creating
-  a project, or adding archives to one, previously returned 403 for every API
-  key). Same shape again: existing keys are backfilled to **off** and new keys
-  default to **on**. Toggle it explicitly if an older key needs to manage
-  projects.
-- **Slicer pipelines** were unreachable from any API key until the run
-  dispatch shipped; every pipeline endpoint answered 403. They now ride the
-  toggles you already have — no new checkbox, and nothing to backfill — so a
-  key that already holds **Manage Queue** and **Manage Library** can run a
-  pipeline after upgrading. That grants no capability it lacked: such a key
-  could already slice a library file and queue prints directly, and a
-  pipeline only composes those two steps using settings an administrator
-  authored.
-- The bundled SpoolBuddy kiosk key is explicitly granted **Manage Inventory**
-  by the CLI (it needs to write NFC scans and scale readings).
-- If a previously-working integration starts returning 403, the missing
-  toggle is named in the response body — tick it in **Settings → API
-  Keys**, regenerate or update the key, and retry.
+- У существующих ключей **Управление библиотекой** и **Управление запасами** наследуют прежнее значение **Управления очередью**. Поэтому ключи для очереди продолжают работать в существующем процессе загрузки и постановки в очередь, а ключи только для чтения не получают запись незаметно.
+- **Управление обслуживанием** было исключено из списка административных запретов в дополнении #1832. Ранее оно явно запрещалось всем ключам, поэтому ни одна интеграция не зависит от него: для существующих ключей оно по умолчанию **выключено**, для новых — **включено**. При необходимости включите его у старого ключа вручную.
+- **Управление архивами** исключено из списка запретов в #1888 (удаление и изменение архивов раньше возвращало 403 для любого ключа). Как и с обслуживанием, у существующих ключей оно **выключено**, у новых — **включено**. При необходимости включите его у старого ключа.
+- **Управление проектами** исключено из списка запретов в #1893 (создание проекта и добавление архивов ранее возвращали 403 для всех ключей). Для существующих ключей оно **выключено**, для новых — **включено**. Включите его у старого ключа при необходимости.
+- **Конвейеры слайсера** до появления отправки запусков были недоступны любым ключам API: все их конечные точки возвращали 403. Теперь они используют существующие переключатели, без нового флажка и миграции: ключ с **Управлением очередью** и **Управлением библиотекой** после обновления может запустить конвейер. Новых возможностей он при этом не получает: такой ключ уже мог нарезать файл библиотеки и поставить печать в очередь; конвейер лишь объединяет эти действия с настройками администратора.
+- Встроенный ключ киоска SpoolBuddy явно получает **Управление запасами** от CLI, поскольку ему нужно записывать NFC-сканирования и показания весов.
+- Если ранее работавшая интеграция возвращает 403, недостающее разрешение указано в ответе. Включите его в **Настройки → Ключи API**, пересоздайте или обновите ключ и повторите попытку.
 
 ---
 
-## :material-cloud-key-outline: Cloud Access Scope
+## :material-cloud-key-outline: Область доступа к облаку {#cloud-access-scope}
 
-API keys created in v0.2.4 and later carry an explicit **owner** (the user who
-created them) and an opt-in **cloud-access scope**. This unlocks a workflow that
-was previously blocked: reading the owner's Bambu Cloud presets, filament
-catalogue, and device list from `/api/v1/cloud/*` endpoints — exactly what a
-headless slicing workflow needs. It is also what lets a
-[slicer pipeline](slicer-pipelines.md) built on cloud presets be run by an API
-key rather than only by a signed-in person.
+Ключи API, созданные начиная с v0.2.4, имеют явного **владельца** и необязательную **область доступа к облаку**. Она открывает ранее недоступный сценарий: чтение пресетов Bambu Cloud, каталога филамента и списка устройств владельца через `/api/v1/cloud/*` — именно это нужно для автоматической нарезки. Кроме того, она позволяет запускать [конвейер слайсера](slicer-pipelines.md) на облачных пресетах с ключом API, а не только от вошедшего пользователя.
 
-### When to enable it
+### Когда включать {#when-to-enable-it}
 
-Tick **Allow cloud access** on the create form when the key needs to:
+Отметьте **Разрешить доступ к облаку** при создании ключа, если ему нужно:
 
-- Pull filament profiles (`GET /cloud/filaments`) for an automated slicer
-- List your Bambu Cloud devices (`GET /cloud/devices`)
-- Read printer firmware availability (`GET /cloud/firmware-updates`)
-- Read your slicer presets (`GET /cloud/settings`)
+- Получать профили филамента (`GET /cloud/filaments`) для автоматического слайсера
+- Получать список устройств Bambu Cloud (`GET /cloud/devices`)
+- Проверять доступность прошивок (`GET /cloud/firmware-updates`)
+- Читать пресеты слайсера (`GET /cloud/settings`)
 
-The flag defaults to **off**, so existing automation never silently gains
-cloud-read access on upgrade.
+По умолчанию флаг **выключен**, поэтому существующие автоматизации не получают облачный доступ незаметно при обновлении.
 
-### Three fences a key must pass for /cloud/*
+### Три проверки ключа для /cloud/* {#three-fences-a-key-must-pass-for-cloud}
 
-When an API-keyed call reaches `/api/v1/cloud/*`, three checks all need to
-succeed:
+При запросе с ключом API к `/api/v1/cloud/*` должны пройти все три проверки:
 
-1. **The key has an owner.** Keys created before v0.2.4 have no owner and are
-   shown as **Legacy** in the API Keys list — they're rejected at `/cloud/*`
-   with a "recreate it" message. Every other endpoint they were used against
-   (queue, status, control) keeps working.
-2. **`Allow cloud access` is enabled** on the key. Otherwise `/cloud/*` returns
-   `403` with a "enable cloud access" hint.
-3. **The owner is signed into Bambu Cloud** (Settings → Cloud Profiles).
-   Without a stored token, `/cloud/*` returns the standard token-not-set error.
+1. **У ключа есть владелец.** Ключи до v0.2.4 его не имеют и отмечены как **Legacy** в списке; `/cloud/*` отклоняет их с предложением пересоздать. Все остальные использовавшиеся конечные точки (очередь, состояние, управление) продолжают работать.
+2. У ключа включён **доступ к облаку**. Иначе `/cloud/*` возвращает `403` с предложением включить его.
+3. **Владелец вошёл в Bambu Cloud** (Настройки → Облачные профили). Без сохранённого токена `/cloud/*` возвращает обычную ошибку отсутствия токена.
 
-### Auth-disabled deployments
+### Установки с отключённой аутентификацией {#auth-disabled-deployments}
 
-The cloud-access scope only makes sense when authentication is enabled —
-auth-disabled deployments don't have per-user cloud tokens to read against.
-The create form refuses `Allow cloud access = true` in that mode with a
-`400 Bad Request` so you don't end up with a non-functional key.
+Область облачного доступа имеет смысл только при включённой аутентификации: без неё нет отдельных облачных токенов пользователей. Форма создания отклоняет `Allow cloud access = true` с ответом `400 Bad Request`, чтобы не создавать неработающий ключ.
 
-### Migrating older keys
+### Перенос старых ключей {#migrating-older-keys}
 
-Keys created before v0.2.4 keep working against every non-cloud endpoint
-without any change. To grant one of them cloud access, **delete the key and
-recreate it** — there's no in-place upgrade because the original creator
-identity wasn't recorded at the time.
+Ключи, созданные до v0.2.4, продолжают работать со всеми не облачными конечными точками без изменений. Чтобы предоставить одному из них доступ к облаку, **удалите и создайте ключ заново**: обновить его на месте нельзя, поскольку идентификатор создателя тогда не записывался.
 
-### Owner deletion
+### Удаление владельца {#owner-deletion}
 
-Deleting a user removes all of their API keys (`ON DELETE CASCADE` on
-PostgreSQL, plus an explicit cleanup step in the user-delete route for SQLite
-where FK enforcement is off by default). Orphan keys can never authenticate.
+При удалении пользователя удаляются все его ключи API (`ON DELETE CASCADE` в PostgreSQL и явная очистка в маршруте удаления пользователя для SQLite, где проверка внешних ключей по умолчанию выключена). Осиротевшие ключи не могут пройти аутентификацию.
 
 ---
 
-## :material-api: Using the API
+## :material-api: Использование API {#using-the-api}
 
-### Authentication
+### Аутентификация {#authentication}
 
-Include the API key in request headers:
+Передавайте ключ API в заголовках запроса:
 
 ```bash
 curl -H "X-API-Key: your-api-key-here" \
   http://localhost:8000/api/v1/printers
 ```
 
-### Base URL
+### Базовый URL {#base-url}
 
 ```
 http://your-server:8000/api/v1
 ```
 
-### Common Endpoints
+### Основные конечные точки {#common-endpoints}
 
-| Endpoint | Method | Description |
+| Конечная точка | Метод | Описание |
 |----------|--------|-------------|
-| `/printers` | GET | List all printers |
-| `/printers/{id}` | GET | Get printer details |
-| `/printers/{id}/status` | GET | Get printer status |
-| `/archives` | GET | List archives |
-| `/archives/{id}` | GET | Get archive details |
-| `/queue` | GET | View print queue |
-| `/queue` | POST | Add to queue |
-| `/archives/stats` | GET | Get print statistics |
-| `/inventory/spools` | GET | List spools |
-| `/inventory/spools/by-tag` | GET | Find a spool by NFC `tray_uuid`/`tag_uid` |
-| `/slicer-pipelines` | GET | List saved slicer pipelines |
-| `/slicer-pipelines/{id}/run` | POST | Run a pipeline (needs Manage Queue + Manage Library) |
-| `/pipeline-runs` | GET | List pipeline runs |
-| `/users/slim` | GET | Resolve user ids to names (id + username only) |
-| `/auth/me` | GET | Identify the key: its owner and the scopes it actually carries |
-| `/webhook/printer/{id}/status` | GET | Compact printer status for polling clients (see below) |
-| `/webhook/queue` | GET | Queue status (needs Read Status): the pending and printing counts of every job, and the jobs the key's owner sees in the queue |
-| `/webhook/queue/add` | POST | Add a print to the queue (needs Manage Queue; an archive its owner did not create also needs Read Status, see "Queueing runs as the owner") |
-| `/webhook/printer/{id}/start` | POST | Start the next pending job in this printer's queue that the key's owner could start from the queue, releasing it if it waits for a manual start (needs Control Printer) |
-| `/webhook/printer/{id}/stop` | POST | Stop the current print, printing or paused (needs Control Printer) |
-| `/webhook/printer/{id}/cancel` | POST | Cancel the current print, printing or paused (needs Control Printer) |
+| `/printers` | GET | Список принтеров |
+| `/printers/{id}` | GET | Сведения о принтере |
+| `/printers/{id}/status` | GET | Состояние принтера |
+| `/archives` | GET | Список архивов |
+| `/archives/{id}` | GET | Сведения об архиве |
+| `/queue` | GET | Просмотр очереди печати |
+| `/queue` | POST | Добавление в очередь |
+| `/archives/stats` | GET | Статистика печати |
+| `/inventory/spools` | GET | Список катушек |
+| `/inventory/spools/by-tag` | GET | Поиск катушки по NFC `tray_uuid`/`tag_uid` |
+| `/slicer-pipelines` | GET | Список сохранённых конвейеров слайсера |
+| `/slicer-pipelines/{id}/run` | POST | Запуск конвейера (нужны управление очередью и библиотекой) |
+| `/pipeline-runs` | GET | Список запусков конвейеров |
+| `/users/slim` | GET | Определение имён по идентификаторам (только id и username) |
+| `/auth/me` | GET | Сведения о ключе: его владелец и фактические области доступа |
+| `/webhook/printer/{id}/status` | GET | Компактное состояние принтера для опрашивающих клиентов (см. ниже) |
+| `/webhook/queue` | GET | Состояние очереди (нужно чтение состояния): общее количество ожидающих и печатающихся заданий и задания, которые видит владелец ключа |
+| `/webhook/queue/add` | POST | Добавление печати в очередь (нужно управление очередью; для чужого архива также нужно чтение состояния, см. «Постановка в очередь выполняется от имени владельца») |
+| `/webhook/printer/{id}/start` | POST | Запуск следующего ожидающего задания в очереди принтера, которое владелец ключа мог бы запустить из очереди, включая ожидающее ручного запуска (нужно управление принтером) |
+| `/webhook/printer/{id}/stop` | POST | Остановка текущей печати или печати на паузе (нужно управление принтером) |
+| `/webhook/printer/{id}/cancel` | POST | Отмена текущей печати или печати на паузе (нужно управление принтером) |
 
-### Compact printer status
+### Компактное состояние принтера {#compact-printer-status}
 
-`GET /webhook/printer/{id}/status` needs **Read Status**, and a key limited to
-certain printers only reaches those. It returns the few fields a phone widget
-or Live Activity polls for, in one small response:
+Для `GET /webhook/printer/{id}/status` нужно **Чтение состояния**; ключ, ограниченный определёнными принтерами, видит только их. Метод возвращает небольшой набор полей для опроса мобильным виджетом или Live Activity:
 
 ```json
 {
@@ -409,90 +270,76 @@ or Live Activity polls for, in one small response:
 }
 ```
 
-- `remaining_time` is in **minutes**, as the printer reports it. `remaining_seconds` is the same estimate in seconds, the unit notifications use.
-- `subtask_id` is the printer's id for the running job. A new value means a new print, even when two prints of the same file run back to back between two polls. It is `null` when the job has no id: Bambu gives none to some local prints, such as one started on the printer itself.
-- `hms_errors` is the printer's live HMS list, in the same shape as `GET /printers/{id}/status`. It includes notices as well as faults; the [API reference](../reference/api.md) explains which entries Bambuddy's own UI counts as a fault. It is what tells a filament runout apart from someone pressing pause.
-- `serial_number` identifies the printer by what it reports itself, rather than by Bambuddy's id.
-- Until Bambuddy has heard from the printer, `connected` is `false` and the live fields are `null`. A connected, idle printer reports `0` for the counters.
+- `remaining_time` указывается в **минутах**, как сообщает принтер. `remaining_seconds` — та же оценка в секундах, которые используются в уведомлениях.
+- `subtask_id` — идентификатор текущего задания принтера. Новое значение означает новую печать, даже если один и тот же файл напечатан дважды между опросами. Значение равно `null`, если у задания нет идентификатора: Bambu не назначает его некоторым локальным заданиям, например запущенным с самого принтера.
+- `hms_errors` — текущий список HMS принтера в том же формате, что и `GET /printers/{id}/status`. Он содержит уведомления и ошибки; [справочник API](../reference/api.md) объясняет, какие записи интерфейс Bambuddy считает ошибками. Список позволяет отличить окончание филамента от ручной паузы.
+- `serial_number` идентифицирует принтер по сообщённому им серийному номеру, а не по идентификатору Bambuddy.
+- Пока Bambuddy не получил данные от принтера, `connected` равно `false`, а текущие поля — `null`. Подключённый бездействующий принтер возвращает `0` для счётчиков.
 
-!!! note "Turning `created_by_id` into a name"
-    Archives, the queue and the statistics endpoints all report ownership as a
-    numeric `created_by_id`, and `/archives/stats` accepts it as a filter. To turn
-    those numbers into names, call `GET /users/slim` — it returns
-    `[{"id": 1, "username": "martin"}, ...]` and nothing else. Emails, roles,
-    group membership and permission sets stay behind the admin-only
-    `GET /users` listing, which rejects API keys.
+!!! note "Как получить имя по `created_by_id`"
+    Конечные точки архивов, очереди и статистики сообщают владельца как числовой `created_by_id`; `/archives/stats` принимает его в качестве фильтра. Чтобы сопоставить числа с именами, вызовите `GET /users/slim`: метод вернёт только `[{"id": 1, "username": "martin"}, ...]`. Адреса почты, роли, группы и разрешения остаются в списке `GET /users`, доступном только администраторам и отклоняющем ключи API.
 
-    If you only need *your own* id — a personal dashboard rather than a
-    per-user one — `GET /auth/me` is enough and needs no user listing at all.
+    Если нужен только *свой* идентификатор, например для личной панели, достаточно `GET /auth/me`; список пользователей не требуется.
 
-!!! warning "`/auth/me` changed in 0.2.5"
-    Before 0.2.5, `/auth/me` answered an API key with a synthetic
-    administrator: `id: 0`, `role: "admin"`, `is_admin: true` and every
-    permission in the system. That never matched what the key could do — keys
-    cannot reach administrative routes at all — so clients that built their UI
-    from this response showed actions that failed with 403 on use.
+!!! warning "`/auth/me` изменился в 0.2.5"
+    До 0.2.5 `/auth/me` отвечал на ключ API данными условного администратора: `id: 0`, `role: "admin"`, `is_admin: true` и всеми разрешениями системы. Это не соответствовало фактическим возможностям ключа, который не имеет доступа к административным маршрутам. Поэтому клиенты, строившие интерфейс по ответу, показывали действия, завершающиеся ошибкой 403.
 
-    It now returns the key **owner's** `id` and `username`, `is_admin: false`,
-    and a `permissions` list containing exactly the permissions the key's
-    scopes admit. Keys created before per-user ownership existed have no owner
-    to report and keep `id: 0` with an `api-key:` username. If your client
-    branched on `is_admin` or `role`, branch on `permissions` instead.
+    Теперь возвращаются `id` и `username` **владельца** ключа, `is_admin: false` и список `permissions` с разрешениями, реально допускаемыми областями ключа. У ключей, созданных до появления владельцев, по-прежнему `id: 0` и имя с префиксом `api-key:`. Если клиент проверял `is_admin` или `role`, переключитесь на `permissions`.
 
-!!! note "Manage Inventory keys can look up spools by tag"
-    The `/inventory/spools/by-tag` lookup is reachable with either the **Read Status** scope *or* the **Manage Inventory** scope, so a key created only with **Manage Inventory** — which can create, update, and delete spools — can look a spool up by its NFC tag without needing the broader Read Status scope. This is what lets an NFC inventory integration dedupe a scan with a single, narrowly-scoped key. Other inventory read endpoints (e.g. `/inventory/spools` to list all spools) still require **Read Status**.
+!!! note "Ключи управления запасами могут искать катушки по метке"
+    Поиск `/inventory/spools/by-tag` доступен с **Чтением состояния** или **Управлением запасами**. Поэтому ключ только с управлением запасами, который может создавать, изменять и удалять катушки, способен искать их по NFC-метке без более широкого разрешения на чтение. Это позволяет интеграции NFC проверять дубликаты одним ключом с узкими правами. Другие методы чтения запасов, например `/inventory/spools` для списка всех катушек, по-прежнему требуют **Чтения состояния**.
 
-See [API Reference](../reference/api.md) for complete documentation.
+Полную документацию см. в [справочнике API](../reference/api.md).
 
 ---
 
-## :material-web: Interactive API Browser
+## :material-web: Интерактивный браузер API {#interactive-api-browser}
 
-Bambuddy includes a built-in API browser for testing endpoints directly in the interface.
+Bambuddy содержит встроенный браузер API для проверки конечных точек прямо в интерфейсе.
 
-### Accessing the API Browser
+### Доступ к браузеру API {#accessing-the-api-browser}
 
-The API Browser appears in the right column of the API Keys settings page.
+Браузер API находится в правой колонке страницы настроек ключей API.
 
-1. Go to **Settings** > **API Keys**
-2. Scroll to see the API Browser on the right
+1. Откройте **Настройки** > **Ключи API**
+2. Прокрутите страницу до браузера API справа
 
-### Features
+### Возможности {#features}
 
-- **Auto-discovery** - All endpoints loaded from OpenAPI schema
-- **Grouped by category** - Printers, archives, settings, etc.
-- **Parameter inputs** - Fill in path, query, and body parameters
-- **Request body examples** - Pre-filled from schema
-- **Live execution** - Test requests and see responses
-- **Response display** - Formatted JSON with status and timing
-- **Search** - Filter endpoints across categories
+- **Автоматическое обнаружение** — конечные точки загружаются из схемы OpenAPI
+- **Группировка по категориям** — принтеры, архивы, настройки и т. д.
+- **Ввод параметров** — заполнение параметров пути, запроса и тела
+- **Примеры тела запроса** — предварительно заполнены по схеме
+- **Выполнение запросов** — проверка запросов и просмотр ответов
+- **Отображение ответа** — форматированный JSON со статусом и временем
+- **Поиск** — фильтрация конечных точек по категориям
 
-### Using with API Keys
+### Использование ключей API {#using-with-api-keys}
 
-1. Paste an API key in the "API Key for Testing" input
-2. Expand an endpoint and fill in parameters
-3. Click **Execute** to make the request
-4. View the response below
+1. Вставьте ключ в поле «Ключ API для тестирования»
+2. Разверните конечную точку и заполните параметры
+3. Нажмите **Выполнить**, чтобы отправить запрос
+4. Посмотрите ответ ниже
 
-!!! tip "New Key Shortcut"
-    After creating a new API key, click **Use in API Browser** to automatically add it for testing.
+!!! tip "Быстрое использование нового ключа"
+    После создания ключа нажмите **Использовать в браузере API**, чтобы автоматически добавить его для тестирования.
 
 ---
 
-## :material-webhook: Webhooks
+## :material-webhook: Вебхуки {#webhooks}
 
-### Outgoing Webhooks
+### Исходящие вебхуки {#outgoing-webhooks}
 
-Bambuddy can send notifications to external URLs:
+Bambuddy может отправлять уведомления на внешние URL:
 
-1. Go to **Settings** > **Notifications**
-2. Add a **Webhook** provider
-3. Enter your endpoint URL
-4. Configure events to trigger
+1. Откройте **Настройки** > **Уведомления**
+2. Добавьте провайдера **Webhook**
+3. Введите URL конечной точки
+4. Выберите события, вызывающие отправку
 
-### Payload Format
+### Формат данных {#payload-format}
 
-The payload is flat: `title`, `message`, `timestamp`, `source`, `event`, and the event's own values as top-level fields.
+Данные имеют плоскую структуру: `title`, `message`, `timestamp`, `source`, `event` и значения самого события находятся на верхнем уровне.
 
 ```json
 {
@@ -509,27 +356,27 @@ The payload is flat: `title`, `message`, `timestamp`, `source`, `event`, and the
 }
 ```
 
-See [Notifications](notifications.md#webhook-custom) for every field, the failed/stopped fields and the Slack format.
+Все поля, включая поля неудачной и остановленной печати, а также формат Slack описаны в разделе [Уведомления](notifications.md#webhook-custom).
 
-### Events
+### События {#events}
 
-| Event | Trigger |
+| Событие | Условие |
 |-------|---------|
-| `print_start` | Print begins |
-| `print_progress` | Progress milestone |
-| `print_complete` | Print finishes (includes filament usage) |
-| `print_failed` | Print fails (includes scaled filament usage and progress) |
-| `print_stopped` | Manual cancellation (includes scaled filament usage and progress) |
-| `printer_offline` | Connection lost |
-| `printer_error` | HMS error |
+| `print_start` | Начало печати |
+| `print_progress` | Достижение этапа печати |
+| `print_complete` | Завершение печати (включая расход филамента) |
+| `print_failed` | Неудачная печать (включая пропорциональный расход филамента и прогресс) |
+| `print_stopped` | Отмена вручную (включая пропорциональный расход филамента и прогресс) |
+| `printer_offline` | Потеря соединения |
+| `printer_error` | Ошибка HMS |
 
 ---
 
-## :material-home-assistant: Integration Examples
+## :material-home-assistant: Примеры интеграции {#integration-examples}
 
-### Home Assistant
+### Home Assistant {#home-assistant}
 
-Use REST sensors to display status:
+Используйте REST-сенсоры для отображения состояния:
 
 ```yaml
 sensor:
@@ -545,105 +392,105 @@ sensor:
       - temperature
 ```
 
-Trigger automations on webhook events.
+Запускайте автоматизации по событиям вебхука.
 
-### Node-RED
+### Node-RED {#node-red}
 
-Use HTTP request nodes with API key authentication.
+Используйте узлы HTTP-запросов с аутентификацией по ключу API.
 
-### IFTTT / Zapier
+### IFTTT / Zapier {#ifttt-zapier}
 
-Use webhook triggers and actions.
-
----
-
-## :material-cog: Managing API Keys
-
-### Viewing Keys
-
-See all API keys in Settings:
-
-- Name
-- Created date
-- Last used (updated at most once a minute)
-- Permissions
-
-### Revoking Keys
-
-Delete keys that are no longer needed:
-
-1. Find the key in the list
-2. Click **Delete**
-3. Confirm deletion
-
-Key is immediately invalidated.
-
-### Rotating Keys
-
-Best practice: Rotate keys periodically:
-
-1. Create new key
-2. Update applications
-3. Delete old key
+Используйте триггеры и действия вебхуков.
 
 ---
 
-## :material-shield-check: Security Best Practices
+## :material-cog: Управление ключами API {#managing-api-keys}
 
-### Key Storage
+### Просмотр ключей {#viewing-keys}
 
-- Never commit keys to version control
-- Use environment variables
-- Store in secrets managers
+В настройках можно увидеть все ключи API:
 
-### Network Security
+- Название
+- Дата создания
+- Время последнего использования (обновляется не чаще раза в минуту)
+- Разрешения
 
-- Use HTTPS for external access
-- Limit API access to trusted IPs if possible
-- Consider VPN for remote access
+### Отзыв ключей {#revoking-keys}
 
-### Monitoring
+Удаляйте ненужные ключи:
 
-- Review API key usage
-- Check for unauthorized access
-- Revoke unused keys
+1. Найдите ключ в списке
+2. Нажмите **Удалить**
+3. Подтвердите удаление
 
-### Permissions
+Ключ немедленно становится недействительным.
 
-- Use minimum required permissions
-- Create separate keys per application
-- Avoid using admin keys in automation
+### Ротация ключей {#rotating-keys}
 
----
+Рекомендуется периодически менять ключи:
 
-## :material-help-circle: Troubleshooting
-
-### 401 Unauthorized
-
-- Check API key is correct
-- Verify key hasn't been revoked
-- Ensure header name is `X-API-Key`
-
-### 403 Forbidden
-
-- Check key has required permissions
-- Verify endpoint matches permissions
+1. Создайте новый ключ
+2. Обновите приложения
+3. Удалите старый ключ
 
 ---
 
-## :material-lightbulb: Tips
+## :material-shield-check: Рекомендации по безопасности {#security-best-practices}
 
-!!! tip "Descriptive Names"
-    Name keys after their purpose: "Home Assistant Dashboard" not "key1".
+### Хранение ключей {#key-storage}
 
-!!! tip "Separate Keys"
-    Use different keys for different applications for easy management.
+- Не сохраняйте ключи в системе контроля версий
+- Используйте переменные окружения
+- Храните ключи в менеджерах секретов
 
-!!! tip "Regular Audit"
-    Review API keys periodically and remove unused ones.
+### Сетевая безопасность {#network-security}
 
-!!! tip "Test First"
-    Test API calls manually before implementing in automation.
+- Для внешнего доступа используйте HTTPS
+- По возможности ограничьте доступ к API доверенными IP-адресами
+- Для удалённого доступа рассмотрите VPN
 
-!!! tip "Document Usage"
-    Keep notes on which keys are used where.
+### Мониторинг {#monitoring}
+
+- Проверяйте использование ключей API
+- Ищите признаки несанкционированного доступа
+- Отзывайте неиспользуемые ключи
+
+### Разрешения {#permissions_1}
+
+- Используйте минимально необходимые разрешения
+- Создавайте отдельный ключ для каждого приложения
+- Не используйте административные ключи в автоматизациях
+
+---
+
+## :material-help-circle: Устранение неполадок {#troubleshooting}
+
+### 401 Unauthorized {#401-unauthorized}
+
+- Проверьте правильность ключа API
+- Убедитесь, что ключ не отозван
+- Убедитесь, что заголовок называется `X-API-Key`
+
+### 403 Forbidden {#403-forbidden}
+
+- Убедитесь, что у ключа есть необходимые разрешения
+- Проверьте соответствие конечной точки разрешениям
+
+---
+
+## :material-lightbulb: Советы {#tips}
+
+!!! tip "Понятные названия"
+    Называйте ключи по назначению: «Панель Home Assistant», а не «key1».
+
+!!! tip "Отдельные ключи"
+    Используйте разные ключи для разных приложений, чтобы ими было проще управлять.
+
+!!! tip "Регулярная проверка"
+    Периодически проверяйте ключи API и удаляйте неиспользуемые.
+
+!!! tip "Сначала проверьте"
+    Перед внедрением в автоматизацию проверьте вызовы API вручную.
+
+!!! tip "Документируйте использование"
+    Записывайте, где используются ключи.

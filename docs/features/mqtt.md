@@ -1,92 +1,92 @@
-# MQTT Publishing
+# Публикация MQTT {#mqtt-publishing}
 
-Bambuddy can publish events to an external MQTT broker, enabling integration with home automation platforms like **Home Assistant**, **Node-RED**, and other MQTT-based systems.
+Bambuddy может публиковать события во внешнем брокере MQTT для интеграции с платформами домашней автоматизации, такими как **Home Assistant**, **Node-RED** и другие системы на базе MQTT.
 
-## Configuration
+## Настройка {#configuration}
 
-Navigate to **Settings → Network → MQTT Publishing** to configure the connection.
+Откройте **Настройки → Сеть → Публикация MQTT**, чтобы настроить подключение.
 
-### Settings
+### Параметры {#settings}
 
-| Setting | Description | Default |
+| Параметр | Описание | По умолчанию |
 |---------|-------------|---------|
-| **Enable MQTT** | Toggle MQTT publishing on/off | Off |
-| **Broker Hostname** | MQTT broker address (IP or hostname) | - |
-| **Port** | Broker port | 1883 (8883 with TLS) |
-| **Username** | Authentication username (optional) | - |
-| **Password** | Authentication password (optional) | - |
-| **Topic Prefix** | Prefix for all published topics | `bambuddy` |
-| **Use TLS** | Enable TLS/SSL encryption | Off |
+| **Включить MQTT** | Включение и отключение публикации MQTT | Выключено |
+| **Адрес брокера** | IP-адрес или имя хоста брокера MQTT | - |
+| **Порт** | Порт брокера | 1883 (8883 с TLS) |
+| **Имя пользователя** | Имя для аутентификации (необязательно) | - |
+| **Пароль** | Пароль для аутентификации (необязательно) | - |
+| **Префикс топика** | Префикс всех публикуемых топиков | `bambuddy` |
+| **Использовать TLS** | Включить шифрование TLS/SSL | Выключено |
 
-!!! note "Saved password"
-    Once saved, the password is never shown again: the field shows `********` instead. Leave it as is to keep the saved value, clear it to remove it, or enter a new one. If you change the broker, port or TLS setting, enter the password again; the settings are not saved until you do.
+!!! note "Сохранённый пароль"
+    После сохранения пароль больше не показывается: вместо него отображается `********`. Оставьте поле без изменений, чтобы сохранить пароль, очистите для удаления или введите новый. При изменении брокера, порта или настройки TLS пароль нужно ввести заново; до этого настройки не сохраняются.
 
-!!! tip "Port Auto-Population"
-    When you toggle TLS on/off, the port field automatically updates:
+!!! tip "Автоматическое заполнение порта"
+    При включении или выключении TLS порт меняется автоматически:
 
-    - TLS enabled → Port 8883
-    - TLS disabled → Port 1883
+    - TLS включён → порт 8883
+    - TLS выключен → порт 1883
 
-## Published Topics
+## Публикуемые топики {#published-topics}
 
-All topics are prefixed with your configured topic prefix (default: `bambuddy`).
+Все топики начинаются с настроенного префикса (по умолчанию `bambuddy`).
 
-### Status
+### Состояние {#status}
 
-| Topic | Description | Retained |
+| Топик | Описание | Сохранение |
 |-------|-------------|----------|
-| `bambuddy/status` | Online/offline status | Yes |
+| `bambuddy/status` | Состояние подключения | Да |
 
-### Printer Events
+### События принтера {#printer-events}
 
-| Topic | Description | Retained |
+| Топик | Описание | Сохранение |
 |-------|-------------|----------|
-| `bambuddy/printers/{serial}/status` | Real-time printer state (throttled to 1/sec) | Yes |
-| `bambuddy/printers/{serial}/print/started` | Print job started | No |
-| `bambuddy/printers/{serial}/print/completed` | Print job completed successfully | No |
-| `bambuddy/printers/{serial}/print/failed` | Print job failed | No |
-| `bambuddy/printers/{serial}/run/started` | A print's run opened at its start: names the run and its archive (see [Run Events](#run-events)) | No |
-| `bambuddy/printers/{serial}/run/completed` | A print's run as its end wrote it: outcome and figures | No |
-| `bambuddy/printers/{serial}/run/discarded` | A run dropped without an end (its print ended unseen, or its archive was deleted) | No |
-| `bambuddy/printers/{serial}/ams/changed` | AMS filament changed | No |
-| `bambuddy/printers/{serial}/plate_clear` | Plate-clear gate raised or released | Yes |
-| `bambuddy/printers/{serial}/offline` | Printer has been disconnected for a minute | No |
-| `bambuddy/printers/{serial}/online` | Printer reconnected after an `offline` event | No |
-| `bambuddy/printers/{serial}/filament/low` | The spool in an AMS slot crossed its low-stock threshold | No |
+| `bambuddy/printers/{serial}/status` | Состояние принтера в реальном времени (не чаще раза в секунду) | Да |
+| `bambuddy/printers/{serial}/print/started` | Задание печати запущено | Нет |
+| `bambuddy/printers/{serial}/print/completed` | Задание печати успешно завершено | Нет |
+| `bambuddy/printers/{serial}/print/failed` | Задание печати завершилось ошибкой | Нет |
+| `bambuddy/printers/{serial}/run/started` | При начале печати открыт её запуск: указаны запуск и архив (см. [События запусков](#run-events)) | Нет |
+| `bambuddy/printers/{serial}/run/completed` | Данные завершённого запуска: результат и показатели | Нет |
+| `bambuddy/printers/{serial}/run/discarded` | Запуск удалён без события завершения (окончание печати не было получено или архив удалён) | Нет |
+| `bambuddy/printers/{serial}/ams/changed` | Филамент AMS изменён | Нет |
+| `bambuddy/printers/{serial}/plate_clear` | Установлено или снято ожидание очистки пластины | Да |
+| `bambuddy/printers/{serial}/offline` | Принтер отключён в течение минуты | Нет |
+| `bambuddy/printers/{serial}/online` | Принтер снова подключён после события `offline` | Нет |
+| `bambuddy/printers/{serial}/filament/low` | Остаток катушки в слоте AMS опустился ниже порога | Нет |
 
-### Queue Events
+### События очереди {#queue-events}
 
-| Topic | Description | Retained |
+| Топик | Описание | Сохранение |
 |-------|-------------|----------|
-| `bambuddy/queue/job_added` | Job added to print queue, from any source; one message per job | No |
-| `bambuddy/queue/job_started` | Queued job started printing | No |
-| `bambuddy/queue/job_completed` | Queued job completed | No |
+| `bambuddy/queue/job_added` | Задание из любого источника добавлено в очередь печати; одно сообщение на задание | Нет |
+| `bambuddy/queue/job_started` | Задание очереди начало печататься | Нет |
+| `bambuddy/queue/job_completed` | Задание очереди завершено | Нет |
 
-### Maintenance Events
+### События обслуживания {#maintenance-events}
 
-| Topic | Description | Retained |
+| Топик | Описание | Сохранение |
 |-------|-------------|----------|
-| `bambuddy/maintenance/alert` | Maintenance due or nearly due, after a print; `current_value` is the hours (or days) since it was last done, `threshold` its interval, `unit` says `hours` or `days` | No |
-| `bambuddy/maintenance/reset` | Maintenance counter reset | No |
+| `bambuddy/maintenance/alert` | Обслуживание требуется или скоро потребуется после печати; `current_value` — часы или дни с последнего обслуживания, `threshold` — интервал, `unit` — `hours` или `days` | Нет |
+| `bambuddy/maintenance/reset` | Счётчик обслуживания сброшен | Нет |
 
-### Smart Plug Events
+### События умных розеток {#smart-plug-events}
 
-| Topic | Description | Retained |
+| Топик | Описание | Сохранение |
 |-------|-------------|----------|
-| `bambuddy/smart_plugs/on` | A plug was switched on, by hand or automatically (auto-on, schedule, queue); also sent when it already was on | No |
-| `bambuddy/smart_plugs/off` | A plug was switched off, by hand or automatically (auto-off, schedule, failure detection); also sent when it already was off | No |
-| `bambuddy/smart_plugs/energy` | Power and energy of each enabled plug, once a minute | No |
+| `bambuddy/smart_plugs/on` | Розетка включена вручную или автоматически (автовключение, расписание, очередь); событие отправляется и если она уже была включена | Нет |
+| `bambuddy/smart_plugs/off` | Розетка выключена вручную или автоматически (автовыключение, расписание, обнаружение ошибок); событие отправляется и если она уже была выключена | Нет |
+| `bambuddy/smart_plugs/energy` | Мощность и энергопотребление каждой включённой розетки раз в минуту | Нет |
 
-### Archive Events
+### События архива {#archive-events}
 
-| Topic | Description | Retained |
+| Топик | Описание | Сохранение |
 |-------|-------------|----------|
-| `bambuddy/archive/created` | New archive created | No |
-| `bambuddy/archive/updated` | Archive updated | No |
+| `bambuddy/archive/created` | Создан новый архив | Нет |
+| `bambuddy/archive/updated` | Архив обновлён | Нет |
 
-### Run Events
+### События запусков {#run-events}
 
-An archive is a file; each print of it is a run. The print and archive events above go out before the print's run exists, so they don't name it. `run/started` and `run/completed` do, once it does:
+Архив — это файл, а каждая его печать — отдельный запуск. Описанные выше события печати и архива отправляются до создания запуска, поэтому не содержат его идентификатор. События `run/started` и `run/completed` содержат его после создания:
 
 ```json
 {
@@ -109,17 +109,17 @@ An archive is a file; each print of it is a run. The print and archive events ab
 }
 ```
 
-`run/started` carries the fields up to `started_at` (its `status` is `printing`); `run/completed` adds the rest. Times are UTC. `run/started` is sent once per print: a restart that resumes a print does not send it again.
+`run/started` содержит поля до `started_at` включительно (его `status` — `printing`); `run/completed` добавляет остальные. Время указывается в UTC. `run/started` отправляется один раз на печать: перезапуск приложения с возобновлением печати не отправляет его повторно.
 
-`run/completed` is sent when the print's end reaches Bambuddy, and also when a queued print is stopped while its printer is offline (as `cancelled`). Should that printer report the real end later, a second `run/completed` for the same `run_id` replaces the first. `duration_unmeasured` is `true` for an end only found at a reconnect: its duration is then the estimate, or `0` when there is none. `energy_kwh` is filled in a moment later, after the plug's reading, and is not in this message yet.
+`run/completed` отправляется, когда Bambuddy получает сообщение об окончании печати, а также когда печать из очереди остановлена при отключённом принтере (с состоянием `cancelled`). Если позже принтер сообщит о фактическом окончании, второе событие `run/completed` с тем же `run_id` заменит первое. Для завершения, обнаруженного только после повторного подключения, `duration_unmeasured` равно `true`: длительность является оценкой или `0` при её отсутствии. `energy_kwh` заполняется немного позже после получения показаний розетки и в этом сообщении ещё отсутствует.
 
-`run/discarded` (the `run/started` fields) says a run is gone without an end: a new print started on the printer while the run was still open, or its archive was deleted while it printed. Its `run_id` no longer exists after it.
+`run/discarded` (с полями `run/started`) сообщает об удалении запуска без завершения: на принтере началась новая печать, пока запуск ещё был открыт, либо его архив удалён во время печати. После этого `run_id` больше не существует.
 
-Use `run_id` with `GET /archives/{archive_id}?run_id=` for everything else about the print.
+Для остальных сведений о печати используйте `run_id` с `GET /archives/{archive_id}?run_id=`.
 
-## Payload Format
+## Формат данных {#payload-format}
 
-All payloads are JSON objects. Here's an example printer status payload:
+Все сообщения представляют собой объекты JSON. Пример состояния принтера:
 
 ```json
 {
@@ -152,11 +152,11 @@ All payloads are JSON objects. Here's an example printer status payload:
 }
 ```
 
-### Plate Clear
+### Очистка пластины {#plate-clear}
 
-`awaiting_plate_clear` is a Bambuddy-side flag, not printer telemetry: the printer itself only ever reports `RUNNING`, `PAUSE`, `FAILED`, `FINISH` and `IDLE`. It goes `true` when a print reaches a terminal state and stays `true` until someone confirms the build plate is free — the queue will not dispatch the next job in the meantime. See [Print Queue](print-queue.md) for the gate itself.
+`awaiting_plate_clear` — флаг Bambuddy, а не телеметрия принтера: сам принтер сообщает только `RUNNING`, `PAUSE`, `FAILED`, `FINISH` и `IDLE`. Флаг становится `true` при переходе печати в конечное состояние и остаётся таким до подтверждения освобождения пластины; до этого очередь не отправляет следующее задание. Подробнее см. [Очередь печати](print-queue.md).
 
-Because the status topic only refreshes when the printer pushes telemetry — which stops entirely once [Auto Off](smart-plugs.md) powers the printer down — every transition is also published on its own **retained** topic:
+Поскольку топик состояния обновляется только при отправке телеметрии принтером, которая полностью прекращается после выключения принтера функцией [Автовыключение](smart-plugs.md), каждый переход также публикуется в отдельном **сохраняемом** топике:
 
 ```json
 {
@@ -168,14 +168,14 @@ Because the status topic only refreshes when the printer pushes telemetry — wh
 }
 ```
 
-Subscribe to `bambuddy/printers/+/plate_clear` and you get the current state of every printer the moment you connect, then one message per change. Acknowledge from your own automation with `POST /api/v1/printers/{id}/clear-plate` (see the [API reference](../reference/api.md)).
+Подпишитесь на `bambuddy/printers/+/plate_clear`, чтобы при подключении получить текущее состояние каждого принтера, а затем по одному сообщению на каждое изменение. Подтверждать очистку из собственной автоматизации можно через `POST /api/v1/printers/{id}/clear-plate` (см. [справочник API](../reference/api.md)).
 
-!!! tip "Notification too"
-    The same transition can raise a push notification — enable **Plate Clear Required** on a notification provider. It is off by default because it fires after every print, at the same moment as the print-complete notification. See [Notifications](notifications.md).
+!!! tip "Также доступно уведомление"
+    То же изменение может вызывать push-уведомление: включите уведомление о необходимости очистить пластину у поставщика уведомлений. По умолчанию оно выключено, так как срабатывает после каждой печати одновременно с уведомлением о завершении. См. [Уведомления](notifications.md).
 
-### Printer Offline and Online
+### Принтер отключён и снова подключён {#printer-offline-and-online}
 
-`offline` is sent when a printer has stayed disconnected for a minute, so a short network blip sends nothing. `online` is sent when that printer connects again, and only after an `offline` went out, so an `online` never arrives on its own. If the broker is unreachable when the printer comes back, `online` follows once the relay has reconnected. Both carry the printer:
+`offline` отправляется, когда принтер остаётся отключённым минуту, поэтому кратковременный сбой сети не вызывает сообщения. `online` отправляется при повторном подключении только после события `offline`, поэтому само по себе не появляется. Если при возвращении принтера брокер недоступен, `online` отправляется после повторного подключения ретранслятора. Оба события содержат сведения о принтере:
 
 ```json
 {
@@ -186,9 +186,9 @@ Subscribe to `bambuddy/printers/+/plate_clear` and you get the current state of 
 }
 ```
 
-### Low Filament
+### Мало филамента {#low-filament}
 
-Sent once when the spool assigned to an AMS slot drops below its low-stock threshold (the spool's own, or the global one, 20% by default; with Spoolman always the global one), at the same moment as the **Low Filament** notification. It is sent again only after the slot has gone back above the threshold, for example with a new spool, or after the relay was switched off and on again, which sends every slot that is low at that point. If the relay is only disconnected at that moment, the event follows once it reconnects.
+Событие отправляется один раз, когда остаток назначенной слоту AMS катушки опускается ниже порога (порог катушки или общий, по умолчанию 20%; со Spoolman всегда общий), одновременно с уведомлением о низком остатке. Повторно оно отправляется только после того, как остаток в слоте снова превысил порог, например при установке новой катушки, либо после выключения и повторного включения ретранслятора: тогда отправляются события для всех слотов с низким остатком. Если ретранслятор в этот момент только отключён от сети, событие будет отправлено после восстановления связи.
 
 ```json
 {
@@ -203,11 +203,11 @@ Sent once when the spool assigned to an AMS slot drops below its low-stock thres
 }
 ```
 
-`color` is the spool's colour name, or `null` when it has none. `spool_id` is Bambuddy's spool ID, or Spoolman's when Spoolman manages the inventory. Only slots with an assigned spool are checked.
+`color` — название цвета катушки или `null`, если оно не задано. `spool_id` — ID катушки Bambuddy или Spoolman, если учётом управляет Spoolman. Проверяются только слоты с назначенной катушкой.
 
-### Smart Plug Energy
+### Энергопотребление умной розетки {#smart-plug-energy}
 
-Every enabled plug's readings are published once a minute while the relay is connected. A value the plug doesn't report is `null`. A plug that gives no reading at all is left out (a Home Assistant plug without a power value counts as that), and so is an MQTT plug that has stopped sending messages. An MQTT plug has a single energy value, the one from its energy topic, which is given as both `energy_today_kwh` and `energy_total_kwh`.
+Показания каждой включённой розетки публикуются раз в минуту, пока ретранслятор подключён. Значение, которое розетка не сообщает, равно `null`. Розетка без каких-либо показаний исключается (в том числе розетка Home Assistant без значения мощности), как и MQTT-розетка, переставшая отправлять сообщения. У MQTT-розетки одно значение энергии из соответствующего топика; оно указывается и в `energy_today_kwh`, и в `energy_total_kwh`.
 
 ```json
 {
@@ -220,15 +220,15 @@ Every enabled plug's readings are published once a minute while the relay is con
 }
 ```
 
-## Home Assistant Integration
+## Интеграция с Home Assistant {#home-assistant-integration}
 
-### MQTT Discovery
+### Обнаружение MQTT {#mqtt-discovery}
 
-Bambuddy does not currently support Home Assistant MQTT discovery. You'll need to configure sensors manually.
+Сейчас Bambuddy не поддерживает автоматическое обнаружение MQTT в Home Assistant. Датчики нужно настроить вручную.
 
-### Example Sensor Configuration
+### Пример настройки датчиков {#example-sensor-configuration}
 
-Add to your `configuration.yaml`:
+Добавьте в `configuration.yaml`:
 
 ```yaml
 mqtt:
@@ -249,43 +249,43 @@ mqtt:
       device_class: temperature
 ```
 
-### Node-RED Example
+### Пример Node-RED {#node-red-example}
 
-Use an **MQTT In** node subscribed to `bambuddy/#` to receive all events, then route them based on topic:
+Используйте узел **MQTT In** с подпиской на `bambuddy/#` для получения всех событий, затем направляйте их по топику:
 
 ```
 [MQTT In] → [Switch (by topic)] → [Function/Dashboard]
 ```
 
-## TLS/SSL Configuration
+## Настройка TLS/SSL {#tlsssl-configuration}
 
-Bambuddy supports TLS connections with self-signed certificates:
+Bambuddy поддерживает TLS-соединения с самоподписанными сертификатами:
 
-- Certificates are **not verified** (allows self-signed certs)
-- Connection is still encrypted
-- Suitable for home networks
+- Сертификаты **не проверяются**, что позволяет использовать самоподписанные сертификаты
+- Соединение всё равно шифруется
+- Подходит для домашних сетей
 
-For production environments, use properly signed certificates from your broker.
+Для рабочих сред используйте сертификаты брокера, подписанные надлежащим образом.
 
-## Troubleshooting
+## Устранение неполадок {#troubleshooting}
 
-### Connection Status
+### Состояние соединения {#connection-status}
 
-The connection status is shown in the Settings page:
+Состояние отображается на странице настроек:
 
-- **Green dot** = Connected
-- **Red dot** = Disconnected or error
+- **Зелёная точка** — подключено
+- **Красная точка** — отключено или произошла ошибка
 
-### Common Issues
+### Распространённые проблемы {#common-issues}
 
-| Issue | Solution |
+| Проблема | Решение |
 |-------|----------|
-| "Not authorized" | Check username/password |
-| Connection refused | Verify broker address and port |
-| TLS errors | Ensure broker supports TLS on the configured port |
-| No messages received | Check your subscriber's topic filter matches |
+| "Not authorized" | Проверьте имя пользователя и пароль |
+| Соединение отклонено | Проверьте адрес и порт брокера |
+| Ошибки TLS | Убедитесь, что брокер поддерживает TLS на настроенном порту |
+| Сообщения не поступают | Проверьте соответствие фильтра топиков у подписчика |
 
-### Testing with Mosquitto
+### Проверка с Mosquitto {#testing-with-mosquitto}
 
 ```bash
 # Subscribe to all Bambuddy topics

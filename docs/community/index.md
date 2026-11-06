@@ -1,349 +1,349 @@
 ---
-title: Community Add-ons
-description: Third-party hardware and software add-ons built by the Bambuddy community
+title: Дополнения сообщества
+description: Сторонние аппаратные и программные дополнения сообщества Bambuddy
 ---
 
-# Community Add-ons
+# Дополнения сообщества {#community-add-ons}
 
-Third-party projects that extend Bambuddy &mdash; built by the community, for the community. These are independent projects maintained outside the main Bambuddy repository, talking to Bambuddy through its public API.
+Сторонние проекты, расширяющие Bambuddy, созданные сообществом для сообщества. Эти независимые проекты сопровождаются вне основного репозитория Bambuddy и взаимодействуют с ним через публичный API.
 
-!!! info "Want to build one?"
-    Bambuddy exposes a documented [REST API](../reference/api.md) and supports [API keys](../features/api-keys.md) for headless integrations. If you build something cool, open a PR on the [wiki repo](https://github.com/maziggy/bambuddy-wiki) to add it here.
+!!! info "Хотите создать дополнение?"
+    Bambuddy предоставляет документированный [REST API](../reference/api.md) и поддерживает [ключи API](../features/api-keys.md) для интеграций без графического интерфейса. Если вы что-то создали, откройте PR в [репозитории Wiki](https://github.com/maziggy/bambuddy-wiki), чтобы добавить проект сюда.
 
-!!! warning "Independent projects"
-    Community add-ons are maintained by their respective authors, not by the Bambuddy team. Issues and feature requests for an add-on belong on its own repository.
+!!! warning "Независимые проекты"
+    Дополнения сопровождаются их авторами, а не командой Bambuddy. Сообщения об ошибках и предложения функций направляйте в соответствующий репозиторий дополнения.
 
 ---
 
-## :material-gesture-tap-button: Hardware
+## :material-gesture-tap-button: Оборудование {#hardware}
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### [:material-radiobox-marked: Bambutton](bambutton.md)
-ESP32-C3 wireless button that lets you mark the build plate clear at the printer with a single press, so the next queued job can be dispatched automatically. Includes an LED ring that signals when a plate needs clearing.
+### [:material-radiobox-marked: Bambutton](bambutton.md) {#bambutton}
+Беспроводная кнопка на ESP32-C3 позволяет одним нажатием отметить пластину очищенной у принтера, чтобы следующее задание из очереди отправилось автоматически. Светодиодное кольцо сигнализирует о необходимости очистки.
 
-**Author:** [Edward Chamberlain](https://github.com/EdwardChamberlain) &middot; [Repository](https://github.com/EdwardChamberlain/bambutton)
+**Автор:** [Edward Chamberlain](https://github.com/EdwardChamberlain) &middot; [Репозиторий](https://github.com/EdwardChamberlain/bambutton)
 </div>
 
 <div class="feature-card" markdown>
-### [:material-nfc: ESPHome Bambu Spool Reader](https://github.com/bemble/esphome-bambuddy-reader)
-ESPHome firmware for a Waveshare ESP32-S3 with PN532 NFC reader and 2.8" touchscreen. Reads Bambu Lab spool tags and syncs them with Bambuddy &mdash; looks up known spools by tag UID, displays remaining weight, and can register new spools straight from the device.
+### [:material-nfc: ESPHome Bambu Spool Reader](https://github.com/bemble/esphome-bambuddy-reader) {#esphome-bambu-spool-reader}
+Прошивка ESPHome для Waveshare ESP32-S3 с NFC-считывателем PN532 и сенсорным экраном 2,8 дюйма. Считывает метки катушек Bambu Lab и синхронизирует их с Bambuddy: находит известные катушки по UID метки, показывает оставшийся вес и позволяет регистрировать новые катушки прямо с устройства.
 
-**Author:** [bemble](https://github.com/bemble) &middot; [Repository](https://github.com/bemble/esphome-bambuddy-reader)
+**Автор:** [bemble](https://github.com/bemble) &middot; [Репозиторий](https://github.com/bemble/esphome-bambuddy-reader)
 </div>
 
 <div class="feature-card" markdown>
-### [:material-chip: ESP Virtual Printer](https://github.com/mengxyz/ESP_VP)
-ESP-IDF firmware for an ESP32-S3 with PSRAM that presents an archive-only Bambu virtual printer on the LAN. Slicers discover it like a real printer and upload `.3mf` files over implicit FTPS; the ESP streams the bytes straight into Bambuddy as a chunked HTTP upload &mdash; no SD card, no local storage. Works with the bundled `buddy_recv.py` sidecar today.
+### [:material-chip: ESP Virtual Printer](https://github.com/mengxyz/ESP_VP) {#esp-virtual-printer}
+Прошивка ESP-IDF для ESP32-S3 с PSRAM представляет в локальной сети виртуальный принтер Bambu только для архивации. Слайсеры обнаруживают его как настоящий принтер и загружают файлы `.3mf` по неявному FTPS; ESP передаёт данные непосредственно в Bambuddy частями через HTTP, без SD-карты и локального хранилища. Сейчас работает с прилагаемым дополнительным сервисом `buddy_recv.py`.
 
-**Author:** [mengxyz](https://github.com/mengxyz) &middot; [Repository](https://github.com/mengxyz/ESP_VP)
+**Автор:** [mengxyz](https://github.com/mengxyz) &middot; [Репозиторий](https://github.com/mengxyz/ESP_VP)
 </div>
 
 <div class="feature-card" markdown>
-### [:material-nfc-search-variant: ESPoolBuddy](https://github.com/CSchlipp/espoolbuddy)
-ESPHome firmware that turns cheap ESP32-S3 boards into a [SpoolBuddy](../spoolbuddy/index.md)-style NFC spool station &mdash; no Raspberry Pi needed. The **Console** (WT32-SC01 Plus, 3.5" touchscreen + PN532) registers with Bambuddy over the HTTP API, heartbeats, polls AMS and printer state, and reports NFC scans; scan a tag and load the spool into the AMS within 60 seconds and it is assigned automatically. Tag *writing* is triggered from the Bambuddy dashboard. An optional **Scale** (any ESP32-S3 + HX711 load cell + PN532) never talks to Bambuddy itself &mdash; it finds the Console over mDNS and pushes weights through it, so everything arrives under one device ID. Deep-sleep and battery operation supported.
+### [:material-nfc-search-variant: ESPoolBuddy](https://github.com/CSchlipp/espoolbuddy) {#espoolbuddy}
+Прошивка ESPHome превращает недорогие платы ESP32-S3 в NFC-станцию катушек в стиле [SpoolBuddy](../spoolbuddy/index.md), без Raspberry Pi. **Консоль** (WT32-SC01 Plus, сенсорный экран 3,5 дюйма и PN532) регистрируется в Bambuddy через HTTP API, отправляет сигналы состояния, опрашивает AMS и принтер и передаёт результаты NFC-сканирования. Если отсканировать метку и загрузить катушку в AMS в течение 60 секунд, она назначается автоматически. *Запись* метки запускается с панели Bambuddy. Необязательные **весы** (любой ESP32-S3, датчик HX711 и PN532) не связываются с Bambuddy напрямую: они находят консоль через mDNS и передают вес через неё, поэтому всё поступает под одним ID устройства. Поддерживаются глубокий сон и питание от батареи.
 
-**Author:** [CSchlipp](https://github.com/CSchlipp) &middot; [Repository](https://github.com/CSchlipp/espoolbuddy)
+**Автор:** [CSchlipp](https://github.com/CSchlipp) &middot; [Репозиторий](https://github.com/CSchlipp/espoolbuddy)
 </div>
 
 <div class="feature-card" markdown>
-### [:material-barcode-scan: NFC Handheld Case](https://makerworld.com/en/models/3043887)
-Printable barcode-scanner-style enclosure that turns a SpoolBuddy console, an ESPoolBuddy console, or a SpoolEase console into a **handheld** NFC scanner &mdash; one-handed operation, everything in thumb reach, so you can walk the shelf and scan spools instead of carrying them to a fixed station. Two build options: a cable inlet for a permanently wired USB-C setup, or a battery compartment plus a pogo-pin connector for cordless use with magnetic charging (Adafruit PowerBoost 1000C + 18650). Assembly guide covers the heat-inserts, the PN532 on the back cover, and the optional speaker.
+### [:material-barcode-scan: NFC Handheld Case](https://makerworld.com/en/models/3043887) {#nfc-handheld-case}
+Печатный корпус в форме сканера штрихкодов превращает консоль SpoolBuddy, ESPoolBuddy или SpoolEase в **ручной** NFC-сканер: управление одной рукой, все элементы под большим пальцем, поэтому можно обходить полки и сканировать катушки на месте. Два варианта сборки: ввод кабеля для постоянного USB-C-подключения либо отсек батареи и контакты pogo-pin для беспроводной работы с магнитной зарядкой (Adafruit PowerBoost 1000C + 18650). Руководство по сборке описывает термовставки, PN532 на задней крышке и дополнительный динамик.
 
-**Designer:** Chris ([CSchlipp](https://github.com/CSchlipp)) &middot; [MakerWorld model](https://makerworld.com/en/models/3043887)
+**Дизайнер:** Chris ([CSchlipp](https://github.com/CSchlipp)) &middot; [Модель MakerWorld](https://makerworld.com/en/models/3043887)
 </div>
 
 <div class="feature-card" markdown>
-### [:material-keyboard-outline: Bambuddy Keypad](https://github.com/Bridawg/bambuddy-keypad)
-Screen-less MicroPython controller on a Raspberry Pi Pico W with a Pimoroni Pico Display Pack &mdash; born after the Pack's LCD died, so its four buttons and single RGB LED carry the entire interface. The LED encodes state by colour *and* motion: green steady = idle, blue breathing = printing, amber steady = paused, amber **pulsing** = a finished plate with a job waiting, red = HMS error, dim white heartbeat = offline. The buttons cover what the printer's own screen can't do &mdash; pause/resume, clear plate and dispatch the next queued job, clear an HMS error, reprint the last archived job &mdash; with the two destructive ones held for 2 s while the LED ramps as confirmation. Polls Bambuddy's REST API directly over WiFi (~3 s cycle) with no host PC in between; write actions authenticate with an API key.
+### [:material-keyboard-outline: Bambuddy Keypad](https://github.com/Bridawg/bambuddy-keypad) {#bambuddy-keypad}
+Контроллер MicroPython без экрана на Raspberry Pi Pico W с Pimoroni Pico Display Pack появился после поломки LCD: интерфейс состоит из четырёх кнопок и одного RGB-светодиода. Цвет и движение показывают состояние: зелёный постоянно — ожидание, синий пульсирует — печать, жёлтый постоянно — пауза, жёлтый **мигает** — пластина готова и задание ожидает, красный — ошибка HMS, тусклый белый сигнал — офлайн. Кнопки позволяют приостановить и продолжить печать, подтвердить очистку пластины и отправить следующее задание, сбросить ошибку HMS и повторить последнюю архивную печать. Для двух необратимых действий требуется удержание 2 секунды с нарастающим сигналом светодиода. Устройство опрашивает REST API Bambuddy напрямую по Wi-Fi примерно каждые 3 секунды, без промежуточного ПК; действия записи используют ключ API.
 
-**Author:** [Bridawg](https://github.com/Bridawg) &middot; [Repository](https://github.com/Bridawg/bambuddy-keypad)
+**Автор:** [Bridawg](https://github.com/Bridawg) &middot; [Репозиторий](https://github.com/Bridawg/bambuddy-keypad)
 </div>
 
 </div>
 
 ---
 
-## :material-cellphone: Mobile Apps
+## :material-cellphone: Мобильные приложения {#mobile-apps}
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### [:material-android: BuddyDash](https://github.com/ChronosWing/BuddyDash)
-Unofficial Android companion app for Bambuddy &mdash; a mobile-first dashboard for quick status checks, multi-printer overview, archives browsing, and smart-outlet control. The standout is NFC quick actions: stick a tag on the printer and tap it to clear the plate, toggle power (with idle-safety checks), or run a finish workflow &mdash; no app navigation needed. Built with Jetpack Compose, with layouts optimised for phones, foldables, and tablets. Connects to your existing Bambuddy server through the REST API; it's a companion, not a replacement.
+### [:material-android: BuddyDash](https://github.com/ChronosWing/BuddyDash) {#buddydash}
+Неофициальное приложение Android для Bambuddy: мобильная панель быстрого просмотра состояния нескольких принтеров, архива и управления умными розетками. Быстрые NFC-действия позволяют приложить метку на принтере для подтверждения очистки пластины, переключения питания с проверкой простоя или запуска процедуры завершения без навигации по приложению. Создано на Jetpack Compose с компоновкой для телефонов, складных устройств и планшетов. Подключается к существующему серверу Bambuddy через REST API и дополняет его.
 
-!!! warning "Beta"
-    The author flags BuddyDash as beta &mdash; expect rough edges and breaking changes. Track the repo for stable releases.
+!!! warning "Бета-версия"
+    Автор указывает, что BuddyDash находится в бета-версии: возможны недоработки и несовместимые изменения. Следите за стабильными выпусками в репозитории.
 
-**Author:** [ChronosWing](https://github.com/ChronosWing) &middot; [Repository](https://github.com/ChronosWing/BuddyDash)
+**Автор:** [ChronosWing](https://github.com/ChronosWing) &middot; [Репозиторий](https://github.com/ChronosWing/BuddyDash)
 </div>
 
 <div class="feature-card" markdown>
-### [:material-watch: Bambuddy Mobile](https://github.com/DoYouHost/bambuddy-mobile)
-Flutter companion app for **Android phones and Wear OS watches**. Live status, progress, temperatures and ETA; pause / resume / stop and queue management; filament inventory with QR scanning; maintenance reminders and hardware alerts; home-screen widgets. The watch app runs standalone or relays through the phone when it cannot reach the server itself. Talks only to your own Bambuddy instance over its REST and WebSocket APIs &mdash; never to Bambu's cloud &mdash; and a demo mode lets you look around without a server. AGPL-3.0, same as Bambuddy.
+### [:material-watch: Bambuddy Mobile](https://github.com/DoYouHost/bambuddy-mobile) {#bambuddy-mobile}
+Приложение Flutter для **телефонов Android и часов Wear OS**: состояние, прогресс, температуры и время окончания в реальном времени; пауза, продолжение, остановка и управление очередью; учёт филамента со сканированием QR; напоминания об обслуживании, оповещения оборудования и виджеты главного экрана. Приложение часов работает самостоятельно или через телефон, если сервер напрямую недоступен. Связывается только с вашим Bambuddy через REST и WebSocket API, без облака Bambu; деморежим позволяет изучить интерфейс без сервера. Лицензия AGPL-3.0, как у Bambuddy.
 
-!!! warning "Beta"
-    Published on [Google Play](https://play.google.com/store/apps/details?id=page.codeberg.morganmlgman.bambuddy_mobile). Still in **beta**; phone and watch APKs are also on Github. Expect rough edges.
+!!! warning "Бета-версия"
+    Опубликовано в [Google Play](https://play.google.com/store/apps/details?id=page.codeberg.morganmlgman.bambuddy_mobile). Приложение всё ещё в **бета-версии**; APK для телефона и часов также доступны на GitHub. Возможны недоработки.
 
-**Author:** [DoYouHost](https://github.com/DoYouHost) &middot; [Repository](https://github.com/DoYouHost/bambuddy-mobile)
+**Автор:** [DoYouHost](https://github.com/DoYouHost) &middot; [Репозиторий](https://github.com/DoYouHost/bambuddy-mobile)
 </div>
 
 </div>
 
 ---
 
-## :material-monitor: Desktop
+## :material-monitor: Настольные приложения {#desktop}
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### [:material-apple: BambuddyTray](https://github.com/bcsutar/BambuddyTray)
-Native macOS **menu-bar** companion. Keeps a status badge (&check; healthy, ! attention, &times; error) in the menu bar with live progress and remaining time, and optionally raises macOS notifications when a print changes state or the server goes unreachable &mdash; so you can watch a print without a browser tab open and without Bambu Handy or any cloud account. Points at your Bambuddy instance with an API key, ships a settings UI and a LaunchAgent to start at login, and is distributed as a signed and notarised `.dmg`.
+### [:material-apple: BambuddyTray](https://github.com/bcsutar/BambuddyTray) {#bambuddytray}
+Нативное приложение macOS в **строке меню**. Показывает значок состояния (&check; исправно, ! требуется внимание, &times; ошибка), текущий прогресс и оставшееся время; при изменении состояния печати или недоступности сервера может отправлять уведомления macOS. За печатью можно следить без вкладки браузера, Bambu Handy и облачной учётной записи. Подключается к Bambuddy с ключом API, включает интерфейс настроек и LaunchAgent для запуска при входе, распространяется как подписанный и нотариально заверенный `.dmg`.
 
-**Author:** [bcsutar](https://github.com/bcsutar) &middot; [Repository](https://github.com/bcsutar/BambuddyTray)
+**Автор:** [bcsutar](https://github.com/bcsutar) &middot; [Репозиторий](https://github.com/bcsutar/BambuddyTray)
 </div>
 
 </div>
 
 ---
 
-## :material-monitor-dashboard: Dashboards &amp; Displays
+## :material-monitor-dashboard: Панели и дисплеи {#dashboards-displays}
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### [:material-mirror: MMM-Bambuddy](https://github.com/fbthpg/MMM-Bambuddy)
-[MagicMirror&sup2;](https://magicmirror.builders/) module that puts your fleet on the mirror &mdash; one entry per printer with name, status (online / printing / offline / error), live progress while printing, and, on an HMS fault, the error message plus a camera snapshot. Every Bambuddy call runs server-side in the module's `node_helper.js`, so the API key never reaches the browser; snapshots are proxied through the module's own route after it mints a short-lived camera token, because Bambuddy's snapshot endpoints are built for `<img>` tags that can't send headers. A single key with **Read Status** covers both the status polling and the snapshot token. No `npm install` &mdash; it uses Node's built-in `fetch`. Works with LAN-only and cloud-connected printers alike, since it only ever talks to your Bambuddy instance.
+### [:material-mirror: MMM-Bambuddy](https://github.com/fbthpg/MMM-Bambuddy) {#mmm-bambuddy}
+Модуль [MagicMirror&sup2;](https://magicmirror.builders/) показывает принтеры на зеркале: название, состояние (онлайн / печать / офлайн / ошибка), текущий прогресс и при ошибке HMS — сообщение и снимок камеры. Запросы к Bambuddy выполняются серверным `node_helper.js`, поэтому ключ API не попадает в браузер; снимки проксируются через собственный маршрут модуля после получения краткосрочного токена камеры, поскольку конечные точки снимков Bambuddy предназначены для `<img>`, не передающих заголовки. Одного ключа с разрешением **Чтение состояния** достаточно для опроса и токена. `npm install` не требуется: используется встроенный `fetch` Node. Работает с локальными и облачными принтерами, обращаясь только к Bambuddy.
 
-**Author:** [fbthpg](https://github.com/fbthpg) &middot; [Repository](https://github.com/fbthpg/MMM-Bambuddy)
+**Автор:** [fbthpg](https://github.com/fbthpg) &middot; [Репозиторий](https://github.com/fbthpg/MMM-Bambuddy)
 </div>
 
 </div>
 
 ---
 
-## :material-google-chrome: Browser Extensions
+## :material-google-chrome: Расширения браузера {#browser-extensions}
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### [:material-google-chrome: MakerWorld Import Extension](https://github.com/wolfrage76/Bambuddy-Extension)
-Chrome (MV3) extension that sends any MakerWorld print profile to your Bambuddy instance in one click, matching the built-in *Import from MakerWorld* feature. Resolves models via Bambuddy's own resolve endpoint (the URL fragment pre-selects the profile when the page contains `#profileId-XXXXX`), flags profiles already in your library with a ✓ badge, and pulls thumbnails through Bambuddy's proxy so your IP never touches MakerWorld's CDN directly. Configure with your Bambuddy base URL + an API key that has **Manage Library** + **Allow cloud access**; a *Test Connection* helper runs `/health` + `/system/info` + `/makerworld/status` to catch misconfiguration before you save.
+### [:material-google-chrome: MakerWorld Import Extension](https://github.com/wolfrage76/Bambuddy-Extension) {#makerworld-import-extension}
+Расширение Chrome (MV3) отправляет любой профиль печати MakerWorld в Bambuddy одним нажатием, как встроенная функция *Импорт из MakerWorld*. Определяет модели через соответствующую конечную точку Bambuddy (фрагмент URL заранее выбирает профиль при `#profileId-XXXXX`), отмечает уже имеющиеся профили значком ✓ и получает миниатюры через прокси Bambuddy, чтобы ваш IP не обращался напрямую к CDN MakerWorld. Укажите базовый URL Bambuddy и ключ API с разрешениями **Управление библиотекой** и **Разрешить доступ к облаку**; проверка соединения вызывает `/health`, `/system/info` и `/makerworld/status` для выявления ошибок до сохранения.
 
-**Author:** [wolfrage76](https://github.com/wolfrage76) &middot; [Repository](https://github.com/wolfrage76/Bambuddy-Extension)
+**Автор:** [wolfrage76](https://github.com/wolfrage76) &middot; [Репозиторий](https://github.com/wolfrage76/Bambuddy-Extension)
 </div>
 
 </div>
 
 ---
 
-## :material-home-automation: Home Automation
+## :material-home-automation: Домашняя автоматизация {#home-automation}
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### [:material-toggle-switch-outline: Hubitat Driver](https://github.com/jc21/hubitat-bambuddy)
-Hubitat Elevation driver that talks to Bambuddy over REST (and optionally MQTT). Lets you wire Bambu Lab printer state and commands &mdash; clear plate, light on/off, pause/resume/stop &mdash; into your home-automation rules and physical buttons.
+### [:material-toggle-switch-outline: Hubitat Driver](https://github.com/jc21/hubitat-bambuddy) {#hubitat-driver}
+Драйвер Hubitat Elevation взаимодействует с Bambuddy через REST и при необходимости MQTT. Позволяет использовать состояние принтеров Bambu Lab и команды очистки пластины, включения и выключения подсветки, паузы, продолжения и остановки в правилах домашней автоматизации и физических кнопках.
 
-**Author:** [jc21](https://github.com/jc21) &middot; [Repository](https://github.com/jc21/hubitat-bambuddy)
+**Автор:** [jc21](https://github.com/jc21) &middot; [Репозиторий](https://github.com/jc21/hubitat-bambuddy)
 </div>
 
 <div class="feature-card" markdown>
-### [:material-home-assistant: Home Assistant Sidecar Add-ons](https://github.com/tzimpel/homeassistant-bambuddy-sidecar-apps)
-Home Assistant Add-on repository that packages Bambuddy's optional sidecar containers as one-click HA add-ons. Includes the OrcaSlicer API sidecar for server-side slicing &mdash; add the repository URL in Home Assistant's add-on store and install without writing any Docker Compose.
+### [:material-home-assistant: Home Assistant Sidecar Add-ons](https://github.com/tzimpel/homeassistant-bambuddy-sidecar-apps) {#home-assistant-sidecar-add-ons}
+Репозиторий дополнений Home Assistant, упаковывающий необязательные дополнительные контейнеры Bambuddy для установки одним нажатием. Включает сервис OrcaSlicer API для нарезки на сервере: добавьте URL репозитория в магазин дополнений Home Assistant и установите его без написания Docker Compose.
 
-**Author:** [Jan-Tobias Zimpel](https://github.com/tzimpel) &middot; [Repository](https://github.com/tzimpel/homeassistant-bambuddy-sidecar-apps)
+**Автор:** [Jan-Tobias Zimpel](https://github.com/tzimpel) &middot; [Репозиторий](https://github.com/tzimpel/homeassistant-bambuddy-sidecar-apps)
 </div>
 
 <div class="feature-card" markdown>
-### [:material-home-assistant: Home Assistant App (Bambuddy)](https://github.com/Spegeli/homeassistant-app-bambuddy)
-Home Assistant Add-on repository that packages Bambuddy itself as a first-class HA App for Supervised / HA OS installations. Ships three flavours &mdash; stable, beta, and daily &mdash; with hourly update checks, so new Bambuddy releases appear directly in the HA App Store. Data is persisted in `addon_configs` across upgrades. Note: HA Ingress is not supported (SPA + service worker constraints).
+### [:material-home-assistant: Home Assistant App (Bambuddy)](https://github.com/Spegeli/homeassistant-app-bambuddy) {#home-assistant-app-bambuddy}
+Репозиторий дополнений Home Assistant, предоставляющий сам Bambuddy как приложение HA для установок Supervised и HA OS. Доступны стабильная, бета- и ежедневная версии с ежечасной проверкой обновлений, поэтому новые выпуски Bambuddy появляются прямо в магазине приложений HA. Данные сохраняются в `addon_configs` при обновлениях. Примечание: HA Ingress не поддерживается из-за ограничений SPA и service worker.
 
-**Author:** [Spegeli](https://github.com/Spegeli) &middot; [Repository](https://github.com/Spegeli/homeassistant-app-bambuddy)
+**Автор:** [Spegeli](https://github.com/Spegeli) &middot; [Репозиторий](https://github.com/Spegeli/homeassistant-app-bambuddy)
 </div>
 
 <div class="feature-card" markdown>
-### [:material-puzzle-outline: HACS Integration](https://github.com/Spegeli/hacs_bambuddy)
-HACS custom integration that exposes a Bambuddy instance to Home Assistant. Adds each printer as a device with sensors (status, progress, layer, temperatures, fan speeds, HMS, diagnostics), a camera entity, the print-job cover image, pause / resume / stop / clear-plate buttons, a chamber-light switch, and a print-speed select. Also surfaces instance-level stats (total prints, filament used, disk usage).
+### [:material-puzzle-outline: HACS Integration](https://github.com/Spegeli/hacs_bambuddy) {#hacs-integration}
+Пользовательская интеграция HACS подключает Bambuddy к Home Assistant. Каждый принтер представлен устройством с датчиками состояния, прогресса, слоя, температур, скоростей вентиляторов, HMS и диагностики, камерой, обложкой задания, кнопками паузы, продолжения, остановки и очистки пластины, переключателем подсветки камеры и выбором скорости печати. Также доступны общие показатели экземпляра: количество печатей, расход филамента и использование диска.
 
-!!! warning "Under active development"
-    The author explicitly flags this integration as not yet production-ready &mdash; expect breaking changes and incomplete features. Track the repo for stable releases.
+!!! warning "Активная разработка"
+    Автор предупреждает, что интеграция ещё не готова к рабочему применению: возможны несовместимые изменения и незавершённые функции. Следите за стабильными выпусками в репозитории.
 
-**Author:** [Spegeli](https://github.com/Spegeli) &middot; [Repository](https://github.com/Spegeli/hacs_bambuddy)
+**Автор:** [Spegeli](https://github.com/Spegeli) &middot; [Репозиторий](https://github.com/Spegeli/hacs_bambuddy)
 </div>
 
 </div>
 
 ---
 
-## :material-package-variant-closed: Filament &amp; Inventory
+## :material-package-variant-closed: Филамент и его учёт {#filament-inventory}
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### [:material-puzzle-outline: FilaMan Bambuddy Plugin](https://github.com/Fire-Devils/filaman-bambuddy-plugin)
-FilaMan driver plugin that connects [FilaMan](https://www.filaman.app) to Bambuddy. Receives real-time AMS slot data via WebSocket, supports manual and automatic spool assignment, and optionally syncs FilaMan's spool inventory into Bambuddy.
+### [:material-puzzle-outline: FilaMan Bambuddy Plugin](https://github.com/Fire-Devils/filaman-bambuddy-plugin) {#filaman-bambuddy-plugin}
+Плагин драйвера подключает [FilaMan](https://www.filaman.app) к Bambuddy. Получает данные слотов AMS в реальном времени через WebSocket, поддерживает ручное и автоматическое назначение катушек и при необходимости синхронизирует учёт катушек FilaMan с Bambuddy.
 
-**Author:** [FilaMan / Fire-Devils](https://github.com/Fire-Devils) &middot; [Repository](https://github.com/Fire-Devils/filaman-bambuddy-plugin)
+**Автор:** [FilaMan / Fire-Devils](https://github.com/Fire-Devils) &middot; [Репозиторий](https://github.com/Fire-Devils/filaman-bambuddy-plugin)
 </div>
 
 <div class="feature-card" markdown>
-### [:material-database-import-outline: CSV Spool Import](https://github.com/bsaunder/bambuddy_spoolimport)
-Python toolkit for managing Bambuddy's filament inventory from the command line. Bulk-imports spools from a CSV file (mapping your existing spool IDs to Bambuddy catalog IDs), lists existing spools, and generates printable QR-code PDF labels for physical spool identification. Talks to Bambuddy through its public REST API with an API key &mdash; useful for migrating from other inventory tools.
+### [:material-database-import-outline: CSV Spool Import](https://github.com/bsaunder/bambuddy_spoolimport) {#csv-spool-import}
+Набор инструментов Python для управления филаментом Bambuddy из командной строки. Массово импортирует катушки из CSV, сопоставляя существующие ID катушек с ID каталога Bambuddy, выводит список катушек и создаёт PDF-этикетки с QR-кодами для печати. Использует публичный REST API Bambuddy с ключом API и полезен при переходе с других систем учёта.
 
-**Author:** [bsaunder](https://github.com/bsaunder) &middot; [Repository](https://github.com/bsaunder/bambuddy_spoolimport)
+**Автор:** [bsaunder](https://github.com/bsaunder) &middot; [Репозиторий](https://github.com/bsaunder/bambuddy_spoolimport)
 </div>
 
 <div class="feature-card" markdown>
-### [:material-cash-sync: Spoolman Cost Sync](https://github.com/ojimpo/bambuddy-spoolman-cost-sync)
-Python sidecar that copies per-spool prices from Spoolman into Bambuddy's local `cost_per_kg` field, so per-print cost calculations reflect what each spool actually cost. Read-only against Spoolman, writes only `cost_per_kg` on Bambuddy &mdash; matches RFID-linked spools by `tray_uuid` / `tag_uid` and runs on a configurable interval (default 10 min). Stdlib-only; ships as a Docker sidecar.
+### [:material-cash-sync: Spoolman Cost Sync](https://github.com/ojimpo/bambuddy-spoolman-cost-sync) {#spoolman-cost-sync}
+Дополнительный сервис Python копирует цены катушек из Spoolman в локальное поле `cost_per_kg` Bambuddy, чтобы расчёт стоимости печати учитывал фактическую цену. Доступ к Spoolman только для чтения; в Bambuddy изменяется только `cost_per_kg`. Катушки с RFID сопоставляются по `tray_uuid` / `tag_uid`, синхронизация выполняется с настраиваемым интервалом (по умолчанию 10 минут). Используется только стандартная библиотека; поставляется как дополнительный контейнер Docker.
 
-**Author:** [ojimpo](https://github.com/ojimpo) &middot; [Repository](https://github.com/ojimpo/bambuddy-spoolman-cost-sync)
+**Автор:** [ojimpo](https://github.com/ojimpo) &middot; [Репозиторий](https://github.com/ojimpo/bambuddy-spoolman-cost-sync)
 </div>
 
 <div class="feature-card" markdown>
-### [:material-cellphone-nfc: Spool NFC PWA](https://github.com/Poltavtcev/spool-nfc-pwa)
-Mobile Progressive Web App for reading and writing OpenTag3D NFC tags (NTAG213/215/216) on unofficial filament spools straight from your phone. Scan a tag to find or link a spool, browse the inventory with material filters and remaining-weight indicators, assign spools to AMS and external slots, and update weights &mdash; all over Bambuddy's REST API with an API key. Installs as a PWA on Android and desktop Chrome, and credentials stay in the browser only. NFC writing needs Chrome on Android with Web NFC; iOS can install the PWA but cannot use NFC.
+### [:material-cellphone-nfc: Spool NFC PWA](https://github.com/Poltavtcev/spool-nfc-pwa) {#spool-nfc-pwa}
+Мобильное PWA для чтения и записи NFC-меток OpenTag3D (NTAG213/215/216) на сторонних катушках прямо с телефона. Позволяет сканировать метку для поиска или привязки катушки, просматривать филамент с фильтрами материалов и индикаторами остатка, назначать катушки слотам AMS и внешним слотам и обновлять вес через REST API Bambuddy с ключом API. Устанавливается как PWA на Android и в настольном Chrome; учётные данные хранятся только в браузере. Для записи NFC нужен Chrome на Android с Web NFC; на iOS PWA устанавливается, но NFC недоступен.
 
-**Author:** [Poltavtcev](https://github.com/Poltavtcev) &middot; [Repository](https://github.com/Poltavtcev/spool-nfc-pwa)
+**Автор:** [Poltavtcev](https://github.com/Poltavtcev) &middot; [Репозиторий](https://github.com/Poltavtcev/spool-nfc-pwa)
 </div>
 
 <div class="feature-card" markdown>
-### [:material-nfc-variant: BambuMan](https://github.com/bambuman/BambuMan.App)
-Android (built-in NFC) and Windows (PCSC reader like ACR122U) app that reads Bambu Lab spool NFC tags and imports them straight into your Bambuddy inventory. Matches each tag against SpoolmanDB so vendor, material, color, weight, and the corresponding Bambuddy slicer preset are filled in automatically; subsequent scans update the existing spool by `tray_uuid` instead of duplicating. Backend is selectable between Bambuddy and Spoolman in settings, so the spool the AMS reports over MQTT lines up with the one BambuMan imported. Distributed on Google Play and F-Droid; the project also runs its own public NFC tag library at [bambuman.ee](https://bambuman.ee).
+### [:material-nfc-variant: BambuMan](https://github.com/bambuman/BambuMan.App) {#bambuman}
+Приложение для Android (встроенный NFC) и Windows (считыватель PCSC, например ACR122U) читает NFC-метки катушек Bambu Lab и импортирует их непосредственно в филамент Bambuddy. Каждая метка сопоставляется со SpoolmanDB для автоматического заполнения производителя, материала, цвета, веса и соответствующего пресета слайсера Bambuddy; последующие сканирования обновляют катушку по `tray_uuid` вместо создания дубликата. В настройках выбирается сервер Bambuddy или Spoolman, поэтому катушка, передаваемая AMS через MQTT, соответствует импортированной BambuMan. Приложение доступно в Google Play и F-Droid; проект также ведёт публичную библиотеку NFC-меток [bambuman.ee](https://bambuman.ee).
 
-**Author:** [bambuman](https://github.com/bambuman) &middot; [Repository](https://github.com/bambuman/BambuMan.App)
+**Автор:** [bambuman](https://github.com/bambuman) &middot; [Репозиторий](https://github.com/bambuman/BambuMan.App)
 </div>
 
 <div class="feature-card" markdown>
-### [:material-nfc-tap: SpoolTap](https://github.com/dmuth23/spooltap)
-NFC filament tracking orchestrated through Home Assistant. Stick an NTAG215 tag on each AMS slot and each spool, scan with the HA Companion app on Android, and SpoolTap pushes the matching custom filament profile to the printer through Bambuddy &mdash; resolves the spool's profile from Spoolman, applies it to the scanned slot via Bambuddy's API (`setting_id` codes), and pairs with `ha-bambulab` for usage telemetry back into Spoolman. The glue lives entirely in HA automations &mdash; no bespoke server.
+### [:material-nfc-tap: SpoolTap](https://github.com/dmuth23/spooltap) {#spooltap}
+Учёт филамента через NFC с автоматизацией Home Assistant. Приклейте метку NTAG215 к каждому слоту AMS и каждой катушке, сканируйте приложением HA Companion на Android, и SpoolTap отправит соответствующий пользовательский профиль филамента на принтер через Bambuddy. Профиль берётся из Spoolman, применяется к отсканированному слоту через API Bambuddy (коды `setting_id`), а `ha-bambulab` передаёт сведения о расходе обратно в Spoolman. Вся связующая логика работает в автоматизациях HA без отдельного сервера.
 
-**Author:** [dmuth23](https://github.com/dmuth23) &middot; [Repository](https://github.com/dmuth23/spooltap)
+**Автор:** [dmuth23](https://github.com/dmuth23) &middot; [Репозиторий](https://github.com/dmuth23/spooltap)
 </div>
 
 <div class="feature-card" markdown>
-### [:material-barcode-scan: Filament Box Scanner](https://github.com/hibikipr/filament_to_bambuddy)
-Mobile web app (PWA) for adding third-party spools to Bambuddy's inventory by scanning the box barcode or photographing the label. Lookup goes: local per-barcode cache (anything you've confirmed before) → the [Open Filament Database](https://openfilamentdatabase.org) (a spool-barcode-keyed catalogue of brand / material / colour / weight / print temps) → blank form with a paste-the-title auto-fill helper; the label-OCR path uses on-device text recognition so it works over plain HTTP (unlike the live camera which needs HTTPS). Everything you confirm gets remembered per barcode so the same product auto-fills instantly next time. Talks to Bambuddy's inventory API with a key that has **Manage Inventory**. Ships a multi-arch Docker image on GHCR and installs as a PWA on Android and iOS.
+### [:material-barcode-scan: Filament Box Scanner](https://github.com/hibikipr/filament_to_bambuddy) {#filament-box-scanner}
+Мобильное веб-приложение (PWA) добавляет сторонние катушки в учёт Bambuddy по штрихкоду коробки или фотографии этикетки. Поиск выполняется последовательно: локальный кэш подтверждённых штрихкодов → [Open Filament Database](https://openfilamentdatabase.org), каталог производителя, материала, цвета, веса и температур по штрихкоду → пустая форма с автозаполнением по вставленному названию. Распознавание этикетки выполняется на устройстве и работает через обычный HTTP, в отличие от камеры в реальном времени, требующей HTTPS. Подтверждённые данные запоминаются для каждого штрихкода и автоматически заполняются при следующем сканировании. API филамента Bambuddy используется с ключом и разрешением **Управление филаментом**. Доступен многоархитектурный образ Docker на GHCR и установка PWA на Android и iOS.
 
-**Author:** [Victor Manuel / hibikipr](https://github.com/hibikipr) &middot; [Repository](https://github.com/hibikipr/filament_to_bambuddy)
+**Автор:** [Victor Manuel / hibikipr](https://github.com/hibikipr) &middot; [Репозиторий](https://github.com/hibikipr/filament_to_bambuddy)
 </div>
 
 <div class="feature-card" markdown>
-### [:material-console-line: bambuddy-cli](https://github.com/mailletf/bambuddy-cli)
-Terminal companion for assigning AMS slots and editing print-archive metadata without opening the web UI. Closes the AMS Lite gap &mdash; AMS Lite cannot read RFID, so third-party spools show up as occupied-but-unknown; the CLI calls Bambuddy's assignment API directly to map any inventory spool to any unit/slot. Also patches archived prints (cost, notes, tags, status, failure reason, external URL) from one-shot commands or an interactive picker. Talks to Bambuddy over the REST API with host + printer ID from `.env` or flags; shells out to `curl` to dodge a macOS IPv6 socket quirk.
+### [:material-console-line: bambuddy-cli](https://github.com/mailletf/bambuddy-cli) {#bambuddy-cli}
+Терминальная утилита для назначения слотов AMS и изменения метаданных архива без веб-интерфейса. Решает ограничение AMS Lite, не читающей RFID и показывающей сторонние катушки как занятые, но неизвестные: CLI обращается к API назначения Bambuddy и связывает любую катушку с любым блоком и слотом. Также изменяет стоимость, заметки, теги, состояние, причину неудачи и внешний URL архивных печатей одноразовыми командами или через интерактивный выбор. Использует REST API Bambuddy; хост и ID принтера берутся из `.env` или флагов. Для обхода особенности IPv6-сокетов macOS вызывает `curl`.
 
-**Author:** [mailletf](https://github.com/mailletf) &middot; [Repository](https://github.com/mailletf/bambuddy-cli)
+**Автор:** [mailletf](https://github.com/mailletf) &middot; [Репозиторий](https://github.com/mailletf/bambuddy-cli)
 </div>
 
 </div>
 
 ---
 
-## :material-folder-multiple-outline: Model Libraries
+## :material-folder-multiple-outline: Библиотеки моделей {#model-libraries}
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### [:material-folder-sync-outline: Manyfold Sync](https://github.com/hibikipr/bambuddy_to_manyfold)
-Python tool that syncs Bambuddy's print archives **and** file-manager library into [Manyfold](https://manyfold.app), the self-hosted 3D model manager. Bambuddy's folder hierarchy recreates as nested Manyfold collections, MakerWorld metadata (description, tags, cover image) enriches each model, and multiple profiles of the same design can be grouped into one Manyfold model. Uploads use Manyfold's resumable (Tus) API, which needs an OAuth application with **client_credentials** + the `upload` scope (personal access tokens can't carry it — the script probes for it on startup and stops early with instructions if missing). A local state file skips already-synced items on re-runs and `--force` recovers items whose upload background job failed. Ships CLI, Tkinter desktop GUI, and web GUI variants; `--cleanup-empty` deletes zero-file Manyfold models left over from failed uploads (needs the `delete` scope too).
+### [:material-folder-sync-outline: Manyfold Sync](https://github.com/hibikipr/bambuddy_to_manyfold) {#manyfold-sync}
+Инструмент Python синхронизирует **архивы печати и библиотеку файлового менеджера** Bambuddy с [Manyfold](https://manyfold.app), локальным менеджером 3D-моделей. Иерархия папок Bambuddy воссоздаётся как вложенные коллекции Manyfold, метаданные MakerWorld (описание, теги, обложка) дополняют модель, а несколько профилей одного дизайна можно сгруппировать. Загрузка использует возобновляемый API Manyfold (Tus), требующий приложение OAuth с **client_credentials** и разрешением `upload`: личные токены доступа его не поддерживают, поэтому скрипт проверяет разрешение при запуске и при отсутствии выводит инструкцию. Локальный файл состояния пропускает уже синхронизированное при повторном запуске, а `--force` восстанавливает элементы с неудачной фоновой загрузкой. Есть CLI, настольный GUI Tkinter и веб-интерфейс; `--cleanup-empty` удаляет модели Manyfold без файлов после неудачных загрузок (также требует `delete`).
 
-**Author:** [Victor Manuel / hibikipr](https://github.com/hibikipr) &middot; [Repository](https://github.com/hibikipr/bambuddy_to_manyfold)
+**Автор:** [Victor Manuel / hibikipr](https://github.com/hibikipr) &middot; [Репозиторий](https://github.com/hibikipr/bambuddy_to_manyfold)
 </div>
 
 </div>
 
 ---
 
-## :material-message-text-outline: Bots &amp; Notifications
+## :material-message-text-outline: Боты и уведомления {#bots-notifications}
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### [:material-discord: Discord Print Queue Bot](https://github.com/CrazyClone55/bambuddy-discord-bot)
-Discord bot that turns a Forum channel into a print queue. Members submit `.gcode.3mf` files via `!print` in a thread; superusers queue immediately, others go through an approval reaction from a designated approver. Pings the submitter when their print starts and finishes.
+### [:material-discord: Discord Print Queue Bot](https://github.com/CrazyClone55/bambuddy-discord-bot) {#material-discord-discord-print-queue-bot}
+Бот Discord превращает канал форума в очередь печати. Участники отправляют файлы `.gcode.3mf` командой `!print` в ветке; задания суперпользователей сразу попадают в очередь, остальные требуют реакции назначенного утверждающего. Бот уведомляет отправителя о начале и завершении печати.
 
-**Author:** [CrazyClone55](https://github.com/CrazyClone55) &middot; [Repository](https://github.com/CrazyClone55/bambuddy-discord-bot)
+**Автор:** [CrazyClone55](https://github.com/CrazyClone55) &middot; [Репозиторий](https://github.com/CrazyClone55/bambuddy-discord-bot)
 </div>
 
 <div class="feature-card" markdown>
-### [:material-message-processing-outline: Signal Print Queue Bot](https://github.com/phieb/bambu-bot)
-Signal bot that turns MakerWorld links into Bambuddy print jobs. DM the bot a link and it creates a persistent Signal group, then walks you through profile / plate(s) / per-filament AMS slot selection in numbered replies, re-slices for your target printer, and queues each plate through Bambuddy's REST API. Group commands give live progress with a camera snapshot (`!progress`), the current queue (`!queue`), and cancel-the-last-pending-job (`!cancel`); the bot pings the group when each queued print finishes or fails. Receives messages from an upstream dispatcher (the author's [signal-router](https://github.com/phieb/signal-router) or any forwarder that hits its `/claims` + `/receive` endpoints).
+### [:material-message-processing-outline: Signal Print Queue Bot](https://github.com/phieb/bambu-bot) {#signal-print-queue-bot}
+Бот Signal превращает ссылки MakerWorld в задания Bambuddy. Отправьте ссылку в личном сообщении: бот создаст постоянную группу Signal и предложит выбрать профиль, пластины и слоты AMS для каждого филамента нумерованными ответами, повторно нарежет модель для выбранного принтера и поставит пластины в очередь через REST API Bambuddy. Команды группы показывают прогресс со снимком камеры (`!progress`), текущую очередь (`!queue`) и отменяют последнее ожидающее задание (`!cancel`); бот сообщает группе об успешной и неудачной печати. Сообщения поступают от внешнего диспетчера ([signal-router](https://github.com/phieb/signal-router) автора или другого посредника, вызывающего `/claims` и `/receive`).
 
-**Author:** [phieb](https://github.com/phieb) &middot; [Repository](https://github.com/phieb/bambu-bot)
+**Автор:** [phieb](https://github.com/phieb) &middot; [Репозиторий](https://github.com/phieb/bambu-bot)
 </div>
 
 <div class="feature-card" markdown>
-### [:material-printer-pos: PrinterPrinter](https://github.com/FirstBuild/PrinterPrinter)
-Local Python daemon that watches Bambuddy for print starts and auto-prints a job label on a Brother QL-820NWB. Polls Bambuddy's REST API on a configurable interval (default 5 s), detects new print events, persists them in SQLite, and renders a DK1202 (62&times;100 mm) label per job with filament mass and optional cost (price-per-gram &times; rounded grams). Admin endpoints expose `/health`, `/admin/printers`, `/admin/events`, and a reprint hook (`POST /admin/print-event/{id}`). Ships with an interactive Raspberry Pi installer for always-on deployments.
+### [:material-printer-pos: PrinterPrinter](https://github.com/FirstBuild/PrinterPrinter) {#printerprinter}
+Локальный демон Python отслеживает начало печати в Bambuddy и автоматически печатает этикетку задания на Brother QL-820NWB. Опрашивает REST API с настраиваемым интервалом (по умолчанию 5 секунд), обнаруживает новые задания, сохраняет события в SQLite и создаёт этикетку DK1202 (62&times;100 мм) с массой филамента и при необходимости стоимостью (цена за грамм &times; округлённые граммы). Административные конечные точки: `/health`, `/admin/printers`, `/admin/events` и повторная печать (`POST /admin/print-event/{id}`). Включает интерактивный установщик Raspberry Pi для постоянной работы.
 
-**Author:** [FirstBuild](https://github.com/FirstBuild) &middot; [Repository](https://github.com/FirstBuild/PrinterPrinter)
+**Автор:** [FirstBuild](https://github.com/FirstBuild) &middot; [Репозиторий](https://github.com/FirstBuild/PrinterPrinter)
 </div>
 
 <div class="feature-card" markdown>
-### [:material-bell-ring-outline: Bambark](https://github.com/rogernolan/Bambark)
-Small Go service that receives Bambuddy's [webhook notifications](../features/notifications.md) and forwards them to [Bark](https://bark.day.app), the open-source iOS push app &mdash; so print-finished and print-failed events land on an iPhone without an account anywhere. Accepts the webhook as POST JSON or GET query parameters, authenticates callers with a bearer token, exposes `/healthz`, and ships systemd units for both root and rootless deployment. Intended to sit on your LAN behind your own reverse proxy: it does not terminate TLS itself.
+### [:material-bell-ring-outline: Bambark](https://github.com/rogernolan/Bambark) {#bambark}
+Небольшая служба Go получает [уведомления вебхуков](../features/notifications.md) Bambuddy и пересылает их в [Bark](https://bark.day.app), приложение push-уведомлений iOS с открытым кодом. События завершения и неудачи печати поступают на iPhone без учётной записи. Принимает вебхук как POST JSON или параметры GET, аутентифицирует отправителей bearer-токеном, предоставляет `/healthz` и включает службы systemd для запуска с root и без него. Предназначена для работы в локальной сети за вашим обратным прокси: сама TLS не завершает.
 
-**Author:** [Roger Nolan](https://github.com/rogernolan) &middot; [Repository](https://github.com/rogernolan/Bambark)
+**Автор:** [Roger Nolan](https://github.com/rogernolan) &middot; [Репозиторий](https://github.com/rogernolan/Bambark)
 </div>
 
 </div>
 
 ---
 
-## :material-server-network: Deployment &amp; Automation
+## :material-server-network: Развёртывание и автоматизация {#deployment-automation}
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### [:material-script-text-outline: Ansible Collection](https://github.com/nils-ost/ansible-collection-bambuddy)
-Ansible collection for installing and configuring Bambuddy at scale. Includes modules for initial setup, login/token fetch, settings, printer management, and the virtual-printer feature &mdash; all callable via `delegate_to: localhost`.
+### [:material-script-text-outline: Ansible Collection](https://github.com/nils-ost/ansible-collection-bambuddy) {#ansible-collection}
+Коллекция Ansible для масштабной установки и настройки Bambuddy. Включает модули первоначальной настройки, входа и получения токена, параметров, управления принтерами и виртуального принтера; все вызываются через `delegate_to: localhost`.
 
-**Author:** [nils-ost](https://github.com/nils-ost) &middot; [Repository](https://github.com/nils-ost/ansible-collection-bambuddy)
+**Автор:** [nils-ost](https://github.com/nils-ost) &middot; [Репозиторий](https://github.com/nils-ost/ansible-collection-bambuddy)
 </div>
 
 <div class="feature-card" markdown>
-### [:material-kubernetes: Helm Chart](https://github.com/npelikan/bambuddy-helm)
-Helm chart for running Bambuddy on Kubernetes. Pins the `ghcr.io/maziggy/bambuddy` image via the chart's `appVersion`, defaults to SQLite on a persistent volume with optional external PostgreSQL via `database.externalDatabase`, and persists `/app/data` and `/app/logs` on separate PVCs. Supports `hostNetwork` for SSDP printer discovery and grants `NET_BIND_SERVICE` so the virtual-printer ports (322, 990, FTP passive range) bind as a non-root user. Single-instance by design &mdash; uses the `Recreate` strategy so the RWO data volume is released cleanly between rollouts.
+### [:material-kubernetes: Helm Chart](https://github.com/npelikan/bambuddy-helm) {#helm-chart}
+Helm chart для запуска Bambuddy в Kubernetes. Фиксирует образ `ghcr.io/maziggy/bambuddy` через `appVersion`, по умолчанию использует SQLite на постоянном томе с возможностью внешнего PostgreSQL через `database.externalDatabase`, сохраняет `/app/data` и `/app/logs` на отдельных PVC. Поддерживает `hostNetwork` для обнаружения SSDP и предоставляет `NET_BIND_SERVICE`, чтобы пользователь без root мог привязать порты виртуального принтера (322, 990 и пассивный FTP). Предназначен для одного экземпляра: стратегия `Recreate` корректно освобождает том RWO между развёртываниями.
 
-**Author:** [npelikan](https://github.com/npelikan) &middot; [Repository](https://github.com/npelikan/bambuddy-helm)
+**Автор:** [npelikan](https://github.com/npelikan) &middot; [Репозиторий](https://github.com/npelikan/bambuddy-helm)
 </div>
 
 </div>
 
 ---
 
-## :material-robot-outline: AI &amp; Integrations
+## :material-robot-outline: ИИ и интеграции {#ai-integrations}
 
 <div class="feature-grid" markdown>
 
 <div class="feature-card" markdown>
-### [:material-cog-outline: Bambuddy MCP Server](bambuddy-mcp.md)
-Model Context Protocol server that exposes Bambuddy's full REST API as tools for AI assistants like Claude Desktop and Claude Code. Talk to your printers in plain language &mdash; check status, queue prints, control lights, view camera snapshots.
+### [:material-cog-outline: Bambuddy MCP Server](bambuddy-mcp.md) {#bambuddy-mcp-server}
+Сервер Model Context Protocol предоставляет полный REST API Bambuddy в виде инструментов ИИ-ассистентам, таким как Claude Desktop и Claude Code. Общайтесь с принтерами обычным языком: проверяйте состояние, ставьте задания в очередь, управляйте подсветкой и смотрите снимки камеры.
 
-**Author:** [MrMebelMan](https://github.com/MrMebelMan) &middot; [Repository](https://github.com/MrMebelMan/bambuddy-mcp)
+**Автор:** [MrMebelMan](https://github.com/MrMebelMan) &middot; [Репозиторий](https://github.com/MrMebelMan/bambuddy-mcp)
 </div>
 
 <div class="feature-card" markdown>
-### [:material-shield-key-outline: Print Concierge](https://github.com/dpdev69/print-concierge)
-Python MCP / CLI safety layer that sits between agent clients (Claude, Codex, Hermes, OpenClaw) and a Bambuddy server. Exposes a curated tool set for searching the archive, discovering models via 3DSEARCH, importing from MakerWorld / Printables / Thingiverse, slicing with explicit presets, hash-verifying outputs, and assembling deterministic print plans &mdash; but deliberately does **not** expose raw queue / start / pause / cancel. The only sensitive action is a scoped `queue_print_request(request_id)` that submits a pre-approved, plan-hash-bound request, with audit logging and Bambuddy's manual-start as the default. Talks to Bambuddy over the REST API with a least-privilege API key (`BAMBUDDY_BASE_URL` + `BAMBUDDY_API_KEY`). Ships a sandbox backend mode for no-hardware demos.
+### [:material-shield-key-outline: Print Concierge](https://github.com/dpdev69/print-concierge) {#print-concierge}
+Защитный слой Python MCP / CLI между агентными клиентами (Claude, Codex, Hermes, OpenClaw) и сервером Bambuddy. Предоставляет отобранные инструменты для поиска в архиве, поиска моделей через 3DSEARCH, импорта из MakerWorld / Printables / Thingiverse, нарезки с явными пресетами, проверки хешей результатов и составления детерминированных планов печати; прямые команды очереди, запуска, паузы и отмены намеренно **не предоставляются**. Единственное чувствительное действие — ограниченный `queue_print_request(request_id)`, отправляющий заранее утверждённый запрос, связанный с хешем плана; ведётся журнал аудита, а по умолчанию используется ручной запуск Bambuddy. Связь с Bambuddy идёт через REST API и ключ с минимальными правами (`BAMBUDDY_BASE_URL` + `BAMBUDDY_API_KEY`). Для демонстрации без оборудования доступен режим песочницы.
 
-**Author:** [dpdev69](https://github.com/dpdev69) &middot; [Repository](https://github.com/dpdev69/print-concierge)
+**Автор:** [dpdev69](https://github.com/dpdev69) &middot; [Репозиторий](https://github.com/dpdev69/print-concierge)
 </div>
 
 </div>
 
 ---
 
-## Contributing an add-on
+## Добавление дополнения {#contributing-an-add-on}
 
-If you've built something that integrates with Bambuddy &mdash; hardware, browser extensions, mobile shortcuts, scripts, dashboards, anything &mdash; we'd love to list it here.
+Если вы создали интеграцию с Bambuddy — устройство, расширение браузера, мобильную команду, скрипт, панель или что-то ещё — её можно добавить сюда.
 
-To submit:
+Чтобы предложить проект:
 
-1. Make sure the project has a clear README and a license.
-2. Open a PR against the [wiki repository](https://github.com/maziggy/bambuddy-wiki) adding a page under `docs/community/` and a card on this hub page.
-3. Keep it interoperability-focused &mdash; add-ons should use Bambuddy's public API, not internal endpoints.
+1. Убедитесь, что у проекта есть понятный README и лицензия.
+2. Откройте PR в [репозитории Wiki](https://github.com/maziggy/bambuddy-wiki), добавив страницу в `docs/community/` и карточку на эту страницу.
+3. Обеспечьте совместимость: дополнения должны использовать публичный API Bambuddy, а не внутренние конечные точки.
 
-Questions? Drop into the [Discord](https://discord.gg/aFS3ZfScHM).
+Остались вопросы? Заходите в [Discord](https://discord.gg/aFS3ZfScHM).

@@ -1,342 +1,339 @@
 ---
-title: System Info
-description: View database statistics and system resources
+title: Информация о системе
+description: Просмотр статистики базы данных и системных ресурсов
 ---
 
-# System Info
+# Информация о системе {#system-info}
 
-View system information and database statistics.
-
----
-
-## :material-information: Overview
-
-The System Info page shows:
-
-- **Database statistics** - Archive counts, sizes
-- **Resource usage** - Memory, storage
-- **Application info** - Version, uptime
+Просматривайте сведения о системе и статистику базы данных.
 
 ---
 
-## :material-database: Database Statistics
+## :material-information: Обзор {#overview}
 
-### Archive Statistics
+Страница информации о системе показывает:
 
-| Metric | Description |
+- **Статистику базы данных** — количество и размер архивов
+- **Использование ресурсов** — память и накопители
+- **Сведения о приложении** — версию и время работы
+
+---
+
+## :material-database: Статистика базы данных {#database-statistics}
+
+### Статистика архива {#archive-statistics}
+
+| Показатель | Описание |
 |--------|-------------|
-| **Total Archives** | Number of archived prints |
-| **Total Size** | Database file size |
-| **3MF Files** | Number of stored 3MF files |
-| **Thumbnails** | Number of thumbnail images |
-| **Photos** | Number of attached photos |
+| **Всего архивов** | Количество архивированных печатей |
+| **Общий размер** | Размер файла базы данных |
+| **Файлы 3MF** | Количество сохранённых файлов 3MF |
+| **Миниатюры** | Количество миниатюр |
+| **Фотографии** | Количество прикреплённых фотографий |
 
-### Print Statistics
+### Статистика печати {#print-statistics}
 
-| Metric | Description |
+| Показатель | Описание |
 |--------|-------------|
-| **Successful Prints** | Completed prints |
-| **Failed Prints** | Print failures |
-| **Total Print Time** | Cumulative hours |
-| **Total Filament** | Cumulative kg |
+| **Успешные печати** | Завершённые печати |
+| **Неудачные печати** | Ошибки печати |
+| **Общее время печати** | Суммарное количество часов |
+| **Всего филамента** | Суммарный расход в кг |
 
-### Database Health
+### Состояние базы данных {#database-health}
 
-| Check | Status |
+| Проверка | Состояние |
 |-------|--------|
-| **Integrity** | Database file intact |
-| **FTS Index** | Full-text search working |
-| **Connections** | Active database connections |
+| **Целостность** | Файл базы данных не повреждён |
+| **Индекс FTS** | Полнотекстовый поиск работает |
+| **Соединения** | Активные соединения с базой данных |
 
 ---
 
-## :material-memory: Resource Usage
+## :material-memory: Использование ресурсов {#resource-usage}
 
-### Memory
+### Память {#memory}
 
-| Metric | Value |
+| Показатель | Значение |
 |--------|-------|
-| **RAM Used** | Current usage |
-| **RAM Available** | Free memory |
-| **Process Memory** | Bambuddy process |
+| **Использовано ОЗУ** | Текущее использование |
+| **Доступно ОЗУ** | Свободная память |
+| **Память процесса** | Процесс Bambuddy |
 
-### Storage
+### Хранилище {#storage}
 
-| Metric | Value |
+| Показатель | Значение |
 |--------|-------|
-| **Database Size** | SQLite file size |
-| **Archive Folder** | 3MF and thumbnail storage |
-| **Log Files** | Log directory size |
-| **Total Used** | All Bambuddy data |
+| **Размер базы данных** | Размер файла SQLite |
+| **Папка архива** | Хранилище 3MF и миниатюр |
+| **Файлы журналов** | Размер каталога журналов |
+| **Всего занято** | Все данные Bambuddy |
 
-### Disk Space
+### Место на диске {#disk-space}
 
-| Location | Free Space |
+| Расположение | Свободное место |
 |----------|------------|
-| **Data Directory** | Available storage |
-| **Archive Directory** | Available storage |
+| **Каталог данных** | Доступное место |
+| **Каталог архива** | Доступное место |
 
 ---
 
-## :material-application: Application Info
+## :material-application: Сведения о приложении {#application-info}
 
-### Version
+### Версия {#version}
 
-| Info | Value |
+| Сведения | Значение |
 |------|-------|
-| **Version** | Current Bambuddy version |
-| **Python** | Python version |
-| **Database** | SQLite version |
+| **Версия** | Текущая версия Bambuddy |
+| **Python** | Версия Python |
+| **База данных** | Версия SQLite |
 
-### Runtime
+### Время работы {#runtime}
 
-| Info | Value |
+| Сведения | Значение |
 |------|-------|
-| **Uptime** | Time since start |
-| **Started** | Start timestamp |
-| **Restarts** | Number of restarts |
+| **Время работы** | Время с момента запуска |
+| **Запущено** | Дата и время запуска |
+| **Перезапуски** | Количество перезапусков |
 
-### Environment
+### Окружение {#environment}
 
-| Info | Value |
+| Сведения | Значение |
 |------|-------|
-| **OS** | Operating system |
-| **Architecture** | CPU architecture |
-| **Docker** | Running in Docker? |
+| **ОС** | Операционная система |
+| **Архитектура** | Архитектура процессора |
+| **Docker** | Работает ли приложение в Docker |
 
 ---
 
-## :material-update: Application Updates
+## :material-update: Обновления приложения {#application-updates}
 
-Bambuddy can check for and install updates directly from the Settings page.
+Bambuddy может проверять и устанавливать обновления прямо со страницы настроек.
 
-### Checking for Updates
+### Проверка обновлений {#checking-for-updates}
 
-1. Go to **Settings** > **General**
-2. Updates are checked automatically, or click **Check for Updates**
-3. If a new version is available, the update details are shown
+1. Перейдите в **Настройки** > **Общие**
+2. Обновления проверяются автоматически; можно также нажать **Проверить обновления**
+3. Если доступна новая версия, отобразятся сведения о ней
 
-### Beta Updates
+### Бета-обновления {#beta-updates}
 
-To receive pre-release versions:
+Чтобы получать предварительные версии:
 
-1. Go to **Settings** > **General**
-2. Enable **Include beta updates**
-3. Beta versions will appear in update checks
+1. Перейдите в **Настройки** > **Общие**
+2. Включите **Включать бета-обновления**
+3. Бета-версии будут появляться при проверке обновлений
 
-### Installing Updates
+### Установка обновлений {#installing-updates}
 
-When an update is available:
+Если обновление доступно:
 
-1. Review the release notes
-2. Click **Update** to begin
-3. Progress is shown during download and installation
-4. Bambuddy restarts automatically after the update
+1. Ознакомьтесь с примечаниями к выпуску
+2. Нажмите **Обновить**
+3. Во время скачивания и установки отображается прогресс
+4. После обновления Bambuddy автоматически перезапускается
 
-!!! note "Docker Users"
-    For Docker installations, updates are applied by pulling the latest image. The in-app updater is for bare-metal/systemd installations.
-
----
-
-## :material-tools: Maintenance Actions
-
-### Rebuild FTS Index
-
-If search isn't working correctly:
-
-1. Click **Rebuild Search Index**
-2. Wait for completion
-3. Search should work now
-
-### Clear Cache
-
-Remove temporary files:
-
-1. Click **Clear Cache**
-2. Confirm action
-3. Cache is cleared
-
-### Vacuum Database
-
-Optimize database size:
-
-1. Click **Vacuum Database**
-2. Wait for completion
-3. May reduce file size
-
-!!! note "When to Vacuum"
-    Vacuum after deleting many archives to reclaim disk space.
+!!! note "Для пользователей Docker"
+    При установке через Docker обновление применяется путём загрузки последнего образа. Встроенный механизм обновления предназначен для установок непосредственно в системе или через systemd.
 
 ---
 
-## :material-stethoscope: Connection Diagnostic
+## :material-tools: Обслуживание {#maintenance-actions}
 
-The **Connection Diagnostic** section lists every configured printer with a
-*Run diagnostic* button. It checks why a printer won't connect or won't print:
+### Перестроение индекса FTS {#rebuild-fts-index}
 
-- TCP reachability of the MQTT (8883), FTPS (990), and RTSPS (322) ports
-- LAN Developer Mode
-- Container network mode (host, bridge, macvlan or ipvlan), for Docker, Podman, Kubernetes and LXC/LXD alike. Where the mode genuinely cannot be read the check says so instead of guessing.
-- Whether the printer and the Bambuddy host are on the same subnet, read at the real prefix of the interface that routes to the printer — not assumed to be a `/24`
-- Printer credentials (access code / serial number)
-- **Store sent files on external storage** — verifies the printer-side variant of install [step 4](../getting-started/index.md#step-4-enable-store-sent-files-on-external-storage). Reads the toggle's state from the MQTT status push (`home_flag` bit 11), so the check is instant. Catches the newer firmware variant (P2S 01.02 / Bambu Studio 2.6+) where the setting moved to the printer. The older slicer-side variant of the setting is invisible to the printer, so the check will pass even when the option is off in the slicer — when in doubt, verify install step 4 manually.
+Если поиск работает неправильно:
 
-Each check reports pass, fail, warning, or skipped, with a plain-language fix.
-The same diagnostic is also available from the printer card (when a printer is
-offline) and the Add Printer dialog.
+1. Нажмите **Перестроить поисковый индекс**
+2. Дождитесь завершения
+3. Поиск должен снова заработать
+
+### Очистка кэша {#clear-cache}
+
+Удаление временных файлов:
+
+1. Нажмите **Очистить кэш**
+2. Подтвердите действие
+3. Кэш будет очищен
+
+### Оптимизация базы данных {#vacuum-database}
+
+Чтобы уменьшить размер базы:
+
+1. Нажмите **Vacuum Database**
+2. Дождитесь завершения
+3. Размер файла может уменьшиться
+
+!!! note "Когда выполнять VACUUM"
+    Выполните операцию после удаления большого количества архивов, чтобы освободить место на диске.
 
 ---
 
-## :material-bug: Debug Information
+## :material-stethoscope: Диагностика соединения {#connection-diagnostic}
 
-### Log Files
+В разделе **Диагностика соединения** перечислены все настроенные принтеры с кнопкой запуска диагностики. Она проверяет, почему принтер не подключается или не печатает:
 
-Access application logs:
+- Доступность по TCP портов MQTT (8883), FTPS (990) и RTSPS (322)
+- Режим разработчика в локальной сети
+- Режим сети контейнера (host, bridge, macvlan или ipvlan) для Docker, Podman, Kubernetes и LXC/LXD. Если режим действительно невозможно определить, проверка сообщает об этом, а не угадывает
+- Нахождение принтера и хоста Bambuddy в одной подсети с учётом реального префикса интерфейса, через который проходит маршрут к принтеру, без предположения о `/24`
+- Учётные данные принтера (код доступа и серийный номер)
+- **Сохранение отправленных файлов на внешнем накопителе** — проверка варианта настройки на принтере из [шага 4](../getting-started/index.md#step-4-enable-store-sent-files-on-external-storage). Состояние считывается из сообщения статуса MQTT (бит 11 `home_flag`), поэтому проверка мгновенная. Она охватывает новые прошивки (P2S 01.02 / Bambu Studio 2.6+), где настройка перенесена на принтер. Старый вариант настройки в слайсере принтеру не виден, поэтому проверка может пройти, даже если параметр в слайсере выключен. При сомнениях проверьте шаг 4 вручную.
 
-| Log | Content |
+Каждая проверка показывает успех, ошибку, предупреждение или пропуск и понятное описание решения. Та же диагностика доступна с карточки отключённого принтера и из окна добавления принтера.
+
+---
+
+## :material-bug: Отладочная информация {#debug-information}
+
+### Файлы журналов {#log-files}
+
+Доступ к журналам приложения:
+
+| Журнал | Содержимое |
 |-----|---------|
-| **Application** | General operations |
-| **MQTT** | Printer communication |
-| **Database** | Database operations |
+| **Приложение** | Общие операции |
+| **MQTT** | Связь с принтером |
+| **База данных** | Операции с базой данных |
 
-### Log Level
+### Уровень журнала {#log-level}
 
-Configure logging detail:
+Настройка подробности:
 
-| Level | Detail |
+| Уровень | Подробность |
 |-------|--------|
-| ERROR | Only errors |
-| WARNING | Errors + warnings |
-| INFO | Normal operations |
-| DEBUG | Everything (verbose) |
+| ERROR | Только ошибки |
+| WARNING | Ошибки и предупреждения |
+| INFO | Обычные операции |
+| DEBUG | Всё, подробно |
 
 ---
 
-## :material-text-box-search: Log Viewer
+## :material-text-box-search: Просмотр журнала {#log-viewer}
 
-View and filter application logs in real-time directly from the System Information page.
+Просматривайте и фильтруйте журналы приложения в реальном времени прямо на странице информации о системе.
 
-### Opening the Log Viewer
+### Открытие просмотра журнала {#opening-the-log-viewer}
 
-1. Go to **System Information** page
-2. Find **Support & Troubleshooting** section
-3. Click on **Application Logs** to expand the viewer
+1. Откройте страницу **Информация о системе**
+2. Найдите раздел **Поддержка и устранение неполадок**
+3. Нажмите **Журналы приложения**, чтобы развернуть просмотр
 
-### Controls
+### Элементы управления {#controls}
 
-| Button | Action |
+| Кнопка | Действие |
 |:------:|--------|
-| **Start** | Begin live streaming (auto-refresh every 2 seconds) |
-| **Stop** | Pause live streaming |
-| :material-trash-can: Clear | Clear the log file |
-| :material-refresh: Refresh | Manual one-time refresh |
+| **Запустить** | Начать просмотр в реальном времени (обновление каждые 2 секунды) |
+| **Остановить** | Приостановить просмотр |
+| :material-trash-can: Очистить | Очистить файл журнала |
+| :material-refresh: Обновить | Однократно обновить вручную |
 
-### Filtering Options
+### Фильтры {#filtering-options}
 
-| Filter | Description |
+| Фильтр | Описание |
 |--------|-------------|
-| **Level** | Filter by log level: All, DEBUG, INFO, WARNING, ERROR |
-| **Search** | Text search across messages and logger names |
-| **Auto-scroll** | Automatically scroll to newest entries |
+| **Уровень** | Фильтр по уровню: все, DEBUG, INFO, WARNING, ERROR |
+| **Поиск** | Поиск текста в сообщениях и названиях компонентов журнала |
+| **Автопрокрутка** | Автоматический переход к новым записям |
 
-### Log Entry Details
+### Сведения о записи журнала {#log-entry-details}
 
-Each log entry shows:
+Каждая запись показывает:
 
-- **Timestamp** - Time the log was written
-- **Level** - Log severity (color-coded)
-- **Logger** - Component that generated the log
-- **Message** - Log content
+- **Время** записи
+- **Уровень** важности с цветовой отметкой
+- **Компонент**, создавший запись
+- **Сообщение** — содержимое записи
 
-Click on entries with multi-line content (like stack traces) to expand them.
+Нажмите запись с многострочным содержимым, например трассировкой стека, чтобы развернуть её.
 
-### Log Levels
+### Уровни журналирования {#log-levels}
 
-| Level | Color | Description |
+| Уровень | Цвет | Описание |
 |-------|-------|-------------|
-| DEBUG | Gray | Detailed debugging information |
-| INFO | Blue | Normal operational messages |
-| WARNING | Yellow | Warning conditions |
-| ERROR | Red | Error conditions |
+| DEBUG | Серый | Подробные отладочные сведения |
+| INFO | Синий | Обычные рабочие сообщения |
+| WARNING | Жёлтый | Предупреждения |
+| ERROR | Красный | Ошибки |
 
-!!! tip "Debug Level Logs"
-    DEBUG level logs are only captured when debug logging is enabled. Use the debug toggle above the log viewer to enable detailed logging.
+!!! tip "Записи уровня DEBUG"
+    Записи DEBUG собираются только при включённом отладочном журналировании. Для подробных журналов включите его переключателем над просмотром.
 
 ---
 
-## :material-lifebuoy: Support Bundle
+## :material-lifebuoy: Пакет поддержки {#support-bundle}
 
-Generate a support bundle for issue reporting. The bundle contains debug logs and system information to help diagnose problems.
+Создайте пакет поддержки для сообщения о проблеме. Он содержит отладочные журналы и системную информацию, помогающие диагностике.
 
-The **Support & Troubleshooting** section (debug logging, support bundle and the log viewer) is shown to users with the **settings:update** permission. The logs cover every printer, so viewers don't get them.
+Раздел **Поддержка и устранение неполадок** (отладочное журналирование, пакет поддержки и просмотр журнала) виден пользователям с разрешением **settings:update**. Журналы охватывают все принтеры, поэтому наблюдателям они недоступны.
 
-### Enable Debug Logging
+### Включение отладочного журналирования {#enable-debug-logging}
 
-Before generating a support bundle:
+Перед созданием пакета:
 
-1. Go to **System Information** page
-2. Find **Support & Troubleshooting** section
-3. Click **Enable** to turn on debug logging
-4. A banner appears across all pages showing debug mode is active with a live timer
-5. Reproduce the issue you want to report
-6. Click **Download** to get the support bundle
+1. Откройте страницу **Информация о системе**
+2. Найдите раздел **Поддержка и устранение неполадок**
+3. Нажмите **Включить** для отладочного журналирования
+4. На всех страницах появится баннер активного режима с таймером
+5. Воспроизведите проблему
+6. Нажмите **Скачать**, чтобы получить пакет поддержки
 
-### What's Collected
+### Какие данные собираются {#whats-collected}
 
-| Data | Description |
+| Данные | Описание |
 |------|-------------|
-| **App version** | Current Bambuddy version |
-| **OS info** | Platform, architecture, Python version |
-| **Database stats** | Archive/printer/filament counts (numbers only) |
-| **Printer diagnostics** | Model, firmware version, connectivity status, AMS unit/tray counts, WiFi signal, HMS error count (no names or serials) |
-| **Integration status** | Spoolman reachability, MQTT relay connection, Home Assistant enabled, notification provider types |
-| **Network interfaces** | Interface names and subnets only (e.g., `192.168.1.0/24`) — no host IPs |
-| **Python packages** | Versions of key dependencies (FastAPI, Pydantic, etc.) |
-| **Database health** | SQLite journal mode, integrity check, DB/WAL file sizes |
-| **Docker environment** | Container memory limit, network mode hint (only when running in Docker) |
-| **Process resources** | Bambuddy's resident and virtual memory, thread count, child processes **by executable name only**, open file and socket counts, uptime, and a census of live objects by type. Included so reports of memory growing over time can be diagnosed from the bundle. The object census is skipped when the process is already above 2 GB &mdash; walking the heap costs most on a process that is short of memory. |
-| **WebSocket connections** | Number of active browser connections |
-| **Log file** | Log file size |
-| **Settings** | Non-sensitive settings (themes, formats) |
-| **Debug logs** | Sanitized application logs |
+| **Версия приложения** | Текущая версия Bambuddy |
+| **Сведения об ОС** | Платформа, архитектура, версия Python |
+| **Статистика базы данных** | Количество архивов, принтеров и филаментов (только числа) |
+| **Диагностика принтеров** | Модель, версия прошивки, состояние подключения, количество блоков и слотов AMS, сигнал Wi-Fi и число ошибок HMS (без имён и серийных номеров) |
+| **Состояние интеграций** | Доступность Spoolman, соединение MQTT, включён ли Home Assistant, типы поставщиков уведомлений |
+| **Сетевые интерфейсы** | Только имена интерфейсов и подсети (например, `192.168.1.0/24`), без IP-адресов хостов |
+| **Пакеты Python** | Версии основных зависимостей (FastAPI, Pydantic и др.) |
+| **Состояние базы данных** | Режим журнала SQLite, проверка целостности, размеры файлов DB/WAL |
+| **Окружение Docker** | Ограничение памяти контейнера и указание режима сети (только при работе в Docker) |
+| **Ресурсы процесса** | Резидентная и виртуальная память Bambuddy, количество потоков, дочерние процессы **только по имени исполняемого файла**, количество открытых файлов и сокетов, время работы и подсчёт живых объектов по типу. Эти сведения помогают диагностировать рост потребления памяти. Подсчёт объектов пропускается, если процесс уже занимает более 2 ГБ, поскольку обход кучи наиболее затратен при нехватке памяти. |
+| **Соединения WebSocket** | Количество активных подключений браузеров |
+| **Файл журнала** | Размер файла журнала |
+| **Настройки** | Нечувствительные настройки (темы, форматы) |
+| **Отладочные журналы** | Очищенные журналы приложения |
 
-### What's NOT Collected
+### Какие данные НЕ собираются {#whats-not-collected}
 
-| Data | Reason |
+| Данные | Причина |
 |------|--------|
-| **Printer names/serials** | Privacy |
-| **Access codes/passwords** | Security |
-| **IP addresses** | Privacy |
-| **Email addresses** | Filtered from settings and logs |
-| **API keys/tokens** | Security |
-| **Webhook URLs** | May contain sensitive info |
-| **Your hostname/username** | Privacy |
-| **Child process command lines** | An ffmpeg command line carries the camera URL, and with it the camera password &mdash; only the executable name is recorded |
+| **Имена и серийные номера принтеров** | Конфиденциальность |
+| **Коды доступа и пароли** | Безопасность |
+| **IP-адреса** | Конфиденциальность |
+| **Адреса электронной почты** | Отфильтровываются из настроек и журналов |
+| **Ключи API и токены** | Безопасность |
+| **URL вебхуков** | Могут содержать чувствительные сведения |
+| **Имя хоста и пользователя** | Конфиденциальность |
+| **Командные строки дочерних процессов** | Команда ffmpeg содержит URL камеры и её пароль; записывается только имя исполняемого файла |
 
-!!! info "Privacy First"
-    Email addresses in logs are replaced with `[EMAIL]`, printer names with `[PRINTER]`, serial numbers with `[SERIAL]`, and IP addresses with `[IP]`. Paths are sanitized to hide usernames.
+!!! info "Конфиденциальность прежде всего"
+    Адреса электронной почты в журналах заменяются на `[EMAIL]`, имена принтеров — на `[PRINTER]`, серийные номера — на `[SERIAL]`, IP-адреса — на `[IP]`. Пути очищаются от имён пользователей.
 
-### Using the Bundle
+### Использование пакета {#using-the-bundle}
 
-1. Download the ZIP file
-2. Attach it to your [GitHub issue](https://github.com/maziggy/bambuddy/issues)
-3. Describe the problem you encountered
-4. Remember to disable debug logging when done
+1. Скачайте ZIP-файл
+2. Прикрепите его к [обращению на GitHub](https://github.com/maziggy/bambuddy/issues)
+3. Опишите возникшую проблему
+4. После завершения отключите отладочное журналирование
 
-!!! warning "Disable Debug Logging"
-    Debug logging increases log verbosity and file size. Remember to disable it after collecting the bundle.
+!!! warning "Отключайте отладочное журналирование"
+    Оно увеличивает подробность журналов и размер файлов. Не забудьте отключить его после создания пакета.
 
 ---
 
-## :material-api: API Endpoint
+## :material-api: Конечная точка API {#api-endpoint}
 
-Get system info via API:
+Получение информации о системе через API:
 
 ```bash
 GET /api/v1/system/info
 ```
 
-Response (trimmed):
+Ответ (сокращён):
 
 ```json
 {
@@ -350,20 +347,20 @@ Response (trimmed):
 }
 ```
 
-Sections: `app`, `database`, `printers`, `storage`, `system`, `memory`, `cpu`. Sizes are in bytes, each with a `_formatted` twin (`"45.6 MB"`). Needs `system:read`.
+Разделы: `app`, `database`, `printers`, `storage`, `system`, `memory`, `cpu`. Размеры указываются в байтах; для каждого есть форматированная версия с суффиксом `_formatted` (`"45.6 MB"`). Требуется `system:read`.
 
 ---
 
-## :material-lightbulb: Tips
+## :material-lightbulb: Советы {#tips}
 
-!!! tip "Regular Checks"
-    Check system info periodically to monitor storage and performance.
+!!! tip "Регулярная проверка"
+    Периодически проверяйте информацию о системе, чтобы следить за хранилищем и производительностью.
 
-!!! tip "Before Backups"
-    Review database size before backing up to plan storage.
+!!! tip "Перед резервным копированием"
+    Проверьте размер базы данных, чтобы спланировать место для копии.
 
-!!! tip "Troubleshooting"
-    Check uptime and logs when investigating issues.
+!!! tip "Устранение неполадок"
+    При поиске причин проверяйте время работы и журналы.
 
-!!! tip "Clean Up"
-    Use vacuum and cache clear to maintain performance.
+!!! tip "Очистка"
+    Для поддержания производительности выполняйте VACUUM и очищайте кэш.

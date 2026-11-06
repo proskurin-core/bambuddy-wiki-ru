@@ -1,82 +1,82 @@
 ---
-title: Energy Tracking
-description: Monitor power consumption and calculate electricity costs
+title: Учёт энергии
+description: Отслеживание энергопотребления и расчёт стоимости электричества
 ---
 
-# Energy Tracking
+# Учёт энергии {#energy-tracking}
 
-Track power consumption from your 3D printers and calculate electricity costs per print or cumulatively.
-
----
-
-## :material-lightning-bolt: Overview
-
-Energy tracking helps you understand:
-
-- **Power consumption** per print
-- **Electricity costs** over time
-- **Most efficient** printers and settings
-- **Total energy** usage
+Отслеживайте энергопотребление 3D-принтеров и рассчитывайте стоимость электричества для каждой печати или суммарно.
 
 ---
 
-## :material-power-plug: Requirements
+## :material-lightning-bolt: Обзор {#overview}
 
-Energy tracking requires a smart plug with power monitoring:
+Учёт энергии поможет узнать:
 
-### Supported Smart Plugs
+- **Энергопотребление** каждой печати
+- **Затраты на электричество** за период
+- **Наиболее эффективные** принтеры и настройки
+- **Общий расход** энергии
 
-| Type | Power Monitoring | Notes |
+---
+
+## :material-power-plug: Требования {#requirements}
+
+Для учёта энергии нужна умная розетка с измерением мощности:
+
+### Поддерживаемые умные розетки {#supported-smart-plugs}
+
+| Тип | Измерение мощности | Примечания |
 |------|:----------------:|-------|
-| **Tasmota** | :material-check: | Direct HTTP API |
-| **Home Assistant** | :material-check: | Via HA sensors |
-| **REST / Webhook** | :material-check: | Via JSON path extraction from status endpoint |
-| **MQTT** | :material-check: | Via MQTT topic subscription |
+| **Tasmota** | :material-check: | Прямой HTTP API |
+| **Home Assistant** | :material-check: | Через датчики HA |
+| **REST / Webhook** | :material-check: | Извлечение по пути JSON из ответа конечной точки состояния |
+| **MQTT** | :material-check: | Через подписку на топик MQTT |
 
-!!! info "Home Assistant Energy Sensors"
-    Many HA plugs expose energy data as separate sensor entities. Configure these in the plug settings under **Energy Monitoring (Optional)**. REST/Webhook and MQTT plugs extract energy data from JSON responses/messages using configurable paths. See [Smart Plugs](smart-plugs.md) for setup.
-
----
-
-## :material-cog: Configuration
-
-### Setting Up Energy Tracking
-
-1. Configure a smart plug for your printer (Tasmota, Home Assistant, REST/Webhook, or MQTT)
-2. Go to **Settings** > **Smart Plugs**
-3. Assign the plug to a printer
-4. For HA plugs: Configure energy sensor entities if needed
-5. Energy tracking starts automatically
-
-### Tracking Mode
-
-Choose how energy is tracked:
-
-| Mode | Description |
-|------|-------------|
-| **Per Print** | Track energy for each individual print |
-| **Total** | Track cumulative energy usage |
-
-Configure in **Settings** > **General**.
+!!! info "Датчики энергии Home Assistant"
+    Многие розетки HA предоставляют данные энергии через отдельные сущности датчиков. Настройте их в параметрах розетки в разделе **Мониторинг энергии (необязательно)**. Розетки REST/Webhook и MQTT извлекают данные из ответов и сообщений JSON по настраиваемым путям. Настройку см. в разделе [Умные розетки](smart-plugs.md).
 
 ---
 
-## :material-meter-electric: Energy Data
+## :material-cog: Настройка {#configuration}
 
-### Per-Print Tracking
+### Настройка учёта энергии {#setting-up-energy-tracking}
 
-When enabled, each print records:
+1. Настройте умную розетку для принтера (Tasmota, Home Assistant, REST/Webhook или MQTT)
+2. Откройте **Настройки** > **Умные розетки**
+3. Назначьте розетку принтеру
+4. Для розеток HA при необходимости настройте сущности датчиков энергии
+5. Учёт энергии начнётся автоматически
 
-| Data | Description |
+### Режим учёта {#tracking-mode}
+
+Выберите способ учёта энергии:
+
+| Режим | Описание |
 |------|-------------|
-| **Energy (Wh)** | Watt-hours consumed |
-| **Peak Power (W)** | Maximum power draw |
-| **Avg Power (W)** | Average during print |
-| **Cost** | Calculated electricity cost |
+| **По печатям** | Учёт энергии для каждой отдельной печати |
+| **Всего** | Учёт суммарного расхода энергии |
 
-### Archive Display
+Настройте в разделе **Настройки** > **Общие**.
 
-Energy data appears on archive cards:
+---
+
+## :material-meter-electric: Данные энергии {#energy-data}
+
+### Учёт по печатям {#per-print-tracking}
+
+Когда функция включена, для каждой печати записываются:
+
+| Данные | Описание |
+|------|-------------|
+| **Энергия (Вт·ч)** | Израсходованные ватт-часы |
+| **Пиковая мощность (Вт)** | Максимальная потребляемая мощность |
+| **Средняя мощность (Вт)** | Средняя мощность во время печати |
+| **Стоимость** | Расчётная стоимость электричества |
+
+### Отображение в архиве {#archive-display}
+
+Данные энергии отображаются на карточках архива:
 
 ```
 ⚡ 245 Wh • $0.04
@@ -84,145 +84,145 @@ Energy data appears on archive cards:
 
 ---
 
-## :material-chart-line: Energy Statistics
+## :material-chart-line: Статистика энергии {#energy-statistics}
 
-### Dashboard Widget
+### Виджет панели {#dashboard-widget}
 
-The Energy widget shows:
+Виджет энергии показывает:
 
-- **Total consumption** for period
-- **Cost breakdown** by printer
-- **Trend over time**
-- **Comparison** between printers
+- **Общий расход** за период
+- **Разбивку затрат** по принтерам
+- **Динамику во времени**
+- **Сравнение** принтеров
 
-Per-print energy also feeds the [Statistics page](statistics.md): the **Filament Trends** widget gains an **Energy Over Time** chart when measured data exists in the selected range, and the **Most Expensive** record ranks prints by filament + energy cost.
+Энергия каждой печати также учитывается на [странице статистики](statistics.md): в виджете **Тенденции филамента** появляется график **Энергия за период**, если в выбранном диапазоне есть измерения, а рекорд **Самая дорогая** ранжирует печати по сумме затрат на филамент и энергию.
 
-### Energy by Printer
+### Энергия по принтерам {#energy-by-printer}
 
-| Printer | Total Energy | Avg per Print | Cost |
+| Принтер | Всего энергии | В среднем на печать | Стоимость |
 |---------|:------------:|:-------------:|:----:|
 | Workshop X1C | 15.2 kWh | 380 Wh | $2.28 |
 | Office P1S | 8.5 kWh | 425 Wh | $1.28 |
 
 ---
 
-## :material-cash: Cost Calculation
+## :material-cash: Расчёт стоимости {#cost-calculation}
 
-### Setting Electricity Rate
+### Настройка тарифа на электричество {#setting-electricity-rate}
 
-1. Go to **Settings** > **General** > **Cost Tracking**
-2. Choose the **Electricity price source**:
-    - **Fixed price**: enter your rate per kWh under **Electricity cost per kWh**
-    - **Home Assistant sensor**: pick the sensor that holds your current price, see [Dynamic Electricity Rates](#dynamic-electricity-rates)
-3. Choose currency
+1. Откройте **Настройки** > **Общие** > **Учёт затрат**
+2. Выберите **Источник цены электричества**:
+    - **Фиксированная цена**: введите тариф за кВт·ч в поле **Стоимость электричества за кВт·ч**
+    - **Датчик Home Assistant**: выберите датчик с текущей ценой; см. [Динамические тарифы](#dynamic-electricity-rates)
+3. Выберите валюту
 
-### Cost Formula
+### Формула стоимости {#cost-formula}
 
 ```
 Print Cost = (Energy in Wh / 1000) × Rate per kWh
 ```
 
-**Example:**
+**Пример:**
 ```
 245 Wh at $0.15/kWh = 0.245 × 0.15 = $0.037
 ```
 
-### Energy Is Costed at the Price of the Hour It Was Used
+### Энергия оценивается по цене часа её потребления {#energy-is-costed-at-the-price-of-the-hour-it-was-used}
 
-Bambuddy records the electricity price with each hourly energy reading, and costs the energy used in each hour at that hour's price:
+Bambuddy записывает цену электричества вместе с каждым часовым показанием и оценивает энергию за каждый час по цене этого часа:
 
-- **A print** that runs through a price change is costed hour by hour: its cheap hours at the cheap price and its expensive hours at the expensive one, not all of it at the price when it ends.
-- **The Statistics page** in **Total** mode does the same for any date range and for the all-time figure.
-- **Changing the price** applies to the energy used from then on. Energy already used keeps the price it was used at, so a new contract doesn't re-cost last year.
+- **Печать**, во время которой цена изменилась, оценивается по часам: дешёвые часы по низкой цене, дорогие — по высокой, а не целиком по цене в конце печати.
+- **Страница статистики** в режиме **Всего** делает то же для любого периода и общего значения за всё время.
+- **Изменение цены** применяется к последующему расходу. Уже использованная энергия сохраняет прежнюю цену, поэтому новый договор не пересчитывает затраты за прошлый год.
 
-Energy used since the last hourly reading, and energy from plugs without a lifetime counter (MQTT plugs), is costed at the current price. Energy recorded before this feature existed keeps the price that was set when you upgraded.
+Энергия, израсходованная после последнего часового показания, и энергия розеток без накопительного счётчика (MQTT) оцениваются по текущей цене. Энергия, записанная до появления этой функции, сохраняет цену, установленную при обновлении.
 
 ---
 
-## :material-clock-start: When Energy is Tracked
+## :material-clock-start: Когда учитывается энергия {#when-energy-is-tracked}
 
-Energy tracking records:
+Учёт энергии охватывает:
 
-| Phase | Tracked? |
+| Этап | Учитывается? |
 |-------|:--------:|
-| Preheating | :material-check: |
-| Printing | :material-check: |
-| Cooling | :material-check: |
-| Idle (printer on, not printing) | Depends on mode |
+| Предварительный нагрев | :material-check: |
+| Печать | :material-check: |
+| Охлаждение | :material-check: |
+| Простой (принтер включён, но не печатает) | Зависит от режима |
 
-### Per-Print Mode
+### Режим по печатям {#per-print-mode}
 
-Only tracks during active print:
+Учитывается только активная печать:
 
-- Starts when print begins
-- Ends when print completes
-- Includes preheating and cooling
-- **Restart-resilient**: the starting plug counter is persisted on the archive row, so if the Bambuddy backend restarts during a print the per-print energy delta is still computed correctly at completion.
+- Начинается при запуске печати
+- Заканчивается при завершении печати
+- Включает предварительный нагрев и охлаждение
+- **Устойчивость к перезапуску**: начальное показание счётчика розетки сохраняется в записи архива, поэтому после перезапуска бэкенда Bambuddy во время печати расход всё равно будет правильно рассчитан при завершении.
 
-!!! info "More than one plug on a printer"
-    You can link several plugs to the same printer — a dry box, a filter fan, a chamber light. Only one of them supplies the energy figure: Bambuddy prefers a plug marked **Powers the printer**, and of those the first that actually reports a meter reading. Accessory plugs without energy monitoring are skipped automatically, so no configuration is needed for the usual case. If a printer's energy stays empty, check that its own plug still has **Powers the printer** enabled.
+!!! info "Несколько розеток у принтера"
+    К одному принтеру можно привязать несколько розеток: сухой бокс, вентилятор фильтра, освещение камеры. Показания энергии берутся только от одной: Bambuddy предпочитает розетку с отметкой **Питает принтер**, выбирая первую из них, которая сообщает показание счётчика. Розетки аксессуаров без измерения энергии пропускаются автоматически, поэтому обычно дополнительная настройка не нужна. Если энергия принтера не отображается, проверьте, включён ли параметр **Питает принтер** у его розетки.
 
-### Total Mode
+### Режим общего расхода {#total-mode}
 
-Tracks all energy when the plug is on — including idle, preheat, printing, cooldown, and standby. The value comes from the smart plug's lifetime counter (delivered via Tasmota/HA/REST), not from per-print deltas.
+Учитывается вся энергия при включённой розетке, включая простой, нагрев, печать, охлаждение и ожидание. Значение берётся из накопительного счётчика умной розетки (через Tasmota/HA/REST), а не из разниц по отдельным печатям.
 
-- Cumulative total reported as the plug's live lifetime counter
-- Includes idle / standby / chamber heating
-- Date-range views (Today / This Week / This Month / …) are supported via **hourly snapshots** of each plug's lifetime counter. For a date range, Bambuddy computes `lastSnapshot − baseline` per plug where *baseline* is the last snapshot at or before the range start.
+- Суммарное значение поступает из текущего накопительного счётчика розетки
+- Включает простой, ожидание и нагрев камеры
+- Периоды (сегодня, эта неделя, этот месяц и т. д.) поддерживаются с помощью **часовых снимков** накопительного счётчика каждой розетки. Для выбранного периода Bambuddy вычисляет `lastSnapshot − baseline` для каждой розетки, где *baseline* — последний снимок на момент начала периода или ранее.
 
-!!! warning "Warming-up period"
-    The hourly snapshot loop starts shortly after backend startup. On a fresh install — or immediately after upgrading to a version that ships snapshot support — there is not yet a baseline snapshot *before* every possible date range. In that case the Statistics page shows a yellow warning icon next to **Energy Used** / **Energy Cost**; hover over it to read the explanation. As soon as at least one snapshot exists before the selected range the warning disappears and values become accurate. No configuration or manual action is required — the system is simply collecting data.
-
----
-
-## :material-file-export: Energy Export
-
-Export energy data:
-
-1. Go to **Statistics**
-2. Click **Export**
-3. Energy data included in CSV/Excel
-
-Export includes:
-
-- Per-print energy consumption
-- Cost calculations
-- Printer comparison data
+!!! warning "Начальный период накопления данных"
+    Часовые снимки начинают создаваться вскоре после запуска бэкенда. В новой установке или сразу после обновления до версии с поддержкой снимков базового снимка *до* начала каждого возможного периода ещё нет. Тогда на странице статистики рядом с **Использовано энергии** / **Стоимость энергии** появляется жёлтый значок предупреждения; наведите на него указатель для пояснения. Когда появится хотя бы один снимок до выбранного периода, предупреждение исчезнет и значения станут точными. Никакие действия или настройка не требуются — система просто собирает данные.
 
 ---
 
-## :material-chart-bar: Energy Analysis
+## :material-file-export: Экспорт данных энергии {#energy-export}
 
-### Efficient Settings
+Чтобы экспортировать данные энергии:
 
-Compare energy usage across prints to find efficient settings:
+1. Откройте **Статистика**
+2. Нажмите **Экспорт**
+3. Данные энергии будут включены в CSV/Excel
 
-| Setting | Energy Impact |
+Экспорт включает:
+
+- Энергопотребление по печатям
+- Расчёты стоимости
+- Данные сравнения принтеров
+
+---
+
+## :material-chart-bar: Анализ энергии {#energy-analysis}
+
+### Эффективные настройки {#efficient-settings}
+
+Сравните расход энергии разных печатей, чтобы найти эффективные настройки:
+
+| Настройка | Влияние на расход |
 |---------|---------------|
-| Lower temps | Less energy |
-| Faster prints | Less energy (shorter runtime) |
-| PLA vs ABS | ABS uses more (higher temps) |
-| Enclosed chamber | Uses more (chamber heating) |
+| Более низкие температуры | Меньше энергии |
+| Более быстрая печать | Меньше энергии (меньше времени работы) |
+| PLA и ABS | ABS потребляет больше (выше температуры) |
+| Закрытая камера | Расход выше (нагрев камеры) |
 
-### Printer Efficiency
+### Эффективность принтеров {#printer-efficiency}
 
-Compare printers:
+Сравнивайте принтеры:
 
-- Some are more efficient than others
-- Consider energy when choosing which printer to use
-- Factor into total cost of ownership
+- Некоторые эффективнее других
+- Учитывайте энергию при выборе принтера
+- Учитывайте её в совокупной стоимости владения
 
 ---
 
-## :material-poll: Total Cost of Printing
+## :material-poll: Общая стоимость печати {#total-cost-of-printing}
 
-Combine energy costs with filament costs:
+Сложите затраты на энергию и филамент:
 
 ```
 Total Print Cost = Filament Cost + Electricity Cost
 ```
 
-**Example:**
+**Пример:**
 ```
 Filament: 45g at $25/kg = $1.13
 Electricity: 245 Wh at $0.15/kWh = $0.04
@@ -232,59 +232,59 @@ Total: $1.17
 
 ---
 
-## :material-lightbulb: Tips
+## :material-lightbulb: Советы {#tips}
 
-!!! tip "Accurate Rates"
-    Use your actual electricity rate from your utility bill, including all fees and taxes.
+!!! tip "Точные тарифы"
+    Используйте фактический тариф из счёта за электричество с учётом всех сборов и налогов.
 
-!!! tip "Compare Printers"
-    Track energy to understand which printer is most cost-effective for different jobs.
+!!! tip "Сравнивайте принтеры"
+    Отслеживайте энергию, чтобы понять, какой принтер выгоднее для разных задач.
 
-!!! tip "Factor in Failures"
-    Failed prints still consume energy - another reason to optimize for reliability.
+!!! tip "Учитывайте неудачи"
+    Неудачные печати тоже расходуют энергию — ещё одна причина повышать надёжность.
 
-!!! tip "Peak Hours"
-    If your electricity has time-of-use rates, schedule prints during off-peak hours.
+!!! tip "Пиковые часы"
+    Если тариф зависит от времени суток, планируйте печать на непиковые часы.
 
-!!! tip "Standby Power"
-    Consider auto power-off to eliminate standby energy consumption.
+!!! tip "Энергия в режиме ожидания"
+    Настройте автоматическое выключение, чтобы исключить расход в режиме ожидания.
 
 ---
 
-## :material-home-automation: Dynamic Electricity Rates
+## :material-home-automation: Динамические тарифы на электричество {#dynamic-electricity-rates}
 
-If you have a dynamic electricity tariff (e.g., Amber, Tibber, Octopus Energy, Nord Pool), Bambuddy can take the price from Home Assistant. Each hour of energy is then costed at the price of that hour, see [Energy Is Costed at the Price of the Hour It Was Used](#energy-is-costed-at-the-price-of-the-hour-it-was-used).
+При динамическом тарифе (например, Amber, Tibber, Octopus Energy, Nord Pool) Bambuddy может получать цену из Home Assistant. Энергия за каждый час оценивается по цене этого часа; см. [Энергия оценивается по цене часа её потребления](#energy-is-costed-at-the-price-of-the-hour-it-was-used).
 
-### Read the Price Sensor (Recommended)
+### Чтение датчика цены (рекомендуется) {#read-the-price-sensor-recommended}
 
-Bambuddy reads the price straight from a Home Assistant sensor, using the [Home Assistant connection](smart-plugs.md) you already set up for smart plugs:
+Bambuddy считывает цену непосредственно с датчика Home Assistant через уже настроенное для умных розеток [подключение Home Assistant](smart-plugs.md):
 
-1. Make sure Home Assistant is connected under **Settings** > **Network** > **Home Assistant**
-2. Go to **Settings** > **General** > **Cost Tracking**
-3. Set **Electricity price source** to **Home Assistant sensor**
-4. Under **Price sensor**, pick or type the sensor holding your current price, e.g. `sensor.amber_general_price`
+1. Убедитесь, что Home Assistant подключён в разделе **Настройки** > **Сеть** > **Home Assistant**
+2. Откройте **Настройки** > **Общие** > **Учёт затрат**
+3. Установите **Источник цены электричества** в значение **Датчик Home Assistant**
+4. В поле **Датчик цены** выберите или введите датчик с текущей ценой, например `sensor.amber_general_price`
 
-Bambuddy reads the sensor when you save, every hour, and at the start and end of every print. The price field then shows the last price read and can't be edited. If Home Assistant can't be reached, Bambuddy keeps using the last price it read.
+Bambuddy считывает датчик при сохранении, каждый час, а также в начале и в конце каждой печати. Поле цены показывает последнее считанное значение и недоступно для изменения. Если Home Assistant недоступен, Bambuddy продолжает использовать последнюю полученную цену.
 
-!!! info "Sensor units"
-    The sensor must give the price per kWh in your Bambuddy currency, e.g. `AUD/kWh` or `EUR/kWh`. Prices per MWh (common for Nord Pool and ENTSO-E day-ahead sensors) and per Wh are converted automatically. A sensor in cents (`c/kWh`, `ct/kWh`, `p/kWh`) needs a [template sensor](https://www.home-assistant.io/integrations/template/) that divides by 100. A negative price is costed as free.
+!!! info "Единицы датчика"
+    Датчик должен возвращать цену за кВт·ч в валюте Bambuddy, например `AUD/kWh` или `EUR/kWh`. Цены за МВт·ч (часто встречаются у датчиков Nord Pool и ENTSO-E на следующий день) и за Вт·ч преобразуются автоматически. Для датчика в центах (`c/kWh`, `ct/kWh`, `p/kWh`) нужен [шаблонный датчик](https://www.home-assistant.io/integrations/template/), делящий значение на 100. Отрицательная цена учитывается как нулевая.
 
-!!! tip "Time-of-use tariffs without an API"
-    If your provider has fixed peak and off-peak hours but no integration, create a template sensor in Home Assistant that returns the right price for the time of day, and pick that.
+!!! tip "Тарифы по времени суток без API"
+    Если у поставщика фиксированные пиковые и непиковые часы, но нет интеграции, создайте в Home Assistant шаблонный датчик, который возвращает нужную цену для текущего времени, и выберите его.
 
-### Push the Price from Home Assistant
+### Отправка цены из Home Assistant {#push-the-price-from-home-assistant}
 
-The older alternative, still supported: Home Assistant pushes the price to Bambuddy's API whenever it changes. Leave **Electricity price source** on **Fixed price** for this; the pushed price applies from the moment it arrives.
+Поддерживается и более старый способ: Home Assistant отправляет цену в API Bambuddy при каждом изменении. Для этого оставьте **Источник цены электричества** в положении **Фиксированная цена**; отправленная цена применяется с момента получения.
 
-#### 1. Create an API Key
+#### 1. Создайте ключ API {#1-create-an-api-key}
 
-1. Go to **Settings** > **API Keys**
-2. Create a key and tick the **Update electricity price** permission (this is the only settings field writable via API key — see [API Keys](api-keys.md#available-permissions) for why)
-3. Copy the key
+1. Откройте **Настройки** > **Ключи API**
+2. Создайте ключ и отметьте разрешение **Обновление цены электричества** (это единственное поле настроек, доступное для записи через ключ API; причину см. в разделе [Ключи API](api-keys.md#available-permissions))
+3. Скопируйте ключ
 
-#### 2. Add REST Command to Home Assistant
+#### 2. Добавьте команду REST в Home Assistant {#2-add-rest-command-to-home-assistant}
 
-Add to your `configuration.yaml`:
+Добавьте в `configuration.yaml`:
 
 ```yaml
 rest_command:
@@ -297,22 +297,21 @@ rest_command:
     payload: '{"energy_cost_per_kwh": {{ states("sensor.electricity_price") }}}'
 ```
 
-Replace:
+Замените:
 
-- `YOUR_BAMBUDDY_IP` with your Bambuddy server address
-- `YOUR_API_KEY` with the API key from step 1
-- `sensor.electricity_price` with your energy provider's price sensor
+- `YOUR_BAMBUDDY_IP` на адрес сервера Bambuddy
+- `YOUR_API_KEY` на ключ API из шага 1
+- `sensor.electricity_price` на датчик цены вашего поставщика энергии
 
-!!! warning "Old `PATCH /settings` example no longer works"
-    Bambuddy versions before v0.2.6 documented this integration using
-    `PATCH /api/v1/settings`, but that route was always denied for API
-    keys (it can rewrite SMTP/LDAP credentials) and the call would 403.
-    The dedicated `POST /api/v1/settings/electricity-price` endpoint
-    introduced in [#1356](https://github.com/maziggy/bambuddy/issues/1356)
-    is the correct path — if your automation predates this fix, update
-    both the URL and the method.
+!!! warning "Старый пример с `PATCH /settings` больше не работает"
+    В версиях Bambuddy до v0.2.6 эта интеграция была описана с использованием
+    `PATCH /api/v1/settings`, но этот путь всегда был запрещён для ключей API
+    (он может перезаписывать учётные данные SMTP/LDAP) и возвращал 403.
+    Правильный путь — отдельная конечная точка `POST /api/v1/settings/electricity-price`,
+    добавленная в [#1356](https://github.com/maziggy/bambuddy/issues/1356).
+    Если автоматизация создана до исправления, обновите URL и метод.
 
-#### 3. Create Automation
+#### 3. Создайте автоматизацию {#3-create-automation}
 
 ```yaml
 automation:
@@ -332,15 +331,15 @@ automation:
     - service: rest_command.bambuddy_electricity_price
 ```
 
-This updates the price in Bambuddy whenever your electricity rate changes.
+Это обновляет цену в Bambuddy при каждом изменении тарифа.
 
-### Common Energy Provider Sensors
+### Распространённые датчики поставщиков энергии {#common-energy-provider-sensors}
 
-| Provider | Typical Sensor |
+| Поставщик | Типичный датчик |
 |----------|----------------|
 | Tibber | `sensor.tibber_prices` |
 | Octopus Energy | `sensor.octopus_energy_electricity_current_rate` |
 | Nordpool | `sensor.nordpool_kwh_*` |
 
-!!! tip "Check Your Sensor"
-    Verify your sensor returns a numeric value (e.g., `0.25`) not a string with currency symbol.
+!!! tip "Проверьте датчик"
+    Убедитесь, что датчик возвращает числовое значение (например, `0.25`), а не строку с символом валюты.

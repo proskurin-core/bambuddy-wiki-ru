@@ -1,142 +1,142 @@
 ---
-title: AI Failure Detection
-description: Detect print failures with Obico or OctoEverywhere AI failure detection
+title: Обнаружение ошибок с помощью ИИ
+description: Обнаружение сбоев печати с помощью ИИ Obico или OctoEverywhere
 ---
 
-# AI Failure Detection
+# Обнаружение ошибок с помощью ИИ {#ai-failure-detection}
 
-Bambuddy can check camera snapshots while a print is running and notify you, pause the print, or pause and cut power when a possible failure is detected.
+Bambuddy может проверять снимки с камеры во время печати и при обнаружении возможной ошибки уведомить вас, приостановить печать или приостановить её и отключить питание.
 
-Choose a **Provider** in **Settings → Failure Detection**:
+Выберите **Провайдера** в разделе **Настройки → Обнаружение ошибок**:
 
-| Provider | Where analysis runs | What you need |
+| Провайдер | Где выполняется анализ | Что понадобится |
 |----------|---------------------|---------------|
-| [Obico](#obico) | Your own ML API container on your local network | An Obico ML API URL and a reachable Bambuddy External URL |
-| [OctoEverywhere](#octoeverywhere) | OctoEverywhere's private cloud | A free Gadget API key and outbound internet access |
+| [Obico](#obico) | Собственный контейнер ML API в вашей локальной сети | URL Obico ML API и доступный внешний URL Bambuddy |
+| [OctoEverywhere](#octoeverywhere) | Частное облако OctoEverywhere | Бесплатный ключ Gadget API и исходящий доступ в интернет |
 
 ---
 
-## OctoEverywhere
+## OctoEverywhere {#octoeverywhere}
 
-[OctoEverywhere](https://octoeverywhere.com/) provides cloud AI failure detection through its Gadget API. Bambuddy captures snapshots from the printer's configured built-in or external camera and uploads them over HTTPS. Gadget follows each print over time and returns print quality and warning/pause suggestions; Bambuddy handles notifications and printer actions.
+[OctoEverywhere](https://octoeverywhere.com/) обнаруживает ошибки с помощью облачного ИИ через Gadget API. Bambuddy делает снимки со встроенной или внешней камеры, настроенной для принтера, и загружает их по HTTPS. Gadget отслеживает печать во времени и возвращает оценку качества и рекомендации предупредить пользователя или приостановить печать; уведомлениями и действиями принтера управляет Bambuddy.
 
-### Privacy
+### Конфиденциальность {#privacy}
 
-OctoEverywhere has a strict privacy policy for the Gadget AI APIs that states all images are deleted immediately after the processing request is complete. OctoEverywhere does not store images or use them to train its AI models. [Read the full Privacy Policy here.](https://octoeverywhere.com/privacy?source=footer#gadget-developer-api)
+Согласно строгой политике конфиденциальности OctoEverywhere для Gadget AI API, все изображения удаляются сразу после завершения обработки запроса. OctoEverywhere не хранит изображения и не использует их для обучения моделей ИИ. [Полная политика конфиденциальности](https://octoeverywhere.com/privacy?source=footer#gadget-developer-api).
 
-### Setup
+### Настройка {#setup}
 
-1. Open the [Gadget API account page](https://octoeverywhere.com/gadgetapi), sign in or create an account, and copy your API key.
-2. Go to **Settings → Failure Detection** and select **OctoEverywhere** under **Provider**.
-3. Turn on **OctoEverywhere AI Detection**, paste the key into **Gadget API key**, and click **Test**.
-4. Confirm the key verification succeeds. Connected printers are monitored while actively printing. Clear **Monitor all connected printers** to choose individual printers.
-5. In **Settings → Notifications**, enable **AI Failure Detection** on each notification provider that should receive alerts. Check that its printer filters include the monitored printers, and use the provider's test to verify delivery. See [Notifications → Printer Events](notifications.md#printer-events).
+1. Откройте [страницу учётной записи Gadget API](https://octoeverywhere.com/gadgetapi), войдите или создайте учётную запись и скопируйте ключ API.
+2. Перейдите в **Настройки → Обнаружение ошибок** и выберите **OctoEverywhere** в поле **Провайдер**.
+3. Включите **Обнаружение ошибок ИИ OctoEverywhere**, вставьте ключ в поле **Ключ Gadget API** и нажмите **Проверить**.
+4. Убедитесь, что ключ успешно проверен. Подключённые принтеры отслеживаются во время активной печати. Снимите отметку **Отслеживать все подключённые принтеры**, чтобы выбрать отдельные принтеры.
+5. В разделе **Настройки → Уведомления** включите **Обнаружение ошибок ИИ** у каждого провайдера уведомлений, который должен отправлять оповещения. Проверьте, что в фильтры принтеров включены отслеживаемые устройства, и проверьте доставку тестом провайдера. См. [Уведомления → События принтера](notifications.md#printer-events).
 
-### Detection Settings
+### Настройки обнаружения {#detection-settings}
 
-| Setting | Behavior |
+| Настройка | Поведение |
 |---------|----------|
-| **Confidence** | **Lowest**, **Low**, **Medium** (default), **High**, or **Highest**. Lower confidence reports possible failures sooner, with more potential false positives. Higher confidence requires more certainty before warning or pausing. |
-| **Inspection interval** | **20 seconds** by default. Choose an interval from **5 to 30 seconds** with the slider. |
-| **Action on detected failure** | **Notify only** (default), **Pause print**, or **Pause and cut power**. Pause actions run when Gadget suggests pausing; cutting power also turns off enabled smart plugs linked to the printer. |
-| **Monitored Printers** | **Monitor all connected printers** is selected by default. Clear it to select a subset; selecting no printers monitors none. |
+| **Уверенность** | **Самая низкая**, **Низкая**, **Средняя** (по умолчанию), **Высокая** или **Самая высокая**. При низкой уверенности возможные ошибки сообщаются раньше, но ложных срабатываний может быть больше. При высокой требуется большая уверенность перед предупреждением или паузой. |
+| **Интервал проверки** | По умолчанию **20 секунд**. Ползунком можно выбрать от **5 до 30 секунд**. |
+| **Действие при обнаружении ошибки** | **Только уведомить** (по умолчанию), **Приостановить печать** или **Приостановить и отключить питание**. Действия с паузой выполняются, когда Gadget рекомендует приостановить печать; отключение питания также выключает включённые умные розетки, связанные с принтером. |
+| **Отслеживаемые принтеры** | По умолчанию выбрано **Отслеживать все подключённые принтеры**. Снимите отметку и выберите нужные устройства; если не выбрать ни одного, отслеживание не выполняется. |
 
-The first warning sends a notification. If Gadget still reports a possible failure 3 hours later, Bambuddy notifies again, and every 3 hours after that for as long as the print runs. If Gadget suggests pausing, **Pause print** or **Pause and cut power** runs once and sends its own notification; later reminders are notifications only, so the printer is never paused or switched off twice. With **Notify only**, the printer keeps printing, and a pause suggestion shortly after a warning is notified once the 3 hours have passed.
+Первое предупреждение отправляет уведомление. Если через 3 часа Gadget всё ещё сообщает о возможной ошибке, Bambuddy уведомляет снова, а затем каждые 3 часа, пока идёт печать. Если Gadget рекомендует паузу, действие **Приостановить печать** или **Приостановить и отключить питание** выполняется один раз и отправляет собственное уведомление; последующие напоминания только уведомляют, поэтому принтер не будет повторно приостановлен или выключен. При выборе **Только уведомить** принтер продолжает печать, а рекомендация паузы вскоре после предупреждения будет сообщена по истечении 3 часов.
 
-### Inspection Timing
+### Время проверок {#inspection-timing}
 
-The selected interval is subject to the server's minimum interval. When Gadget suggests faster inspections, Bambuddy temporarily uses its recommended interval if it is shorter than your selection, while still respecting the minimum. Camera capture, processing time, rate limits, and error retry delays can make checks take longer than the selected interval. The selected interval never overrides the server's minimum or retry timing.
+Выбранный интервал ограничен минимальным интервалом сервера. Когда Gadget рекомендует более частые проверки, Bambuddy временно использует рекомендованный интервал, если он короче выбранного, но соблюдает минимум сервера. Захват изображения, обработка, ограничения частоты и задержки повторных попыток могут увеличить время между проверками. Выбранный интервал никогда не отменяет минимум сервера или время повтора.
 
-### Status and Print Quality
+### Состояние и качество печати {#status-and-print-quality}
 
-The **Status** and **Recent Detections** cards show monitored prints and their results. The **Monitoring** field distinguishes waiting for results, successful checks, and problems that need attention. The printer card's AI badge opens the detection details.
+Карточки **Состояние** и **Последние обнаружения** показывают отслеживаемые печати и результаты. Поле **Мониторинг** различает ожидание результата, успешные проверки и проблемы, требующие внимания. Значок ИИ на карточке принтера открывает подробности обнаружения.
 
-| Badge | Meaning |
+| Значок | Значение |
 |-------|---------|
-| **Starting** | Waiting for the first usable result. |
-| **Safe** | The latest successful check did not suggest a warning or pause. |
-| **Warning** | Gadget suggested warning about a possible issue. |
-| **Failure** | Gadget suggested pausing the print. |
-| **Not checking** | A camera, connection, or API problem prevented a result. Open the details for the reason. |
+| **Запуск** | Ожидание первого пригодного результата. |
+| **Безопасно** | Последняя успешная проверка не рекомендовала предупреждение или паузу. |
+| **Предупреждение** | Gadget рекомендовал предупредить о возможной проблеме. |
+| **Ошибка** | Gadget рекомендовал приостановить печать. |
+| **Не проверяется** | Проблема камеры, соединения или API помешала получить результат. Причина указана в подробностях. |
 
-**Print quality** ranges from **1/10 to 10/10**, with higher values indicating better quality. It is not a failure probability. Warnings and actions follow Gadget's suggestions, not the quality score alone.
+**Качество печати** оценивается от **1/10 до 10/10**: большее значение означает лучшее качество. Это не вероятность ошибки. Предупреждения и действия следуют рекомендациям Gadget, а не одной только оценке качества.
 
-### Troubleshooting OctoEverywhere
+### Устранение неполадок OctoEverywhere {#troubleshooting-octoeverywhere}
 
-**Key rejected or account unavailable**
-: Check the saved Gadget API key and the status on the [Gadget API account page](https://octoeverywhere.com/gadgetapi). For a disabled key, [contact OctoEverywhere support](https://octoeverywhere.com/support). For an IP restriction, use the original key associated with that public IP or contact support if it is unavailable. After resolving access, click **Test** to resume inspections.
+**Ключ отклонён или учётная запись недоступна**
+: Проверьте сохранённый ключ Gadget API и состояние на [странице учётной записи Gadget API](https://octoeverywhere.com/gadgetapi). Если ключ отключён, [обратитесь в поддержку OctoEverywhere](https://octoeverywhere.com/support). При ограничении IP используйте исходный ключ, связанный с этим публичным IP, или обратитесь в поддержку, если он недоступен. После восстановления доступа нажмите **Проверить**, чтобы возобновить проверки.
 
-**Usage limit reached**
-: When the API returns `OE_FREE_USAGE_LIMIT_REACHED`, Bambuddy shows **Usage limit reached.** with a **Set up billing to continue** link. Wait for the next monthly allowance, or optionally set up billing and turn off **Free Usage Only** on the [Gadget API account page](https://octoeverywhere.com/gadgetapi). If billing is already configured, only **Free Usage Only** needs changing. After the allowance renews or the account settings are updated, click **Test** to resume inspections.
+**Лимит использования исчерпан**
+: При ответе API `OE_FREE_USAGE_LIMIT_REACHED` Bambuddy показывает сообщение об исчерпании лимита и ссылку настройки оплаты. Дождитесь следующего месячного лимита либо настройте оплату и отключите **Free Usage Only** на [странице учётной записи Gadget API](https://octoeverywhere.com/gadgetapi). Если оплата уже настроена, достаточно изменить **Free Usage Only**. После обновления лимита или настроек нажмите **Проверить**.
 
-**IP restriction remains after changing account settings**
-: Changing billing settings or creating another key does not remove an IP restriction. Use the original Gadget API key associated with that public IP, or [contact OctoEverywhere support](https://octoeverywhere.com/support) if the key is unavailable or the IP is shared with another account. Click **Test** after resolving access.
+**Ограничение IP осталось после изменения настроек учётной записи**
+: Изменение оплаты или создание другого ключа не снимает ограничение IP. Используйте исходный ключ Gadget API, связанный с этим публичным IP, или [обратитесь в поддержку OctoEverywhere](https://octoeverywhere.com/support), если ключ недоступен или IP используется другой учётной записью. После восстановления доступа нажмите **Проверить**.
 
-**Camera or connection failure**
-: Confirm the printer is connected, actively printing, and selected for monitoring. Check that its configured camera works in Bambuddy and that the Bambuddy host has DNS and outbound HTTPS access to OctoEverywhere. Temporary connection and service failures retry automatically; repeated failures delay subsequent retries.
+**Ошибка камеры или соединения**
+: Убедитесь, что принтер подключён, активно печатает и выбран для мониторинга. Проверьте работу настроенной камеры в Bambuddy и доступ хоста Bambuddy к DNS и исходящему HTTPS для OctoEverywhere. Временные ошибки соединения и службы повторяются автоматически; при повторных ошибках задержка увеличивается.
 
-**Checks slower than the selected interval**
-: Camera capture, processing time, the server's minimum interval, rate limits, and error retry delays can lengthen the interval. See [Inspection Timing](#inspection-timing).
+**Проверки идут медленнее выбранного интервала**
+: Захват изображения, обработка, минимум сервера, ограничения частоты и задержки повторных попыток могут увеличить интервал. См. [Время проверок](#inspection-timing).
 
-**False alarms or late alerts**
-: Raise **Confidence** if healthy prints trigger warnings; lower it to report possible failures sooner. This is the opposite direction to Obico's **Sensitivity** control.
+**Ложные или запоздалые оповещения**
+: Повысьте **Уверенность**, если исправные печати вызывают предупреждения; уменьшите её, чтобы раньше сообщать о возможных ошибках. Направление противоположно настройке **Чувствительность** Obico.
 
-**Detection appears but no notification arrives**
-: Enable **AI Failure Detection** on a working notification provider and check its printer filters. The settings page reports missing notification coverage; the provider's own test checks delivery.
+**Обнаружение показано, но уведомление не приходит**
+: Включите **Обнаружение ошибок ИИ** у работающего провайдера уведомлений и проверьте его фильтры принтеров. На странице настроек указывается отсутствие покрытия уведомлениями; тест провайдера проверяет доставку.
 
-!!! warning "Account errors stop monitoring"
-    Key, account, IP restriction, and usage-limit errors stop inspections across all monitored printers until access is restored and **Test** succeeds with the configured key, or a replacement key is saved. These errors do not pause the printers.
+!!! warning "Ошибки учётной записи останавливают мониторинг"
+    Ошибки ключа, учётной записи, ограничения IP и лимита использования останавливают проверки всех отслеживаемых принтеров, пока доступ не восстановлен и **Проверить** не выполнится успешно с настроенным ключом либо не будет сохранён новый ключ. Эти ошибки не приостанавливают принтеры.
 
-**Test** verifies access by creating a context; it does not upload an image or verify the remaining inspection allowance. A successful test resumes inspections, but the next inspection can stop monitoring again if the allowance is still exhausted. Creating another context or switching processing URLs does not reset the allowance.
+**Проверить** проверяет доступ созданием контекста; изображение не загружается и остаток лимита проверок не проверяется. Успешный тест возобновляет проверки, но следующая проверка может снова остановить мониторинг, если лимит всё ещё исчерпан. Создание другого контекста или смена URL обработки не сбрасывает лимит.
 
-A successful **Test** with the same key preserves existing monitoring contexts. Saving a replacement key creates new contexts while preserving notification/action tracking and the current inspection timing.
+Успешная проверка с тем же ключом сохраняет существующие контексты мониторинга. Сохранение нового ключа создаёт новые контексты, сохраняя учёт уведомлений и действий и текущее расписание проверки.
 
-#### Inspection Debug Logs
+#### Отладочные журналы проверок {#inspection-debug-logs}
 
-Each inspection logs its start and whether it reuses a context. Successful results include the printer ID, frame count, verdict, print quality, warning/pause suggestions, faster-inspection flag, server minimum, and effective interval until the next check. Failed attempts log a safe error message, recognized error code, and retry delay when another attempt is scheduled; canceled or discarded inspections are also recorded. Scheduled polls that are not yet due do not produce inspection logs. These diagnostics omit API keys, context IDs/URLs, image data, and raw API response bodies.
+Для каждой проверки записывается её начало и факт повторного использования контекста. Успешный результат содержит ID принтера, число кадров, вердикт, качество печати, рекомендации предупреждения и паузы, признак ускоренной проверки, минимум сервера и фактический интервал до следующей проверки. При ошибке записываются безопасное сообщение, распознанный код и задержка повтора, если он запланирован; отменённые или отброшенные проверки также записываются. Опросы, срок которых ещё не наступил, записей не создают. Диагностика не содержит ключи API, ID или URL контекстов, данные изображений и необработанные тела ответов API.
 
-### API Reference
+### Справочник API {#api-reference}
 
-See [OctoEverywhere API Reference](../reference/api.md#octoeverywhere-ai-failure-detection) for settings keys, defaults, status and test endpoints, required permissions, and notification coverage fields.
-
----
-
-## Obico
-
-The [Obico](https://github.com/TheSpaghettiDetective/obico-server) integration uses a **self-hosted** `ml_api` container. No Obico account is required. Snapshots are analyzed on your own network; this provider does not connect to obico.io.
-
-### How It Works
-
-1. While a print is running, Bambuddy hands the ML API your camera snapshot URL every *N* seconds (default 10s).
-2. The ML API fetches the snapshot itself and returns a list of detected defects with confidence scores.
-3. Bambuddy smooths scores over time with Obico's own math, so a single noisy frame cannot trigger an action, and what the camera always sees (plate texture, labels) counts as background, not as a failure.
-4. When the score says the print is failing, Bambuddy runs your configured action **once** for this print. **Notify only** fires at Obico's alert level; **Pause print** and **Pause and cut power** wait for Obico's pause level, which takes a clearly stronger signal (the score divided by 1.75 must still be failing).
-
-The details, as in Obico's own detector:
-
-- **Score:** an exponentially weighted moving average of each frame's summed confidences (`alpha = 2/13`) minus the printer's long-term average (its last 7200 frames, ~20 h at 10 s/frame). The long-term average carries over from one print to the next on the same printer, until Bambuddy restarts.
-- **Decision:** below the **Low** threshold the print is safe and above **High** it is failing. In between it is failing only if the score is more than 3.8 times (scaled with the Sensitivity) the rise of the short average (the print's last 310 frames, ~52 min) over the long-term one, so a slow build-up warns at most.
-- **Warmup:** the first 30 frames of each print are always safe.
-- **Pause and resume:** pausing a print keeps its state; a new print (or the printer preparing one) starts fresh. After you resume a print Bambuddy paused, it is not paused again for the same print; detection starts over with the next print.
-
-A detection that appears suddenly and stays, such as a part edge that comes into view as the print grows, is a sudden sustained rise, which is what this model treats as spaghetti. If that happens on healthy prints, lower the Sensitivity.
+Ключи настроек, значения по умолчанию, конечные точки состояния и проверки, разрешения и поля покрытия уведомлениями описаны в [справочнике API OctoEverywhere](../reference/api.md#octoeverywhere-ai-failure-detection).
 
 ---
 
-### Setting Up the Obico ML API
+## Obico {#obico}
 
-You only need the `ml_api` container from Obico's stack. The web app, Django site, and printer registration are **not required**.
+Интеграция [Obico](https://github.com/TheSpaghettiDetective/obico-server) использует **локально размещённый** контейнер `ml_api`. Учётная запись Obico не нужна. Снимки анализируются в вашей сети; этот провайдер не подключается к obico.io.
 
-#### 1. Clone the Obico server
+### Как это работает {#how-it-works}
+
+1. Во время печати Bambuddy передаёт ML API URL снимка с камеры каждые *N* секунд (по умолчанию 10 с).
+2. ML API сам получает снимок и возвращает список обнаруженных дефектов с оценками уверенности.
+3. Bambuddy сглаживает оценки во времени по алгоритму Obico, чтобы одиночный шумный кадр не вызвал действие, а постоянно видимые элементы (текстура пластины, надписи) считались фоном, а не ошибкой.
+4. Когда оценка указывает на ошибку печати, Bambuddy выполняет настроенное действие **один раз** для этой печати. **Только уведомить** срабатывает на уровне предупреждения Obico; **Приостановить печать** и **Приостановить и отключить питание** ждут уровня паузы Obico, который требует значительно более сильного сигнала (оценка, делённая на 1,75, должна всё ещё указывать на ошибку).
+
+Подробнее, согласно детектору Obico:
+
+- **Оценка:** экспоненциально взвешенное скользящее среднее сумм уверенностей каждого кадра (`alpha = 2/13`) за вычетом долгосрочного среднего принтера (последние 7200 кадров, около 20 часов при 10 с/кадр). Долгосрочное среднее сохраняется между печатями одного принтера до перезапуска Bambuddy.
+- **Решение:** ниже порога **Низкий** печать безопасна, выше **Высокого** — ошибочна. Между ними ошибка определяется, только если оценка более чем в 3,8 раза (с поправкой на чувствительность) превышает рост краткосрочного среднего (последние 310 кадров печати, около 52 минут) над долгосрочным, поэтому медленное нарастание вызывает максимум предупреждение.
+- **Прогрев:** первые 30 кадров каждой печати всегда считаются безопасными.
+- **Пауза и возобновление:** пауза сохраняет состояние печати; новая печать или её подготовка принтером начинает отслеживание заново. После возобновления печати, приостановленной Bambuddy, повторной паузы для неё не будет; обнаружение начнётся заново со следующей печатью.
+
+Внезапно появившийся и оставшийся объект, например край детали, входящий в поле зрения по мере роста модели, вызывает резкий устойчивый рост, который модель считает спагетти. Если это происходит при исправной печати, уменьшите чувствительность.
+
+---
+
+### Настройка Obico ML API {#setting-up-the-obico-ml-api}
+
+Из стека Obico нужен только контейнер `ml_api`. Веб-приложение, сайт Django и регистрация принтера **не требуются**.
+
+#### 1. Клонируйте сервер Obico {#1-clone-the-obico-server}
 
 ```bash
 git clone -b release https://github.com/TheSpaghettiDetective/obico-server.git
 cd obico-server
 ```
 
-#### 2. Expose port 3333 (ml_api)
+#### 2. Откройте порт 3333 (ml_api) {#2-expose-port-3333-ml_api}
 
-Edit `docker-compose.yml` and add a `ports` mapping on the `ml_api` service:
+Измените `docker-compose.yml`, добавив сопоставление `ports` для службы `ml_api`:
 
 ```yaml
 ml_api:
@@ -144,24 +144,24 @@ ml_api:
     - "3333:3333"
 ```
 
-#### 3. Start the stack
+#### 3. Запустите стек {#3-start-the-stack}
 
 ```bash
 docker compose up -d ml_api
 ```
 
-The first start downloads the YOLO model (~100 MB) and allocates ~4 GB RAM.
+При первом запуске загружается модель YOLO (около 100 МБ) и выделяется около 4 ГБ ОЗУ.
 
-#### 4. Verify
+#### 4. Проверьте работу {#4-verify}
 
 ```bash
 curl http://<obico-host>:3333/hc/
 # → "ok"
 ```
 
-#### 5. Optional: protect it with a token
+#### 5. Необязательно: защитите токеном {#5-optional-protect-it-with-a-token}
 
-The ml_api container reads an `ML_API_TOKEN` environment variable. Set it and the container answers `401` to any detection request that doesn't carry that token, which keeps anything else on your network from using your inference server:
+Контейнер ml_api читает переменную окружения `ML_API_TOKEN`. Если её задать, контейнер ответит `401` на любой запрос обнаружения без этого токена, не позволяя другим устройствам сети использовать сервер анализа:
 
 ```yaml
 ml_api:
@@ -169,133 +169,133 @@ ml_api:
     - ML_API_TOKEN=<a long random string>
 ```
 
-Put the same value in Bambuddy's **ML API Token** field below. Leave both unset if you don't need it.
+Укажите то же значение в поле **ML API Token** Bambuddy ниже. Если защита не нужна, оставьте оба значения незаданными.
 
-!!! note "Saved token"
-    Once saved, the token is never shown again: the field shows `********` instead. Leave it as is to keep the saved value, clear it to remove it, or enter a new one. If you change the ML API URL, enter the token again; the settings are not saved until you do, and **Test** uses the saved token only for the saved URL.
+!!! note "Сохранённый токен"
+    После сохранения токен больше не показывается: вместо него поле содержит `********`. Оставьте его как есть, чтобы сохранить значение, очистите для удаления или введите новое. При изменении URL ML API токен нужно ввести снова; до этого настройки не сохраняются, а **Проверить** использует сохранённый токен только для сохранённого URL.
 
-!!! warning "The health endpoint is not protected"
-    `/hc/` answers `ok` whether or not the token is right — only the detection endpoint is gated. So a `curl` of `/hc/` proves nothing about your token. Bambuddy's **Test** button probes both, and tells you specifically when the token is rejected.
+!!! warning "Конечная точка проверки работоспособности не защищена"
+    `/hc/` отвечает `ok` независимо от правильности токена — защищена только конечная точка обнаружения. Поэтому `curl` к `/hc/` ничего не доказывает о токене. Кнопка **Проверить** в Bambuddy проверяет обе точки и отдельно сообщает об отклонённом токене.
 
 ---
 
-### Configuring Bambuddy
+### Настройка Bambuddy {#configuring-bambuddy}
 
-Go to **Settings → Failure Detection** and select **Obico** under **Provider**.
+Перейдите в **Настройки → Обнаружение ошибок** и выберите **Obico** в поле **Провайдер**.
 
-#### Required
+#### Обязательные настройки {#required}
 
-- **Enable toggle** — turns the detection service on.
-- **Obico ML API URL** — base URL to your ML API, e.g. `http://192.168.1.10:3333`. Click **Test** to check reachability and the token.
-- **ML API Token** — only needed if your ml_api container runs with `ML_API_TOKEN` set. It must match that value exactly. Leave empty otherwise.
-- **Bambuddy address** — set **Bambuddy Internal URL** below, or **External URL** in **Settings → Network**. The chosen address must be reachable from the ML API container.
+- **Переключатель включения** — включает службу обнаружения.
+- **Obico ML API URL** — базовый URL ML API, например `http://192.168.1.10:3333`. Нажмите **Проверить**, чтобы проверить доступность и токен.
+- **ML API Token** — нужен только если контейнер ml_api запущен с `ML_API_TOKEN`. Значение должно точно совпадать. Иначе оставьте поле пустым.
+- **Адрес Bambuddy** — задайте ниже **Bambuddy Internal URL** или **Внешний URL** в разделе **Настройки → Сеть**. Выбранный адрес должен быть доступен контейнеру ML API.
 
-#### Optional: Bambuddy Internal URL
+#### Необязательно: Bambuddy Internal URL {#optional-bambuddy-internal-url}
 
-**Bambuddy Internal URL** lets the ML API fetch snapshots through a different Bambuddy address. Leave it empty to use **External URL**. Other integrations continue to use External URL.
+**Bambuddy Internal URL** позволяет ML API получать снимки через другой адрес Bambuddy. Оставьте поле пустым, чтобы использовать **Внешний URL**. Другие интеграции продолжают использовать внешний URL.
 
-For example, when both containers share a Docker network:
+Например, если оба контейнера находятся в одной сети Docker:
 
-| Setting | Example | Connection |
+| Настройка | Пример | Соединение |
 |---|---|---|
-| **Obico ML API URL** | `http://obico-ml:3333` | Bambuddy calls the ML API. |
-| **Bambuddy Internal URL** | `http://bambuddy:8000` | The ML API fetches snapshots from Bambuddy. |
-| **External URL** (Settings → Network) | `https://bambuddy.example.com` | Other integrations use the public address. |
+| **Obico ML API URL** | `http://obico-ml:3333` | Bambuddy обращается к ML API. |
+| **Bambuddy Internal URL** | `http://bambuddy:8000` | ML API получает снимки от Bambuddy. |
+| **Внешний URL** (Настройки → Сеть) | `https://bambuddy.example.com` | Другие интеграции используют публичный адрес. |
 
-Use your actual Docker service names and Bambuddy's container port. You can also use a LAN address, such as `http://192.168.1.20:8000`. Include `http://` or `https://` and any required port. `localhost` inside the ML container points to that container, not Bambuddy.
+Укажите фактические имена служб Docker и порт контейнера Bambuddy. Можно также использовать адрес локальной сети, например `http://192.168.1.20:8000`. Включите `http://` или `https://` и нужный порт. `localhost` внутри контейнера ML указывает на него самого, а не на Bambuddy.
 
-The field saves automatically. An address without `http://` or `https://` is marked in red and not saved until it has one. Changes take effect on the next detection cycle without restarting Bambuddy. Clear it to return to External URL.
+Поле сохраняется автоматически. Адрес без `http://` или `https://` отмечается красным и не сохраняется, пока префикс не добавлен. Изменения применяются со следующего цикла обнаружения без перезапуска Bambuddy. Очистите поле, чтобы вернуться к внешнему URL.
 
-The **Test** button checks the ML API and token. It does not check whether the ML API can fetch a snapshot; check detection during a print to confirm that connection.
+Кнопка **Проверить** проверяет ML API и токен. Она не проверяет, может ли ML API получить снимок; для этого проверьте обнаружение во время печати.
 
-#### Tuning
+#### Регулировка {#tuning}
 
-- **Sensitivity** — Low / Medium / High. Scales the confidence thresholds:
-    - **Low** is less eager to trigger (fewer false positives, may miss early failures)
-    - **Medium** is the default (Obico's original thresholds)
-    - **High** triggers earlier but with more false positives
-- **Poll interval** — how often each active print is checked (5–120 seconds). 10 s is the Obico default.
-- **Action on detected failure** — what Bambuddy should do when the print is judged failing (see How It Works for the two levels):
-    - **Notify only** — fires the **AI Failure Detection** notification event through your existing notification providers
-    - **Pause print** — notify + send an MQTT pause command
-    - **Pause and cut power** — pause + turn off any smart plug linked to that printer
-- **Monitored printers** — by default all connected printers are watched. Uncheck "Monitor all connected printers" to pick a specific subset.
+- **Чувствительность** — низкая / средняя / высокая. Масштабирует пороги уверенности:
+    - **Низкая** срабатывает реже (меньше ложных тревог, но возможны пропущенные ранние ошибки)
+    - **Средняя** используется по умолчанию (исходные пороги Obico)
+    - **Высокая** срабатывает раньше, но чаще ошибочно
+- **Интервал опроса** — частота проверки каждой активной печати (5–120 секунд). Значение Obico по умолчанию — 10 с.
+- **Действие при обнаружении ошибки** — действие Bambuddy, когда печать признана ошибочной (два уровня описаны выше):
+    - **Только уведомить** — отправляет событие **Обнаружение ошибок ИИ** через настроенных провайдеров уведомлений
+    - **Приостановить печать** — уведомляет и отправляет команду паузы MQTT
+    - **Приостановить и отключить питание** — приостанавливает и выключает все умные розетки, связанные с принтером
+- **Отслеживаемые принтеры** — по умолчанию отслеживаются все подключённые. Снимите отметку «Отслеживать все подключённые принтеры», чтобы выбрать отдельные устройства.
 
-!!! note "Enabling notifications for detected failures"
-    Detections fire the dedicated **AI Failure Detection** event, not the general "Printer Error" event. Edit each notification provider you want to receive spaghetti alerts on (Telegram, Discord, ntfy, etc.) and turn on the **AI Failure Detection** toggle in the Printer Status section. See [Notifications → Printer Events](notifications.md#printer-events). Existing providers that had "Printer Error" enabled will continue to receive HMS hardware errors unchanged; they will not automatically receive AI alerts until the new toggle is enabled.
+!!! note "Включение уведомлений об обнаруженных ошибках"
+    Обнаружение вызывает отдельное событие **Обнаружение ошибок ИИ**, а не общее событие «Ошибка принтера». Измените каждого провайдера, через которого хотите получать оповещения о спагетти (Telegram, Discord, ntfy и т. д.), и включите **Обнаружение ошибок ИИ** в разделе состояния принтера. См. [Уведомления → События принтера](notifications.md#printer-events). Провайдеры с включённой «Ошибкой принтера» продолжат получать аппаратные ошибки HMS, но не будут автоматически получать оповещения ИИ до включения нового переключателя.
 
-#### Status card
+#### Карточка состояния {#status-card}
 
-The right column shows:
+В правом столбце показано:
 
-- Whether the background service is running
-- The currently active thresholds (after sensitivity scaling), and the pause level: the score above which pausing is certain (High × 1.75)
-- Each active print's live classification (*safe / warning / failure*), smoothed score, and frame count
-- Recent detection history (timestamp, printer, class, score)
+- Работает ли фоновая служба
+- Текущие активные пороги (с учётом чувствительности) и уровень паузы: оценка, выше которой пауза гарантирована (Высокий × 1,75)
+- Текущая классификация каждой активной печати (*безопасно / предупреждение / ошибка*), сглаженная оценка и число кадров
+- Недавняя история обнаружений (время, принтер, класс, оценка)
 
-#### Printer card badge
+#### Значок на карточке принтера {#printer-card-badge}
 
-When failure detection is enabled, every monitored printer's card on the **Printers** page shows an AI badge next to the HMS indicator, so you can watch detection track your print without leaving the Printers screen:
+Когда обнаружение ошибок включено, на карточке каждого отслеживаемого принтера на странице **Принтеры** рядом с индикатором HMS отображается значок ИИ. Он позволяет следить за обнаружением, не покидая страницу:
 
-| Badge | Meaning |
+| Значок | Значение |
 |---|---|
-| gray **Idle** | No print is being watched on this printer. |
-| gray **Starting** | A monitored print has begun; waiting for the first result. |
-| green **Safe** | An inference came back and found nothing. |
-| amber **Warning** | The print is failing at Obico's alert level. **Notify only** fires here. |
-| red **Failure** | The print is failing at Obico's pause level. **Pause print** and **Pause and cut power** fire here. |
-| amber **Not checking** | The last check produced no result at all — a rejected token, an unreachable ML API, a snapshot that could not be captured, or a missing snapshot address. **This print is not being watched.** Hover, or click, for the reason. Detection resumes on its own once the cause is fixed. |
+| серый **Ожидание** | Печать на этом принтере не отслеживается. |
+| серый **Запуск** | Отслеживаемая печать началась; ожидание первого результата. |
+| зелёный **Безопасно** | Анализ завершился и ничего не обнаружил. |
+| жёлтый **Предупреждение** | Ошибка достигла уровня предупреждения Obico. Здесь срабатывает **Только уведомить**. |
+| красный **Ошибка** | Ошибка достигла уровня паузы Obico. Здесь срабатывают действия паузы. |
+| жёлтый **Не проверяется** | Последняя проверка не дала результата: токен отклонён, ML API недоступен, снимок не удалось получить или не задан его адрес. **Эта печать не отслеживается.** Наведите указатель или нажмите, чтобы узнать причину. После её устранения обнаружение возобновится автоматически. |
 
-Hover for the current score (smoothed, minus the printer's background; 0 when nothing stands out); click to open a modal with the live status, score, frames analyzed, and the reason for a **Not checking** badge, plus a shortcut to **Settings → Failure Detection** for the full history. Score and frame count are omitted while the badge reads **Not checking** — there is no measurement behind them. Printers excluded from monitoring (and setups with detection disabled) show no badge.
-
----
-
-### Requirements & Gotchas
-
-- **The ML API container must be able to reach the configured Bambuddy address.** Use a Docker service name on a shared network or a reachable LAN address.
-- **Set Bambuddy Internal URL or External URL.** Without either, Bambuddy cannot tell the ML API where to fetch snapshots.
-- **Snapshots must be accessible to the ML API without additional proxy authentication.** The cached-image endpoint uses short-lived, single-use URLs and does not require a Bambuddy login. Bambuddy Internal URL can avoid an authenticated public reverse proxy; the snapshots do not need to be exposed to the internet.
-- **The printer camera must be enabled and reachable** — same requirement as Bambuddy's own camera page.
-- **The action fires exactly once per print.** After a detected failure, subsequent frames won't re-trigger until a new print starts.
-- **Calibration prints are automatically skipped** by Bambuddy's detection loop — the service only runs while a print is in the `RUNNING` state.
-- **Disk / RAM** — the ML model needs roughly 4 GB RAM on the Obico host. CPU use scales with how many printers you monitor and how short the poll interval is.
+Наведите указатель для просмотра текущей оценки (сглаженной, за вычетом фона принтера; 0, если ничего не выделяется); нажмите, чтобы открыть окно с текущим состоянием, оценкой, числом обработанных кадров, причиной значка **Не проверяется** и ссылкой на **Настройки → Обнаружение ошибок** с полной историей. При значке **Не проверяется** оценка и число кадров не отображаются, поскольку измерения нет. На исключённых из мониторинга принтерах и при отключённом обнаружении значка нет.
 
 ---
 
-### Troubleshooting
+### Требования и особенности {#requirements-gotchas}
 
-**"No address set for the ML API to fetch snapshots from"**
-: Set **Bambuddy Internal URL** in **Settings → Failure Detection**, or **External URL** in **Settings → Network**, to an address the ML API container can reach.
-
-**The Test button succeeds, but detection reports a snapshot error**
-: The ML API may be reachable from Bambuddy while it cannot fetch images in the other direction. Check that the snapshot address resolves and is reachable from the ML API container. If the public address requires proxy authentication, set Bambuddy Internal URL to a reachable address.
-
-**Test button returns an error**
-: Check the ML API is running (`docker compose ps ml_api`) and that port 3333 is exposed. Try `curl` from the Bambuddy host: `curl http://<obico-host>:3333/hc/`.
-
-**"The ML API is reachable but rejected the token"**
-: The container runs with `ML_API_TOKEN` set and Bambuddy's **ML API Token** doesn't match it. Copy the value from your `docker-compose.yml` (or `docker compose exec ml_api env | grep ML_API_TOKEN`) into the field, or remove `ML_API_TOKEN` from the container and clear the field.
-
-**Detection never runs, but the Test button says everything is fine**
-: On versions before 1.2.6 this was the signature of a token-protected ML API: the test only pinged the ungated `/hc/` endpoint while every detection call was rejected with `401`. Set the **ML API Token**, or update — the test now checks the token too, and the status card names the problem outright.
-
-**Service is running but no detections appear**
-: No news is good news — entries are only written to the history when a detection is returned or the classification leaves "safe". Check the printer card badge: green **Safe** with a climbing frame count means checks are landing and finding nothing. Amber **Not checking** means they are not landing, and names the cause.
-
-**The ML API container's log shows no requests from Bambuddy**
-: A request rejected for a bad token is turned away by the ML API's auth layer before its request log ever sees it, so a token problem looks exactly like "Bambuddy never called". The same is true of successful checks, which log nothing at all. Trust the printer card badge over the container log: **Not checking** names the real cause, and a climbing frame count means the calls are getting through. Bambuddy's own log records every rejected call.
-
-**False positives on normal prints**
-: Lower the Sensitivity setting (High → Medium → Low).
-
-**Actions didn't fire on an obvious failure**
-: Raise the Sensitivity. Remember there's a 30-frame warmup at the start of each print (5 min at 10 s/frame), and that pausing waits for a stronger signal than a notification, during which the service is deliberately quiet.
-
-**Detection fires in the History card but no Telegram / Discord / ntfy notification arrives**
-: The notification is dispatched on the dedicated **AI Failure Detection** event, not the general "Printer Error" event. Open **Settings → Notifications**, edit each provider you want spaghetti alerts on, and turn on the **AI Failure Detection** toggle in the Printer Status section. Providers that only had "Printer Error" enabled won't receive AI alerts.
+- **Контейнер ML API должен иметь доступ к настроенному адресу Bambuddy.** Используйте имя службы Docker в общей сети или доступный адрес локальной сети.
+- **Задайте Bambuddy Internal URL или внешний URL.** Без них Bambuddy не сможет сообщить ML API, откуда получать снимки.
+- **Снимки должны быть доступны ML API без дополнительной аутентификации прокси.** Конечная точка кэшированных изображений использует краткоживущие одноразовые URL и не требует входа в Bambuddy. Bambuddy Internal URL позволяет обойти публичный обратный прокси с аутентификацией; открывать снимки в интернет не нужно.
+- **Камера принтера должна быть включена и доступна** — это же требуется странице камеры Bambuddy.
+- **Действие выполняется ровно один раз на печать.** После обнаруженной ошибки последующие кадры не вызовут его снова до новой печати.
+- **Калибровочные печати автоматически пропускаются** циклом обнаружения Bambuddy: служба работает только пока печать находится в состоянии `RUNNING`.
+- **Диск и ОЗУ** — модели ML нужно около 4 ГБ ОЗУ на хосте Obico. Загрузка процессора зависит от числа отслеживаемых принтеров и частоты опроса.
 
 ---
 
-### License & Attribution
+### Устранение неполадок {#troubleshooting}
 
-Obico's ML model and detection algorithms are licensed under AGPL-3.0, the same license as Bambuddy. Bambuddy does **not** vendor or link any Obico code — it only calls the ML API over HTTP.
+**«Не задан адрес для получения снимков ML API»**
+: Задайте **Bambuddy Internal URL** в **Настройки → Обнаружение ошибок** или **Внешний URL** в **Настройки → Сеть**, доступный контейнеру ML API.
+
+**Кнопка проверки работает, но обнаружение сообщает об ошибке снимка**
+: ML API может быть доступен из Bambuddy, но не иметь доступа к изображениям в обратном направлении. Проверьте разрешение имени и доступность адреса снимка из контейнера ML API. Если публичный адрес требует аутентификацию прокси, задайте доступный Bambuddy Internal URL.
+
+**Кнопка проверки возвращает ошибку**
+: Убедитесь, что ML API работает (`docker compose ps ml_api`), а порт 3333 открыт. Попробуйте выполнить на хосте Bambuddy: `curl http://<obico-host>:3333/hc/`.
+
+**«ML API доступен, но отклонил токен»**
+: Контейнер запущен с `ML_API_TOKEN`, а **ML API Token** в Bambuddy не совпадает. Скопируйте значение из `docker-compose.yml` (или `docker compose exec ml_api env | grep ML_API_TOKEN`) в поле либо удалите `ML_API_TOKEN` из контейнера и очистите поле.
+
+**Обнаружение не работает, хотя проверка сообщает, что всё в порядке**
+: До версии 1.2.6 это указывало на ML API, защищённый токеном: тест проверял только незащищённый `/hc/`, тогда как каждый запрос обнаружения получал `401`. Задайте **ML API Token** или обновите приложение: теперь тест проверяет и токен, а карточка состояния прямо называет проблему.
+
+**Служба работает, но обнаружений нет**
+: Отсутствие новостей — хороший знак: история пополняется только при обнаружении или смене классификации с «безопасно». Проверьте значок принтера: зелёный **Безопасно** с растущим числом кадров означает, что проверки проходят и ничего не находят. Жёлтый **Не проверяется** означает, что проверки не проходят, и указывает причину.
+
+**В журнале контейнера ML API нет запросов от Bambuddy**
+: Запрос с неверным токеном отклоняется слоем аутентификации ML API до попадания в журнал запросов, поэтому ошибка токена выглядит как отсутствие обращений Bambuddy. Успешные проверки тоже ничего не записывают. Ориентируйтесь на значок принтера: **Не проверяется** указывает реальную причину, а растущее число кадров означает, что запросы проходят. Собственный журнал Bambuddy записывает каждый отклонённый запрос.
+
+**Ложные срабатывания при нормальной печати**
+: Уменьшите чувствительность (высокая → средняя → низкая).
+
+**Действия не сработали при очевидной ошибке**
+: Увеличьте чувствительность. Помните о прогреве в 30 кадров в начале каждой печати (5 минут при 10 с/кадр) и о том, что пауза ждёт более сильного сигнала, чем уведомление; в это время служба намеренно молчит.
+
+**Обнаружение видно в истории, но уведомление Telegram / Discord / ntfy не приходит**
+: Уведомление отправляется по отдельному событию **Обнаружение ошибок ИИ**, а не общему событию «Ошибка принтера». Откройте **Настройки → Уведомления**, измените каждого провайдера, через которого хотите получать оповещения о спагетти, и включите **Обнаружение ошибок ИИ** в разделе состояния принтера. Провайдеры только с включённой «Ошибкой принтера» не получат оповещения ИИ.
+
+---
+
+### Лицензия и авторство {#license-attribution}
+
+Модель ML и алгоритмы обнаружения Obico лицензированы по AGPL-3.0, как и Bambuddy. Bambuddy **не включает и не связывает** код Obico — он только обращается к ML API по HTTP.
